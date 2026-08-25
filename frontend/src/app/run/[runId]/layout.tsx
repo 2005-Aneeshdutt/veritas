@@ -74,6 +74,12 @@ export default function RunLayout({
             >
               book view
             </Link>
+            <Link
+              href="/drift"
+              className="text-xs text-muted hover:text-gold transition-colors whitespace-nowrap"
+            >
+              drift
+            </Link>
 
             <div className="h-5 w-px bg-line" />
 

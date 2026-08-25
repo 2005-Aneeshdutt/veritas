@@ -108,6 +108,9 @@ export default function PortfolioPage() {
             </span>
           </Link>
           <span className="chip-neutral">book view</span>
+          <Link href="/drift" className="text-xs link-quiet">
+            ecosystem drift
+          </Link>
           <div className="ml-auto flex items-center gap-2">
             <a
               href="/api/portfolio.csv"
