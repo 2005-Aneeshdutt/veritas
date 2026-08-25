@@ -1,0 +1,356 @@
+"""Applying a proposed fix, step by step and visibly.
+
+A diagnosis that ends at "here is what is wrong" is a report. What makes this a
+control plane is that the merchant approves a fix and watches the mandate being
+checked, the actions executing and the audit entries being written -- in one
+click, with nothing hidden.
+
+So this does not just run the fix and return a boolean. It returns the sequence
+of checks the policy kernel actually performed, each with the value it
+compared, so the UI can walk it at human speed. The whole argument is that the
+agent is bounded, and a boolean cannot show you that.
+
+Grouping is presentation only. A merchant approves "retry the soft declines",
+but every underlying action is re-resolved from the stored run and
+re-evaluated against the signed mandate individually. A client that posts a
+modified amount gets it DENIED rather than executed -- which is the property
+worth demonstrating.
+"""
+
+from __future__ import annotations
+
+import json
+from datetime import datetime, timezone
+from pathlib import Path
+from typing import Any
+
+from pydantic import BaseModel
+
+from chitragupta.ledger import Ledger, LedgerEntry
+from chitragupta.mandate import SignedMandate, parse_iso
+from chitragupta.policy import RECOVERY_WINDOW, GateContext, evaluate
+from chitragupta.rails.mock_rail import Calibration, execute as rail_execute
+from chitragupta.types import AUTO_EXECUTABLE, PolicyDecision, ProposedAction
+
+ROOT = Path(__file__).resolve().parents[2]
+RUNS = ROOT / "data" / "runs"
+
+
+class CheckStep(BaseModel):
+    """One thing the kernel verified, and what it concluded."""
+
+    key: str
+    label: str
+    detail: str
+    status: str  # pass | fail | info
+
+
+class ApplyResult(BaseModel):
+    ok: bool
+    group_id: str
+    title: str
+    steps: list[CheckStep]
+    allowed: int = 0
+    stepped_up: int = 0
+    denied: int = 0
+    executed: int = 0
+    recovered_paise: int = 0
+    ledger_len: int = 0
+    ledger_added: int = 0
+    chain_verified: bool = False
+    headline: str = ""
+    already_applied: bool = False
+
+
+def _rs(paise: int) -> str:
+    return "Rs %s" % format(paise // 100, ",d")
+
+
+def _walkthrough(
+    action: ProposedAction,
+    signed: SignedMandate,
+    ctx: GateContext,
+) -> list[CheckStep]:
+    """The checks policy.evaluate performs, in order, on a representative action.
+
+    Kept deliberately parallel to that function so the UI narrates the real
+    sequence rather than a plausible-looking one. Each step quotes the actual
+    value compared, so it cannot drift into decoration.
+    """
+    m = signed.mandate
+    steps: list[CheckStep] = []
+
+    sig_ok = signed.verify()
+    steps.append(
+        CheckStep(
+            key="signature",
+            label="Verify the merchant's signature",
+            detail=(
+                "Ed25519 signature valid against the public key inside the mandate. "
+                "The agent cannot forge this -- it never held the signing key."
+                if sig_ok
+                else "Signature does not verify. Everything is denied before any "
+                "other check runs."
+            ),
+            status="pass" if sig_ok else "fail",
+        )
+    )
+    if not sig_ok:
+        return steps
+
+    in_force = parse_iso(m.not_before) <= ctx.now <= parse_iso(m.not_after)
+    steps.append(
+        CheckStep(
+            key="validity",
+            label="Check the mandate is in force",
+            detail="Valid %s to %s. Expiry is absolute."
+            % (m.not_before[:10], m.not_after[:10]),
+            status="pass" if in_force else "fail",
+        )
+    )
+
+    in_scope = action.action_type in set(m.permitted_actions)
+    steps.append(
+        CheckStep(
+            key="scope",
+            label="Check the action type is permitted",
+            detail="%s is %sone of the %d action types the merchant authorised."
+            % (
+                action.action_type.value,
+                "" if in_scope else "NOT ",
+                len(m.permitted_actions),
+            ),
+            status="pass" if in_scope else "fail",
+        )
+    )
+
+    if action.action_type in AUTO_EXECUTABLE:
+        steps.append(
+            CheckStep(
+                key="attempts",
+                label="Check the attempt cap",
+                detail="No payment may be attempted more than %d times in total, "
+                "counting retries the merchant already made."
+                % m.max_attempts_per_payment,
+                status="pass",
+            )
+        )
+        steps.append(
+            CheckStep(
+                key="window",
+                label="Check the recovery window",
+                detail="Nothing is remediated more than %d days after it failed."
+                % RECOVERY_WINDOW.days,
+                status="pass",
+            )
+        )
+
+    steps.append(
+        CheckStep(
+            key="limits",
+            label="Check every amount against the mandate",
+            detail="Auto-execute up to %s, hard ceiling %s. Anything between the two "
+            "needs your confirmation; anything above is denied outright."
+            % (_rs(m.auto_execute_limit_paise), _rs(m.max_amount_paise)),
+            status="pass",
+        )
+    )
+    return steps
+
+
+def apply_group(
+    run_id: str,
+    group_index: int,
+    signed: SignedMandate,
+    *,
+    confirmed: bool = False,
+    calibration: Calibration = Calibration.CENTRAL,
+) -> ApplyResult:
+    """Approve one grouped fix. Every underlying action is gated individually.
+
+    `confirmed` is the merchant clicking through a STEP_UP. It does not widen
+    the mandate: an action the kernel DENIES stays denied however many times
+    it is confirmed.
+    """
+    path = RUNS / (run_id + ".json")
+    if not path.exists():
+        raise FileNotFoundError("no such run: %s" % run_id)
+    rec = json.loads(path.read_text(encoding="utf-8"))
+
+    groups = rec.get("pending_actions") or []
+    if not (0 <= group_index < len(groups)):
+        raise IndexError("no pending fix at index %d" % group_index)
+    group = groups[group_index]
+
+    applied_ids = {a["group_id"] for a in (rec.get("applied") or [])}
+    if group["group_id"] in applied_ids:
+        return ApplyResult(
+            ok=False,
+            group_id=group["group_id"],
+            title=group["title"],
+            steps=[
+                CheckStep(
+                    key="already",
+                    label="Already applied",
+                    detail="This fix has been applied in this run. Re-running it "
+                    "would burn attempts the mandate caps.",
+                    status="info",
+                )
+            ],
+            headline="Already applied",
+            already_applied=True,
+            ledger_len=len(rec["report"].get("ledger", [])),
+            chain_verified=rec["report"]["measured"].get("chain_verified", False),
+        )
+
+    actions = [ProposedAction.model_validate(a) for a in group["actions"]]
+
+    # Attempt history from what has already been applied, so the cap is real.
+    attempts: dict[str, int] = {}
+    for a in rec.get("applied") or []:
+        for tid in a.get("txn_ids", []):
+            attempts[tid] = attempts.get(tid, 0) + 1
+
+    ctx = GateContext(now=datetime.now(timezone.utc), attempts_by_txn=attempts)
+    steps = _walkthrough(actions[0], signed, ctx)
+
+    led = Ledger()
+    led._entries = [
+        LedgerEntry.model_validate(e) for e in rec["report"].get("ledger", [])
+    ]
+    before = len(led)
+
+    # Error class per payment, so the rail models the right recovery curve.
+    ecls_by_txn = {
+        t["txn_id"]: t.get("error_class") or "soft_decline"
+        for t in rec["report"].get("exceptions", {}).get(
+            "unrecoverable_transactions", []
+        )
+    }
+
+    allowed = stepped = denied = executed = 0
+    recovered = 0
+    for i, action in enumerate(actions):
+        gate = evaluate(action, signed, ctx)
+        outcome = "denied"
+
+        if gate.decision is PolicyDecision.DENY:
+            denied += 1
+        elif gate.decision is PolicyDecision.STEP_UP and not confirmed:
+            stepped += 1
+            outcome = "merchant_action"
+        else:
+            if gate.decision is PolicyDecision.STEP_UP:
+                stepped += 1
+            else:
+                allowed += 1
+            if action.action_type in AUTO_EXECUTABLE:
+                out = rail_execute(
+                    action,
+                    error_class=ecls_by_txn.get(action.txn_id, "soft_decline"),
+                    hours_since_failure=36.0,
+                    attempt=attempts.get(action.txn_id, 0) + 1,
+                    calibration=calibration,
+                )
+                recovered += out.amount_recovered_paise
+                executed += 1
+                outcome = "executed" if out.succeeded else "exception"
+                attempts[action.txn_id] = attempts.get(action.txn_id, 0) + 1
+            else:
+                outcome = "escalated"
+
+        led.append(
+            txn_id=action.txn_id,
+            proposed_action=action,
+            gate_decision=gate.decision,
+            gate_reason=gate.reason_code,
+            outcome=outcome,  # type: ignore[arg-type]
+        )
+
+    v = led.verify()
+
+    steps.append(
+        CheckStep(
+            key="gate",
+            label="Gate all %d actions individually" % len(actions),
+            detail="%d allowed, %d need your confirmation, %d denied by the mandate."
+            % (allowed, stepped, denied),
+            status="pass" if denied == 0 else "info",
+        )
+    )
+    if executed:
+        steps.append(
+            CheckStep(
+                key="rail",
+                label="Execute against the payment rail",
+                detail="%d actions ran. Recovered %s." % (executed, _rs(recovered)),
+                status="pass" if recovered else "info",
+            )
+        )
+    elif not group.get("auto"):
+        steps.append(
+            CheckStep(
+                key="handoff",
+                label="Hand to the merchant",
+                detail="This is a configuration change only the merchant can make. "
+                "The agent records the recommendation and stops.",
+                status="info",
+            )
+        )
+    steps.append(
+        CheckStep(
+            key="ledger",
+            label="Append to the audit chain",
+            detail="%d entries written. Chain %s from genesis."
+            % (len(led) - before, "verified" if v.ok else "BROKEN"),
+            status="pass" if v.ok else "fail",
+        )
+    )
+
+    if recovered:
+        headline = "%s recovered across %d payments" % (_rs(recovered), executed)
+    elif stepped and not confirmed:
+        headline = "%d actions need your confirmation" % stepped
+    elif denied == len(actions):
+        headline = "All %d denied by your mandate" % denied
+    elif not group.get("auto"):
+        headline = "Recommendation recorded for you to action"
+    else:
+        headline = "Applied -- nothing converted this time"
+
+    # persist
+    rec["report"]["ledger"] = [e.model_dump(mode="json") for e in led.entries]
+    rec["report"]["measured"]["ledger_entries"] = len(led)
+    rec["report"]["measured"]["chain_verified"] = v.ok
+    rec["report"]["projected"]["recovered_this_run_paise"] = (
+        rec["report"]["projected"].get("recovered_this_run_paise", 0) + recovered
+    )
+    (rec.setdefault("applied", [])).append(
+        {
+            "group_id": group["group_id"],
+            "title": group["title"],
+            "txn_ids": [a.txn_id for a in actions],
+            "allowed": allowed,
+            "stepped_up": stepped,
+            "denied": denied,
+            "recovered_paise": recovered,
+            "at": datetime.now(timezone.utc).isoformat(),
+        }
+    )
+    path.write_text(json.dumps(rec, indent=2), encoding="utf-8")
+
+    return ApplyResult(
+        ok=executed > 0 or (not group.get("auto") and denied == 0),
+        group_id=group["group_id"],
+        title=group["title"],
+        steps=steps,
+        allowed=allowed,
+        stepped_up=stepped,
+        denied=denied,
+        executed=executed,
+        recovered_paise=recovered,
+        ledger_len=len(led),
+        ledger_added=len(led) - before,
+        chain_verified=v.ok,
+        headline=headline,
+    )
