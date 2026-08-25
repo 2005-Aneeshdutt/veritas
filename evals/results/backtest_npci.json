@@ -1,0 +1,100 @@
+{
+  "note": "Walk-forward on NPCI's published top-50 remitter tables. Fit on months 1..k, predict k+1, never look ahead. This is the only eval here whose data I did not generate, and it tests the one empirical claim the success model rests on: that a bank's published failure rate predicts how it behaves next month.",
+  "source": "data/npci/remitter_banks.csv (pinned Internet Archive capture)",
+  "n_banks": 42,
+  "n_months": 32,
+  "period_range": [
+    "2023-01",
+    "2025-08"
+  ],
+  "by_horizon": {
+    "horizon_1m": {
+      "persistence": {
+        "mae_pts": 0.9105,
+        "median_abs_err_pts": 0.48,
+        "n_predictions": 1058
+      },
+      "smoothed": {
+        "mae_pts": 1.0288,
+        "median_abs_err_pts": 0.6057,
+        "n_predictions": 1058
+      },
+      "rolling3": {
+        "mae_pts": 1.0285,
+        "median_abs_err_pts": 0.575,
+        "n_predictions": 1058
+      },
+      "global": {
+        "mae_pts": 2.3708,
+        "median_abs_err_pts": 1.9357,
+        "n_predictions": 1058
+      },
+      "smoothed_vs_persistence": 1.1299,
+      "persistence_vs_global": 0.384
+    },
+    "horizon_3m": {
+      "persistence": {
+        "mae_pts": 1.3328,
+        "median_abs_err_pts": 0.885,
+        "n_predictions": 974
+      },
+      "smoothed": {
+        "mae_pts": 1.3935,
+        "median_abs_err_pts": 0.8881,
+        "n_predictions": 974
+      },
+      "rolling3": {
+        "mae_pts": 1.448,
+        "median_abs_err_pts": 0.9183,
+        "n_predictions": 974
+      },
+      "global": {
+        "mae_pts": 2.3497,
+        "median_abs_err_pts": 1.9507,
+        "n_predictions": 974
+      },
+      "smoothed_vs_persistence": 1.0455,
+      "persistence_vs_global": 0.5672
+    }
+  },
+  "by_volatility": {
+    "stable": {
+      "n_banks": 21,
+      "smoothed_mae_pts": 0.5773,
+      "persistence_mae_pts": 0.5278,
+      "smoothing_helps": false
+    },
+    "volatile": {
+      "n_banks": 21,
+      "smoothed_mae_pts": 1.4977,
+      "persistence_mae_pts": 1.308,
+      "smoothing_helps": false
+    }
+  },
+  "hardest_banks_1m": [
+    {
+      "bank": "andhra pragathi grameena",
+      "persistence_mae_pts": 3.409
+    },
+    {
+      "bank": "sarva haryana gramin",
+      "persistence_mae_pts": 2.143
+    },
+    {
+      "bank": "rajasthan marudhara gramin",
+      "persistence_mae_pts": 1.975
+    },
+    {
+      "bank": "maharashtra gramin",
+      "persistence_mae_pts": 1.755
+    },
+    {
+      "bank": "punjab and sind",
+      "persistence_mae_pts": 1.648
+    },
+    {
+      "bank": "rbl",
+      "persistence_mae_pts": 1.537
+    }
+  ]
+}
