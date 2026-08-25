@@ -17,6 +17,9 @@ export function EmailPanel({ runId }: { runId: string }) {
   const [email, setEmail] = useState<any>(null);
   const [open, setOpen] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [to, setTo] = useState("");
+  const [sendState, setSendState] = useState<any>(null);
+  const [sending, setSending] = useState(false);
 
   useEffect(() => {
     if (open && !email) {
@@ -98,9 +101,54 @@ export function EmailPanel({ runId }: { runId: string }) {
                 </a>
               </div>
 
+              {/* Real sending, opt-in. Off unless SMTP is configured, and it
+                  says so rather than pretending. */}
+              <div className="flex flex-wrap items-center gap-2 mt-3 pt-3 border-t border-line">
+                <input
+                  value={to}
+                  onChange={(e) => setTo(e.target.value)}
+                  placeholder="merchant@example.com"
+                  className="glass-raised px-3 py-1.5 text-xs flex-1 min-w-[200px]
+                             placeholder:text-faint"
+                />
+                <button
+                  onClick={async () => {
+                    setSending(true);
+                    const r = await fetch(
+                      `/api/run/${runId}/email/send?to=${encodeURIComponent(to)}`,
+                      { method: "POST" }
+                    );
+                    setSendState(await r.json());
+                    setSending(false);
+                  }}
+                  disabled={sending || !to}
+                  className="px-3 py-1.5 rounded-lg glass-raised text-xs
+                             hover:border-gold/40 transition-colors disabled:opacity-50"
+                >
+                  {sending ? "sending…" : "Send via SMTP"}
+                </button>
+              </div>
+
+              {sendState && (
+                <div
+                  className={`mt-2 text-[11px] leading-relaxed ${
+                    sendState.sent
+                      ? "text-mint"
+                      : sendState.configured
+                      ? "text-rose"
+                      : "text-muted"
+                  }`}
+                >
+                  {sendState.sent ? "✓ " : ""}
+                  {sendState.detail}
+                </div>
+              )}
+
               <p className="text-[11px] text-faint mt-3 leading-relaxed">
-                Opens a pre-filled Gmail compose window — nothing is sent
-                automatically, and this app never holds your mail credentials.
+                The Gmail link opens a pre-filled compose window and sends nothing.
+                SMTP sending is opt-in and off by default — this project does not
+                need to hold a mail credential to be demonstrated, which is the
+                same principle as the agent never holding the signing key.
               </p>
             </>
           )}
