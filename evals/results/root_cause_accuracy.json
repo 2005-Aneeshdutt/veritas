@@ -1,0 +1,464 @@
+{
+  "error_decomposition": {
+    "note": "The model reads the ESTIMATED decomposition, not the truth. Splitting the error says whether the bottleneck is the model or the attribution feeding it.",
+    "attribution_pointed_at_the_right_cause": 0.75,
+    "attribution_ci95": [
+      0.6277,
+      0.8422
+    ],
+    "model_faithful_to_what_it_saw": 0.6333,
+    "faithful_ci95": [
+      0.5068,
+      0.7438
+    ],
+    "accuracy_when_attribution_was_right": 0.6667,
+    "n_solvable": 45
+  },
+  "note": "Exact match on root_cause_label against the injected cause. The model emits from the same closed enum the generator injects from, so this is forced-choice classification, not keyword matching.",
+  "n": 60,
+  "accuracy": 0.6,
+  "accuracy_ci95": [
+    0.4737,
+    0.7143
+  ],
+  "confusion_matrix": {
+    "midnight_billing_penalty": {
+      "midnight_billing_penalty": 4,
+      "bank_concentration": 1,
+      "none_of_the_above": 2
+    },
+    "bank_concentration": {
+      "bank_concentration": 16,
+      "none_of_the_above": 1,
+      "midnight_billing_penalty": 4,
+      "no_soft_decline_retry": 2,
+      "amount_band_risk": 1
+    },
+    "no_soft_decline_retry": {
+      "no_soft_decline_retry": 1
+    },
+    "amount_band_risk": {
+      "amount_band_risk": 7,
+      "no_soft_decline_retry": 4,
+      "midnight_billing_penalty": 1,
+      "bank_concentration": 1
+    },
+    "method_mix_mismatch": {
+      "bank_concentration": 1,
+      "none_of_the_above": 2,
+      "method_mix_mismatch": 2,
+      "no_soft_decline_retry": 2,
+      "amount_band_risk": 1
+    },
+    "none_of_the_above": {
+      "method_mix_mismatch": 1,
+      "none_of_the_above": 6
+    }
+  },
+  "healthy_merchants": {
+    "n": 7,
+    "correctly_said_none_of_the_above": 6,
+    "note": "Merchants with nothing injected. A model that never uses none_of_the_above here is overconfident."
+  },
+  "overreach": {
+    "said_none_when_a_cause_was_injected": 5,
+    "rate": 0.0943
+  },
+  "cache_hit_rate": 1.0,
+  "cost_inr": 0.0,
+  "errors": [
+    {
+      "merchant": "sweep_001",
+      "injected": [],
+      "true": "none_of_the_above",
+      "pred": "method_mix_mismatch",
+      "correct": false,
+      "n_txns": 60,
+      "rho": 0.0,
+      "implied_by_estimate": "method_mix_mismatch",
+      "faithful": true,
+      "attribution_was_right": false,
+      "cache_hit": true,
+      "summary": "Sweep Merchant 001's 6.42-point success-rate gap is driven primarily by a heavy reliance on UPI (75% of volume) where the cohort performs better on card rails, "
+    },
+    {
+      "merchant": "sweep_004",
+      "injected": [
+        "method_mix_mismatch"
+      ],
+      "true": "method_mix_mismatch",
+      "pred": "bank_concentration",
+      "correct": false,
+      "n_txns": 150,
+      "rho": 0.0,
+      "implied_by_estimate": "method_mix_mismatch",
+      "faithful": false,
+      "attribution_was_right": true,
+      "cache_hit": true,
+      "summary": "Sweep Merchant 004's 2.05-point success-rate shortfall is driven primarily by concentration in higher-decline issuers like Punjab National Bank (91.20%) and Ban"
+    },
+    {
+      "merchant": "sweep_007",
+      "injected": [
+        "bank_concentration",
+        "no_soft_decline_retry"
+      ],
+      "true": "bank_concentration",
+      "pred": "none_of_the_above",
+      "correct": false,
+      "n_txns": 60,
+      "rho": 0.0,
+      "implied_by_estimate": "no_soft_decline_retry",
+      "faithful": false,
+      "attribution_was_right": false,
+      "cache_hit": true,
+      "summary": "With only 60 transactions this month, every decomposed factor (bank, method, hour, amount_band) falls inside its own error bar, so no single root cause can be r"
+    },
+    {
+      "merchant": "sweep_008",
+      "injected": [
+        "amount_band_risk"
+      ],
+      "true": "amount_band_risk",
+      "pred": "no_soft_decline_retry",
+      "correct": false,
+      "n_txns": 1000,
+      "rho": 0.0,
+      "implied_by_estimate": "amount_band_risk",
+      "faithful": false,
+      "attribution_was_right": true,
+      "cache_hit": true,
+      "summary": "The only clearly measurable and actionable cause of Sweep Merchant 008's 1.55 pt success-rate gap is an unrecovered process gap of 0.66 pts from soft declines t"
+    },
+    {
+      "merchant": "sweep_012",
+      "injected": [
+        "amount_band_risk",
+        "method_mix_mismatch"
+      ],
+      "true": "amount_band_risk",
+      "pred": "midnight_billing_penalty",
+      "correct": false,
+      "n_txns": 400,
+      "rho": 0.8,
+      "implied_by_estimate": "amount_band_risk",
+      "faithful": false,
+      "attribution_was_right": true,
+      "cache_hit": true,
+      "summary": "Sweep Merchant 012's 0.85-point success-rate gap is primarily driven by a portion of mandate debits firing in the night window (-0.80 pts), with secondary drag "
+    },
+    {
+      "merchant": "sweep_014",
+      "injected": [
+        "bank_concentration",
+        "midnight_billing_penalty"
+      ],
+      "true": "bank_concentration",
+      "pred": "midnight_billing_penalty",
+      "correct": false,
+      "n_txns": 150,
+      "rho": 0.8,
+      "implied_by_estimate": "midnight_billing_penalty",
+      "faithful": true,
+      "attribution_was_right": false,
+      "cache_hit": true,
+      "summary": "Sweep Merchant 014 is losing ~3.1 points of success rate because 37.3% of payments fire in the high-decline night window, and another ~3.1 points because nearly"
+    },
+    {
+      "merchant": "sweep_015",
+      "injected": [
+        "method_mix_mismatch"
+      ],
+      "true": "method_mix_mismatch",
+      "pred": "none_of_the_above",
+      "correct": false,
+      "n_txns": 400,
+      "rho": 0.0,
+      "implied_by_estimate": "method_mix_mismatch",
+      "faithful": false,
+      "attribution_was_right": true,
+      "cache_hit": true,
+      "summary": "Sweep Merchant 015 is actually outperforming its cohort (92.25% vs 91.66% achievable), and every negative decomposition factor falls inside its own error bar, s"
+    },
+    {
+      "merchant": "sweep_017",
+      "injected": [
+        "amount_band_risk"
+      ],
+      "true": "amount_band_risk",
+      "pred": "no_soft_decline_retry",
+      "correct": false,
+      "n_txns": 150,
+      "rho": 0.0,
+      "implied_by_estimate": "amount_band_risk",
+      "faithful": false,
+      "attribution_was_right": true,
+      "cache_hit": true,
+      "summary": "The only directly measurable and actionable cause of Sweep Merchant 017's 1.40-point success-rate gap is an unretried process gap of 0.40 points \u2014 all other fac"
+    },
+    {
+      "merchant": "sweep_018",
+      "injected": [
+        "midnight_billing_penalty"
+      ],
+      "true": "midnight_billing_penalty",
+      "pred": "bank_concentration",
+      "correct": false,
+      "n_txns": 150,
+      "rho": 0.0,
+      "implied_by_estimate": "midnight_billing_penalty",
+      "faithful": false,
+      "attribution_was_right": true,
+      "cache_hit": true,
+      "summary": "Sweep Merchant 018 is actually outperforming its cohort by 2.22 points, but the biggest identifiable drag comes from heavy concentration on high-decline issuers"
+    },
+    {
+      "merchant": "sweep_019",
+      "injected": [
+        "method_mix_mismatch"
+      ],
+      "true": "method_mix_mismatch",
+      "pred": "none_of_the_above",
+      "correct": false,
+      "n_txns": 150,
+      "rho": 0.0,
+      "implied_by_estimate": "method_mix_mismatch",
+      "faithful": false,
+      "attribution_was_right": true,
+      "cache_hit": true,
+      "summary": "Sweep Merchant 019's 0.40-point success-rate gap is too small and statistically noisy to pin on any single root cause \u2014 every negative factor (bank, hour, amoun"
+    },
+    {
+      "merchant": "sweep_021",
+      "injected": [
+        "amount_band_risk"
+      ],
+      "true": "amount_band_risk",
+      "pred": "no_soft_decline_retry",
+      "correct": false,
+      "n_txns": 60,
+      "rho": 0.0,
+      "implied_by_estimate": "no_soft_decline_retry",
+      "faithful": true,
+      "attribution_was_right": false,
+      "cache_hit": true,
+      "summary": "Sweep Merchant 021 is already outperforming its cohort (95.00% vs 91.96% achievable), but the -3.04 pt gap versus its own potential is driven most by an unexpla"
+    },
+    {
+      "merchant": "sweep_022",
+      "injected": [
+        "amount_band_risk",
+        "method_mix_mismatch"
+      ],
+      "true": "amount_band_risk",
+      "pred": "bank_concentration",
+      "correct": false,
+      "n_txns": 150,
+      "rho": 0.0,
+      "implied_by_estimate": "amount_band_risk",
+      "faithful": false,
+      "attribution_was_right": true,
+      "cache_hit": true,
+      "summary": "Sweep Merchant 022 is beating its cohort benchmark (89.33% vs 87.35% achievable) but is leaving roughly 1.21 points on the table because over half its volume si"
+    },
+    {
+      "merchant": "sweep_023",
+      "injected": [
+        "bank_concentration",
+        "no_soft_decline_retry"
+      ],
+      "true": "bank_concentration",
+      "pred": "no_soft_decline_retry",
+      "correct": false,
+      "n_txns": 150,
+      "rho": 0.0,
+      "implied_by_estimate": "no_soft_decline_retry",
+      "faithful": true,
+      "attribution_was_right": false,
+      "cache_hit": true,
+      "summary": "Sweep Merchant 023's -1.68 pt success-rate gap is dominated by a +1.60 pt process gap \u2014 the largest measurable factor \u2014 suggesting unretried soft declines are t"
+    },
+    {
+      "merchant": "sweep_026",
+      "injected": [
+        "midnight_billing_penalty"
+      ],
+      "true": "midnight_billing_penalty",
+      "pred": "none_of_the_above",
+      "correct": false,
+      "n_txns": 400,
+      "rho": 0.0,
+      "implied_by_estimate": "midnight_billing_penalty",
+      "faithful": false,
+      "attribution_was_right": true,
+      "cache_hit": true,
+      "summary": "Sweep Merchant 026's -0.04 point gap versus cohort is negligible and within noise \u2014 every decomposed factor sits inside its error bar, and the merchant is alrea"
+    },
+    {
+      "merchant": "sweep_027",
+      "injected": [
+        "bank_concentration",
+        "midnight_billing_penalty"
+      ],
+      "true": "bank_concentration",
+      "pred": "amount_band_risk",
+      "correct": false,
+      "n_txns": 60,
+      "rho": 0.0,
+      "implied_by_estimate": "bank_concentration",
+      "faithful": false,
+      "attribution_was_right": true,
+      "cache_hit": true,
+      "summary": "Sweep Merchant 027's success rate is essentially at par with its cohort (gap of only -0.01 pts), but the medium-amount-band transactions are the single largest "
+    },
+    {
+      "merchant": "sweep_030",
+      "injected": [
+        "amount_band_risk"
+      ],
+      "true": "amount_band_risk",
+      "pred": "no_soft_decline_retry",
+      "correct": false,
+      "n_txns": 60,
+      "rho": 0.0,
+      "implied_by_estimate": "amount_band_risk",
+      "faithful": false,
+      "attribution_was_right": true,
+      "cache_hit": true,
+      "summary": "With 86.7% of payments in the large-amount band and a directly measured process gap of 0.50 pts, the most actionable and confirmed cause of Sweep Merchant 030's"
+    },
+    {
+      "merchant": "sweep_044",
+      "injected": [
+        "method_mix_mismatch"
+      ],
+      "true": "method_mix_mismatch",
+      "pred": "no_soft_decline_retry",
+      "correct": false,
+      "n_txns": 1000,
+      "rho": 0.0,
+      "implied_by_estimate": "method_mix_mismatch",
+      "faithful": false,
+      "attribution_was_right": true,
+      "cache_hit": true,
+      "summary": "With all four Shapley factors inside their error bars or unmeasurable, the only actionable signal is the directly computed process gap of +0.45 pts, pointing to"
+    },
+    {
+      "merchant": "sweep_046",
+      "injected": [
+        "method_mix_mismatch"
+      ],
+      "true": "method_mix_mismatch",
+      "pred": "no_soft_decline_retry",
+      "correct": false,
+      "n_txns": 400,
+      "rho": 0.0,
+      "implied_by_estimate": "method_mix_mismatch",
+      "faithful": false,
+      "attribution_was_right": true,
+      "cache_hit": true,
+      "summary": "The only firmly measurable and actionable gap for Sweep Merchant 046 is the 0.75-point process gap from unretried soft declines \u2014 all other factors are either i"
+    },
+    {
+      "merchant": "sweep_047",
+      "injected": [
+        "bank_concentration",
+        "midnight_billing_penalty"
+      ],
+      "true": "bank_concentration",
+      "pred": "midnight_billing_penalty",
+      "correct": false,
+      "n_txns": 150,
+      "rho": 0.2,
+      "implied_by_estimate": "midnight_billing_penalty",
+      "faithful": true,
+      "attribution_was_right": false,
+      "cache_hit": true,
+      "summary": "Sweep Merchant 047's 0.76-point success-rate gap is driven primarily by 26% of payments falling in the high-decline night window (+0.84 pts) and secondarily by "
+    },
+    {
+      "merchant": "sweep_048",
+      "injected": [
+        "bank_concentration",
+        "midnight_billing_penalty"
+      ],
+      "true": "bank_concentration",
+      "pred": "midnight_billing_penalty",
+      "correct": false,
+      "n_txns": 60,
+      "rho": 0.5,
+      "implied_by_estimate": "midnight_billing_penalty",
+      "faithful": true,
+      "attribution_was_right": false,
+      "cache_hit": true,
+      "summary": "Over half of Sweep Merchant 048's payments happen at night (56.7%) when banks decline more, and this alone costs 4.72 points of success rate \u2014 the single bigges"
+    },
+    {
+      "merchant": "sweep_052",
+      "injected": [
+        "method_mix_mismatch"
+      ],
+      "true": "method_mix_mismatch",
+      "pred": "amount_band_risk",
+      "correct": false,
+      "n_txns": 60,
+      "rho": 0.0,
+      "implied_by_estimate": "method_mix_mismatch",
+      "faithful": false,
+      "attribution_was_right": true,
+      "cache_hit": true,
+      "summary": "The only statistically reliable drag on Sweep Merchant 052's success rate is the amount-band mix, where medium and large ticket payments (average Rs 1916.98) ar"
+    },
+    {
+      "merchant": "sweep_056",
+      "injected": [
+        "bank_concentration",
+        "no_soft_decline_retry"
+      ],
+      "true": "bank_concentration",
+      "pred": "no_soft_decline_retry",
+      "correct": false,
+      "n_txns": 150,
+      "rho": 0.0,
+      "implied_by_estimate": "no_soft_decline_retry",
+      "faithful": true,
+      "attribution_was_right": false,
+      "cache_hit": true,
+      "summary": "The biggest recoverable opportunity for Sweep Merchant 056 is enabling soft-decline retries (2.20-point process gap), followed by reducing concentration on Airt"
+    },
+    {
+      "merchant": "sweep_058",
+      "injected": [
+        "midnight_billing_penalty",
+        "amount_band_risk"
+      ],
+      "true": "midnight_billing_penalty",
+      "pred": "none_of_the_above",
+      "correct": false,
+      "n_txns": 400,
+      "rho": 0.0,
+      "implied_by_estimate": "midnight_billing_penalty",
+      "faithful": false,
+      "attribution_was_right": true,
+      "cache_hit": true,
+      "summary": "Sweep Merchant 058 has a gap of only -0.04 pts versus its cohort benchmark, every decomposed factor is either inside its error bar or flagged not identified, an"
+    },
+    {
+      "merchant": "sweep_059",
+      "injected": [
+        "bank_concentration",
+        "midnight_billing_penalty"
+      ],
+      "true": "bank_concentration",
+      "pred": "midnight_billing_penalty",
+      "correct": false,
+      "n_txns": 60,
+      "rho": 0.0,
+      "implied_by_estimate": "midnight_billing_penalty",
+      "faithful": true,
+      "attribution_was_right": false,
+      "cache_hit": true,
+      "summary": "Sweep Merchant 059's 1.66-point success-rate gap is driven primarily by 31.7% of payments falling in the night window (the largest single factor at +0.79 pts) a"
+    }
+  ]
+}
