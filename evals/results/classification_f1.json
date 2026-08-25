@@ -1,0 +1,103 @@
+{
+  "note": "Held-out CODES, not rows. The deterministic lookup was restricted to the training split, so every code scored here reached the model with nothing memorised. Small per-class support is real -- hence Wilson intervals rather than bare percentages.",
+  "n_codes_total": 110,
+  "n_train": 77,
+  "n_test": 33,
+  "accuracy": 0.8788,
+  "accuracy_ci95": [
+    0.7267,
+    0.9518
+  ],
+  "macro_f1": 0.7786,
+  "per_class": {
+    "soft_decline": {
+      "support": 4,
+      "precision": 0.6667,
+      "recall": 1.0,
+      "recall_ci95": [
+        0.5101,
+        1.0
+      ],
+      "f1": 0.8
+    },
+    "hard_decline": {
+      "support": 17,
+      "precision": 0.8889,
+      "recall": 0.9412,
+      "recall_ci95": [
+        0.7302,
+        0.9895
+      ],
+      "f1": 0.9143
+    },
+    "technical": {
+      "support": 8,
+      "precision": 1.0,
+      "recall": 1.0,
+      "recall_ci95": [
+        0.6756,
+        1.0
+      ],
+      "f1": 1.0
+    },
+    "auth_failure": {
+      "support": 4,
+      "precision": 1.0,
+      "recall": 0.25,
+      "recall_ci95": [
+        0.0456,
+        0.6994
+      ],
+      "f1": 0.4
+    }
+  },
+  "recoverable_accuracy": 0.9394,
+  "recoverable_ci95": [
+    0.8039,
+    0.9832
+  ],
+  "low_confidence_routed_to_review": 3,
+  "cache_hit_rate": 0.0,
+  "errors": [
+    {
+      "code": "incorrect_cardholder_name",
+      "true": "auth_failure",
+      "pred": "hard_decline",
+      "true_recoverable": false,
+      "pred_recoverable": false,
+      "confidence": 0.92,
+      "correct": false,
+      "cache_hit": false
+    },
+    {
+      "code": "invalid_device",
+      "true": "auth_failure",
+      "pred": "hard_decline",
+      "true_recoverable": false,
+      "pred_recoverable": false,
+      "confidence": 0.95,
+      "correct": false,
+      "cache_hit": false
+    },
+    {
+      "code": "payment_risk_check_failed",
+      "true": "hard_decline",
+      "pred": "soft_decline",
+      "true_recoverable": false,
+      "pred_recoverable": true,
+      "confidence": 0.72,
+      "correct": false,
+      "cache_hit": false
+    },
+    {
+      "code": "pin_attempts_exceeded",
+      "true": "auth_failure",
+      "pred": "soft_decline",
+      "true_recoverable": false,
+      "pred_recoverable": true,
+      "confidence": 0.85,
+      "correct": false,
+      "cache_hit": false
+    }
+  ]
+}
