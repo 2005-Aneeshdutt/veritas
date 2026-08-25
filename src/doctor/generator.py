@@ -50,10 +50,16 @@ from .features import (
 )
 from .priors import BUSINESS_DECLINE_MIX
 
-#: How many banks the joint distribution spans. 12 x 4 x 4 x 4 = 768 cells,
-#: small enough to hold the exact joint in memory and compute truth without
-#: any Monte Carlo.
-N_BANKS = 12
+#: How many banks the joint distribution spans. 20 x 4 x 4 x 4 = 1280 cells,
+#: still small enough to hold the exact joint in memory and compute ground
+#: truth with no Monte Carlo.
+#:
+#: This was 12, chosen purely for tractability, and the cutoff turned out to
+#: matter: Bank of India sits 13th by national volume and Fino 18th, so a
+#: whole band of real issuers -- about 11% of UPI volume, and the band where
+#: performance drifts most -- could never appear in a generated merchant. A
+#: merchant book with no tail is not a merchant book.
+N_BANKS = 20
 
 Cell = tuple[str, str, str, str]  # (bank, method, hour_band, amount_band)
 
