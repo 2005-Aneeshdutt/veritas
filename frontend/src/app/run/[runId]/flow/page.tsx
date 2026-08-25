@@ -47,7 +47,9 @@ export default function FlowPage({ params }: { params: { runId: string } }) {
   const [traces, setTraces] = useState<NodeTrace[]>([]);
   const [selected, setSelected] = useState<string>("decompose");
   const [playing, setPlaying] = useState(false);
-  const [speed, setSpeed] = useState(3);
+  // Slow by default: this page gets narrated over, and a replay that
+  // finishes before you have said the node name is useless.
+  const [speed, setSpeed] = useState(1);
   const [step, setStep] = useState<number | null>(null);
   const esRef = useRef<EventSource | null>(null);
   const logRef = useRef<HTMLDivElement>(null);
@@ -119,6 +121,10 @@ export default function FlowPage({ params }: { params: { runId: string } }) {
 
   const sel = byNode[selected] ?? rec.traces.find((t) => t.node === selected) ?? null;
   const doc = NODE_DOCS[selected];
+  const latest = traces.length ? traces[traces.length - 1] : null;
+  const live = latest
+    ? { title: NODE_DOCS[latest.node]?.title ?? latest.node, line: narrate(latest) }
+    : null;
   const done = traces.filter((t) => t.status !== "running").length;
   const llmNodes = rec.traces.filter((t) => t.kind === "llm").length;
 
@@ -145,7 +151,7 @@ export default function FlowPage({ params }: { params: { runId: string } }) {
               onChange={(e) => setSpeed(parseFloat(e.target.value))}
               className="glass-raised px-2 py-1.5 text-xs num"
             >
-              {[1, 2, 3, 6].map((s) => (
+              {[0.5, 1, 2, 4].map((s) => (
                 <option key={s} value={s}>
                   {s}× speed
                 </option>
@@ -186,8 +192,35 @@ export default function FlowPage({ params }: { params: { runId: string } }) {
         </div>
       </Stagger>
 
-      {/* progress */}
+      {/* what is happening right now, in one sentence */}
       <Stagger i={1}>
+        <div
+          className={`glass px-5 py-3.5 flex items-center gap-4 transition-colors ${
+            playing ? "border-gold/40" : ""
+          }`}
+        >
+          <span
+            className={`w-2 h-2 rounded-full shrink-0 ${
+              playing ? "bg-gold animate-breathe" : "bg-faint"
+            }`}
+          />
+          <div className="min-w-0 flex-1 text-sm">
+            {live ? (
+              <>
+                <span className="text-gold font-medium">{live.title}</span>
+                <span className="text-muted"> &mdash; {live.line}</span>
+              </>
+            ) : (
+              <span className="text-muted">
+                Press replay to watch the agent run one node at a time.
+              </span>
+            )}
+          </div>
+        </div>
+      </Stagger>
+
+      {/* progress */}
+      <Stagger i={2}>
         <div className="glass px-4 py-2.5 flex items-center gap-4">
           <div className="eyebrow shrink-0">
             {step !== null ? `step ${step + 1}` : playing ? "streaming" : "complete"} ·{" "}
@@ -380,24 +413,19 @@ export default function FlowPage({ params }: { params: { runId: string } }) {
             </div>
 
             <div className="p-5 space-y-4 overflow-y-auto" style={{ maxHeight: 520 }}>
-              <div className="glass-raised p-3">
-                <div className="eyebrow mb-1.5">why it is built this way</div>
-                <p className="text-xs text-muted leading-relaxed">{doc?.why}</p>
-              </div>
-
-              <div className="glass-raised p-3 border-l-2 border-l-gold/50">
-                <div className="eyebrow mb-1.5">what to check</div>
-                <p className="text-xs text-muted leading-relaxed">{doc?.inspect}</p>
-              </div>
-
-              {!sel && (
+              {!sel ? (
                 <div className="text-xs text-faint font-mono">
                   this node has not run yet in the current playback
                 </div>
-              )}
-
-              {sel && (
+              ) : (
                 <>
+                  <div className="glass-raised p-3 border-l-2 border-l-gold/60">
+                    <div className="eyebrow mb-1.5">what just happened</div>
+                    <p className="text-sm leading-relaxed">{narrate(sel)}</p>
+                  </div>
+
+                  <Facts trace={sel} />
+
                   {sel.branch_taken && (
                     <KV k="branch taken" v={sel.branch_taken} accent />
                   )}
@@ -412,31 +440,25 @@ export default function FlowPage({ params }: { params: { runId: string } }) {
                     </div>
                   )}
 
-                  <Block label="output" data={sel.output_summary} open />
-
                   {sel.kind === "llm" && (
                     <>
                       <div className="flex flex-wrap gap-1.5">
                         <span className="chip-neutral">{sel.model}</span>
                         <span className="chip-neutral">temperature 0</span>
                         {sel.cache_hit && (
-                          <span className="chip bg-mint/12 text-mint border-mint/30">
+                          <span className="chip bg-mint/10 text-mint border-mint/30">
                             served from cache
                           </span>
                         )}
-                        {sel.stub && <span className="chip-warn">stub — no model called</span>}
+                        {sel.stub && (
+                          <span className="chip-warn">stub &mdash; no model called</span>
+                        )}
                         {sel.tokens_in != null && (
                           <span className="chip-neutral">
-                            {sel.tokens_in}→{sel.tokens_out} tokens
-                          </span>
-                        )}
-                        {sel.confidence != null && (
-                          <span className="chip-neutral">
-                            confidence {sel.confidence}
+                            {sel.tokens_in}&rarr;{sel.tokens_out} tokens
                           </span>
                         )}
                       </div>
-
                       {sel.prompt && (
                         <Reveal label="the exact prompt that was sent">
                           {sel.prompt}
@@ -447,26 +469,35 @@ export default function FlowPage({ params }: { params: { runId: string } }) {
                           {sel.raw_response}
                         </Reveal>
                       )}
-                      <p className="text-[11px] text-faint leading-relaxed">
-                        Most submissions hide the prompt. Showing it lets you check
-                        whether the model was led to its answer.
-                      </p>
                     </>
                   )}
+
+                  <Block label="full output" data={sel.output_summary} />
 
                   {sel.intermediates && Object.keys(sel.intermediates).length > 0 && (
                     <Block
                       label={
                         selected === "decompose"
-                          ? "intermediates — all 16 coalition values"
+                          ? "all 16 coalition values"
                           : "intermediates"
                       }
                       data={sel.intermediates}
-                      open={selected === "decompose"}
                     />
                   )}
                 </>
               )}
+
+              <details className="pt-2 border-t border-line">
+                <summary className="eyebrow cursor-pointer hover:text-ink transition-colors">
+                  why this node exists
+                </summary>
+                <div className="space-y-3 mt-3">
+                  <p className="text-xs text-muted leading-relaxed">{doc?.why}</p>
+                  <p className="text-xs text-muted leading-relaxed border-l-2 border-l-gold/40 pl-3">
+                    {doc?.inspect}
+                  </p>
+                </div>
+              </details>
             </div>
           </Card>
         </Stagger>
@@ -516,6 +547,98 @@ export default function FlowPage({ params }: { params: { runId: string } }) {
 }
 
 /* ------------------------------------------------------------- fragments */
+
+/** One plain sentence describing what this node actually did, from its output.
+ *
+ * The inspector used to lead with "here is what this node is for", which is
+ * useful once and useless every time after. What a reader wants while watching
+ * a run is what it just did with THEIR data. */
+function narrate(t: NodeTrace): string {
+  const o: any = t.output_summary ?? {};
+  switch (t.node) {
+    case "ingest":
+      return `Loaded ${fmt(o.transactions)} payments, ${fmt(
+        o.failures
+      )} of which failed. Observed success ${o.observed_success_pct}%, give or take ${
+        o.wilson_halfwidth_pts
+      } points.`;
+    case "classify":
+      return `Sorted ${fmt(
+        (o.from_taxonomy ?? 0) + (o.from_llm ?? 0)
+      )} distinct error codes. ${fmt(
+        o.from_taxonomy
+      )} answered from the hand-labelled taxonomy with no API call; ${fmt(
+        o.from_llm
+      )} needed the model. ${o.low_confidence || "None"} went to human review.`;
+    case "human_review":
+      return o.reason ?? `${fmt(o.queued)} classifications held for a person.`;
+    case "bank_health":
+      return `Joined ${fmt(o.banks_examined)} banks against NPCI ${o.npci_period}. ${
+        (o.worse_than_npci_baseline?.length ?? 0) > 0
+          ? `${o.worse_than_npci_baseline.join(
+              ", "
+            )} performs materially worse here than it does nationally.`
+          : "None performs materially worse here than it does nationally."
+      }`;
+    case "decompose": {
+      const top = Object.entries(o.attributions ?? {}).sort(
+        (a: any, b: any) => b[1] - a[1]
+      )[0];
+      return `Split a ${o.gap_pts}-point gap across 16 coalitions. ${
+        top ? `${top[0]} carries ${top[1]} points` : "Nothing carries much"
+      }; ${o.residual_pts} left unexplained.${
+        o.degenerate_factors?.length
+          ? ` ${o.degenerate_factors.join(", ")} could not be identified at all.`
+          : ""
+      }`;
+    }
+    case "hypothesise":
+      return o.summary || `Named ${o.primary_label} as the primary cause.`;
+    case "plan":
+      return o.headline ?? `Proposed ${fmt(o.actions)} actions.`;
+    case "gate":
+      return `Checked every action against the signed mandate: ${fmt(
+        o.decisions?.allow
+      )} allowed, ${fmt(o.decisions?.step_up)} need the merchant, ${fmt(
+        o.decisions?.deny
+      )} denied outright.`;
+    case "execute":
+      return `Ran ${fmt(o.executed)} actions and recovered Rs ${fmt(
+        o.recovered_inr
+      )}. Wrote ${fmt(o.ledger_entries)} ledger entries; chain ${
+        o.chain_verified ? "verified" : "BROKEN"
+      }.`;
+    case "report":
+      return "Separated what is measured from what is modelled, and refused to mix them.";
+    default:
+      return summarise(t);
+  }
+}
+
+function fmt(n: any): string {
+  return typeof n === "number" ? n.toLocaleString("en-IN") : String(n ?? "0");
+}
+
+/** The handful of numbers from this node worth reading at a glance. */
+function Facts({ trace }: { trace: NodeTrace }) {
+  const o: any = trace.output_summary ?? {};
+  const pick = Object.entries(o).filter(
+    ([, v]) => typeof v === "number" || typeof v === "boolean"
+  ) as [string, any][];
+  if (!pick.length) return null;
+  return (
+    <div className="grid grid-cols-2 gap-2">
+      {pick.slice(0, 6).map(([k, v]) => (
+        <div key={k} className="glass-raised px-3 py-2">
+          <div className="eyebrow truncate">{k.replace(/_/g, " ")}</div>
+          <div className="num text-sm mt-0.5">
+            {typeof v === "boolean" ? (v ? "yes" : "no") : fmt(v)}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
 
 function summarise(t: NodeTrace): string {
   const o = t.output_summary ?? {};
