@@ -1,21 +1,76 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Card, Eyebrow, Info, Loading, SectionHeader, Stagger } from "@/components/ui";
+import { Card, Eyebrow, Info, Loading, Stagger, Ticker } from "@/components/ui";
 import { GLOSSARY } from "@/lib/explain";
 import { RunRecord, inr } from "@/lib/types";
 
-const STOPPING_RULES = [
-  ["Max 3 attempts per payment", "Counting retries the merchant already made, not just ours."],
+const CLASS_META: Record<
+  string,
+  { label: string; why: string; fix: string; tone: string }
+> = {
+  hard_decline: {
+    label: "Permanently unusable",
+    why: "The card or account cannot be charged at all — expired, closed, or blocked.",
+    fix: "Only the customer can fix this. Ask them for a new instrument.",
+    tone: "rose",
+  },
+  auth_failure: {
+    label: "Customer did not authenticate",
+    why: "Wrong OTP or PIN, or the payment was abandoned partway.",
+    fix: "Recoverable by the customer, never by the agent. Send them back to checkout.",
+    tone: "amber",
+  },
+  soft_decline: {
+    label: "Temporary, but already retried",
+    why: "Recoverable in principle, already attempted the maximum number of times.",
+    fix: "Stopped by the mandate's attempt cap, not by a lack of options.",
+    tone: "amber",
+  },
+  technical: {
+    label: "Infrastructure",
+    why: "The bank, gateway or PSP failed rather than the customer.",
+    fix: "Retried where the window allowed; the rest ran out of time.",
+    tone: "iris",
+  },
+  unknown: {
+    label: "Unclassified",
+    why: "No error code was returned, so nothing can be concluded.",
+    fix: "Chase the gateway for the code.",
+    tone: "muted",
+  },
+};
+
+const METHOD_META: Record<string, { label: string; what: string }> = {
+  factor_not_identified: {
+    label: "Factor not identified",
+    what:
+      "This merchant has effectively one value for that factor, so there is nothing to compare against. The number is unmeasurable rather than small, and the agent is forbidden from acting on it.",
+  },
+  weights_clamped: {
+    label: "Reweighting unreliable",
+    what:
+      "This merchant sits far enough from their category profile that the importance weights had to be capped on many transactions. The attribution still runs, but it is not trusted with an automatic action.",
+  },
+  underpowered_batch: {
+    label: "Not enough payments",
+    what:
+      "The uncertainty on the observed success rate is wider than half the gap being split four ways. Ranking causes here would be ranking noise.",
+  },
+};
+
+const STOPPING_RULES: [string, string][] = [
+  ["3 attempts per payment", "Counting retries the merchant already made, not only ours."],
   ["Escalation ladder", "auto-retry → merchant flag → human handoff. Never skipped."],
-  ["Bank-degraded hold", "4 hours before re-evaluating a bank that is failing."],
-  ["Recovery window", "7 days from the original failure, then it stops."],
+  ["4-hour bank hold", "A failing bank is left alone before re-evaluating."],
+  ["7-day recovery window", "Older failures are not touched."],
   ["Per-action ceiling", "From the signed mandate. Above it, denied outright."],
-  ["Mandate expiry", "Absolute. An expired mandate denies everything."],
+  ["Absolute expiry", "An expired mandate denies everything."],
 ];
 
 export default function ExceptionsPage({ params }: { params: { runId: string } }) {
   const [rec, setRec] = useState<RunRecord | null>(null);
+  const [open, setOpen] = useState<string | null>(null);
 
   useEffect(() => {
     fetch(`/api/run/${params.runId}`).then((r) => r.json()).then(setRec);
@@ -25,147 +80,229 @@ export default function ExceptionsPage({ params }: { params: { runId: string } }
 
   const r = rec.report;
   const ex = r.exceptions;
+  const p = r.projected;
+
   const byClass: Record<string, any[]> = {};
   for (const t of ex.unrecoverable_transactions) {
     (byClass[t.error_class ?? "unknown"] ||= []).push(t);
   }
+  const groups = Object.entries(byClass)
+    .map(([k, rows]) => ({
+      key: k,
+      rows,
+      total: rows.reduce((a: number, t: any) => a + t.amount_paise, 0),
+      meta: CLASS_META[k] ?? CLASS_META.unknown,
+    }))
+    .sort((a, b) => b.total - a.total);
+  const grandTotal = groups.reduce((a, g) => a + g.total, 0) || 1;
 
   return (
     <div className="space-y-6">
       <Stagger>
         <div>
-          <Eyebrow>What it could not do, and where not to trust it</Eyebrow>
-          <h1 className="text-2xl font-semibold mt-1">Exceptions</h1>
+          <Eyebrow>The honest denominator</Eyebrow>
+          <h1 className="text-2xl font-semibold mt-1">What it could not do</h1>
           <p className="text-sm text-muted mt-1.5 max-w-3xl leading-relaxed">
-            Two lists. The first is unusual: it is the exception list for the{" "}
-            <em>method itself</em> — places this engine cannot answer the question it
-            was asked, as opposed to payments it failed to fix.
+            Two lists. The second is ordinary. The first is unusual — it is the
+            exception list for the <em>method itself</em>.
           </p>
         </div>
       </Stagger>
 
-      {/* ─────────────────── method failures — the unusual one */}
+      {/* ─────────────── method failures — the unusual list, first */}
       <Stagger i={1}>
         <Card className="border-l-2 border-l-amber">
-          <SectionHeader
-            eyebrow="List 1 · almost nobody ships this"
-            title="Where the method itself is unreliable"
-            sub="Not payments that failed — attributions that should not be trusted, and the agent is forbidden from acting on them."
-          />
+          <div className="flex items-start justify-between gap-6 flex-wrap">
+            <div>
+              <Eyebrow>List one · almost nobody ships this</Eyebrow>
+              <h2 className="text-lg font-semibold mt-1">
+                Where this engine should not be trusted
+              </h2>
+              <p className="text-sm text-muted mt-1.5 max-w-2xl">
+                Not payments that failed. Attributions the method cannot stand
+                behind — and which the agent is therefore forbidden from acting on.
+              </p>
+            </div>
+            <div className="text-right">
+              <div
+                className={`text-3xl font-display font-bold ${
+                  ex.method_failures.length ? "text-amber" : "text-mint"
+                }`}
+              >
+                {ex.method_failures.length}
+              </div>
+              <div className="eyebrow">flagged</div>
+            </div>
+          </div>
+
           {ex.method_failures.length === 0 ? (
-            <div className="glass-raised p-4 text-sm text-mint">
-              ✓ Nothing flagged for this merchant — every factor identified, importance
-              weights within bounds, batch adequately powered.
+            <div className="glass-raised p-4 mt-4 text-sm text-mint">
+              ✓ Nothing flagged. Every factor was identifiable, the importance
+              weights stayed in bounds, and the batch was large enough to resolve
+              the gap being claimed.
             </div>
           ) : (
-            <div className="space-y-2">
-              {ex.method_failures.map((f: any, i: number) => (
-                <div key={i} className="glass-raised p-4">
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <span className="chip bg-amber/10 text-amber border-amber/30">
-                      {f.kind.replace(/_/g, " ")}
-                    </span>
-                    <span className="text-xs text-muted">factor: {f.factor}</span>
-                    <Info
-                      text={
-                        f.kind === "factor_not_identified"
-                          ? GLOSSARY.not_identified
-                          : f.kind === "weights_clamped"
-                          ? GLOSSARY.clamp_rate
-                          : "The batch is too small for the gap being claimed to be resolvable."
-                      }
-                    />
+            <div className="mt-4 grid md:grid-cols-2 gap-3">
+              {ex.method_failures.map((f: any, i: number) => {
+                const m = METHOD_META[f.kind] ?? {
+                  label: f.kind,
+                  what: f.detail,
+                };
+                return (
+                  <div key={i} className="glass-raised p-4">
+                    <div className="flex items-center gap-2">
+                      <span className="text-amber">▲</span>
+                      <span className="text-sm font-medium">{m.label}</span>
+                      {f.factor !== "all" && (
+                        <span className="chip-neutral ml-auto">{f.factor}</span>
+                      )}
+                    </div>
+                    <p className="text-xs text-muted mt-2 leading-relaxed">{m.what}</p>
+                    <p className="text-[11px] text-faint mt-2 font-mono leading-relaxed">
+                      {f.detail}
+                    </p>
                   </div>
-                  <p className="text-xs text-muted mt-2 leading-relaxed">{f.detail}</p>
-                </div>
-              ))}
+                );
+              })}
             </div>
           )}
         </Card>
       </Stagger>
 
-      {/* ─────────────────── unrecoverable payments */}
+      {/* ─────────────── unrecoverable money, grouped by why */}
       <Stagger i={2}>
         <Card>
-          <SectionHeader
-            eyebrow="List 2 · the honest denominator"
-            title={`${r.projected.unrecoverable_count} payments no retry can recover`}
-            sub={`Worth ${inr(
-              r.projected.unrecoverable_paise
-            )}. Listed individually rather than quietly dropped from the recovery rate — which is how recovery percentages get flattering.`}
-          />
-
-          <div className="grid sm:grid-cols-2 gap-3 mb-4">
-            {Object.entries(byClass).map(([cls, rows]) => (
-              <div key={cls} className="glass-raised p-3">
-                <div className="flex items-center justify-between">
-                  <span className="text-sm font-medium">{cls.replace("_", " ")}</span>
-                  <span className="num text-sm">{rows.length}</span>
-                </div>
-                <div className="num text-xs text-amber mt-1">
-                  {inr(
-                    rows.reduce((a: number, t: any) => a + t.amount_paise, 0),
-                    { compact: true }
-                  )}
-                </div>
-                <p className="text-[11px] text-muted mt-1.5 leading-snug">
-                  {rows[0]?.why}
-                </p>
+          <div className="flex items-start justify-between gap-6 flex-wrap">
+            <div>
+              <Eyebrow>List two · the honest denominator</Eyebrow>
+              <h2 className="text-lg font-semibold mt-1">
+                Money no retry can recover
+              </h2>
+              <p className="text-sm text-muted mt-1.5 max-w-2xl">
+                Listed rather than quietly dropped from the recovery rate — which is
+                how recovery percentages get flattering.
+              </p>
+            </div>
+            <div className="text-right">
+              <div className="text-3xl font-display font-bold text-rose">
+                ₹<Ticker value={p.unrecoverable_paise / 100} decimals={0} />
               </div>
+              <div className="eyebrow">{p.unrecoverable_count} payments</div>
+            </div>
+          </div>
+
+          {/* proportional bar */}
+          <div className="flex h-3 w-full rounded-full overflow-hidden mt-5 border border-line">
+            {groups.map((g) => (
+              <div
+                key={g.key}
+                title={`${g.meta.label}: ${inr(g.total)}`}
+                className={
+                  g.meta.tone === "rose"
+                    ? "bg-rose/70"
+                    : g.meta.tone === "amber"
+                    ? "bg-amber/70"
+                    : g.meta.tone === "iris"
+                    ? "bg-iris/70"
+                    : "bg-faint/70"
+                }
+                style={{ width: `${(g.total / grandTotal) * 100}%` }}
+              />
             ))}
           </div>
 
-          <div className="overflow-x-auto max-h-96 overflow-y-auto">
-            <table className="w-full text-xs num">
-              <thead className="sticky top-0 bg-surface">
-                <tr className="eyebrow border-b border-line">
-                  <th className="text-left py-2 font-normal">payment</th>
-                  <th className="text-right py-2 font-normal">amount</th>
-                  <th className="text-left py-2 pl-4 font-normal">error code</th>
-                  <th className="text-left py-2 font-normal">class</th>
-                </tr>
-              </thead>
-              <tbody>
-                {ex.unrecoverable_transactions.map((t: any) => (
-                  <tr key={t.txn_id} className="border-b border-line/40">
-                    <td className="py-1.5 text-muted">{t.txn_id}</td>
-                    <td className="text-right text-amber">{inr(t.amount_paise)}</td>
-                    <td className="pl-4">{t.error_code}</td>
-                    <td>
+          <div className="mt-4 space-y-2">
+            {groups.map((g) => {
+              const isOpen = open === g.key;
+              return (
+                <div key={g.key} className="glass-raised overflow-hidden">
+                  <button
+                    onClick={() => setOpen(isOpen ? null : g.key)}
+                    className="w-full p-4 text-left hover:bg-white/[0.02] transition-colors"
+                  >
+                    <div className="flex items-center gap-4 flex-wrap">
                       <span
-                        className={
-                          t.error_class === "hard_decline" ? "text-rose" : "text-amber"
-                        }
-                      >
-                        {t.error_class}
+                        className={`w-2 h-8 rounded-full shrink-0 ${
+                          g.meta.tone === "rose"
+                            ? "bg-rose"
+                            : g.meta.tone === "amber"
+                            ? "bg-amber"
+                            : g.meta.tone === "iris"
+                            ? "bg-iris"
+                            : "bg-faint"
+                        }`}
+                      />
+                      <div className="min-w-0 flex-1">
+                        <div className="text-sm font-medium">{g.meta.label}</div>
+                        <div className="text-xs text-muted mt-0.5">{g.meta.why}</div>
+                      </div>
+                      <div className="text-right shrink-0">
+                        <div className="num text-sm text-amber">
+                          {inr(g.total, { compact: true })}
+                        </div>
+                        <div className="eyebrow">{g.rows.length} payments</div>
+                      </div>
+                      <span className="text-gold w-3 shrink-0">
+                        {isOpen ? "−" : "+"}
                       </span>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+                    </div>
+                    <div className="text-[11px] text-faint mt-2 pl-6">
+                      {g.meta.fix}
+                    </div>
+                  </button>
+
+                  {isOpen && (
+                    <div className="border-t border-line max-h-72 overflow-y-auto animate-rise">
+                      <table className="w-full text-[11px] num">
+                        <thead className="sticky top-0 bg-surface">
+                          <tr className="eyebrow border-b border-line">
+                            <th className="text-left py-2 px-4 font-normal">payment</th>
+                            <th className="text-right py-2 font-normal">amount</th>
+                            <th className="text-left py-2 px-4 font-normal">code</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {g.rows.map((t: any) => (
+                            <tr key={t.txn_id} className="border-b border-line/40">
+                              <td className="py-1.5 px-4 text-muted">{t.txn_id}</td>
+                              <td className="text-right text-amber">
+                                {inr(t.amount_paise)}
+                              </td>
+                              <td className="px-4">{t.error_code}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
           </div>
         </Card>
       </Stagger>
 
-      {/* ─────────────────── human review */}
+      {/* ─────────────── human review */}
       {r.needs_review?.length > 0 && (
         <Stagger i={3}>
           <Card>
-            <SectionHeader
-              eyebrow="Routed to a person"
-              title="Low-confidence classifications"
-              sub="The classifier scored these below 0.85 and sent them to a human instead of acting. That is a real branch in the graph, not a log line."
-            />
-            <div className="space-y-1.5">
+            <Eyebrow>Routed to a person</Eyebrow>
+            <h2 className="text-lg font-semibold mt-1 mb-1">
+              {r.needs_review.length} low-confidence classifications
+            </h2>
+            <p className="text-sm text-muted mb-4 max-w-2xl">
+              Scored below 0.85 and sent to a human rather than acted on. A real
+              branch in the graph, not a log line.
+            </p>
+            <div className="grid sm:grid-cols-2 gap-2">
               {r.needs_review.map((c: any) => (
                 <div
                   key={c.code}
                   className="glass-raised px-3 py-2 flex items-center gap-3 text-xs num"
                 >
-                  <span className="text-ink">{c.code}</span>
+                  <span className="text-ink truncate">{c.code}</span>
                   <span className="text-muted">{c.category}</span>
-                  <span className="ml-auto text-amber">confidence {c.confidence}</span>
+                  <span className="ml-auto text-amber shrink-0">{c.confidence}</span>
                 </div>
               ))}
             </div>
@@ -173,23 +310,24 @@ export default function ExceptionsPage({ params }: { params: { runId: string } }
         </Stagger>
       )}
 
-      {/* ─────────────────── stopping rules */}
+      {/* ─────────────── stopping rules */}
       <Stagger i={4}>
         <Card>
-          <SectionHeader
-            eyebrow="Bounded by construction"
-            title="Stopping rules in force"
-            sub="All six live in the policy kernel and are enforced deterministically. No model is consulted about what the agent is allowed to do."
-          />
-          <div className="grid sm:grid-cols-2 gap-2.5">
+          <Eyebrow>Bounded by construction</Eyebrow>
+          <h2 className="text-lg font-semibold mt-1 mb-1">Why it stopped</h2>
+          <p className="text-sm text-muted mb-4 max-w-2xl">
+            Six rules in the policy kernel, enforced deterministically. No model is
+            ever consulted about what the agent is allowed to do.
+          </p>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-2.5">
             {STOPPING_RULES.map(([rule, detail]) => (
-              <div key={rule} className="glass-raised p-3 flex gap-3">
-                <span className="text-mint text-sm shrink-0">✓</span>
-                <div>
-                  <div className="text-sm font-medium">{rule}</div>
-                  <div className="text-[11px] text-muted mt-0.5 leading-snug">
-                    {detail}
-                  </div>
+              <div key={rule} className="glass-raised p-3">
+                <div className="flex items-center gap-2">
+                  <span className="text-mint text-xs">✓</span>
+                  <span className="text-sm font-medium">{rule}</span>
+                </div>
+                <div className="text-[11px] text-muted mt-1 leading-snug pl-5">
+                  {detail}
                 </div>
               </div>
             ))}
