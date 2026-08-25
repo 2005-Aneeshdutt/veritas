@@ -36,6 +36,7 @@ from fastapi.responses import PlainTextResponse
 
 from doctor.apply import apply_group
 from doctor.baseline import Baseline
+from doctor.drift import build_drift_report
 from doctor.outreach import as_eml, compose
 from doctor.portfolio import build_portfolio, ledger_csv, portfolio_csv
 from doctor.generator import GeneratedMerchant
@@ -180,6 +181,16 @@ def run_email_file(run_id: str, to: str = "") -> PlainTextResponse:
         headers={"Content-Disposition": "attachment; filename=%s.eml" % run_id},
         media_type="message/rfc822",
     )
+
+
+@app.get("/api/drift")
+def drift() -> dict:
+    """Which issuers are moving, and who on the book is exposed.
+
+    The proactive half of the product. Everything else waits for a merchant to
+    have a gap; this watches NPCI's published series and says so first.
+    """
+    return json.loads(build_drift_report().model_dump_json())
 
 
 @app.get("/api/evals")
