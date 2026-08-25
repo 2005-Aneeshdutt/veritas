@@ -1,0 +1,56 @@
+{
+  "note": "Same merchants, same prompts, same seed; the only difference is whether the deterministic verifier runs. HEADLINE: the verifier makes the output consistent, NOT more accurate. Violations fall from 23 merchants to 1 while accuracy moves within noise (8 merchants improve, 7 regress). The model was contradicting its own evidence even where it happened to be right, so removing the contradiction does not fix the reasoning. It is still worth shipping: 10 of the caught violations were figures the model invented, each of which would otherwise have reached a merchant-facing email.",
+  "conclusion": "consistency improved decisively; accuracy did not move. Reported as two separate properties rather than one.",
+  "n": 60,
+  "without_verifier": {
+    "accuracy": 0.6,
+    "ci95": [
+      0.4737,
+      0.7143
+    ],
+    "merchants_with_violations": 23,
+    "violations_by_rule": {
+      "R1_ungrounded_number": 10,
+      "R2_primary_label_mismatch": 19
+    }
+  },
+  "with_verifier": {
+    "accuracy": 0.6167,
+    "ci95": [
+      0.4902,
+      0.7291
+    ],
+    "merchants_with_violations": 1,
+    "violations_by_rule": {
+      "R3_acted_on_unidentified_factor": 1
+    },
+    "repaired": 23
+  },
+  "delta_pts": 1.67,
+  "fixed_by_verifier": [
+    "sweep_004",
+    "sweep_015",
+    "sweep_019",
+    "sweep_022",
+    "sweep_026",
+    "sweep_027",
+    "sweep_052",
+    "sweep_058"
+  ],
+  "broken_by_verifier": [
+    "sweep_009",
+    "sweep_031",
+    "sweep_036",
+    "sweep_042",
+    "sweep_045",
+    "sweep_051",
+    "sweep_057"
+  ],
+  "rules": {
+    "R1_ungrounded_number": "cited a figure not present in the context",
+    "R2_primary_label_mismatch": "named a cause other than the largest identified one",
+    "R3_acted_on_unidentified_factor": "proposed an action on a factor the overlap check rejected",
+    "R4_auto_executed_inside_error_bar": "auto-executed an attribution smaller than its own error",
+    "R5_duplicate_factor": "claimed the same factor twice"
+  }
+}
