@@ -1,0 +1,130 @@
+@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;450;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply bg-void text-ink font-body antialiased;
+  /* Two soft light sources rather than a flat fill, so large dark areas have
+     somewhere for the eye to rest. */
+  background-image:
+    radial-gradient(900px 500px at 12% -8%, rgba(229, 185, 78, 0.07), transparent 60%),
+    radial-gradient(800px 480px at 92% 4%, rgba(96, 165, 250, 0.055), transparent 62%),
+    radial-gradient(1000px 700px at 50% 110%, rgba(167, 139, 250, 0.045), transparent 60%);
+  background-attachment: fixed;
+}
+
+h1, h2, h3, h4 {
+  @apply font-display tracking-[-0.02em];
+}
+
+/* ---------------------------------------------------------------- surfaces */
+
+.glass {
+  @apply bg-glass border border-line/80 rounded-xl backdrop-blur-xl shadow-lift;
+}
+
+.glass-raised {
+  @apply bg-raised/70 border border-line rounded-xl backdrop-blur-xl;
+}
+
+.hairline {
+  @apply border-b border-line/70;
+}
+
+/* The MEASURED / PROJECTED wall. These two classes are the thesis rendered,
+   and nothing else in the app may style a headline metric. */
+.panel-measured {
+  @apply rounded-xl border border-mint/25 bg-mint/[0.045];
+  box-shadow: inset 0 1px 0 0 rgba(52, 211, 153, 0.12);
+}
+.panel-projected {
+  @apply rounded-xl border border-amber/25 bg-hatch;
+  box-shadow: inset 0 1px 0 0 rgba(251, 191, 36, 0.12);
+}
+
+/* "we don't know what this is", without needing a caption */
+.hatched {
+  @apply bg-hatch;
+}
+
+/* ------------------------------------------------------------------ chips */
+
+/* Declared in @layer components so the variants can @apply .chip itself --
+   Tailwind only resolves a custom class inside @apply when it lives in a
+   layer it controls. */
+@layer components {
+  .chip {
+    @apply inline-flex items-center gap-1 font-mono text-[10px] uppercase
+           tracking-[0.09em] px-1.5 py-0.5 rounded border whitespace-nowrap;
+  }
+  .chip-measured { @apply chip bg-mint/10 text-mint border-mint/30; }
+  .chip-projected { @apply chip bg-amber/10 text-amber border-amber/30; }
+  .chip-llm { @apply chip bg-iris/10 text-iris border-iris/30; }
+  .chip-det { @apply chip bg-sky/10 text-sky border-sky/30; }
+  .chip-warn { @apply chip bg-rose/10 text-rose border-rose/30; }
+  .chip-neutral { @apply chip bg-white/[0.04] text-muted border-line; }
+}
+
+/* ------------------------------------------------------------------ atoms */
+
+.eyebrow {
+  @apply font-mono text-[10px] uppercase tracking-[0.16em] text-faint;
+}
+
+.num {
+  @apply font-mono tabular-nums;
+}
+
+.link-quiet {
+  @apply text-muted hover:text-ink transition-colors;
+}
+
+/* A focus ring that is visible on dark glass without being ugly. */
+:where(a, button, input, select, [tabindex]):focus-visible {
+  @apply outline-none ring-2 ring-gold/60 ring-offset-2 ring-offset-void rounded;
+}
+
+/* Shimmer used while a value is still loading. */
+.shimmer {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.04) 25%,
+    rgba(255, 255, 255, 0.10) 37%,
+    rgba(255, 255, 255, 0.04) 63%
+  );
+  background-size: 200% 100%;
+  @apply animate-sweep rounded;
+}
+
+/* --------------------------------------------------------------- scrollbar */
+
+::-webkit-scrollbar { width: 9px; height: 9px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: #1B2333;
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+::-webkit-scrollbar-thumb:hover { background: #2A3548; background-clip: padding-box; }
+
+/* ------------------------------------------------------- reduced motion */
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
