@@ -157,6 +157,70 @@ def compose(rec: dict) -> Email:
     )
 
 
+class SendResult(BaseModel):
+    sent: bool
+    detail: str
+    configured: bool
+
+
+def smtp_configured() -> bool:
+    import os
+
+    return bool(
+        os.environ.get("SMTP_HOST")
+        and os.environ.get("SMTP_USER")
+        and os.environ.get("SMTP_PASSWORD")
+    )
+
+
+def send(email: Email, to_addr: str) -> SendResult:
+    """Actually send, if SMTP credentials are configured.
+
+    Opt-in and off by default. Nothing about this project needs to hold a mail
+    credential to be demonstrated -- the .eml download and the pre-filled Gmail
+    compose window do the same job without one -- so an unconfigured install
+    says so plainly rather than pretending to have sent.
+
+    App-password SMTP rather than an OAuth flow on purpose: an auth redirect is
+    one more thing that can fail in front of an audience, for no additional
+    capability.
+    """
+    import os
+    import smtplib
+    from email.message import EmailMessage
+
+    if not smtp_configured():
+        return SendResult(
+            sent=False,
+            configured=False,
+            detail="SMTP is not configured. Set SMTP_HOST, SMTP_PORT, SMTP_USER "
+            "and SMTP_PASSWORD to enable sending; until then use the .eml "
+            "download or the Gmail compose link.",
+        )
+    if not to_addr or "@" not in to_addr:
+        return SendResult(sent=False, configured=True, detail="No valid recipient.")
+
+    msg = EmailMessage()
+    msg["Subject"] = email.subject
+    msg["From"] = os.environ["SMTP_USER"]
+    msg["To"] = to_addr
+    msg.set_content(email.body)
+
+    host = os.environ["SMTP_HOST"]
+    port = int(os.environ.get("SMTP_PORT", "587"))
+    try:
+        with smtplib.SMTP(host, port, timeout=20) as srv:
+            srv.starttls()
+            srv.login(os.environ["SMTP_USER"], os.environ["SMTP_PASSWORD"])
+            srv.send_message(msg)
+    except Exception as e:  # surface the real reason, do not swallow it
+        return SendResult(
+            sent=False, configured=True,
+            detail="%s: %s" % (type(e).__name__, str(e)[:200]),
+        )
+    return SendResult(sent=True, configured=True, detail="Sent to %s" % to_addr)
+
+
 def as_eml(email: Email, to_addr: str = "") -> str:
     """RFC-822 so it opens in any mail client. Nothing is sent from here.
 
