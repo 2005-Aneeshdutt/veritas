@@ -1,0 +1,150 @@
+{
+  "note": "Hostile inputs. The question is not whether error rises -- it must -- but whether the engine SAYS SO. A case where MAE climbs and flag_rate stays at 0 is a silent failure and the worst outcome short of a crash.",
+  "seed": 20260824,
+  "n_per_case": 12,
+  "cases": {
+    "entangled_factors": {
+      "n_merchants": 12,
+      "crashes": 0,
+      "mae": 0.5081,
+      "mean_clamp_rate": 0.3133,
+      "flagged_as_unreliable": 11,
+      "flag_rate": 0.9167,
+      "degenerate_factor_cases": 0,
+      "underpowered_cases": 10,
+      "sample": [
+        {
+          "clamp_rate": 0.355,
+          "degenerate": [],
+          "underpowered": false,
+          "residual_pts": -1.238,
+          "wilson_halfwidth_pts": 3.96
+        }
+      ],
+      "mae_vs_control": 1.725
+    },
+    "heavy_tailed_amounts": {
+      "n_merchants": 12,
+      "crashes": 0,
+      "mae": 0.2999,
+      "mean_clamp_rate": 0.1127,
+      "flagged_as_unreliable": 12,
+      "flag_rate": 1.0,
+      "degenerate_factor_cases": 0,
+      "underpowered_cases": 12,
+      "sample": [
+        {
+          "clamp_rate": 0.14,
+          "degenerate": [],
+          "underpowered": true,
+          "residual_pts": -0.539,
+          "wilson_halfwidth_pts": 3.68
+        }
+      ],
+      "mae_vs_control": 1.018
+    },
+    "degenerate_factors": {
+      "n_merchants": 12,
+      "crashes": 0,
+      "mae": 1.4413,
+      "mean_clamp_rate": 0.0,
+      "flagged_as_unreliable": 12,
+      "flag_rate": 1.0,
+      "degenerate_factor_cases": 12,
+      "underpowered_cases": 12,
+      "sample": [
+        {
+          "clamp_rate": 0.0,
+          "degenerate": [
+            "bank"
+          ],
+          "underpowered": true,
+          "residual_pts": 5.218,
+          "wilson_halfwidth_pts": 3.68
+        }
+      ],
+      "mae_vs_control": 4.894
+    },
+    "label_noise": {
+      "n_merchants": 12,
+      "crashes": 0,
+      "mae": 0.2945,
+      "mean_clamp_rate": 0.1127,
+      "flagged_as_unreliable": 12,
+      "flag_rate": 1.0,
+      "degenerate_factor_cases": 0,
+      "underpowered_cases": 12,
+      "sample": [
+        {
+          "clamp_rate": 0.14,
+          "degenerate": [],
+          "underpowered": true,
+          "residual_pts": -0.538,
+          "wilson_halfwidth_pts": 3.68
+        }
+      ],
+      "mae_vs_control": 1.0
+    },
+    "missing_fields": {
+      "n_merchants": 12,
+      "crashes": 0,
+      "mae": 0.2945,
+      "mean_clamp_rate": 0.1127,
+      "flagged_as_unreliable": 12,
+      "flag_rate": 1.0,
+      "degenerate_factor_cases": 0,
+      "underpowered_cases": 12,
+      "sample": [
+        {
+          "clamp_rate": 0.14,
+          "degenerate": [],
+          "underpowered": true,
+          "residual_pts": -0.538,
+          "wilson_halfwidth_pts": 3.68
+        }
+      ],
+      "mae_vs_control": 1.0
+    },
+    "tiny_batch": {
+      "n_merchants": 12,
+      "crashes": 0,
+      "mae": 1.1938,
+      "mean_clamp_rate": 0.1367,
+      "flagged_as_unreliable": 12,
+      "flag_rate": 1.0,
+      "degenerate_factor_cases": 0,
+      "underpowered_cases": 12,
+      "sample": [
+        {
+          "clamp_rate": 0.08,
+          "degenerate": [],
+          "underpowered": true,
+          "residual_pts": -0.326,
+          "wilson_halfwidth_pts": 15.14
+        }
+      ],
+      "mae_vs_control": 4.054
+    },
+    "control": {
+      "n_merchants": 12,
+      "crashes": 0,
+      "mae": 0.2945,
+      "mean_clamp_rate": 0.1127,
+      "flagged_as_unreliable": 12,
+      "flag_rate": 1.0,
+      "degenerate_factor_cases": 0,
+      "underpowered_cases": 12,
+      "sample": [
+        {
+          "clamp_rate": 0.14,
+          "degenerate": [],
+          "underpowered": true,
+          "residual_pts": -0.538,
+          "wilson_halfwidth_pts": 3.68
+        }
+      ],
+      "mae_vs_control": 1.0
+    }
+  },
+  "silent_failures": []
+}
