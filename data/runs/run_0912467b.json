@@ -1,0 +1,2563 @@
+{
+  "run_id": "run_0912467b",
+  "merchant_id": "fuelstop",
+  "merchant_name": "FuelStop Network",
+  "mcc": "5541",
+  "seed": 20260824,
+  "started_at": 1787667231.7842164,
+  "duration_ms": 1223,
+  "commit": "d14fd8f",
+  "models": {
+    "fast": "claude-haiku-4.5",
+    "reasoning": "claude-sonnet-4.6",
+    "temperature": 0
+  },
+  "cache_hit_rate": 1.0,
+  "llm_calls": 1,
+  "llm_cost_inr": 0.0,
+  "used_stubs": false,
+  "traces": [
+    {
+      "run_id": "run_0912467b",
+      "seq": 0,
+      "node": "ingest",
+      "kind": "deterministic",
+      "status": "ok",
+      "started_at": 1787667231.7876348,
+      "duration_ms": 20,
+      "input_summary": {
+        "merchant": "fuelstop",
+        "mcc": "5541"
+      },
+      "output_summary": {
+        "transactions": 3400,
+        "failures": 306,
+        "observed_success_pct": 91.0,
+        "wilson_halfwidth_pts": 0.963
+      },
+      "branch_taken": null,
+      "model": null,
+      "prompt": null,
+      "raw_response": null,
+      "tokens_in": null,
+      "tokens_out": null,
+      "cache_hit": null,
+      "stub": null,
+      "confidence": null,
+      "reason_codes": [],
+      "intermediates": {
+        "cohort_s_star_pct": 91.396
+      }
+    },
+    {
+      "run_id": "run_0912467b",
+      "seq": 1,
+      "node": "classify",
+      "kind": "llm",
+      "status": "ok",
+      "started_at": 1787667231.809249,
+      "duration_ms": 1,
+      "input_summary": {
+        "distinct_codes": 66,
+        "failures": 306
+      },
+      "output_summary": {
+        "from_taxonomy": 66,
+        "from_llm": 0,
+        "low_confidence": 0,
+        "classes": {
+          "hard_decline": 56,
+          "auth_failure": 58,
+          "technical": 10,
+          "soft_decline": 182
+        }
+      },
+      "branch_taken": "bank_health",
+      "model": "claude-haiku-4.5",
+      "prompt": null,
+      "raw_response": null,
+      "tokens_in": null,
+      "tokens_out": null,
+      "cache_hit": null,
+      "stub": null,
+      "confidence": 1.0,
+      "reason_codes": [],
+      "intermediates": {}
+    },
+    {
+      "run_id": "run_0912467b",
+      "seq": 2,
+      "node": "human_review",
+      "kind": "deterministic",
+      "status": "skipped",
+      "started_at": 1787667231.8121798,
+      "duration_ms": 0,
+      "input_summary": {},
+      "output_summary": {
+        "reason": "every classification at or above 0.85 confidence"
+      },
+      "branch_taken": null,
+      "model": null,
+      "prompt": null,
+      "raw_response": null,
+      "tokens_in": null,
+      "tokens_out": null,
+      "cache_hit": null,
+      "stub": null,
+      "confidence": null,
+      "reason_codes": [],
+      "intermediates": {}
+    },
+    {
+      "run_id": "run_0912467b",
+      "seq": 3,
+      "node": "bank_health",
+      "kind": "deterministic",
+      "status": "ok",
+      "started_at": 1787667231.8121798,
+      "duration_ms": 13,
+      "input_summary": {},
+      "output_summary": {
+        "banks_examined": 10,
+        "worse_than_npci_baseline": [
+          "Union Bank of India",
+          "Canara Bank",
+          "Kotak Mahindra Bank",
+          "ICICI Bank Ltd."
+        ],
+        "npci_period": "2025-08"
+      },
+      "branch_taken": null,
+      "model": null,
+      "prompt": null,
+      "raw_response": null,
+      "tokens_in": null,
+      "tokens_out": null,
+      "cache_hit": null,
+      "stub": null,
+      "confidence": null,
+      "reason_codes": [
+        "NPCI_JOIN_OK"
+      ],
+      "intermediates": {
+        "bank_table": [
+          {
+            "bank": "State Bank of India",
+            "share_pct": 33.32,
+            "merchant_fail_pct": 7.5,
+            "npci_bd_pct": 5.92,
+            "npci_td_pct": 0.42,
+            "npci_approved_pct": 93.66,
+            "in_npci_top50": true
+          },
+          {
+            "bank": "HDFC Bank Ltd.",
+            "share_pct": 9.59,
+            "merchant_fail_pct": 6.75,
+            "npci_bd_pct": 4.63,
+            "npci_td_pct": 0.01,
+            "npci_approved_pct": 95.37,
+            "in_npci_top50": true
+          },
+          {
+            "bank": "Bank of Baroda",
+            "share_pct": 8.5,
+            "merchant_fail_pct": 9.34,
+            "npci_bd_pct": 8.5,
+            "npci_td_pct": 0.05,
+            "npci_approved_pct": 91.44,
+            "in_npci_top50": true
+          },
+          {
+            "bank": "Punjab National Bank",
+            "share_pct": 7.62,
+            "merchant_fail_pct": 5.02,
+            "npci_bd_pct": 8.61,
+            "npci_td_pct": 0.19,
+            "npci_approved_pct": 91.2,
+            "in_npci_top50": true
+          },
+          {
+            "bank": "Union Bank of India",
+            "share_pct": 6.68,
+            "merchant_fail_pct": 11.89,
+            "npci_bd_pct": 7.02,
+            "npci_td_pct": 0.75,
+            "npci_approved_pct": 92.23,
+            "in_npci_top50": true
+          },
+          {
+            "bank": "Canara Bank",
+            "share_pct": 5.94,
+            "merchant_fail_pct": 13.86,
+            "npci_bd_pct": 6.92,
+            "npci_td_pct": 0.36,
+            "npci_approved_pct": 92.73,
+            "in_npci_top50": true
+          },
+          {
+            "bank": "Kotak Mahindra Bank",
+            "share_pct": 5.68,
+            "merchant_fail_pct": 12.95,
+            "npci_bd_pct": 7.47,
+            "npci_td_pct": 0.13,
+            "npci_approved_pct": 92.39,
+            "in_npci_top50": true
+          },
+          {
+            "bank": "Axis Bank Ltd.",
+            "share_pct": 5.5,
+            "merchant_fail_pct": 4.28,
+            "npci_bd_pct": 5.03,
+            "npci_td_pct": 0.02,
+            "npci_approved_pct": 94.96,
+            "in_npci_top50": true
+          },
+          {
+            "bank": "ICICI Bank Ltd.",
+            "share_pct": 4.71,
+            "merchant_fail_pct": 6.88,
+            "npci_bd_pct": 3.82,
+            "npci_td_pct": 0.52,
+            "npci_approved_pct": 95.66,
+            "in_npci_top50": true
+          },
+          {
+            "bank": "India Post Payments Bank Limited",
+            "share_pct": 4.21,
+            "merchant_fail_pct": 14.69,
+            "npci_bd_pct": 11.15,
+            "npci_td_pct": 0.93,
+            "npci_approved_pct": 87.92,
+            "in_npci_top50": true
+          }
+        ]
+      }
+    },
+    {
+      "run_id": "run_0912467b",
+      "seq": 4,
+      "node": "decompose",
+      "kind": "deterministic",
+      "status": "ok",
+      "started_at": 1787667231.8272166,
+      "duration_ms": 1145,
+      "input_summary": {},
+      "output_summary": {
+        "gap_pts": 0.396,
+        "attributions": {
+          "bank": 0.182,
+          "method": 0.182,
+          "hour": 0.147,
+          "amount_band": 0.19
+        },
+        "residual_pts": -0.305,
+        "process_gap_pts": 0.0,
+        "degenerate_factors": [
+          "method"
+        ],
+        "clamp_rate": 0.0
+      },
+      "branch_taken": null,
+      "model": null,
+      "prompt": null,
+      "raw_response": null,
+      "tokens_in": null,
+      "tokens_out": null,
+      "cache_hit": null,
+      "stub": null,
+      "confidence": null,
+      "reason_codes": [
+        "EFFICIENCY_OK",
+        "FACTORS_NOT_IDENTIFIED",
+        "UNDERPOWERED_BATCH"
+      ],
+      "intermediates": {
+        "coalition_values": {
+          "{}": 0.0,
+          "bank": 0.6424,
+          "method": 0.6432,
+          "hour": 0.6073,
+          "amount_band": 0.6512,
+          "bank+method": 0.671,
+          "bank+hour": 0.6355,
+          "bank+amount_band": 0.6791,
+          "method+hour": 0.6363,
+          "method+amount_band": 0.6798,
+          "hour+amount_band": 0.6442,
+          "bank+method+hour": 0.6642,
+          "bank+method+amount_band": 0.7075,
+          "bank+hour+amount_band": 0.6722,
+          "method+hour+amount_band": 0.6729,
+          "bank+method+hour+amount_band": 0.7007
+        },
+        "effective_support": {
+          "bank": 6.456,
+          "method": 1.19,
+          "hour": 3.371,
+          "amount_band": 2.414
+        },
+        "mae_by_factor": {
+          "bank": 0.538,
+          "method": 0.5297,
+          "hour": 0.5291,
+          "amount_band": 0.5316
+        }
+      }
+    },
+    {
+      "run_id": "run_0912467b",
+      "seq": 5,
+      "node": "hypothesise",
+      "kind": "llm",
+      "status": "ok",
+      "started_at": 1787667232.9742024,
+      "duration_ms": 21,
+      "input_summary": {},
+      "output_summary": {
+        "primary_label": "none_of_the_above",
+        "hypotheses": [
+          {
+            "factor": "bank",
+            "label": "none_of_the_above",
+            "action_type": "investigation"
+          },
+          {
+            "factor": "method",
+            "label": "none_of_the_above",
+            "action_type": "investigation"
+          },
+          {
+            "factor": "hour",
+            "label": "none_of_the_above",
+            "action_type": "investigation"
+          },
+          {
+            "factor": "amount_band",
+            "label": "none_of_the_above",
+            "action_type": "investigation"
+          },
+          {
+            "factor": "process_gap",
+            "label": "none_of_the_above",
+            "action_type": "investigation"
+          }
+        ],
+        "summary": "FuelStop Network's 0.40-point success-rate gap is too small and every decomposed factor sits inside its own error bar, so no single root cause can be reliably identified — the most honest action is to accumulate more data before making routing or configuration changes."
+      },
+      "branch_taken": null,
+      "model": "claude-sonnet-4.6",
+      "prompt": "MERCHANT\n  name: FuelStop Network\n  mcc: 5541 (fuel)\n  transactions this month: 3400\n  average ticket: Rs 1702.51\n\nSUCCESS RATE\n  observed:            91.00%\n  cohort achievable:   91.40%\n  gap:                 0.40 points\n\nDECOMPOSITION (Shapley, points of the gap)\n  bank          +0.18 pts +/- 0.54 measured error   [INSIDE ITS OWN ERROR BAR]\n  method        +0.18 pts +/- 0.53 measured error   [NOT IDENTIFIED - merchant has effectively one value here; INSIDE ITS OWN ERROR BAR]\n  hour          +0.15 pts +/- 0.53 measured error   [INSIDE ITS OWN ERROR BAR]\n  amount_band   +0.19 pts +/- 0.53 measured error   [INSIDE ITS OWN ERROR BAR]\n  residual      -0.30 pts   [unexplained residual]\n  process_gap   +0.00 pts   [process gap, computed directly, NOT decomposed]\n\nMERCHANT BANK MIX vs NPCI NATIONAL DATA (period 2025-08)\n  bank                              share   NPCI BD%%  NPCI TD%%  approved%%\n  State Bank of India               33.3%     5.92     0.42     93.66\n  HDFC Bank Ltd.                     9.6%     4.63     0.01     95.37\n  Bank of Baroda                     8.5%     8.50     0.05     91.44\n  Punjab National Bank               7.6%     8.61     0.19     91.20\n  Union Bank of India                6.7%     7.02     0.75     92.23\n  Canara Bank                        5.9%     6.92     0.36     92.73\n\nHOUR DISTRIBUTION (share of payments)\n  afternoon       35.9%\n  evening         32.1%\n  morning         24.1%\n  night            7.8%\n\nMETHOD DISTRIBUTION (share of payments)\n  upi             91.4%\n  card             7.7%\n  netbanking       0.9%\n\nAMOUNT BAND DISTRIBUTION (share of payments)\n  small           53.7%\n  medium          33.9%\n  micro           10.1%\n  large            2.3%\n\nProduce the JSON object now.",
+      "raw_response": "```json\n{\n  \"hypotheses\": [\n    {\n      \"factor\": \"bank\",\n      \"attribution_pts\": 0.18,\n      \"root_cause_label\": \"none_of_the_above\",\n      \"hypothesis\": \"The bank mix factor contributes 0.18 pts to the gap, but this is smaller than its own measured error bar of +/- 0.54 pts, so no reliable bank concentration signal can be confirmed. While State Bank of India holds 33.3% of volume at 93.66% approval and Punjab National Bank holds 7.6% at 91.20%, the attribution cannot be distinguished from noise.\",\n      \"evidence\": [\n        \"bank attribution 0.18 pts is inside its own error bar of +/- 0.54\",\n        \"State Bank of India share 33.3%, approved 93.66%\",\n        \"Punjab National Bank share 7.6%, approved 91.20%\"\n      ],\n      \"recommended_action\": \"Collect more transaction volume to reduce the error bar on the bank factor before acting on bank routing changes.\",\n      \"action_type\": \"investigation\"\n    },\n    {\n      \"factor\": \"method\",\n      \"attribution_pts\": 0.18,\n      \"root_cause_label\": \"none_of_the_above\",\n      \"hypothesis\": \"The method factor is flagged NOT IDENTIFIED because the merchant has effectively one payment method (UPI at 91.4% share), making a meaningful method-mix comparison impossible. The attribution of 0.18 pts is also inside its own error bar of +/- 0.53 pts, so no method-mix mismatch can be confirmed.\",\n      \"evidence\": [\n        \"method flagged NOT IDENTIFIED and INSIDE ITS OWN ERROR BAR of +/- 0.53\",\n        \"UPI share 91.4%\",\n        \"method attribution 0.18 pts\"\n      ],\n      \"recommended_action\": \"Investigate whether enabling additional payment methods (e.g., cards) for higher-ticket transactions would provide enough method diversity to measure this factor reliably.\",\n      \"action_type\": \"investigation\"\n    },\n    {\n      \"factor\": \"hour\",\n      \"attribution_pts\": 0.15,\n      \"root_cause_label\": \"none_of_the_above\",\n      \"hypothesis\": \"The hour factor contributes 0.15 pts to the gap, but this is inside its own error bar of +/- 0.53 pts, so the midnight billing penalty hypothesis cannot be confirmed. Night-window traffic is only 7.8% of payments, which limits both the exposure and the measurability of any hour-driven effect.\",\n      \"evidence\": [\n        \"hour attribution 0.15 pts is inside its own error bar of +/- 0.53\",\n        \"night share 7.8%\",\n        \"afternoon share 35.9%\"\n      ],\n      \"recommended_action\": \"Monitor night-window (23:00-05:59) decline rates separately over the next month to accumulate enough data to test the midnight billing penalty hypothesis.\",\n      \"action_type\": \"investigation\"\n    },\n    {\n      \"factor\": \"amount_band\",\n      \"attribution_pts\": 0.19,\n      \"root_cause_label\": \"none_of_the_above\",\n      \"hypothesis\": \"The amount_band factor has the largest individual attribution at 0.19 pts, but it is still inside its own error bar of +/- 0.53 pts, so the amount-band risk hypothesis cannot be confirmed with current data. The average ticket of Rs 1702.51 and a large-band share of only 2.3% suggest high-ticket concentration is not a dominant structural feature.\",\n      \"evidence\": [\n        \"amount_band attribution 0.19 pts is inside its own error bar of +/- 0.53\",\n        \"average ticket Rs 1702.51\",\n        \"large band share 2.3%\",\n        \"small band share 53.7%\"\n      ],\n      \"recommended_action\": \"Segment decline rates by amount band in the next reporting period to determine whether the large-band (2.3%) or medium-band (33.9%) cohort is driving disproportionate failures.\",\n      \"action_type\": \"investigation\"\n    },\n    {\n      \"factor\": \"process_gap\",\n      \"attribution_pts\": 0.00,\n      \"root_cause_label\": \"none_of_the_above\",\n      \"hypothesis\": \"The process gap is computed directly at 0.00 pts, indicating no measurable difference between the merchant's checkout or retry process and the cohort benchmark. There is no evidence of missing soft-decline retries or other process-level failures contributing to the gap.\",\n      \"evidence\": [\n        \"process_gap 0.00 pts\",\n        \"total gap 0.40 pts\",\n        \"residual -0.30 pts\"\n      ],\n      \"recommended_action\": \"No process change is warranted; continue monitoring process gap each period to catch any future regression.\",\n      \"action_type\": \"investigation\"\n    }\n  ],\n  \"primary_label\": \"none_of_the_above\",\n  \"summary\": \"FuelStop Network's 0.40-point success-rate gap is too small and every decomposed factor sits inside its own error bar, so no single root cause can be reliably identified — the most honest action is to accumulate more data before making routing or configuration changes.\"\n}\n```",
+      "tokens_in": 1243,
+      "tokens_out": 1289,
+      "cache_hit": true,
+      "stub": false,
+      "confidence": null,
+      "reason_codes": [],
+      "intermediates": {}
+    },
+    {
+      "run_id": "run_0912467b",
+      "seq": 6,
+      "node": "plan",
+      "kind": "llm",
+      "status": "ok",
+      "started_at": 1787667232.9955206,
+      "duration_ms": 1,
+      "input_summary": {},
+      "output_summary": {
+        "actions": 5,
+        "withheld": 4,
+        "headline": "5 fixes proposed, 4 withheld because the attribution is inside its own error bar.",
+        "withheld_detail": [
+          {
+            "factor": "bank",
+            "label": "none_of_the_above",
+            "attribution_pts": 0.18,
+            "mae": 0.538,
+            "downgraded_from": "investigation",
+            "downgraded_to": "investigation",
+            "reason": "attribution 0.18 pts is inside its own measured error of +/-0.54 pts -- the engine cannot tell this from zero"
+          },
+          {
+            "factor": "method",
+            "label": "none_of_the_above",
+            "attribution_pts": 0.18,
+            "mae": 0.5297,
+            "downgraded_from": "investigation",
+            "downgraded_to": "investigation",
+            "reason": "factor not identified -- the merchant has effectively one value here, so there is nothing to reweight toward and the attribution is unmeasurable rather than small"
+          },
+          {
+            "factor": "hour",
+            "label": "none_of_the_above",
+            "attribution_pts": 0.15,
+            "mae": 0.5291,
+            "downgraded_from": "investigation",
+            "downgraded_to": "investigation",
+            "reason": "attribution 0.15 pts is inside its own measured error of +/-0.53 pts -- the engine cannot tell this from zero"
+          },
+          {
+            "factor": "amount_band",
+            "label": "none_of_the_above",
+            "attribution_pts": 0.19,
+            "mae": 0.5316,
+            "downgraded_from": "investigation",
+            "downgraded_to": "investigation",
+            "reason": "attribution 0.19 pts is inside its own measured error of +/-0.53 pts -- the engine cannot tell this from zero"
+          }
+        ]
+      },
+      "branch_taken": null,
+      "model": "claude-haiku-4.5",
+      "prompt": null,
+      "raw_response": null,
+      "tokens_in": null,
+      "tokens_out": null,
+      "cache_hit": null,
+      "stub": null,
+      "confidence": null,
+      "reason_codes": [
+        "UNCERTAINTY_GATE_APPLIED"
+      ],
+      "intermediates": {
+        "mae_by_factor": {
+          "bank": 0.538,
+          "method": 0.5297,
+          "hour": 0.5291,
+          "amount_band": 0.5316
+        }
+      }
+    },
+    {
+      "run_id": "run_0912467b",
+      "seq": 7,
+      "node": "gate",
+      "kind": "deterministic",
+      "status": "ok",
+      "started_at": 1787667232.9981663,
+      "duration_ms": 1,
+      "input_summary": {},
+      "output_summary": {
+        "decisions": {
+          "allow": 5,
+          "step_up": 0,
+          "deny": 0
+        },
+        "total": 5
+      },
+      "branch_taken": "execute",
+      "model": null,
+      "prompt": null,
+      "raw_response": null,
+      "tokens_in": null,
+      "tokens_out": null,
+      "cache_hit": null,
+      "stub": null,
+      "confidence": null,
+      "reason_codes": [
+        "OK_ESCALATION"
+      ],
+      "intermediates": {}
+    },
+    {
+      "run_id": "run_0912467b",
+      "seq": 8,
+      "node": "execute",
+      "kind": "deterministic",
+      "status": "ok",
+      "started_at": 1787667233.000176,
+      "duration_ms": 1,
+      "input_summary": {},
+      "output_summary": {
+        "executed": 0,
+        "recovered_paise": 0,
+        "recovered_inr": 0.0,
+        "ledger_entries": 5,
+        "chain_verified": true,
+        "calibration": "central"
+      },
+      "branch_taken": null,
+      "model": null,
+      "prompt": null,
+      "raw_response": null,
+      "tokens_in": null,
+      "tokens_out": null,
+      "cache_hit": null,
+      "stub": null,
+      "confidence": null,
+      "reason_codes": [
+        "CHAIN_VERIFIED"
+      ],
+      "intermediates": {}
+    },
+    {
+      "run_id": "run_0912467b",
+      "seq": 9,
+      "node": "report",
+      "kind": "deterministic",
+      "status": "ok",
+      "started_at": 1787667233.00218,
+      "duration_ms": 4,
+      "input_summary": {},
+      "output_summary": {
+        "measured_keys": [
+          "observed_success_pct",
+          "observed_success_ci_pct",
+          "wilson_halfwidth_pts",
+          "transactions",
+          "failures",
+          "attribution_mae_by_factor",
+          "validation_merchants",
+          "naive_vs_shapley",
+          "batch_size_power",
+          "correlation_degradation",
+          "classification",
+          "root_cause",
+          "mandate_violations",
+          "ledger_entries",
+          "chain_verified",
+          "chain_detail",
+          "efficiency_check"
+        ],
+        "projected_keys": [
+          "cohort_achievable_pct",
+          "gap_pts",
+          "gap_value_paise",
+          "monthly_gmv_paise",
+          "recoverable",
+          "recovered_this_run_paise",
+          "unrecoverable_paise",
+          "unrecoverable_count",
+          "assumptions"
+        ]
+      },
+      "branch_taken": null,
+      "model": null,
+      "prompt": null,
+      "raw_response": null,
+      "tokens_in": null,
+      "tokens_out": null,
+      "cache_hit": null,
+      "stub": null,
+      "confidence": null,
+      "reason_codes": [],
+      "intermediates": {}
+    }
+  ],
+  "report": {
+    "merchant": {
+      "merchant_id": "fuelstop",
+      "name": "FuelStop Network",
+      "mcc": "5541",
+      "mcc_description": "fuel",
+      "monthly_txn_count": 3400,
+      "avg_ticket_paise": 170251
+    },
+    "run": {
+      "seed": 20260824,
+      "npci_period": "2025-08",
+      "calibration": "central"
+    },
+    "measured": {
+      "observed_success_pct": 91.0,
+      "observed_success_ci_pct": [
+        89.991,
+        91.916
+      ],
+      "wilson_halfwidth_pts": 0.963,
+      "transactions": 3400,
+      "failures": 306,
+      "attribution_mae_by_factor": {
+        "bank": {
+          "mae": 0.538,
+          "bias": 0.012,
+          "median_abs_err": 0.4276,
+          "p90_abs_err": 1.136,
+          "coverage_0p5": 0.58,
+          "n": 200
+        },
+        "method": {
+          "mae": 0.5297,
+          "bias": -0.0086,
+          "median_abs_err": 0.4007,
+          "p90_abs_err": 1.1938,
+          "coverage_0p5": 0.59,
+          "n": 200
+        },
+        "hour": {
+          "mae": 0.5291,
+          "bias": -0.0054,
+          "median_abs_err": 0.3811,
+          "p90_abs_err": 1.1865,
+          "coverage_0p5": 0.63,
+          "n": 200
+        },
+        "amount_band": {
+          "mae": 0.5316,
+          "bias": -0.0221,
+          "median_abs_err": 0.4095,
+          "p90_abs_err": 1.1569,
+          "coverage_0p5": 0.625,
+          "n": 200
+        }
+      },
+      "validation_merchants": 200,
+      "naive_vs_shapley": {
+        "n_scored": 161,
+        "coherence": {
+          "note": "sum(attribution) / v(N). 1.0 means the factor values account for exactly the movement the decomposition explains. Shapley is 1.0 by the efficiency axiom; naive attribution double-counts shared credit and cannot be converted to rupees.",
+          "n": 191,
+          "shapley_mean_ratio": 1.0,
+          "shapley_max_abs_dev": 0.0,
+          "naive_mean_ratio": 2.3934,
+          "naive_min_ratio": -11.2844,
+          "naive_max_ratio": 31.3712,
+          "naive_overstates_pct": 74.3
+        },
+        "shapley_primary_accuracy": 0.9627,
+        "naive_primary_accuracy": 0.9752,
+        "disagreement_rate": 0.0124,
+        "when_they_disagree": {
+          "n": 2,
+          "shapley_correct": 0,
+          "naive_correct": 2,
+          "both_wrong": 0
+        }
+      },
+      "batch_size_power": {
+        "60": {
+          "n_merchants": 56,
+          "mae_all_factors": 0.7803,
+          "mean_wilson_halfwidth_pts": 7.7265,
+          "primary_cause_accuracy": 0.9302
+        },
+        "150": {
+          "n_merchants": 55,
+          "mae_all_factors": 0.5623,
+          "mean_wilson_halfwidth_pts": 5.1242,
+          "primary_cause_accuracy": 0.9545
+        },
+        "400": {
+          "n_merchants": 52,
+          "mae_all_factors": 0.4238,
+          "mean_wilson_halfwidth_pts": 3.1009,
+          "primary_cause_accuracy": 1.0
+        },
+        "1000": {
+          "n_merchants": 37,
+          "mae_all_factors": 0.2637,
+          "mean_wilson_halfwidth_pts": 2.0132,
+          "primary_cause_accuracy": 0.9655
+        }
+      },
+      "correlation_degradation": {
+        "0.0": {
+          "n_merchants": 157,
+          "mean_realised_rho": 0.0,
+          "mae_all_factors": 0.5119,
+          "p90_abs_err": 1.137,
+          "primary_cause_accuracy": 0.9915
+        },
+        "0.2": {
+          "n_merchants": 17,
+          "mean_realised_rho": 0.1654,
+          "mae_all_factors": 0.6557,
+          "p90_abs_err": 1.2457,
+          "primary_cause_accuracy": 0.8824
+        },
+        "0.5": {
+          "n_merchants": 12,
+          "mean_realised_rho": 0.3723,
+          "mae_all_factors": 0.659,
+          "p90_abs_err": 1.2836,
+          "primary_cause_accuracy": 0.9167
+        },
+        "0.8": {
+          "n_merchants": 14,
+          "mean_realised_rho": 0.6727,
+          "mae_all_factors": 0.4998,
+          "p90_abs_err": 0.9912,
+          "primary_cause_accuracy": 0.8571
+        }
+      },
+      "classification": {
+        "note": "Held-out CODES, not rows. The deterministic lookup was restricted to the training split, so every code scored here reached the model with nothing memorised. Small per-class support is real -- hence Wilson intervals rather than bare percentages.",
+        "n_codes_total": 110,
+        "n_train": 77,
+        "n_test": 33,
+        "accuracy": 0.8788,
+        "accuracy_ci95": [
+          0.7267,
+          0.9518
+        ],
+        "macro_f1": 0.7786,
+        "per_class": {
+          "soft_decline": {
+            "support": 4,
+            "precision": 0.6667,
+            "recall": 1.0,
+            "recall_ci95": [
+              0.5101,
+              1.0
+            ],
+            "f1": 0.8
+          },
+          "hard_decline": {
+            "support": 17,
+            "precision": 0.8889,
+            "recall": 0.9412,
+            "recall_ci95": [
+              0.7302,
+              0.9895
+            ],
+            "f1": 0.9143
+          },
+          "technical": {
+            "support": 8,
+            "precision": 1.0,
+            "recall": 1.0,
+            "recall_ci95": [
+              0.6756,
+              1.0
+            ],
+            "f1": 1.0
+          },
+          "auth_failure": {
+            "support": 4,
+            "precision": 1.0,
+            "recall": 0.25,
+            "recall_ci95": [
+              0.0456,
+              0.6994
+            ],
+            "f1": 0.4
+          }
+        },
+        "recoverable_accuracy": 0.9394,
+        "recoverable_ci95": [
+          0.8039,
+          0.9832
+        ],
+        "low_confidence_routed_to_review": 3,
+        "cache_hit_rate": 0.0,
+        "errors": [
+          {
+            "code": "incorrect_cardholder_name",
+            "true": "auth_failure",
+            "pred": "hard_decline",
+            "true_recoverable": false,
+            "pred_recoverable": false,
+            "confidence": 0.92,
+            "correct": false,
+            "cache_hit": false
+          },
+          {
+            "code": "invalid_device",
+            "true": "auth_failure",
+            "pred": "hard_decline",
+            "true_recoverable": false,
+            "pred_recoverable": false,
+            "confidence": 0.95,
+            "correct": false,
+            "cache_hit": false
+          },
+          {
+            "code": "payment_risk_check_failed",
+            "true": "hard_decline",
+            "pred": "soft_decline",
+            "true_recoverable": false,
+            "pred_recoverable": true,
+            "confidence": 0.72,
+            "correct": false,
+            "cache_hit": false
+          },
+          {
+            "code": "pin_attempts_exceeded",
+            "true": "auth_failure",
+            "pred": "soft_decline",
+            "true_recoverable": false,
+            "pred_recoverable": true,
+            "confidence": 0.85,
+            "correct": false,
+            "cache_hit": false
+          }
+        ]
+      },
+      "root_cause": {
+        "error_decomposition": {
+          "note": "The model reads the ESTIMATED decomposition, not the truth. Splitting the error says whether the bottleneck is the model or the attribution feeding it.",
+          "attribution_pointed_at_the_right_cause": 0.75,
+          "attribution_ci95": [
+            0.6277,
+            0.8422
+          ],
+          "model_faithful_to_what_it_saw": 0.6333,
+          "faithful_ci95": [
+            0.5068,
+            0.7438
+          ],
+          "accuracy_when_attribution_was_right": 0.6667,
+          "n_solvable": 45
+        },
+        "note": "Exact match on root_cause_label against the injected cause. The model emits from the same closed enum the generator injects from, so this is forced-choice classification, not keyword matching.",
+        "n": 60,
+        "accuracy": 0.6,
+        "accuracy_ci95": [
+          0.4737,
+          0.7143
+        ],
+        "confusion_matrix": {
+          "midnight_billing_penalty": {
+            "midnight_billing_penalty": 4,
+            "bank_concentration": 1,
+            "none_of_the_above": 2
+          },
+          "bank_concentration": {
+            "bank_concentration": 16,
+            "none_of_the_above": 1,
+            "midnight_billing_penalty": 4,
+            "no_soft_decline_retry": 2,
+            "amount_band_risk": 1
+          },
+          "no_soft_decline_retry": {
+            "no_soft_decline_retry": 1
+          },
+          "amount_band_risk": {
+            "amount_band_risk": 7,
+            "no_soft_decline_retry": 4,
+            "midnight_billing_penalty": 1,
+            "bank_concentration": 1
+          },
+          "method_mix_mismatch": {
+            "bank_concentration": 1,
+            "none_of_the_above": 2,
+            "method_mix_mismatch": 2,
+            "no_soft_decline_retry": 2,
+            "amount_band_risk": 1
+          },
+          "none_of_the_above": {
+            "method_mix_mismatch": 1,
+            "none_of_the_above": 6
+          }
+        },
+        "healthy_merchants": {
+          "n": 7,
+          "correctly_said_none_of_the_above": 6,
+          "note": "Merchants with nothing injected. A model that never uses none_of_the_above here is overconfident."
+        },
+        "overreach": {
+          "said_none_when_a_cause_was_injected": 5,
+          "rate": 0.0943
+        },
+        "cache_hit_rate": 1.0,
+        "cost_inr": 0.0,
+        "errors": [
+          {
+            "merchant": "sweep_001",
+            "injected": [],
+            "true": "none_of_the_above",
+            "pred": "method_mix_mismatch",
+            "correct": false,
+            "n_txns": 60,
+            "rho": 0.0,
+            "implied_by_estimate": "method_mix_mismatch",
+            "faithful": true,
+            "attribution_was_right": false,
+            "cache_hit": true,
+            "summary": "Sweep Merchant 001's 6.42-point success-rate gap is driven primarily by a heavy reliance on UPI (75% of volume) where the cohort performs better on card rails, "
+          },
+          {
+            "merchant": "sweep_004",
+            "injected": [
+              "method_mix_mismatch"
+            ],
+            "true": "method_mix_mismatch",
+            "pred": "bank_concentration",
+            "correct": false,
+            "n_txns": 150,
+            "rho": 0.0,
+            "implied_by_estimate": "method_mix_mismatch",
+            "faithful": false,
+            "attribution_was_right": true,
+            "cache_hit": true,
+            "summary": "Sweep Merchant 004's 2.05-point success-rate shortfall is driven primarily by concentration in higher-decline issuers like Punjab National Bank (91.20%) and Ban"
+          },
+          {
+            "merchant": "sweep_007",
+            "injected": [
+              "bank_concentration",
+              "no_soft_decline_retry"
+            ],
+            "true": "bank_concentration",
+            "pred": "none_of_the_above",
+            "correct": false,
+            "n_txns": 60,
+            "rho": 0.0,
+            "implied_by_estimate": "no_soft_decline_retry",
+            "faithful": false,
+            "attribution_was_right": false,
+            "cache_hit": true,
+            "summary": "With only 60 transactions this month, every decomposed factor (bank, method, hour, amount_band) falls inside its own error bar, so no single root cause can be r"
+          },
+          {
+            "merchant": "sweep_008",
+            "injected": [
+              "amount_band_risk"
+            ],
+            "true": "amount_band_risk",
+            "pred": "no_soft_decline_retry",
+            "correct": false,
+            "n_txns": 1000,
+            "rho": 0.0,
+            "implied_by_estimate": "amount_band_risk",
+            "faithful": false,
+            "attribution_was_right": true,
+            "cache_hit": true,
+            "summary": "The only clearly measurable and actionable cause of Sweep Merchant 008's 1.55 pt success-rate gap is an unrecovered process gap of 0.66 pts from soft declines t"
+          },
+          {
+            "merchant": "sweep_012",
+            "injected": [
+              "amount_band_risk",
+              "method_mix_mismatch"
+            ],
+            "true": "amount_band_risk",
+            "pred": "midnight_billing_penalty",
+            "correct": false,
+            "n_txns": 400,
+            "rho": 0.8,
+            "implied_by_estimate": "amount_band_risk",
+            "faithful": false,
+            "attribution_was_right": true,
+            "cache_hit": true,
+            "summary": "Sweep Merchant 012's 0.85-point success-rate gap is primarily driven by a portion of mandate debits firing in the night window (-0.80 pts), with secondary drag "
+          },
+          {
+            "merchant": "sweep_014",
+            "injected": [
+              "bank_concentration",
+              "midnight_billing_penalty"
+            ],
+            "true": "bank_concentration",
+            "pred": "midnight_billing_penalty",
+            "correct": false,
+            "n_txns": 150,
+            "rho": 0.8,
+            "implied_by_estimate": "midnight_billing_penalty",
+            "faithful": true,
+            "attribution_was_right": false,
+            "cache_hit": true,
+            "summary": "Sweep Merchant 014 is losing ~3.1 points of success rate because 37.3% of payments fire in the high-decline night window, and another ~3.1 points because nearly"
+          },
+          {
+            "merchant": "sweep_015",
+            "injected": [
+              "method_mix_mismatch"
+            ],
+            "true": "method_mix_mismatch",
+            "pred": "none_of_the_above",
+            "correct": false,
+            "n_txns": 400,
+            "rho": 0.0,
+            "implied_by_estimate": "method_mix_mismatch",
+            "faithful": false,
+            "attribution_was_right": true,
+            "cache_hit": true,
+            "summary": "Sweep Merchant 015 is actually outperforming its cohort (92.25% vs 91.66% achievable), and every negative decomposition factor falls inside its own error bar, s"
+          },
+          {
+            "merchant": "sweep_017",
+            "injected": [
+              "amount_band_risk"
+            ],
+            "true": "amount_band_risk",
+            "pred": "no_soft_decline_retry",
+            "correct": false,
+            "n_txns": 150,
+            "rho": 0.0,
+            "implied_by_estimate": "amount_band_risk",
+            "faithful": false,
+            "attribution_was_right": true,
+            "cache_hit": true,
+            "summary": "The only directly measurable and actionable cause of Sweep Merchant 017's 1.40-point success-rate gap is an unretried process gap of 0.40 points — all other fac"
+          },
+          {
+            "merchant": "sweep_018",
+            "injected": [
+              "midnight_billing_penalty"
+            ],
+            "true": "midnight_billing_penalty",
+            "pred": "bank_concentration",
+            "correct": false,
+            "n_txns": 150,
+            "rho": 0.0,
+            "implied_by_estimate": "midnight_billing_penalty",
+            "faithful": false,
+            "attribution_was_right": true,
+            "cache_hit": true,
+            "summary": "Sweep Merchant 018 is actually outperforming its cohort by 2.22 points, but the biggest identifiable drag comes from heavy concentration on high-decline issuers"
+          },
+          {
+            "merchant": "sweep_019",
+            "injected": [
+              "method_mix_mismatch"
+            ],
+            "true": "method_mix_mismatch",
+            "pred": "none_of_the_above",
+            "correct": false,
+            "n_txns": 150,
+            "rho": 0.0,
+            "implied_by_estimate": "method_mix_mismatch",
+            "faithful": false,
+            "attribution_was_right": true,
+            "cache_hit": true,
+            "summary": "Sweep Merchant 019's 0.40-point success-rate gap is too small and statistically noisy to pin on any single root cause — every negative factor (bank, hour, amoun"
+          },
+          {
+            "merchant": "sweep_021",
+            "injected": [
+              "amount_band_risk"
+            ],
+            "true": "amount_band_risk",
+            "pred": "no_soft_decline_retry",
+            "correct": false,
+            "n_txns": 60,
+            "rho": 0.0,
+            "implied_by_estimate": "no_soft_decline_retry",
+            "faithful": true,
+            "attribution_was_right": false,
+            "cache_hit": true,
+            "summary": "Sweep Merchant 021 is already outperforming its cohort (95.00% vs 91.96% achievable), but the -3.04 pt gap versus its own potential is driven most by an unexpla"
+          },
+          {
+            "merchant": "sweep_022",
+            "injected": [
+              "amount_band_risk",
+              "method_mix_mismatch"
+            ],
+            "true": "amount_band_risk",
+            "pred": "bank_concentration",
+            "correct": false,
+            "n_txns": 150,
+            "rho": 0.0,
+            "implied_by_estimate": "amount_band_risk",
+            "faithful": false,
+            "attribution_was_right": true,
+            "cache_hit": true,
+            "summary": "Sweep Merchant 022 is beating its cohort benchmark (89.33% vs 87.35% achievable) but is leaving roughly 1.21 points on the table because over half its volume si"
+          },
+          {
+            "merchant": "sweep_023",
+            "injected": [
+              "bank_concentration",
+              "no_soft_decline_retry"
+            ],
+            "true": "bank_concentration",
+            "pred": "no_soft_decline_retry",
+            "correct": false,
+            "n_txns": 150,
+            "rho": 0.0,
+            "implied_by_estimate": "no_soft_decline_retry",
+            "faithful": true,
+            "attribution_was_right": false,
+            "cache_hit": true,
+            "summary": "Sweep Merchant 023's -1.68 pt success-rate gap is dominated by a +1.60 pt process gap — the largest measurable factor — suggesting unretried soft declines are t"
+          },
+          {
+            "merchant": "sweep_026",
+            "injected": [
+              "midnight_billing_penalty"
+            ],
+            "true": "midnight_billing_penalty",
+            "pred": "none_of_the_above",
+            "correct": false,
+            "n_txns": 400,
+            "rho": 0.0,
+            "implied_by_estimate": "midnight_billing_penalty",
+            "faithful": false,
+            "attribution_was_right": true,
+            "cache_hit": true,
+            "summary": "Sweep Merchant 026's -0.04 point gap versus cohort is negligible and within noise — every decomposed factor sits inside its error bar, and the merchant is alrea"
+          },
+          {
+            "merchant": "sweep_027",
+            "injected": [
+              "bank_concentration",
+              "midnight_billing_penalty"
+            ],
+            "true": "bank_concentration",
+            "pred": "amount_band_risk",
+            "correct": false,
+            "n_txns": 60,
+            "rho": 0.0,
+            "implied_by_estimate": "bank_concentration",
+            "faithful": false,
+            "attribution_was_right": true,
+            "cache_hit": true,
+            "summary": "Sweep Merchant 027's success rate is essentially at par with its cohort (gap of only -0.01 pts), but the medium-amount-band transactions are the single largest "
+          },
+          {
+            "merchant": "sweep_030",
+            "injected": [
+              "amount_band_risk"
+            ],
+            "true": "amount_band_risk",
+            "pred": "no_soft_decline_retry",
+            "correct": false,
+            "n_txns": 60,
+            "rho": 0.0,
+            "implied_by_estimate": "amount_band_risk",
+            "faithful": false,
+            "attribution_was_right": true,
+            "cache_hit": true,
+            "summary": "With 86.7% of payments in the large-amount band and a directly measured process gap of 0.50 pts, the most actionable and confirmed cause of Sweep Merchant 030's"
+          },
+          {
+            "merchant": "sweep_044",
+            "injected": [
+              "method_mix_mismatch"
+            ],
+            "true": "method_mix_mismatch",
+            "pred": "no_soft_decline_retry",
+            "correct": false,
+            "n_txns": 1000,
+            "rho": 0.0,
+            "implied_by_estimate": "method_mix_mismatch",
+            "faithful": false,
+            "attribution_was_right": true,
+            "cache_hit": true,
+            "summary": "With all four Shapley factors inside their error bars or unmeasurable, the only actionable signal is the directly computed process gap of +0.45 pts, pointing to"
+          },
+          {
+            "merchant": "sweep_046",
+            "injected": [
+              "method_mix_mismatch"
+            ],
+            "true": "method_mix_mismatch",
+            "pred": "no_soft_decline_retry",
+            "correct": false,
+            "n_txns": 400,
+            "rho": 0.0,
+            "implied_by_estimate": "method_mix_mismatch",
+            "faithful": false,
+            "attribution_was_right": true,
+            "cache_hit": true,
+            "summary": "The only firmly measurable and actionable gap for Sweep Merchant 046 is the 0.75-point process gap from unretried soft declines — all other factors are either i"
+          },
+          {
+            "merchant": "sweep_047",
+            "injected": [
+              "bank_concentration",
+              "midnight_billing_penalty"
+            ],
+            "true": "bank_concentration",
+            "pred": "midnight_billing_penalty",
+            "correct": false,
+            "n_txns": 150,
+            "rho": 0.2,
+            "implied_by_estimate": "midnight_billing_penalty",
+            "faithful": true,
+            "attribution_was_right": false,
+            "cache_hit": true,
+            "summary": "Sweep Merchant 047's 0.76-point success-rate gap is driven primarily by 26% of payments falling in the high-decline night window (+0.84 pts) and secondarily by "
+          },
+          {
+            "merchant": "sweep_048",
+            "injected": [
+              "bank_concentration",
+              "midnight_billing_penalty"
+            ],
+            "true": "bank_concentration",
+            "pred": "midnight_billing_penalty",
+            "correct": false,
+            "n_txns": 60,
+            "rho": 0.5,
+            "implied_by_estimate": "midnight_billing_penalty",
+            "faithful": true,
+            "attribution_was_right": false,
+            "cache_hit": true,
+            "summary": "Over half of Sweep Merchant 048's payments happen at night (56.7%) when banks decline more, and this alone costs 4.72 points of success rate — the single bigges"
+          },
+          {
+            "merchant": "sweep_052",
+            "injected": [
+              "method_mix_mismatch"
+            ],
+            "true": "method_mix_mismatch",
+            "pred": "amount_band_risk",
+            "correct": false,
+            "n_txns": 60,
+            "rho": 0.0,
+            "implied_by_estimate": "method_mix_mismatch",
+            "faithful": false,
+            "attribution_was_right": true,
+            "cache_hit": true,
+            "summary": "The only statistically reliable drag on Sweep Merchant 052's success rate is the amount-band mix, where medium and large ticket payments (average Rs 1916.98) ar"
+          },
+          {
+            "merchant": "sweep_056",
+            "injected": [
+              "bank_concentration",
+              "no_soft_decline_retry"
+            ],
+            "true": "bank_concentration",
+            "pred": "no_soft_decline_retry",
+            "correct": false,
+            "n_txns": 150,
+            "rho": 0.0,
+            "implied_by_estimate": "no_soft_decline_retry",
+            "faithful": true,
+            "attribution_was_right": false,
+            "cache_hit": true,
+            "summary": "The biggest recoverable opportunity for Sweep Merchant 056 is enabling soft-decline retries (2.20-point process gap), followed by reducing concentration on Airt"
+          },
+          {
+            "merchant": "sweep_058",
+            "injected": [
+              "midnight_billing_penalty",
+              "amount_band_risk"
+            ],
+            "true": "midnight_billing_penalty",
+            "pred": "none_of_the_above",
+            "correct": false,
+            "n_txns": 400,
+            "rho": 0.0,
+            "implied_by_estimate": "midnight_billing_penalty",
+            "faithful": false,
+            "attribution_was_right": true,
+            "cache_hit": true,
+            "summary": "Sweep Merchant 058 has a gap of only -0.04 pts versus its cohort benchmark, every decomposed factor is either inside its error bar or flagged not identified, an"
+          },
+          {
+            "merchant": "sweep_059",
+            "injected": [
+              "bank_concentration",
+              "midnight_billing_penalty"
+            ],
+            "true": "bank_concentration",
+            "pred": "midnight_billing_penalty",
+            "correct": false,
+            "n_txns": 60,
+            "rho": 0.0,
+            "implied_by_estimate": "midnight_billing_penalty",
+            "faithful": true,
+            "attribution_was_right": false,
+            "cache_hit": true,
+            "summary": "Sweep Merchant 059's 1.66-point success-rate gap is driven primarily by 31.7% of payments falling in the night window (the largest single factor at +0.79 pts) a"
+          }
+        ]
+      },
+      "mandate_violations": 0,
+      "ledger_entries": 5,
+      "chain_verified": true,
+      "chain_detail": "chain verified from genesis to head",
+      "efficiency_check": {
+        "sum_of_attributions_pts": 0.700684,
+        "v_of_grand_coalition_pts": 0.700684
+      }
+    },
+    "projected": {
+      "cohort_achievable_pct": 91.396,
+      "gap_pts": 0.396,
+      "gap_value_paise": 2290977,
+      "monthly_gmv_paise": 578853400,
+      "recoverable": {
+        "low_paise": 0,
+        "central_paise": 0,
+        "high_paise": 0,
+        "by_calibration_paise": {
+          "conservative": 0,
+          "central": 0,
+          "optimistic": 0
+        }
+      },
+      "recovered_this_run_paise": 0,
+      "unrecoverable_paise": 18227729,
+      "unrecoverable_count": 114,
+      "assumptions": [
+        "Bank failure rates are MEASURED from NPCI; method, hour and amount effects are assumed priors (priors.py).",
+        "Retry success is an assumed model, not an observation (mock_rail.py). Figures are given as a range across three calibrations.",
+        "s_star is an input from cohort data, not a discovery. See the sensitivity slider."
+      ]
+    },
+    "decomposition": {
+      "s_obs": 0.91,
+      "s_star": 0.913957785763037,
+      "gap_pts": 0.39577857630369584,
+      "residual_pts": -0.3049050477684001,
+      "process_gap_pts": 0.0,
+      "clamp_rate": 0.0,
+      "reliable": true,
+      "underpowered": true,
+      "degenerate_factors": [
+        "method"
+      ],
+      "effective_support": {
+        "bank": 6.455763500140731,
+        "method": 1.1896227846105623,
+        "hour": 3.3708028984239458,
+        "amount_band": 2.4139830595188827
+      },
+      "coalition_values": {
+        "{}": 0.0,
+        "bank": 0.6423974553805389,
+        "method": 0.643238974186422,
+        "hour": 0.6073401500545028,
+        "amount_band": 0.651152498719676,
+        "bank+method": 0.6710492251293276,
+        "bank+hour": 0.6354715420647916,
+        "bank+amount_band": 0.6791306453504231,
+        "method+hour": 0.6363020271977771,
+        "method+amount_band": 0.6797923491342783,
+        "hour+amount_band": 0.6442029645219782,
+        "bank+method+hour": 0.6641760439559663,
+        "bank+method+amount_band": 0.7075170554405541,
+        "bank+hour+amount_band": 0.6722451707535493,
+        "method+hour+amount_band": 0.6728960437262788,
+        "bank+method+hour+amount_band": 0.700683624072096
+      },
+      "factors": [
+        {
+          "factor": "bank",
+          "points": 0.1815,
+          "mae": 0.538,
+          "inside_error_bar": true,
+          "identified": true,
+          "value_paise": 1050674
+        },
+        {
+          "factor": "method",
+          "points": 0.1823,
+          "mae": 0.5297,
+          "inside_error_bar": true,
+          "identified": false,
+          "value_paise": 1054993
+        },
+        {
+          "factor": "hour",
+          "points": 0.1467,
+          "mae": 0.5291,
+          "inside_error_bar": true,
+          "identified": true,
+          "value_paise": 849010
+        },
+        {
+          "factor": "amount_band",
+          "points": 0.1902,
+          "mae": 0.5316,
+          "inside_error_bar": true,
+          "identified": true,
+          "value_paise": 1101251
+        }
+      ]
+    },
+    "bank_health": {
+      "period": "2025-08",
+      "banks": [
+        {
+          "bank": "State Bank of India",
+          "share_pct": 33.32,
+          "merchant_fail_pct": 7.5,
+          "npci_bd_pct": 5.92,
+          "npci_td_pct": 0.42,
+          "npci_approved_pct": 93.66,
+          "in_npci_top50": true
+        },
+        {
+          "bank": "HDFC Bank Ltd.",
+          "share_pct": 9.59,
+          "merchant_fail_pct": 6.75,
+          "npci_bd_pct": 4.63,
+          "npci_td_pct": 0.01,
+          "npci_approved_pct": 95.37,
+          "in_npci_top50": true
+        },
+        {
+          "bank": "Bank of Baroda",
+          "share_pct": 8.5,
+          "merchant_fail_pct": 9.34,
+          "npci_bd_pct": 8.5,
+          "npci_td_pct": 0.05,
+          "npci_approved_pct": 91.44,
+          "in_npci_top50": true
+        },
+        {
+          "bank": "Punjab National Bank",
+          "share_pct": 7.62,
+          "merchant_fail_pct": 5.02,
+          "npci_bd_pct": 8.61,
+          "npci_td_pct": 0.19,
+          "npci_approved_pct": 91.2,
+          "in_npci_top50": true
+        },
+        {
+          "bank": "Union Bank of India",
+          "share_pct": 6.68,
+          "merchant_fail_pct": 11.89,
+          "npci_bd_pct": 7.02,
+          "npci_td_pct": 0.75,
+          "npci_approved_pct": 92.23,
+          "in_npci_top50": true
+        },
+        {
+          "bank": "Canara Bank",
+          "share_pct": 5.94,
+          "merchant_fail_pct": 13.86,
+          "npci_bd_pct": 6.92,
+          "npci_td_pct": 0.36,
+          "npci_approved_pct": 92.73,
+          "in_npci_top50": true
+        },
+        {
+          "bank": "Kotak Mahindra Bank",
+          "share_pct": 5.68,
+          "merchant_fail_pct": 12.95,
+          "npci_bd_pct": 7.47,
+          "npci_td_pct": 0.13,
+          "npci_approved_pct": 92.39,
+          "in_npci_top50": true
+        },
+        {
+          "bank": "Axis Bank Ltd.",
+          "share_pct": 5.5,
+          "merchant_fail_pct": 4.28,
+          "npci_bd_pct": 5.03,
+          "npci_td_pct": 0.02,
+          "npci_approved_pct": 94.96,
+          "in_npci_top50": true
+        },
+        {
+          "bank": "ICICI Bank Ltd.",
+          "share_pct": 4.71,
+          "merchant_fail_pct": 6.88,
+          "npci_bd_pct": 3.82,
+          "npci_td_pct": 0.52,
+          "npci_approved_pct": 95.66,
+          "in_npci_top50": true
+        },
+        {
+          "bank": "India Post Payments Bank Limited",
+          "share_pct": 4.21,
+          "merchant_fail_pct": 14.69,
+          "npci_bd_pct": 11.15,
+          "npci_td_pct": 0.93,
+          "npci_approved_pct": 87.92,
+          "in_npci_top50": true
+        }
+      ]
+    },
+    "diagnosis": {
+      "hypotheses": [
+        {
+          "factor": "bank",
+          "attribution_pts": 0.18,
+          "root_cause_label": "none_of_the_above",
+          "hypothesis": "The bank mix factor contributes 0.18 pts to the gap, but this is smaller than its own measured error bar of +/- 0.54 pts, so no reliable bank concentration signal can be confirmed. While State Bank of India holds 33.3% of volume at 93.66% approval and Punjab National Bank holds 7.6% at 91.20%, the attribution cannot be distinguished from noise.",
+          "evidence": [
+            "bank attribution 0.18 pts is inside its own error bar of +/- 0.54",
+            "State Bank of India share 33.3%, approved 93.66%",
+            "Punjab National Bank share 7.6%, approved 91.20%"
+          ],
+          "recommended_action": "Collect more transaction volume to reduce the error bar on the bank factor before acting on bank routing changes.",
+          "action_type": "investigation"
+        },
+        {
+          "factor": "method",
+          "attribution_pts": 0.18,
+          "root_cause_label": "none_of_the_above",
+          "hypothesis": "The method factor is flagged NOT IDENTIFIED because the merchant has effectively one payment method (UPI at 91.4% share), making a meaningful method-mix comparison impossible. The attribution of 0.18 pts is also inside its own error bar of +/- 0.53 pts, so no method-mix mismatch can be confirmed.",
+          "evidence": [
+            "method flagged NOT IDENTIFIED and INSIDE ITS OWN ERROR BAR of +/- 0.53",
+            "UPI share 91.4%",
+            "method attribution 0.18 pts"
+          ],
+          "recommended_action": "Investigate whether enabling additional payment methods (e.g., cards) for higher-ticket transactions would provide enough method diversity to measure this factor reliably.",
+          "action_type": "investigation"
+        },
+        {
+          "factor": "hour",
+          "attribution_pts": 0.15,
+          "root_cause_label": "none_of_the_above",
+          "hypothesis": "The hour factor contributes 0.15 pts to the gap, but this is inside its own error bar of +/- 0.53 pts, so the midnight billing penalty hypothesis cannot be confirmed. Night-window traffic is only 7.8% of payments, which limits both the exposure and the measurability of any hour-driven effect.",
+          "evidence": [
+            "hour attribution 0.15 pts is inside its own error bar of +/- 0.53",
+            "night share 7.8%",
+            "afternoon share 35.9%"
+          ],
+          "recommended_action": "Monitor night-window (23:00-05:59) decline rates separately over the next month to accumulate enough data to test the midnight billing penalty hypothesis.",
+          "action_type": "investigation"
+        },
+        {
+          "factor": "amount_band",
+          "attribution_pts": 0.19,
+          "root_cause_label": "none_of_the_above",
+          "hypothesis": "The amount_band factor has the largest individual attribution at 0.19 pts, but it is still inside its own error bar of +/- 0.53 pts, so the amount-band risk hypothesis cannot be confirmed with current data. The average ticket of Rs 1702.51 and a large-band share of only 2.3% suggest high-ticket concentration is not a dominant structural feature.",
+          "evidence": [
+            "amount_band attribution 0.19 pts is inside its own error bar of +/- 0.53",
+            "average ticket Rs 1702.51",
+            "large band share 2.3%",
+            "small band share 53.7%"
+          ],
+          "recommended_action": "Segment decline rates by amount band in the next reporting period to determine whether the large-band (2.3%) or medium-band (33.9%) cohort is driving disproportionate failures.",
+          "action_type": "investigation"
+        },
+        {
+          "factor": "process_gap",
+          "attribution_pts": 0.0,
+          "root_cause_label": "none_of_the_above",
+          "hypothesis": "The process gap is computed directly at 0.00 pts, indicating no measurable difference between the merchant's checkout or retry process and the cohort benchmark. There is no evidence of missing soft-decline retries or other process-level failures contributing to the gap.",
+          "evidence": [
+            "process_gap 0.00 pts",
+            "total gap 0.40 pts",
+            "residual -0.30 pts"
+          ],
+          "recommended_action": "No process change is warranted; continue monitoring process gap each period to catch any future regression.",
+          "action_type": "investigation"
+        }
+      ],
+      "primary_label": "none_of_the_above",
+      "summary": "FuelStop Network's 0.40-point success-rate gap is too small and every decomposed factor sits inside its own error bar, so no single root cause can be reliably identified — the most honest action is to accumulate more data before making routing or configuration changes."
+    },
+    "plan": {
+      "headline": "5 fixes proposed, 4 withheld because the attribution is inside its own error bar.",
+      "withheld": [
+        {
+          "factor": "bank",
+          "label": "none_of_the_above",
+          "attribution_pts": 0.18,
+          "mae": 0.538,
+          "downgraded_from": "investigation",
+          "downgraded_to": "investigation",
+          "reason": "attribution 0.18 pts is inside its own measured error of +/-0.54 pts -- the engine cannot tell this from zero"
+        },
+        {
+          "factor": "method",
+          "label": "none_of_the_above",
+          "attribution_pts": 0.18,
+          "mae": 0.5297,
+          "downgraded_from": "investigation",
+          "downgraded_to": "investigation",
+          "reason": "factor not identified -- the merchant has effectively one value here, so there is nothing to reweight toward and the attribution is unmeasurable rather than small"
+        },
+        {
+          "factor": "hour",
+          "label": "none_of_the_above",
+          "attribution_pts": 0.15,
+          "mae": 0.5291,
+          "downgraded_from": "investigation",
+          "downgraded_to": "investigation",
+          "reason": "attribution 0.15 pts is inside its own measured error of +/-0.53 pts -- the engine cannot tell this from zero"
+        },
+        {
+          "factor": "amount_band",
+          "label": "none_of_the_above",
+          "attribution_pts": 0.19,
+          "mae": 0.5316,
+          "downgraded_from": "investigation",
+          "downgraded_to": "investigation",
+          "reason": "attribution 0.19 pts is inside its own measured error of +/-0.53 pts -- the engine cannot tell this from zero"
+        }
+      ],
+      "actions": 5
+    },
+    "gate": {
+      "decisions": {
+        "allow": 5,
+        "step_up": 0,
+        "deny": 0
+      },
+      "reason_codes": [
+        "OK_ESCALATION"
+      ]
+    },
+    "ledger": [
+      {
+        "sequence": 0,
+        "timestamp": "2026-08-25T14:13:53.001178+00:00",
+        "txn_id": "merchant:fuelstop",
+        "proposed_action": {
+          "action_type": "flag_for_investigation",
+          "txn_id": "merchant:fuelstop",
+          "amount_paise": 0,
+          "target_bank": null,
+          "scheduled_time": null,
+          "reason": "bank: attribution 0.18 pts is inside its own measured error of +/-0.54 pts -- the engine cannot tell this from zero",
+          "requires_merchant_approval": false
+        },
+        "gate_decision": "allow",
+        "gate_reason": "OK_ESCALATION",
+        "outcome": "escalated",
+        "prev_hash": "0000000000000000000000000000000000000000000000000000000000000000",
+        "entry_hash": "809ca9f050263ad60107270471cad47df83511b625e1aa4fa5808a56af216011"
+      },
+      {
+        "sequence": 1,
+        "timestamp": "2026-08-25T14:13:53.001178+00:00",
+        "txn_id": "merchant:fuelstop",
+        "proposed_action": {
+          "action_type": "flag_for_investigation",
+          "txn_id": "merchant:fuelstop",
+          "amount_paise": 0,
+          "target_bank": null,
+          "scheduled_time": null,
+          "reason": "method: factor not identified -- the merchant has effectively one value here, so there is nothing to reweight toward and the attribution is unmeasurable rather than small",
+          "requires_merchant_approval": false
+        },
+        "gate_decision": "allow",
+        "gate_reason": "OK_ESCALATION",
+        "outcome": "escalated",
+        "prev_hash": "809ca9f050263ad60107270471cad47df83511b625e1aa4fa5808a56af216011",
+        "entry_hash": "c11fc4e4d56697042664e855249a986ebaa8d83c96cc178141ff33dbe682363a"
+      },
+      {
+        "sequence": 2,
+        "timestamp": "2026-08-25T14:13:53.001178+00:00",
+        "txn_id": "merchant:fuelstop",
+        "proposed_action": {
+          "action_type": "flag_for_investigation",
+          "txn_id": "merchant:fuelstop",
+          "amount_paise": 0,
+          "target_bank": null,
+          "scheduled_time": null,
+          "reason": "hour: attribution 0.15 pts is inside its own measured error of +/-0.53 pts -- the engine cannot tell this from zero",
+          "requires_merchant_approval": false
+        },
+        "gate_decision": "allow",
+        "gate_reason": "OK_ESCALATION",
+        "outcome": "escalated",
+        "prev_hash": "c11fc4e4d56697042664e855249a986ebaa8d83c96cc178141ff33dbe682363a",
+        "entry_hash": "c3f779be974991ce802699b9bad78dd8b985bed09620578263825d66d819c6df"
+      },
+      {
+        "sequence": 3,
+        "timestamp": "2026-08-25T14:13:53.001178+00:00",
+        "txn_id": "merchant:fuelstop",
+        "proposed_action": {
+          "action_type": "flag_for_investigation",
+          "txn_id": "merchant:fuelstop",
+          "amount_paise": 0,
+          "target_bank": null,
+          "scheduled_time": null,
+          "reason": "amount_band: attribution 0.19 pts is inside its own measured error of +/-0.53 pts -- the engine cannot tell this from zero",
+          "requires_merchant_approval": false
+        },
+        "gate_decision": "allow",
+        "gate_reason": "OK_ESCALATION",
+        "outcome": "escalated",
+        "prev_hash": "c3f779be974991ce802699b9bad78dd8b985bed09620578263825d66d819c6df",
+        "entry_hash": "a765137db9ccc513d0b440f2b6a7be80d437cf39d7aa5fe9e894f5acd565f7e6"
+      },
+      {
+        "sequence": 4,
+        "timestamp": "2026-08-25T14:13:53.001178+00:00",
+        "txn_id": "merchant:fuelstop",
+        "proposed_action": {
+          "action_type": "flag_for_investigation",
+          "txn_id": "merchant:fuelstop",
+          "amount_paise": 0,
+          "target_bank": null,
+          "scheduled_time": null,
+          "reason": "process_gap: No process change is warranted; continue monitoring process gap each period to catch any future regression.",
+          "requires_merchant_approval": false
+        },
+        "gate_decision": "allow",
+        "gate_reason": "OK_ESCALATION",
+        "outcome": "escalated",
+        "prev_hash": "a765137db9ccc513d0b440f2b6a7be80d437cf39d7aa5fe9e894f5acd565f7e6",
+        "entry_hash": "496d24a599f3492442cfe963d3590ff000b96fd45cf80b4dda9b243cb7ac3a5c"
+      }
+    ],
+    "exceptions": {
+      "unrecoverable_transactions": [
+        {
+          "txn_id": "pay_fuelstop_0037",
+          "amount_paise": 96805,
+          "error_code": "bank_not_enabled",
+          "error_class": "hard_decline",
+          "why": "hard decline -- the instrument or configuration is permanently unusable"
+        },
+        {
+          "txn_id": "pay_fuelstop_0060",
+          "amount_paise": 44128,
+          "error_code": "incorrect_card_expiry_date",
+          "error_class": "auth_failure",
+          "why": "authentication failed -- only the customer can complete it"
+        },
+        {
+          "txn_id": "pay_fuelstop_0171",
+          "amount_paise": 49243,
+          "error_code": "payment_cancelled",
+          "error_class": "auth_failure",
+          "why": "authentication failed -- only the customer can complete it"
+        },
+        {
+          "txn_id": "pay_fuelstop_0196",
+          "amount_paise": 68799,
+          "error_code": "incorrect_cvv",
+          "error_class": "auth_failure",
+          "why": "authentication failed -- only the customer can complete it"
+        },
+        {
+          "txn_id": "pay_fuelstop_0211",
+          "amount_paise": 71946,
+          "error_code": "incorrect_pin",
+          "error_class": "auth_failure",
+          "why": "authentication failed -- only the customer can complete it"
+        },
+        {
+          "txn_id": "pay_fuelstop_0221",
+          "amount_paise": 17736,
+          "error_code": "otp_attempts_exceeded",
+          "error_class": "auth_failure",
+          "why": "authentication failed -- only the customer can complete it"
+        },
+        {
+          "txn_id": "pay_fuelstop_0250",
+          "amount_paise": 25337,
+          "error_code": "upi_autopay_not_supported_on_psp",
+          "error_class": "hard_decline",
+          "why": "hard decline -- the instrument or configuration is permanently unusable"
+        },
+        {
+          "txn_id": "pay_fuelstop_0324",
+          "amount_paise": 66892,
+          "error_code": "pin_not_set",
+          "error_class": "auth_failure",
+          "why": "authentication failed -- only the customer can complete it"
+        },
+        {
+          "txn_id": "pay_fuelstop_0340",
+          "amount_paise": 951335,
+          "error_code": "incorrect_pin",
+          "error_class": "auth_failure",
+          "why": "authentication failed -- only the customer can complete it"
+        },
+        {
+          "txn_id": "pay_fuelstop_0361",
+          "amount_paise": 60785,
+          "error_code": "amount_less_than_minimum_amount",
+          "error_class": "hard_decline",
+          "why": "hard decline -- the instrument or configuration is permanently unusable"
+        },
+        {
+          "txn_id": "pay_fuelstop_0382",
+          "amount_paise": 56131,
+          "error_code": "incorrect_otp",
+          "error_class": "auth_failure",
+          "why": "authentication failed -- only the customer can complete it"
+        },
+        {
+          "txn_id": "pay_fuelstop_0415",
+          "amount_paise": 253231,
+          "error_code": "authentication_failed",
+          "error_class": "auth_failure",
+          "why": "authentication failed -- only the customer can complete it"
+        },
+        {
+          "txn_id": "pay_fuelstop_0432",
+          "amount_paise": 39699,
+          "error_code": "user_not_eligible",
+          "error_class": "hard_decline",
+          "why": "hard decline -- the instrument or configuration is permanently unusable"
+        },
+        {
+          "txn_id": "pay_fuelstop_0478",
+          "amount_paise": 333080,
+          "error_code": "otp_expired",
+          "error_class": "auth_failure",
+          "why": "authentication failed -- only the customer can complete it"
+        },
+        {
+          "txn_id": "pay_fuelstop_0562",
+          "amount_paise": 36811,
+          "error_code": "beneficiary_account_dormant",
+          "error_class": "hard_decline",
+          "why": "hard decline -- the instrument or configuration is permanently unusable"
+        },
+        {
+          "txn_id": "pay_fuelstop_0580",
+          "amount_paise": 321426,
+          "error_code": "pin_not_set",
+          "error_class": "auth_failure",
+          "why": "authentication failed -- only the customer can complete it"
+        },
+        {
+          "txn_id": "pay_fuelstop_0583",
+          "amount_paise": 62059,
+          "error_code": "incorrect_pin",
+          "error_class": "auth_failure",
+          "why": "authentication failed -- only the customer can complete it"
+        },
+        {
+          "txn_id": "pay_fuelstop_0597",
+          "amount_paise": 42420,
+          "error_code": "otp_attempts_exceeded",
+          "error_class": "auth_failure",
+          "why": "authentication failed -- only the customer can complete it"
+        },
+        {
+          "txn_id": "pay_fuelstop_0607",
+          "amount_paise": 69137,
+          "error_code": "collect_on_mcc_blocked",
+          "error_class": "hard_decline",
+          "why": "hard decline -- the instrument or configuration is permanently unusable"
+        },
+        {
+          "txn_id": "pay_fuelstop_0640",
+          "amount_paise": 96046,
+          "error_code": "payment_method_not_enabled",
+          "error_class": "hard_decline",
+          "why": "hard decline -- the instrument or configuration is permanently unusable"
+        },
+        {
+          "txn_id": "pay_fuelstop_0654",
+          "amount_paise": 38100,
+          "error_code": "international_transaction_not_allowed",
+          "error_class": "hard_decline",
+          "why": "hard decline -- the instrument or configuration is permanently unusable"
+        },
+        {
+          "txn_id": "pay_fuelstop_0681",
+          "amount_paise": 295931,
+          "error_code": "pin_not_set",
+          "error_class": "auth_failure",
+          "why": "authentication failed -- only the customer can complete it"
+        },
+        {
+          "txn_id": "pay_fuelstop_0752",
+          "amount_paise": 91302,
+          "error_code": "bank_account_validation_failed",
+          "error_class": "hard_decline",
+          "why": "hard decline -- the instrument or configuration is permanently unusable"
+        },
+        {
+          "txn_id": "pay_fuelstop_0755",
+          "amount_paise": 88591,
+          "error_code": "upi_autopay_not_supported_on_psp",
+          "error_class": "hard_decline",
+          "why": "hard decline -- the instrument or configuration is permanently unusable"
+        },
+        {
+          "txn_id": "pay_fuelstop_0765",
+          "amount_paise": 71529,
+          "error_code": "payment_method_not_enabled",
+          "error_class": "hard_decline",
+          "why": "hard decline -- the instrument or configuration is permanently unusable"
+        },
+        {
+          "txn_id": "pay_fuelstop_0793",
+          "amount_paise": 485,
+          "error_code": "otp_attempts_exceeded",
+          "error_class": "auth_failure",
+          "why": "authentication failed -- only the customer can complete it"
+        },
+        {
+          "txn_id": "pay_fuelstop_0812",
+          "amount_paise": 143468,
+          "error_code": "card_expired",
+          "error_class": "hard_decline",
+          "why": "hard decline -- the instrument or configuration is permanently unusable"
+        },
+        {
+          "txn_id": "pay_fuelstop_0820",
+          "amount_paise": 25418,
+          "error_code": "otp_attempts_exceeded",
+          "error_class": "auth_failure",
+          "why": "authentication failed -- only the customer can complete it"
+        },
+        {
+          "txn_id": "pay_fuelstop_0829",
+          "amount_paise": 23529,
+          "error_code": "pin_not_set",
+          "error_class": "auth_failure",
+          "why": "authentication failed -- only the customer can complete it"
+        },
+        {
+          "txn_id": "pay_fuelstop_0847",
+          "amount_paise": 403109,
+          "error_code": "otp_attempts_exceeded",
+          "error_class": "auth_failure",
+          "why": "authentication failed -- only the customer can complete it"
+        },
+        {
+          "txn_id": "pay_fuelstop_0850",
+          "amount_paise": 44605,
+          "error_code": "beneficiary_account_dormant",
+          "error_class": "hard_decline",
+          "why": "hard decline -- the instrument or configuration is permanently unusable"
+        },
+        {
+          "txn_id": "pay_fuelstop_0851",
+          "amount_paise": 2037387,
+          "error_code": "psp_app_not_supported",
+          "error_class": "hard_decline",
+          "why": "hard decline -- the instrument or configuration is permanently unusable"
+        },
+        {
+          "txn_id": "pay_fuelstop_0885",
+          "amount_paise": 75770,
+          "error_code": "compliance_violation",
+          "error_class": "hard_decline",
+          "why": "hard decline -- the instrument or configuration is permanently unusable"
+        },
+        {
+          "txn_id": "pay_fuelstop_0887",
+          "amount_paise": 25659,
+          "error_code": "compliance_violation",
+          "error_class": "hard_decline",
+          "why": "hard decline -- the instrument or configuration is permanently unusable"
+        },
+        {
+          "txn_id": "pay_fuelstop_0929",
+          "amount_paise": 242460,
+          "error_code": "psp_not_registered",
+          "error_class": "hard_decline",
+          "why": "hard decline -- the instrument or configuration is permanently unusable"
+        },
+        {
+          "txn_id": "pay_fuelstop_0938",
+          "amount_paise": 38714,
+          "error_code": "incorrect_otp",
+          "error_class": "auth_failure",
+          "why": "authentication failed -- only the customer can complete it"
+        },
+        {
+          "txn_id": "pay_fuelstop_0943",
+          "amount_paise": 34330,
+          "error_code": "authentication_failed",
+          "error_class": "auth_failure",
+          "why": "authentication failed -- only the customer can complete it"
+        },
+        {
+          "txn_id": "pay_fuelstop_0980",
+          "amount_paise": 76692,
+          "error_code": "otp_attempts_exceeded",
+          "error_class": "auth_failure",
+          "why": "authentication failed -- only the customer can complete it"
+        },
+        {
+          "txn_id": "pay_fuelstop_1000",
+          "amount_paise": 309791,
+          "error_code": "authentication_failed",
+          "error_class": "auth_failure",
+          "why": "authentication failed -- only the customer can complete it"
+        },
+        {
+          "txn_id": "pay_fuelstop_1022",
+          "amount_paise": 88877,
+          "error_code": "duplicate_refund_id",
+          "error_class": "hard_decline",
+          "why": "hard decline -- the instrument or configuration is permanently unusable"
+        },
+        {
+          "txn_id": "pay_fuelstop_1046",
+          "amount_paise": 71105,
+          "error_code": "mobile_number_invalid",
+          "error_class": "hard_decline",
+          "why": "hard decline -- the instrument or configuration is permanently unusable"
+        },
+        {
+          "txn_id": "pay_fuelstop_1063",
+          "amount_paise": 142761,
+          "error_code": "pin_attempts_exceeded",
+          "error_class": "auth_failure",
+          "why": "authentication failed -- only the customer can complete it"
+        },
+        {
+          "txn_id": "pay_fuelstop_1072",
+          "amount_paise": 85953,
+          "error_code": "pin_attempts_exceeded",
+          "error_class": "auth_failure",
+          "why": "authentication failed -- only the customer can complete it"
+        },
+        {
+          "txn_id": "pay_fuelstop_1096",
+          "amount_paise": 35369,
+          "error_code": "otp_attempts_exceeded",
+          "error_class": "auth_failure",
+          "why": "authentication failed -- only the customer can complete it"
+        },
+        {
+          "txn_id": "pay_fuelstop_1107",
+          "amount_paise": 25825,
+          "error_code": "incorrect_otp",
+          "error_class": "auth_failure",
+          "why": "authentication failed -- only the customer can complete it"
+        },
+        {
+          "txn_id": "pay_fuelstop_1162",
+          "amount_paise": 387836,
+          "error_code": "credit_limit_expired",
+          "error_class": "hard_decline",
+          "why": "hard decline -- the instrument or configuration is permanently unusable"
+        },
+        {
+          "txn_id": "pay_fuelstop_1165",
+          "amount_paise": 1141,
+          "error_code": "otp_expired",
+          "error_class": "auth_failure",
+          "why": "authentication failed -- only the customer can complete it"
+        },
+        {
+          "txn_id": "pay_fuelstop_1169",
+          "amount_paise": 51047,
+          "error_code": "incorrect_pin",
+          "error_class": "auth_failure",
+          "why": "authentication failed -- only the customer can complete it"
+        },
+        {
+          "txn_id": "pay_fuelstop_1173",
+          "amount_paise": 233590,
+          "error_code": "pin_not_set",
+          "error_class": "auth_failure",
+          "why": "authentication failed -- only the customer can complete it"
+        },
+        {
+          "txn_id": "pay_fuelstop_1327",
+          "amount_paise": 23172,
+          "error_code": "invalid_device",
+          "error_class": "auth_failure",
+          "why": "authentication failed -- only the customer can complete it"
+        }
+      ],
+      "method_failures": [
+        {
+          "kind": "factor_not_identified",
+          "factor": "method",
+          "detail": "effective support 1.19 distinct values -- there is nothing to reweight toward, so this attribution is unmeasurable rather than small"
+        },
+        {
+          "kind": "underpowered_batch",
+          "factor": "all",
+          "detail": "at n=3400 the 95% interval on the observed success rate is wider than half the gap being decomposed"
+        }
+      ]
+    },
+    "classifications": {
+      "amount_less_than_minimum_amount": {
+        "code": "amount_less_than_minimum_amount",
+        "category": "hard_decline",
+        "recoverable": false,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "authentication_failed": {
+        "code": "authentication_failed",
+        "category": "auth_failure",
+        "recoverable": false,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "bank_account_invalid": {
+        "code": "bank_account_invalid",
+        "category": "hard_decline",
+        "recoverable": false,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "bank_account_validation_failed": {
+        "code": "bank_account_validation_failed",
+        "category": "hard_decline",
+        "recoverable": false,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "bank_not_enabled": {
+        "code": "bank_not_enabled",
+        "category": "hard_decline",
+        "recoverable": false,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "bank_technical_error": {
+        "code": "bank_technical_error",
+        "category": "technical",
+        "recoverable": true,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "beneficiary_account_does_not_exist": {
+        "code": "beneficiary_account_does_not_exist",
+        "category": "hard_decline",
+        "recoverable": false,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "beneficiary_account_dormant": {
+        "code": "beneficiary_account_dormant",
+        "category": "hard_decline",
+        "recoverable": false,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "card_expired": {
+        "code": "card_expired",
+        "category": "hard_decline",
+        "recoverable": false,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "card_network_not_enabled": {
+        "code": "card_network_not_enabled",
+        "category": "hard_decline",
+        "recoverable": false,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "collect_on_mcc_blocked": {
+        "code": "collect_on_mcc_blocked",
+        "category": "hard_decline",
+        "recoverable": false,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "collect_request_pending": {
+        "code": "collect_request_pending",
+        "category": "soft_decline",
+        "recoverable": true,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "compliance_violation": {
+        "code": "compliance_violation",
+        "category": "hard_decline",
+        "recoverable": false,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "credit_failed": {
+        "code": "credit_failed",
+        "category": "technical",
+        "recoverable": true,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "credit_limit_exceeded": {
+        "code": "credit_limit_exceeded",
+        "category": "soft_decline",
+        "recoverable": true,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "credit_limit_expired": {
+        "code": "credit_limit_expired",
+        "category": "hard_decline",
+        "recoverable": false,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "credit_limit_inactive": {
+        "code": "credit_limit_inactive",
+        "category": "hard_decline",
+        "recoverable": false,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "debit_declined": {
+        "code": "debit_declined",
+        "category": "soft_decline",
+        "recoverable": true,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "debit_instrument_blocked": {
+        "code": "debit_instrument_blocked",
+        "category": "hard_decline",
+        "recoverable": false,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "deemed_transaction": {
+        "code": "deemed_transaction",
+        "category": "technical",
+        "recoverable": true,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "duplicate_refund_id": {
+        "code": "duplicate_refund_id",
+        "category": "hard_decline",
+        "recoverable": false,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "duplicate_rrn_found": {
+        "code": "duplicate_rrn_found",
+        "category": "technical",
+        "recoverable": true,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "incorrect_card_expiry_date": {
+        "code": "incorrect_card_expiry_date",
+        "category": "auth_failure",
+        "recoverable": false,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "incorrect_cvv": {
+        "code": "incorrect_cvv",
+        "category": "auth_failure",
+        "recoverable": false,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "incorrect_otp": {
+        "code": "incorrect_otp",
+        "category": "auth_failure",
+        "recoverable": false,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "incorrect_pin": {
+        "code": "incorrect_pin",
+        "category": "auth_failure",
+        "recoverable": false,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "input_validation_failed": {
+        "code": "input_validation_failed",
+        "category": "hard_decline",
+        "recoverable": false,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "insufficient_funds": {
+        "code": "insufficient_funds",
+        "category": "soft_decline",
+        "recoverable": true,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "international_transaction_not_allowed": {
+        "code": "international_transaction_not_allowed",
+        "category": "hard_decline",
+        "recoverable": false,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "invalid_currency": {
+        "code": "invalid_currency",
+        "category": "hard_decline",
+        "recoverable": false,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "invalid_device": {
+        "code": "invalid_device",
+        "category": "auth_failure",
+        "recoverable": false,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "invalid_email": {
+        "code": "invalid_email",
+        "category": "hard_decline",
+        "recoverable": false,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "invalid_mobile_number": {
+        "code": "invalid_mobile_number",
+        "category": "hard_decline",
+        "recoverable": false,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "invalid_request": {
+        "code": "invalid_request",
+        "category": "hard_decline",
+        "recoverable": false,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "invalid_response_from_gateway": {
+        "code": "invalid_response_from_gateway",
+        "category": "technical",
+        "recoverable": true,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "live_mode_not_enabled": {
+        "code": "live_mode_not_enabled",
+        "category": "hard_decline",
+        "recoverable": false,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "merchant_not_activated": {
+        "code": "merchant_not_activated",
+        "category": "hard_decline",
+        "recoverable": false,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "mismatch_in_transaction_details": {
+        "code": "mismatch_in_transaction_details",
+        "category": "hard_decline",
+        "recoverable": false,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "mobile_number_invalid": {
+        "code": "mobile_number_invalid",
+        "category": "hard_decline",
+        "recoverable": false,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "order_already_paid": {
+        "code": "order_already_paid",
+        "category": "hard_decline",
+        "recoverable": false,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "order_amount_mismatch": {
+        "code": "order_amount_mismatch",
+        "category": "hard_decline",
+        "recoverable": false,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "otp_attempts_exceeded": {
+        "code": "otp_attempts_exceeded",
+        "category": "auth_failure",
+        "recoverable": false,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "otp_expired": {
+        "code": "otp_expired",
+        "category": "auth_failure",
+        "recoverable": false,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "payment_cancelled": {
+        "code": "payment_cancelled",
+        "category": "auth_failure",
+        "recoverable": false,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "payment_collect_request_expired": {
+        "code": "payment_collect_request_expired",
+        "category": "soft_decline",
+        "recoverable": true,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "payment_declined": {
+        "code": "payment_declined",
+        "category": "soft_decline",
+        "recoverable": true,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "payment_declined_due_to_high_traffic": {
+        "code": "payment_declined_due_to_high_traffic",
+        "category": "technical",
+        "recoverable": true,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "payment_failed": {
+        "code": "payment_failed",
+        "category": "technical",
+        "recoverable": true,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "payment_method_not_enabled": {
+        "code": "payment_method_not_enabled",
+        "category": "hard_decline",
+        "recoverable": false,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "payment_pending": {
+        "code": "payment_pending",
+        "category": "soft_decline",
+        "recoverable": true,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "payment_pending_approval": {
+        "code": "payment_pending_approval",
+        "category": "soft_decline",
+        "recoverable": true,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "payment_session_expired": {
+        "code": "payment_session_expired",
+        "category": "soft_decline",
+        "recoverable": true,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "payment_timed_out": {
+        "code": "payment_timed_out",
+        "category": "technical",
+        "recoverable": true,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "pin_attempts_exceeded": {
+        "code": "pin_attempts_exceeded",
+        "category": "auth_failure",
+        "recoverable": false,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "pin_not_set": {
+        "code": "pin_not_set",
+        "category": "auth_failure",
+        "recoverable": false,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "psp_app_not_supported": {
+        "code": "psp_app_not_supported",
+        "category": "hard_decline",
+        "recoverable": false,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "psp_not_registered": {
+        "code": "psp_not_registered",
+        "category": "hard_decline",
+        "recoverable": false,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "transaction_daily_count_exceeded": {
+        "code": "transaction_daily_count_exceeded",
+        "category": "soft_decline",
+        "recoverable": true,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "transaction_daily_limit_exceeded": {
+        "code": "transaction_daily_limit_exceeded",
+        "category": "soft_decline",
+        "recoverable": true,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "transaction_frequency_limit_exceeded": {
+        "code": "transaction_frequency_limit_exceeded",
+        "category": "soft_decline",
+        "recoverable": true,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "transaction_limit_exceeded": {
+        "code": "transaction_limit_exceeded",
+        "category": "soft_decline",
+        "recoverable": true,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "upi_autopay_not_supported_on_psp": {
+        "code": "upi_autopay_not_supported_on_psp",
+        "category": "hard_decline",
+        "recoverable": false,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "upi_collect_not_enabled": {
+        "code": "upi_collect_not_enabled",
+        "category": "hard_decline",
+        "recoverable": false,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "upi_intent_not_enabled": {
+        "code": "upi_intent_not_enabled",
+        "category": "hard_decline",
+        "recoverable": false,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "user_not_eligible": {
+        "code": "user_not_eligible",
+        "category": "hard_decline",
+        "recoverable": false,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "verification_failed": {
+        "code": "verification_failed",
+        "category": "technical",
+        "recoverable": true,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      }
+    },
+    "needs_review": []
+  },
+  "pending_actions": [
+    {
+      "group_id": "flag_for_investigation",
+      "action_type": "flag_for_investigation",
+      "title": "Flag 5 findings for investigation",
+      "why": "Signals too weak to act on. The agent refuses rather than guessing.",
+      "count": 5,
+      "total_paise": 0,
+      "auto": false,
+      "actions": [
+        {
+          "action_type": "flag_for_investigation",
+          "txn_id": "merchant:fuelstop",
+          "amount_paise": 0,
+          "target_bank": null,
+          "scheduled_time": null,
+          "reason": "bank: attribution 0.18 pts is inside its own measured error of +/-0.54 pts -- the engine cannot tell this from zero",
+          "requires_merchant_approval": false
+        },
+        {
+          "action_type": "flag_for_investigation",
+          "txn_id": "merchant:fuelstop",
+          "amount_paise": 0,
+          "target_bank": null,
+          "scheduled_time": null,
+          "reason": "method: factor not identified -- the merchant has effectively one value here, so there is nothing to reweight toward and the attribution is unmeasurable rather than small",
+          "requires_merchant_approval": false
+        },
+        {
+          "action_type": "flag_for_investigation",
+          "txn_id": "merchant:fuelstop",
+          "amount_paise": 0,
+          "target_bank": null,
+          "scheduled_time": null,
+          "reason": "hour: attribution 0.15 pts is inside its own measured error of +/-0.53 pts -- the engine cannot tell this from zero",
+          "requires_merchant_approval": false
+        },
+        {
+          "action_type": "flag_for_investigation",
+          "txn_id": "merchant:fuelstop",
+          "amount_paise": 0,
+          "target_bank": null,
+          "scheduled_time": null,
+          "reason": "amount_band: attribution 0.19 pts is inside its own measured error of +/-0.53 pts -- the engine cannot tell this from zero",
+          "requires_merchant_approval": false
+        },
+        {
+          "action_type": "flag_for_investigation",
+          "txn_id": "merchant:fuelstop",
+          "amount_paise": 0,
+          "target_bank": null,
+          "scheduled_time": null,
+          "reason": "process_gap: No process change is warranted; continue monitoring process gap each period to catch any future regression.",
+          "requires_merchant_approval": false
+        }
+      ]
+    }
+  ],
+  "applied": []
+}
