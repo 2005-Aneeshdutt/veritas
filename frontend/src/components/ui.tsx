@@ -1,0 +1,352 @@
+"use client";
+
+import { ReactNode, useEffect, useRef, useState } from "react";
+
+/* ------------------------------------------------------------------ atoms */
+
+export function Eyebrow({ children }: { children: ReactNode }) {
+  return <div className="eyebrow">{children}</div>;
+}
+
+export function Card({
+  children,
+  className = "",
+  glow,
+  onClick,
+}: {
+  children: ReactNode;
+  className?: string;
+  glow?: "gold" | "mint" | "rose";
+  onClick?: () => void;
+}) {
+  const glowCls =
+    glow === "gold"
+      ? "hover:shadow-glow"
+      : glow === "mint"
+      ? "hover:shadow-glow-mint"
+      : glow === "rose"
+      ? "hover:shadow-glow-rose"
+      : "";
+  return (
+    <div
+      onClick={onClick}
+      className={`glass p-5 transition-all duration-300 ${glowCls} ${
+        onClick ? "cursor-pointer hover:-translate-y-0.5" : ""
+      } ${className}`}
+    >
+      {children}
+    </div>
+  );
+}
+
+export function SectionHeader({
+  eyebrow,
+  title,
+  sub,
+  right,
+}: {
+  eyebrow?: string;
+  title: string;
+  sub?: ReactNode;
+  right?: ReactNode;
+}) {
+  return (
+    <div className="flex items-start justify-between gap-6 mb-4">
+      <div className="min-w-0">
+        {eyebrow && <Eyebrow>{eyebrow}</Eyebrow>}
+        <h2 className="text-lg font-semibold mt-1">{title}</h2>
+        {sub && (
+          <p className="text-sm text-muted mt-1.5 max-w-2xl leading-relaxed">{sub}</p>
+        )}
+      </div>
+      {right && <div className="shrink-0">{right}</div>}
+    </div>
+  );
+}
+
+/* --------------------------------------------------------------- tooltip */
+
+/**
+ * Hover explanation. Used everywhere a term would otherwise need the reader to
+ * already know the method.
+ */
+export function Info({ text, children }: { text: string; children?: ReactNode }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <span
+      className="relative inline-flex items-center"
+      onMouseEnter={() => setOpen(true)}
+      onMouseLeave={() => setOpen(false)}
+    >
+      {children ?? (
+        <span
+          className="ml-1 w-3.5 h-3.5 inline-flex items-center justify-center rounded-full
+                     border border-line text-[9px] text-faint hover:text-gold
+                     hover:border-gold/50 transition-colors cursor-help"
+        >
+          ?
+        </span>
+      )}
+      {open && (
+        <span
+          className="absolute z-50 bottom-full left-1/2 -translate-x-1/2 mb-2 w-72
+                     glass-raised p-3 text-xs leading-relaxed text-muted
+                     font-body normal-case tracking-normal animate-rise shadow-lift"
+        >
+          {text}
+        </span>
+      )}
+    </span>
+  );
+}
+
+/* -------------------------------------------------------- animated number */
+
+/**
+ * Counts up on mount. Purely presentational — the value is exact, the motion
+ * just gives the eye something to follow so a dashboard of figures does not
+ * land all at once.
+ */
+export function Ticker({
+  value,
+  decimals = 0,
+  prefix = "",
+  suffix = "",
+  duration = 900,
+  className = "",
+}: {
+  value: number;
+  decimals?: number;
+  prefix?: string;
+  suffix?: string;
+  duration?: number;
+  className?: string;
+}) {
+  const [shown, setShown] = useState(0);
+  const raf = useRef<number>();
+  useEffect(() => {
+    const reduce = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+    if (reduce) {
+      setShown(value);
+      return;
+    }
+    const start = performance.now();
+    const from = 0;
+    const tick = (now: number) => {
+      const t = Math.min(1, (now - start) / duration);
+      // easeOutExpo
+      const e = t === 1 ? 1 : 1 - Math.pow(2, -10 * t);
+      setShown(from + (value - from) * e);
+      if (t < 1) raf.current = requestAnimationFrame(tick);
+    };
+    raf.current = requestAnimationFrame(tick);
+    return () => {
+      if (raf.current) cancelAnimationFrame(raf.current);
+    };
+  }, [value, duration]);
+
+  return (
+    <span className={`num ${className}`}>
+      {prefix}
+      {shown.toLocaleString("en-IN", {
+        minimumFractionDigits: decimals,
+        maximumFractionDigits: decimals,
+      })}
+      {suffix}
+    </span>
+  );
+}
+
+/* ------------------------------------------------------------- metric card */
+
+export function Metric({
+  label,
+  value,
+  sub,
+  kind,
+  error,
+  tone = "default",
+  info,
+  onClick,
+}: {
+  label: string;
+  value: ReactNode;
+  sub?: ReactNode;
+  /** Required: RULE 2 is enforced by the type, not by discipline. */
+  kind: "measured" | "projected";
+  /** Rendered as "± n", sourced from the validation sweep. Never a guess. */
+  error?: number | null;
+  tone?: "default" | "good" | "bad";
+  info?: string;
+  onClick?: () => void;
+}) {
+  const toneCls =
+    tone === "good" ? "text-mint" : tone === "bad" ? "text-rose" : "text-ink";
+  return (
+    <div
+      onClick={onClick}
+      className={`${
+        kind === "measured" ? "panel-measured" : "panel-projected"
+      } p-4 flex flex-col gap-1 transition-transform duration-300 ${
+        onClick ? "cursor-pointer hover:-translate-y-0.5" : ""
+      }`}
+    >
+      <div className="eyebrow flex items-center">
+        {label}
+        {info && <Info text={info} />}
+      </div>
+      <div className={`text-2xl font-display font-bold leading-none mt-1 ${toneCls}`}>
+        {value}
+        {error != null && (
+          <span className="text-sm num font-normal text-muted ml-1.5">
+            ± {error.toFixed(2)}
+          </span>
+        )}
+      </div>
+      {sub && <div className="text-xs text-muted leading-snug mt-0.5">{sub}</div>}
+    </div>
+  );
+}
+
+/**
+ * The labelled divider. This wall IS the thesis, rendered — so it gets a real
+ * caption on each side rather than a small badge nobody reads.
+ */
+export function Wall({
+  measured,
+  projected,
+}: {
+  measured: ReactNode;
+  projected: ReactNode;
+}) {
+  return (
+    <div className="grid grid-cols-1 xl:grid-cols-[1fr_auto_1fr] gap-5">
+      <section>
+        <div className="flex items-center gap-2 mb-3">
+          <span className="chip-measured">measured</span>
+          <span className="text-xs text-muted">
+            against ground truth, or cryptographically verified
+          </span>
+        </div>
+        <div className="grid grid-cols-2 gap-3">{measured}</div>
+      </section>
+
+      <div className="hidden xl:flex flex-col items-center px-2">
+        <div className="w-px flex-1 bg-gradient-to-b from-transparent via-line to-transparent" />
+        <div className="py-4 eyebrow [writing-mode:vertical-rl] rotate-180">
+          the wall
+        </div>
+        <div className="w-px flex-1 bg-gradient-to-b from-transparent via-line to-transparent" />
+      </div>
+
+      <section>
+        <div className="flex items-center gap-2 mb-3">
+          <span className="chip-projected">projected</span>
+          <span className="text-xs text-muted">
+            modelled — assumptions stated in the repo
+          </span>
+        </div>
+        <div className="grid grid-cols-2 gap-3">{projected}</div>
+      </section>
+    </div>
+  );
+}
+
+/* ------------------------------------------------------------- misc atoms */
+
+export function Bar({
+  value,
+  max,
+  color = "#E5B94E",
+  hatched,
+}: {
+  value: number;
+  max: number;
+  color?: string;
+  hatched?: boolean;
+}) {
+  const pct = max > 0 ? Math.max(0, Math.min(100, (value / max) * 100)) : 0;
+  return (
+    <div className="h-1.5 w-full rounded-full bg-white/[0.05] overflow-hidden">
+      <div
+        className={`h-full rounded-full transition-[width] duration-700 ${
+          hatched ? "hatched" : ""
+        }`}
+        style={{ width: `${pct}%`, background: hatched ? undefined : color }}
+      />
+    </div>
+  );
+}
+
+export function Spark({
+  values,
+  color = "#E5B94E",
+  height = 28,
+}: {
+  values: number[];
+  color?: string;
+  height?: number;
+}) {
+  if (!values.length) return null;
+  const min = Math.min(...values);
+  const max = Math.max(...values);
+  const span = max - min || 1;
+  const pts = values
+    .map((v, i) => {
+      const x = (i / (values.length - 1 || 1)) * 100;
+      const y = height - ((v - min) / span) * height;
+      return `${x},${y}`;
+    })
+    .join(" ");
+  return (
+    <svg viewBox={`0 0 100 ${height}`} preserveAspectRatio="none"
+         className="w-full" style={{ height }}>
+      <polyline
+        points={pts}
+        fill="none"
+        stroke={color}
+        strokeWidth="1.6"
+        vectorEffect="non-scaling-stroke"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+export function Empty({ label }: { label: string }) {
+  return (
+    <div className="glass p-10 text-center">
+      <div className="text-sm text-muted font-mono">{label}</div>
+    </div>
+  );
+}
+
+export function Loading({ label = "loading" }: { label?: string }) {
+  return (
+    <div className="space-y-4 animate-rise">
+      <div className="shimmer h-8 w-64" />
+      <div className="grid grid-cols-4 gap-3">
+        {[0, 1, 2, 3].map((i) => (
+          <div key={i} className="shimmer h-24" />
+        ))}
+      </div>
+      <div className="shimmer h-48" />
+      <div className="eyebrow">{label}…</div>
+    </div>
+  );
+}
+
+/** Staggered entrance so a dense page arrives in readable order. */
+export function Stagger({
+  children,
+  i = 0,
+}: {
+  children: ReactNode;
+  i?: number;
+}) {
+  return (
+    <div className="animate-rise" style={{ animationDelay: `${i * 60}ms` }}>
+      {children}
+    </div>
+  );
+}
