@@ -1,0 +1,421 @@
+{
+  "part_a_s_star_level": {
+    "note": "The attributions are EXACTLY invariant to the level of s_star, and this is structural: v(S) contains the cohort's factor PROFILE but never its headline rate. Shifting s_star moves the gap and the residual, and therefore the rupee figure, but cannot reorder the causes. The script asserts this rather than observing it.",
+    "max_attribution_move_pts_across_all_shifts": 0.0,
+    "by_shift": {
+      "-2.0": {
+        "mean_gap_change_pts": -2.0,
+        "mean_residual_change_pts": -2.0,
+        "max_attribution_move_pts": 0.0,
+        "primary_cause_flips": 0
+      },
+      "-1.0": {
+        "mean_gap_change_pts": -1.0,
+        "mean_residual_change_pts": -1.0,
+        "max_attribution_move_pts": 0.0,
+        "primary_cause_flips": 0
+      },
+      "-0.5": {
+        "mean_gap_change_pts": -0.5,
+        "mean_residual_change_pts": -0.5,
+        "max_attribution_move_pts": 0.0,
+        "primary_cause_flips": 0
+      },
+      "+0.0": {
+        "mean_gap_change_pts": 0.0,
+        "mean_residual_change_pts": 0.0,
+        "max_attribution_move_pts": 0.0,
+        "primary_cause_flips": 0
+      },
+      "+0.5": {
+        "mean_gap_change_pts": 0.5,
+        "mean_residual_change_pts": 0.5,
+        "max_attribution_move_pts": 0.0,
+        "primary_cause_flips": 0
+      },
+      "+1.0": {
+        "mean_gap_change_pts": 1.0,
+        "mean_residual_change_pts": 1.0,
+        "max_attribution_move_pts": 0.0,
+        "primary_cause_flips": 0
+      },
+      "+2.0": {
+        "mean_gap_change_pts": 2.0,
+        "mean_residual_change_pts": 2.0,
+        "max_attribution_move_pts": 0.0,
+        "primary_cause_flips": 0
+      }
+    }
+  },
+  "part_b_cohort_profile": {
+    "note": "The assumption that actually bites. If the cohort's bank or method mix is wrong, the reweighting target is wrong. Measured by blending the cohort marginals toward uniform.",
+    "by_blend_alpha": {
+      "0.00": {
+        "n_merchants": 80,
+        "mean_abs_attribution_move_pts": 0.0,
+        "primary_cause_flips": 0,
+        "primary_cause_flip_rate": 0.0
+      },
+      "0.10": {
+        "n_merchants": 80,
+        "mean_abs_attribution_move_pts": 0.0826,
+        "primary_cause_flips": 6,
+        "primary_cause_flip_rate": 0.075
+      },
+      "0.25": {
+        "n_merchants": 80,
+        "mean_abs_attribution_move_pts": 0.2034,
+        "primary_cause_flips": 12,
+        "primary_cause_flip_rate": 0.15
+      },
+      "0.50": {
+        "n_merchants": 80,
+        "mean_abs_attribution_move_pts": 0.4161,
+        "primary_cause_flips": 18,
+        "primary_cause_flip_rate": 0.225
+      }
+    }
+  },
+  "part_c_assumed_priors": {
+    "note": "priors.py states that the method, hour and amount coefficients are assumed, each with a plausible range. This sweeps ALL of them across their own stated ranges at once, which is the harshest form of the question. -1.0 is the low end of every range, +1.0 the high end.",
+    "by_prior_scale": {
+      "-1.0": {
+        "n_merchants": 80,
+        "mean_abs_attribution_move_pts": 0.6374,
+        "mean_gap_change_pts": 2.1506,
+        "primary_cause_flips": 10,
+        "primary_cause_flip_rate": 0.125
+      },
+      "-0.5": {
+        "n_merchants": 80,
+        "mean_abs_attribution_move_pts": 0.3468,
+        "mean_gap_change_pts": 1.1554,
+        "primary_cause_flips": 5,
+        "primary_cause_flip_rate": 0.0625
+      },
+      "+0.0": {
+        "n_merchants": 80,
+        "mean_abs_attribution_move_pts": 0.0,
+        "mean_gap_change_pts": 0.0,
+        "primary_cause_flips": 0,
+        "primary_cause_flip_rate": 0.0
+      },
+      "+0.5": {
+        "n_merchants": 80,
+        "mean_abs_attribution_move_pts": 0.5159,
+        "mean_gap_change_pts": -1.6487,
+        "primary_cause_flips": 3,
+        "primary_cause_flip_rate": 0.0375
+      },
+      "+1.0": {
+        "n_merchants": 80,
+        "mean_abs_attribution_move_pts": 1.1289,
+        "mean_gap_change_pts": -3.5781,
+        "primary_cause_flips": 9,
+        "primary_cause_flip_rate": 0.1125
+      }
+    }
+  },
+  "demo_merchants": {
+    "quickmart": [
+      {
+        "shift_pts": -2.0,
+        "s_star_pct": 89.735,
+        "gap_pts": 0.862,
+        "gap_value_paise": 2288961,
+        "attributions": {
+          "bank": 2.758,
+          "method": 0.175,
+          "hour": 0.106,
+          "amount_band": 0.144
+        },
+        "residual_pts": -2.322,
+        "primary_cause": "bank"
+      },
+      {
+        "shift_pts": -1.0,
+        "s_star_pct": 90.735,
+        "gap_pts": 1.862,
+        "gap_value_paise": 4945781,
+        "attributions": {
+          "bank": 2.758,
+          "method": 0.175,
+          "hour": 0.106,
+          "amount_band": 0.144
+        },
+        "residual_pts": -1.322,
+        "primary_cause": "bank"
+      },
+      {
+        "shift_pts": -0.5,
+        "s_star_pct": 91.235,
+        "gap_pts": 2.362,
+        "gap_value_paise": 6274191,
+        "attributions": {
+          "bank": 2.758,
+          "method": 0.175,
+          "hour": 0.106,
+          "amount_band": 0.144
+        },
+        "residual_pts": -0.822,
+        "primary_cause": "bank"
+      },
+      {
+        "shift_pts": 0.0,
+        "s_star_pct": 91.735,
+        "gap_pts": 2.862,
+        "gap_value_paise": 7602601,
+        "attributions": {
+          "bank": 2.758,
+          "method": 0.175,
+          "hour": 0.106,
+          "amount_band": 0.144
+        },
+        "residual_pts": -0.322,
+        "primary_cause": "bank"
+      },
+      {
+        "shift_pts": 0.5,
+        "s_star_pct": 92.235,
+        "gap_pts": 3.362,
+        "gap_value_paise": 8931011,
+        "attributions": {
+          "bank": 2.758,
+          "method": 0.175,
+          "hour": 0.106,
+          "amount_band": 0.144
+        },
+        "residual_pts": 0.178,
+        "primary_cause": "bank"
+      },
+      {
+        "shift_pts": 1.0,
+        "s_star_pct": 92.735,
+        "gap_pts": 3.862,
+        "gap_value_paise": 10259421,
+        "attributions": {
+          "bank": 2.758,
+          "method": 0.175,
+          "hour": 0.106,
+          "amount_band": 0.144
+        },
+        "residual_pts": 0.678,
+        "primary_cause": "bank"
+      },
+      {
+        "shift_pts": 2.0,
+        "s_star_pct": 93.735,
+        "gap_pts": 4.862,
+        "gap_value_paise": 12916241,
+        "attributions": {
+          "bank": 2.758,
+          "method": 0.175,
+          "hour": 0.106,
+          "amount_band": 0.144
+        },
+        "residual_pts": 1.678,
+        "primary_cause": "bank"
+      }
+    ],
+    "cloudsync": [
+      {
+        "shift_pts": -2.0,
+        "s_star_pct": 85.354,
+        "gap_pts": 2.727,
+        "gap_value_paise": 24659039,
+        "attributions": {
+          "bank": 0.168,
+          "method": 0.292,
+          "hour": 3.187,
+          "amount_band": 1.461
+        },
+        "residual_pts": -2.38,
+        "primary_cause": "hour"
+      },
+      {
+        "shift_pts": -1.0,
+        "s_star_pct": 86.354,
+        "gap_pts": 3.727,
+        "gap_value_paise": 33700895,
+        "attributions": {
+          "bank": 0.168,
+          "method": 0.292,
+          "hour": 3.187,
+          "amount_band": 1.461
+        },
+        "residual_pts": -1.38,
+        "primary_cause": "hour"
+      },
+      {
+        "shift_pts": -0.5,
+        "s_star_pct": 86.854,
+        "gap_pts": 4.227,
+        "gap_value_paise": 38221824,
+        "attributions": {
+          "bank": 0.168,
+          "method": 0.292,
+          "hour": 3.187,
+          "amount_band": 1.461
+        },
+        "residual_pts": -0.88,
+        "primary_cause": "hour"
+      },
+      {
+        "shift_pts": 0.0,
+        "s_star_pct": 87.354,
+        "gap_pts": 4.727,
+        "gap_value_paise": 42742752,
+        "attributions": {
+          "bank": 0.168,
+          "method": 0.292,
+          "hour": 3.187,
+          "amount_band": 1.461
+        },
+        "residual_pts": -0.38,
+        "primary_cause": "hour"
+      },
+      {
+        "shift_pts": 0.5,
+        "s_star_pct": 87.854,
+        "gap_pts": 5.227,
+        "gap_value_paise": 47263680,
+        "attributions": {
+          "bank": 0.168,
+          "method": 0.292,
+          "hour": 3.187,
+          "amount_band": 1.461
+        },
+        "residual_pts": 0.12,
+        "primary_cause": "hour"
+      },
+      {
+        "shift_pts": 1.0,
+        "s_star_pct": 88.354,
+        "gap_pts": 5.727,
+        "gap_value_paise": 51784608,
+        "attributions": {
+          "bank": 0.168,
+          "method": 0.292,
+          "hour": 3.187,
+          "amount_band": 1.461
+        },
+        "residual_pts": 0.62,
+        "primary_cause": "hour"
+      },
+      {
+        "shift_pts": 2.0,
+        "s_star_pct": 89.354,
+        "gap_pts": 6.727,
+        "gap_value_paise": 60826464,
+        "attributions": {
+          "bank": 0.168,
+          "method": 0.292,
+          "hour": 3.187,
+          "amount_band": 1.461
+        },
+        "residual_pts": 1.62,
+        "primary_cause": "hour"
+      }
+    ],
+    "techbazaar": [
+      {
+        "shift_pts": -2.0,
+        "s_star_pct": 86.071,
+        "gap_pts": 0.752,
+        "gap_value_paise": 10242237,
+        "attributions": {
+          "bank": -0.097,
+          "method": 1.324,
+          "hour": -0.013,
+          "amount_band": 0.871
+        },
+        "residual_pts": -1.333,
+        "primary_cause": "method"
+      },
+      {
+        "shift_pts": -1.0,
+        "s_star_pct": 87.071,
+        "gap_pts": 1.752,
+        "gap_value_paise": 23862085,
+        "attributions": {
+          "bank": -0.097,
+          "method": 1.324,
+          "hour": -0.013,
+          "amount_band": 0.871
+        },
+        "residual_pts": -0.333,
+        "primary_cause": "method"
+      },
+      {
+        "shift_pts": -0.5,
+        "s_star_pct": 87.571,
+        "gap_pts": 2.252,
+        "gap_value_paise": 30672009,
+        "attributions": {
+          "bank": -0.097,
+          "method": 1.324,
+          "hour": -0.013,
+          "amount_band": 0.871
+        },
+        "residual_pts": 0.167,
+        "primary_cause": "method"
+      },
+      {
+        "shift_pts": 0.0,
+        "s_star_pct": 88.071,
+        "gap_pts": 2.752,
+        "gap_value_paise": 37481933,
+        "attributions": {
+          "bank": -0.097,
+          "method": 1.324,
+          "hour": -0.013,
+          "amount_band": 0.871
+        },
+        "residual_pts": 0.667,
+        "primary_cause": "method"
+      },
+      {
+        "shift_pts": 0.5,
+        "s_star_pct": 88.571,
+        "gap_pts": 3.252,
+        "gap_value_paise": 44291857,
+        "attributions": {
+          "bank": -0.097,
+          "method": 1.324,
+          "hour": -0.013,
+          "amount_band": 0.871
+        },
+        "residual_pts": 1.167,
+        "primary_cause": "method"
+      },
+      {
+        "shift_pts": 1.0,
+        "s_star_pct": 89.071,
+        "gap_pts": 3.752,
+        "gap_value_paise": 51101781,
+        "attributions": {
+          "bank": -0.097,
+          "method": 1.324,
+          "hour": -0.013,
+          "amount_band": 0.871
+        },
+        "residual_pts": 1.667,
+        "primary_cause": "method"
+      },
+      {
+        "shift_pts": 2.0,
+        "s_star_pct": 90.071,
+        "gap_pts": 4.752,
+        "gap_value_paise": 64721629,
+        "attributions": {
+          "bank": -0.097,
+          "method": 1.324,
+          "hour": -0.013,
+          "amount_band": 0.871
+        },
+        "residual_pts": 2.667,
+        "primary_cause": "method"
+      }
+    ]
+  }
+}
