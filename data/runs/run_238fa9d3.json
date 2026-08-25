@@ -1,0 +1,3536 @@
+{
+  "run_id": "run_238fa9d3",
+  "merchant_id": "cloudsync",
+  "merchant_name": "CloudSync Pro",
+  "mcc": "5734",
+  "seed": 20260824,
+  "started_at": 1787681093.9186404,
+  "duration_ms": 27582,
+  "commit": "b734ee9",
+  "models": {
+    "fast": "claude-haiku-4.5",
+    "reasoning": "claude-sonnet-4.6",
+    "temperature": 0
+  },
+  "cache_hit_rate": 0.0,
+  "llm_calls": 1,
+  "llm_cost_inr": 2.0254,
+  "used_stubs": false,
+  "traces": [
+    {
+      "run_id": "run_238fa9d3",
+      "seq": 0,
+      "node": "ingest",
+      "kind": "deterministic",
+      "status": "ok",
+      "started_at": 1787681096.9558437,
+      "duration_ms": 51,
+      "input_summary": {
+        "merchant": "cloudsync",
+        "mcc": "5734"
+      },
+      "output_summary": {
+        "transactions": 1180,
+        "failures": 227,
+        "observed_success_pct": 80.76,
+        "wilson_halfwidth_pts": 2.248
+      },
+      "branch_taken": null,
+      "model": null,
+      "prompt": null,
+      "raw_response": null,
+      "tokens_in": null,
+      "tokens_out": null,
+      "cache_hit": null,
+      "stub": null,
+      "confidence": null,
+      "reason_codes": [],
+      "intermediates": {
+        "cohort_s_star_pct": 87.354
+      }
+    },
+    {
+      "run_id": "run_238fa9d3",
+      "seq": 1,
+      "node": "classify",
+      "kind": "llm",
+      "status": "ok",
+      "started_at": 1787681097.0079348,
+      "duration_ms": 3,
+      "input_summary": {
+        "distinct_codes": 61,
+        "failures": 227
+      },
+      "output_summary": {
+        "from_taxonomy": 61,
+        "from_llm": 0,
+        "low_confidence": 0,
+        "classes": {
+          "hard_decline": 50,
+          "auth_failure": 40,
+          "technical": 9,
+          "soft_decline": 128
+        }
+      },
+      "branch_taken": "bank_health",
+      "model": "claude-haiku-4.5",
+      "prompt": null,
+      "raw_response": null,
+      "tokens_in": null,
+      "tokens_out": null,
+      "cache_hit": null,
+      "stub": null,
+      "confidence": 1.0,
+      "reason_codes": [],
+      "intermediates": {}
+    },
+    {
+      "run_id": "run_238fa9d3",
+      "seq": 2,
+      "node": "human_review",
+      "kind": "deterministic",
+      "status": "skipped",
+      "started_at": 1787681097.010939,
+      "duration_ms": 0,
+      "input_summary": {},
+      "output_summary": {
+        "reason": "every classification at or above 0.85 confidence"
+      },
+      "branch_taken": null,
+      "model": null,
+      "prompt": null,
+      "raw_response": null,
+      "tokens_in": null,
+      "tokens_out": null,
+      "cache_hit": null,
+      "stub": null,
+      "confidence": null,
+      "reason_codes": [],
+      "intermediates": {}
+    },
+    {
+      "run_id": "run_238fa9d3",
+      "seq": 3,
+      "node": "bank_health",
+      "kind": "deterministic",
+      "status": "ok",
+      "started_at": 1787681097.0119598,
+      "duration_ms": 5,
+      "input_summary": {},
+      "output_summary": {
+        "banks_examined": 10,
+        "worse_than_npci_baseline": [
+          "State Bank of India",
+          "HDFC Bank Ltd.",
+          "Bank of Baroda",
+          "Punjab National Bank",
+          "Union Bank of India",
+          "Canara Bank",
+          "Kotak Mahindra Bank",
+          "Axis Bank Ltd.",
+          "ICICI Bank Ltd.",
+          "Airtel Payments Bank Limited"
+        ],
+        "npci_period": "2025-08"
+      },
+      "branch_taken": null,
+      "model": null,
+      "prompt": null,
+      "raw_response": null,
+      "tokens_in": null,
+      "tokens_out": null,
+      "cache_hit": null,
+      "stub": null,
+      "confidence": null,
+      "reason_codes": [
+        "NPCI_JOIN_OK"
+      ],
+      "intermediates": {
+        "bank_table": [
+          {
+            "bank": "State Bank of India",
+            "share_pct": 28.9,
+            "merchant_fail_pct": 16.13,
+            "npci_bd_pct": 5.92,
+            "npci_td_pct": 0.42,
+            "npci_approved_pct": 93.66,
+            "in_npci_top50": true
+          },
+          {
+            "bank": "HDFC Bank Ltd.",
+            "share_pct": 8.64,
+            "merchant_fail_pct": 13.73,
+            "npci_bd_pct": 4.63,
+            "npci_td_pct": 0.01,
+            "npci_approved_pct": 95.37,
+            "in_npci_top50": true
+          },
+          {
+            "bank": "Bank of Baroda",
+            "share_pct": 6.53,
+            "merchant_fail_pct": 23.38,
+            "npci_bd_pct": 8.5,
+            "npci_td_pct": 0.05,
+            "npci_approved_pct": 91.44,
+            "in_npci_top50": true
+          },
+          {
+            "bank": "Punjab National Bank",
+            "share_pct": 6.36,
+            "merchant_fail_pct": 30.67,
+            "npci_bd_pct": 8.61,
+            "npci_td_pct": 0.19,
+            "npci_approved_pct": 91.2,
+            "in_npci_top50": true
+          },
+          {
+            "bank": "Union Bank of India",
+            "share_pct": 6.19,
+            "merchant_fail_pct": 13.7,
+            "npci_bd_pct": 7.02,
+            "npci_td_pct": 0.75,
+            "npci_approved_pct": 92.23,
+            "in_npci_top50": true
+          },
+          {
+            "bank": "Canara Bank",
+            "share_pct": 5.59,
+            "merchant_fail_pct": 22.73,
+            "npci_bd_pct": 6.92,
+            "npci_td_pct": 0.36,
+            "npci_approved_pct": 92.73,
+            "in_npci_top50": true
+          },
+          {
+            "bank": "Kotak Mahindra Bank",
+            "share_pct": 5.34,
+            "merchant_fail_pct": 17.46,
+            "npci_bd_pct": 7.47,
+            "npci_td_pct": 0.13,
+            "npci_approved_pct": 92.39,
+            "in_npci_top50": true
+          },
+          {
+            "bank": "Axis Bank Ltd.",
+            "share_pct": 4.75,
+            "merchant_fail_pct": 19.64,
+            "npci_bd_pct": 5.03,
+            "npci_td_pct": 0.02,
+            "npci_approved_pct": 94.96,
+            "in_npci_top50": true
+          },
+          {
+            "bank": "ICICI Bank Ltd.",
+            "share_pct": 4.32,
+            "merchant_fail_pct": 13.73,
+            "npci_bd_pct": 3.82,
+            "npci_td_pct": 0.52,
+            "npci_approved_pct": 95.66,
+            "in_npci_top50": true
+          },
+          {
+            "bank": "Airtel Payments Bank Limited",
+            "share_pct": 3.81,
+            "merchant_fail_pct": 28.89,
+            "npci_bd_pct": 14.05,
+            "npci_td_pct": 0.12,
+            "npci_approved_pct": 85.83,
+            "in_npci_top50": true
+          }
+        ]
+      }
+    },
+    {
+      "run_id": "run_238fa9d3",
+      "seq": 4,
+      "node": "decompose",
+      "kind": "deterministic",
+      "status": "ok",
+      "started_at": 1787681097.0184598,
+      "duration_ms": 668,
+      "input_summary": {},
+      "output_summary": {
+        "gap_pts": 6.592,
+        "attributions": {
+          "bank": 0.508,
+          "method": 0.459,
+          "hour": 3.79,
+          "amount_band": 1.887
+        },
+        "residual_pts": -0.051,
+        "process_gap_pts": 0.941,
+        "degenerate_factors": [],
+        "clamp_rate": 0.271
+      },
+      "branch_taken": null,
+      "model": null,
+      "prompt": null,
+      "raw_response": null,
+      "tokens_in": null,
+      "tokens_out": null,
+      "cache_hit": null,
+      "stub": null,
+      "confidence": null,
+      "reason_codes": [
+        "EFFICIENCY_OK"
+      ],
+      "intermediates": {
+        "coalition_values": {
+          "{}": 0.0,
+          "bank": 1.965,
+          "method": 1.9124,
+          "hour": 5.3703,
+          "amount_band": 3.4698,
+          "bank+method": 1.9434,
+          "bank+hour": 5.3994,
+          "bank+amount_band": 3.4939,
+          "method+hour": 5.3472,
+          "method+amount_band": 3.4472,
+          "hour+amount_band": 6.6581,
+          "bank+method+hour": 5.377,
+          "bank+method+amount_band": 3.4711,
+          "bank+hour+amount_band": 6.6724,
+          "method+hour+amount_band": 6.6276,
+          "bank+method+hour+amount_band": 6.6428
+        },
+        "effective_support": {
+          "bank": 8.361,
+          "method": 3.064,
+          "hour": 2.414,
+          "amount_band": 2.943
+        },
+        "mae_by_factor": {
+          "bank": 0.5732,
+          "method": 0.5694,
+          "hour": 0.5681,
+          "amount_band": 0.5776
+        }
+      }
+    },
+    {
+      "run_id": "run_238fa9d3",
+      "seq": 5,
+      "node": "hypothesise",
+      "kind": "llm",
+      "status": "ok",
+      "started_at": 1787681097.6876802,
+      "duration_ms": 23765,
+      "input_summary": {},
+      "output_summary": {
+        "primary_label": "midnight_billing_penalty",
+        "hypotheses": [
+          {
+            "factor": "bank",
+            "label": "none_of_the_above",
+            "action_type": "investigation"
+          },
+          {
+            "factor": "method",
+            "label": "none_of_the_above",
+            "action_type": "investigation"
+          },
+          {
+            "factor": "hour",
+            "label": "midnight_billing_penalty",
+            "action_type": "auto_execute"
+          },
+          {
+            "factor": "amount_band",
+            "label": "amount_band_risk",
+            "action_type": "merchant_action"
+          },
+          {
+            "factor": "process_gap",
+            "label": "no_soft_decline_retry",
+            "action_type": "auto_execute"
+          }
+        ],
+        "summary": "Nearly 60% of CloudSync Pro's payments fire during the night window, and this alone explains 3.79 of the 6.59-point success-rate gap — rescheduling billing to daytime hours is the single highest-impact fix available.",
+        "verified": true,
+        "verification_attempts": 1,
+        "violations": []
+      },
+      "branch_taken": null,
+      "model": "claude-sonnet-4.6",
+      "prompt": "MERCHANT\n  name: CloudSync Pro\n  mcc: 5734 (saas)\n  transactions this month: 1180\n  average ticket: Rs 7729.04\n\nSUCCESS RATE\n  observed:            80.76%\n  cohort achievable:   87.35%\n  gap:                 6.59 points\n\nDECOMPOSITION (Shapley, points of the gap)\n  bank          +0.51 pts +/- 0.57 measured error   [INSIDE ITS OWN ERROR BAR]\n  method        +0.46 pts +/- 0.57 measured error   [INSIDE ITS OWN ERROR BAR]\n  hour          +3.79 pts +/- 0.57 measured error\n  amount_band   +1.89 pts +/- 0.58 measured error\n  residual      -0.05 pts   [unexplained residual]\n  process_gap   +0.94 pts   [process gap, computed directly, NOT decomposed]\n\nMERCHANT BANK MIX vs NPCI NATIONAL DATA (period 2025-08)\n  bank                              share   NPCI BD%%  NPCI TD%%  approved%%\n  State Bank of India               28.9%     5.92     0.42     93.66\n  HDFC Bank Ltd.                     8.6%     4.63     0.01     95.37\n  Bank of Baroda                     6.5%     8.50     0.05     91.44\n  Punjab National Bank               6.4%     8.61     0.19     91.20\n  Union Bank of India                6.2%     7.02     0.75     92.23\n  Canara Bank                        5.6%     6.92     0.36     92.73\n\nHOUR DISTRIBUTION (share of payments)\n  night           59.8%\n  afternoon       16.5%\n  evening         14.2%\n  morning          9.5%\n\nMETHOD DISTRIBUTION (share of payments)\n  card            42.5%\n  upi_mandate     31.5%\n  upi             20.8%\n  netbanking       5.1%\n\nAMOUNT BAND DISTRIBUTION (share of payments)\n  large           45.6%\n  medium          28.1%\n  small           22.8%\n  micro            3.6%\n\nProduce the JSON object now.",
+      "raw_response": "```json\n{\n  \"hypotheses\": [\n    {\n      \"factor\": \"bank\",\n      \"attribution_pts\": 0.51,\n      \"root_cause_label\": \"none_of_the_above\",\n      \"hypothesis\": \"The bank mix factor contributes only 0.51 points to the gap, which is smaller than its own measured error bar of 0.57 points, so no reliable bank-concentration signal can be extracted. While banks like Punjab National Bank (91.20% approval) and Bank of Baroda (91.44% approval) have lower approval rates, the attribution is too noisy to act on confidently.\",\n      \"evidence\": [\n        \"bank attribution 0.51 pts is inside its own error bar of +/- 0.57 pts\",\n        \"Punjab National Bank approved%% 91.20\",\n        \"Bank of Baroda approved%% 91.44\"\n      ],\n      \"recommended_action\": \"Investigate bank-level decline codes once a larger transaction sample is available to confirm whether bank concentration is a real driver.\",\n      \"action_type\": \"investigation\"\n    },\n    {\n      \"factor\": \"method\",\n      \"attribution_pts\": 0.46,\n      \"root_cause_label\": \"none_of_the_above\",\n      \"hypothesis\": \"The method factor contributes only 0.46 points to the gap, which is smaller than its own measured error bar of 0.57 points, so no reliable method-mix signal can be extracted. The payment method distribution cannot be confirmed as a meaningful cause of the gap at this sample size.\",\n      \"evidence\": [\n        \"method attribution 0.46 pts is inside its own error bar of +/- 0.57 pts\",\n        \"upi_mandate share 31.5%\",\n        \"netbanking share 5.1%\"\n      ],\n      \"recommended_action\": \"Monitor method-level success rates over a larger transaction volume before making any routing or method-mix changes.\",\n      \"action_type\": \"investigation\"\n    },\n    {\n      \"factor\": \"hour\",\n      \"attribution_pts\": 3.79,\n      \"root_cause_label\": \"midnight_billing_penalty\",\n      \"hypothesis\": \"59.8% of CloudSync Pro's payments are processed during the night window, where bank decline rates are known to run higher, and this single factor accounts for 3.79 of the 6.59-point gap. Shifting or spreading recurring billing attempts away from the night window toward morning or afternoon would be the highest-impact change available.\",\n      \"evidence\": [\n        \"hour attribution 3.79 pts, the largest single factor in the decomposition\",\n        \"night share of payments 59.8%\",\n        \"morning share 9.5%\",\n        \"afternoon share 16.5%\",\n        \"total gap 6.59 points\"\n      ],\n      \"recommended_action\": \"Reschedule the bulk of recurring billing jobs from the night window (23:00–05:59) to the morning or afternoon window to reduce bank-side decline rates.\",\n      \"action_type\": \"auto_execute\"\n    },\n    {\n      \"factor\": \"amount_band\",\n      \"attribution_pts\": 1.89,\n      \"root_cause_label\": \"amount_band_risk\",\n      \"hypothesis\": \"45.6% of transactions fall in the large amount band, and with an average ticket of Rs 7729.04, a disproportionate share of volume sits in a tier where issuer risk engines apply stricter scrutiny, contributing 1.89 points to the gap. Offering an EMI or split-payment option for large-ticket transactions could reduce issuer-side declines in this band.\",\n      \"evidence\": [\n        \"amount_band attribution 1.89 pts\",\n        \"large band share 45.6%\",\n        \"average ticket Rs 7729.04\",\n        \"amount_band error bar +/- 0.58 pts, attribution 1.89 pts exceeds it\"\n      ],\n      \"recommended_action\": \"Enable EMI or instalment options for transactions in the large amount band to reduce issuer risk-engine declines on high-ticket payments.\",\n      \"action_type\": \"merchant_action\"\n    },\n    {\n      \"factor\": \"process_gap\",\n      \"attribution_pts\": 0.94,\n      \"root_cause_label\": \"no_soft_decline_retry\",\n      \"hypothesis\": \"The directly computed process gap of 0.94 points indicates that recoverable (soft) decline responses are not being retried, leaving nearly 1 point of success rate on the table through a purely operational omission. Implementing automatic retry logic for soft decline codes would recover these transactions without any customer friction.\",\n      \"evidence\": [\n        \"process_gap 0.94 pts computed directly\",\n        \"total gap 6.59 points, process_gap represents a measurable share of it\"\n      ],\n      \"recommended_action\": \"Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval.\",\n      \"action_type\": \"auto_execute\"\n    }\n  ],\n  \"primary_label\": \"midnight_billing_penalty\",\n  \"summary\": \"Nearly 60% of CloudSync Pro's payments fire during the night window, and this alone explains 3.79 of the 6.59-point success-rate gap — rescheduling billing to daytime hours is the single highest-impact fix available.\"\n}\n```",
+      "tokens_in": 1217,
+      "tokens_out": 1291,
+      "cache_hit": false,
+      "stub": false,
+      "confidence": null,
+      "reason_codes": [
+        "OUTPUT_VERIFIED"
+      ],
+      "intermediates": {}
+    },
+    {
+      "run_id": "run_238fa9d3",
+      "seq": 6,
+      "node": "plan",
+      "kind": "llm",
+      "status": "ok",
+      "started_at": 1787681121.453841,
+      "duration_ms": 2,
+      "input_summary": {},
+      "output_summary": {
+        "actions": 41,
+        "withheld": 2,
+        "headline": "5 fixes proposed, 2 withheld because the attribution is inside its own error bar.",
+        "withheld_detail": [
+          {
+            "factor": "bank",
+            "label": "none_of_the_above",
+            "attribution_pts": 0.51,
+            "mae": 0.5732,
+            "downgraded_from": "investigation",
+            "downgraded_to": "investigation",
+            "reason": "attribution 0.51 pts is inside its own measured error of +/-0.57 pts -- the engine cannot tell this from zero"
+          },
+          {
+            "factor": "method",
+            "label": "none_of_the_above",
+            "attribution_pts": 0.46,
+            "mae": 0.5694,
+            "downgraded_from": "investigation",
+            "downgraded_to": "investigation",
+            "reason": "attribution 0.46 pts is inside its own measured error of +/-0.57 pts -- the engine cannot tell this from zero"
+          }
+        ]
+      },
+      "branch_taken": null,
+      "model": "claude-haiku-4.5",
+      "prompt": null,
+      "raw_response": null,
+      "tokens_in": null,
+      "tokens_out": null,
+      "cache_hit": null,
+      "stub": null,
+      "confidence": null,
+      "reason_codes": [
+        "UNCERTAINTY_GATE_APPLIED"
+      ],
+      "intermediates": {
+        "mae_by_factor": {
+          "bank": 0.5732,
+          "method": 0.5694,
+          "hour": 0.5681,
+          "amount_band": 0.5776
+        }
+      }
+    },
+    {
+      "run_id": "run_238fa9d3",
+      "seq": 7,
+      "node": "gate",
+      "kind": "deterministic",
+      "status": "ok",
+      "started_at": 1787681121.4558737,
+      "duration_ms": 29,
+      "input_summary": {},
+      "output_summary": {
+        "decisions": {
+          "allow": 14,
+          "step_up": 18,
+          "deny": 9
+        },
+        "total": 41
+      },
+      "branch_taken": "execute",
+      "model": null,
+      "prompt": null,
+      "raw_response": null,
+      "tokens_in": null,
+      "tokens_out": null,
+      "cache_hit": null,
+      "stub": null,
+      "confidence": null,
+      "reason_codes": [
+        "DENY_AMOUNT_ABOVE_CEILING",
+        "OK_ESCALATION",
+        "OK_MERCHANT_ACTION",
+        "OK_WITHIN_MANDATE",
+        "STEP_UP_ABOVE_AUTO_LIMIT"
+      ],
+      "intermediates": {}
+    },
+    {
+      "run_id": "run_238fa9d3",
+      "seq": 8,
+      "node": "execute",
+      "kind": "deterministic",
+      "status": "ok",
+      "started_at": 1787681121.4872074,
+      "duration_ms": 4,
+      "input_summary": {},
+      "output_summary": {
+        "executed": 12,
+        "recovered_paise": 216845,
+        "recovered_inr": 2168.45,
+        "ledger_entries": 41,
+        "chain_verified": true,
+        "calibration": "central"
+      },
+      "branch_taken": null,
+      "model": null,
+      "prompt": null,
+      "raw_response": null,
+      "tokens_in": null,
+      "tokens_out": null,
+      "cache_hit": null,
+      "stub": null,
+      "confidence": null,
+      "reason_codes": [
+        "CHAIN_VERIFIED"
+      ],
+      "intermediates": {}
+    },
+    {
+      "run_id": "run_238fa9d3",
+      "seq": 9,
+      "node": "report",
+      "kind": "deterministic",
+      "status": "ok",
+      "started_at": 1787681121.4929876,
+      "duration_ms": 7,
+      "input_summary": {},
+      "output_summary": {
+        "measured_keys": [
+          "observed_success_pct",
+          "observed_success_ci_pct",
+          "wilson_halfwidth_pts",
+          "transactions",
+          "failures",
+          "attribution_mae_by_factor",
+          "validation_merchants",
+          "naive_vs_shapley",
+          "batch_size_power",
+          "correlation_degradation",
+          "classification",
+          "root_cause",
+          "mandate_violations",
+          "ledger_entries",
+          "chain_verified",
+          "chain_detail",
+          "efficiency_check"
+        ],
+        "projected_keys": [
+          "cohort_achievable_pct",
+          "gap_pts",
+          "gap_value_paise",
+          "monthly_gmv_paise",
+          "recoverable",
+          "recovered_this_run_paise",
+          "unrecoverable_paise",
+          "unrecoverable_count",
+          "assumptions"
+        ]
+      },
+      "branch_taken": null,
+      "model": null,
+      "prompt": null,
+      "raw_response": null,
+      "tokens_in": null,
+      "tokens_out": null,
+      "cache_hit": null,
+      "stub": null,
+      "confidence": null,
+      "reason_codes": [],
+      "intermediates": {}
+    }
+  ],
+  "report": {
+    "merchant": {
+      "merchant_id": "cloudsync",
+      "name": "CloudSync Pro",
+      "mcc": "5734",
+      "mcc_description": "saas",
+      "monthly_txn_count": 1180,
+      "avg_ticket_paise": 772904
+    },
+    "run": {
+      "seed": 20260824,
+      "npci_period": "2025-08",
+      "calibration": "central"
+    },
+    "measured": {
+      "observed_success_pct": 80.763,
+      "observed_success_ci_pct": [
+        78.415,
+        82.91
+      ],
+      "wilson_halfwidth_pts": 2.248,
+      "transactions": 1180,
+      "failures": 227,
+      "attribution_mae_by_factor": {
+        "bank": {
+          "mae": 0.5732,
+          "bias": 0.0413,
+          "median_abs_err": 0.3818,
+          "p90_abs_err": 1.2594,
+          "coverage_0p5": 0.59,
+          "n": 200
+        },
+        "method": {
+          "mae": 0.5694,
+          "bias": -0.0262,
+          "median_abs_err": 0.4052,
+          "p90_abs_err": 1.2916,
+          "coverage_0p5": 0.585,
+          "n": 200
+        },
+        "hour": {
+          "mae": 0.5681,
+          "bias": -0.0576,
+          "median_abs_err": 0.4171,
+          "p90_abs_err": 1.2329,
+          "coverage_0p5": 0.585,
+          "n": 200
+        },
+        "amount_band": {
+          "mae": 0.5776,
+          "bias": -0.0291,
+          "median_abs_err": 0.3995,
+          "p90_abs_err": 1.2875,
+          "coverage_0p5": 0.575,
+          "n": 200
+        }
+      },
+      "validation_merchants": 200,
+      "naive_vs_shapley": {
+        "n_scored": 161,
+        "coherence": {
+          "note": "sum(attribution) / v(N). 1.0 means the factor values account for exactly the movement the decomposition explains. Shapley is 1.0 by the efficiency axiom; naive attribution double-counts shared credit and cannot be converted to rupees.",
+          "n": 189,
+          "shapley_mean_ratio": 1.0,
+          "shapley_max_abs_dev": 0.0,
+          "naive_mean_ratio": 2.2069,
+          "naive_min_ratio": -13.5911,
+          "naive_max_ratio": 38.198,
+          "naive_overstates_pct": 75.7
+        },
+        "shapley_primary_accuracy": 0.9752,
+        "naive_primary_accuracy": 0.9752,
+        "disagreement_rate": 0.0,
+        "when_they_disagree": {
+          "n": 0,
+          "shapley_correct": 0,
+          "naive_correct": 0,
+          "both_wrong": 0
+        }
+      },
+      "batch_size_power": {
+        "60": {
+          "n_merchants": 56,
+          "mae_all_factors": 0.898,
+          "mean_wilson_halfwidth_pts": 7.7033,
+          "primary_cause_accuracy": 0.9535
+        },
+        "150": {
+          "n_merchants": 55,
+          "mae_all_factors": 0.6572,
+          "mean_wilson_halfwidth_pts": 5.1442,
+          "primary_cause_accuracy": 1.0
+        },
+        "400": {
+          "n_merchants": 52,
+          "mae_all_factors": 0.3868,
+          "mean_wilson_halfwidth_pts": 3.184,
+          "primary_cause_accuracy": 0.9778
+        },
+        "1000": {
+          "n_merchants": 37,
+          "mae_all_factors": 0.2125,
+          "mean_wilson_halfwidth_pts": 2.0269,
+          "primary_cause_accuracy": 0.9655
+        }
+      },
+      "correlation_degradation": {
+        "0.0": {
+          "n_merchants": 157,
+          "mean_realised_rho": 0.0,
+          "mae_all_factors": 0.5777,
+          "p90_abs_err": 1.2895,
+          "primary_cause_accuracy": 0.9746
+        },
+        "0.2": {
+          "n_merchants": 17,
+          "mean_realised_rho": 0.166,
+          "mae_all_factors": 0.6357,
+          "p90_abs_err": 1.4276,
+          "primary_cause_accuracy": 1.0
+        },
+        "0.5": {
+          "n_merchants": 12,
+          "mean_realised_rho": 0.3778,
+          "mae_all_factors": 0.5654,
+          "p90_abs_err": 1.2294,
+          "primary_cause_accuracy": 1.0
+        },
+        "0.8": {
+          "n_merchants": 14,
+          "mean_realised_rho": 0.6768,
+          "mae_all_factors": 0.4378,
+          "p90_abs_err": 0.8432,
+          "primary_cause_accuracy": 0.9286
+        }
+      },
+      "classification": {
+        "note": "Held-out CODES, not rows. The deterministic lookup was restricted to the training split, so every code scored here reached the model with nothing memorised. Small per-class support is real -- hence Wilson intervals rather than bare percentages.",
+        "n_codes_total": 110,
+        "n_train": 77,
+        "n_test": 33,
+        "accuracy": 0.8788,
+        "accuracy_ci95": [
+          0.7267,
+          0.9518
+        ],
+        "macro_f1": 0.7786,
+        "per_class": {
+          "soft_decline": {
+            "support": 4,
+            "precision": 0.6667,
+            "recall": 1.0,
+            "recall_ci95": [
+              0.5101,
+              1.0
+            ],
+            "f1": 0.8
+          },
+          "hard_decline": {
+            "support": 17,
+            "precision": 0.8889,
+            "recall": 0.9412,
+            "recall_ci95": [
+              0.7302,
+              0.9895
+            ],
+            "f1": 0.9143
+          },
+          "technical": {
+            "support": 8,
+            "precision": 1.0,
+            "recall": 1.0,
+            "recall_ci95": [
+              0.6756,
+              1.0
+            ],
+            "f1": 1.0
+          },
+          "auth_failure": {
+            "support": 4,
+            "precision": 1.0,
+            "recall": 0.25,
+            "recall_ci95": [
+              0.0456,
+              0.6994
+            ],
+            "f1": 0.4
+          }
+        },
+        "recoverable_accuracy": 0.9394,
+        "recoverable_ci95": [
+          0.8039,
+          0.9832
+        ],
+        "low_confidence_routed_to_review": 3,
+        "cache_hit_rate": 0.0,
+        "errors": [
+          {
+            "code": "incorrect_cardholder_name",
+            "true": "auth_failure",
+            "pred": "hard_decline",
+            "true_recoverable": false,
+            "pred_recoverable": false,
+            "confidence": 0.92,
+            "correct": false,
+            "cache_hit": false
+          },
+          {
+            "code": "invalid_device",
+            "true": "auth_failure",
+            "pred": "hard_decline",
+            "true_recoverable": false,
+            "pred_recoverable": false,
+            "confidence": 0.95,
+            "correct": false,
+            "cache_hit": false
+          },
+          {
+            "code": "payment_risk_check_failed",
+            "true": "hard_decline",
+            "pred": "soft_decline",
+            "true_recoverable": false,
+            "pred_recoverable": true,
+            "confidence": 0.72,
+            "correct": false,
+            "cache_hit": false
+          },
+          {
+            "code": "pin_attempts_exceeded",
+            "true": "auth_failure",
+            "pred": "soft_decline",
+            "true_recoverable": false,
+            "pred_recoverable": true,
+            "confidence": 0.85,
+            "correct": false,
+            "cache_hit": false
+          }
+        ]
+      },
+      "root_cause": {
+        "error_decomposition": {
+          "note": "The model reads the ESTIMATED decomposition, not the truth. Splitting the error says whether the bottleneck is the model or the attribution feeding it.",
+          "attribution_pointed_at_the_right_cause": 0.75,
+          "attribution_ci95": [
+            0.6277,
+            0.8422
+          ],
+          "model_faithful_to_what_it_saw": 0.6333,
+          "faithful_ci95": [
+            0.5068,
+            0.7438
+          ],
+          "accuracy_when_attribution_was_right": 0.6667,
+          "n_solvable": 45
+        },
+        "note": "Exact match on root_cause_label against the injected cause. The model emits from the same closed enum the generator injects from, so this is forced-choice classification, not keyword matching.",
+        "n": 60,
+        "accuracy": 0.6,
+        "accuracy_ci95": [
+          0.4737,
+          0.7143
+        ],
+        "confusion_matrix": {
+          "midnight_billing_penalty": {
+            "midnight_billing_penalty": 4,
+            "bank_concentration": 1,
+            "none_of_the_above": 2
+          },
+          "bank_concentration": {
+            "bank_concentration": 16,
+            "none_of_the_above": 1,
+            "midnight_billing_penalty": 4,
+            "no_soft_decline_retry": 2,
+            "amount_band_risk": 1
+          },
+          "no_soft_decline_retry": {
+            "no_soft_decline_retry": 1
+          },
+          "amount_band_risk": {
+            "amount_band_risk": 7,
+            "no_soft_decline_retry": 4,
+            "midnight_billing_penalty": 1,
+            "bank_concentration": 1
+          },
+          "method_mix_mismatch": {
+            "bank_concentration": 1,
+            "none_of_the_above": 2,
+            "method_mix_mismatch": 2,
+            "no_soft_decline_retry": 2,
+            "amount_band_risk": 1
+          },
+          "none_of_the_above": {
+            "method_mix_mismatch": 1,
+            "none_of_the_above": 6
+          }
+        },
+        "healthy_merchants": {
+          "n": 7,
+          "correctly_said_none_of_the_above": 6,
+          "note": "Merchants with nothing injected. A model that never uses none_of_the_above here is overconfident."
+        },
+        "overreach": {
+          "said_none_when_a_cause_was_injected": 5,
+          "rate": 0.0943
+        },
+        "cache_hit_rate": 1.0,
+        "cost_inr": 0.0,
+        "errors": [
+          {
+            "merchant": "sweep_001",
+            "injected": [],
+            "true": "none_of_the_above",
+            "pred": "method_mix_mismatch",
+            "correct": false,
+            "n_txns": 60,
+            "rho": 0.0,
+            "implied_by_estimate": "method_mix_mismatch",
+            "faithful": true,
+            "attribution_was_right": false,
+            "cache_hit": true,
+            "summary": "Sweep Merchant 001's 6.42-point success-rate gap is driven primarily by a heavy reliance on UPI (75% of volume) where the cohort performs better on card rails, "
+          },
+          {
+            "merchant": "sweep_004",
+            "injected": [
+              "method_mix_mismatch"
+            ],
+            "true": "method_mix_mismatch",
+            "pred": "bank_concentration",
+            "correct": false,
+            "n_txns": 150,
+            "rho": 0.0,
+            "implied_by_estimate": "method_mix_mismatch",
+            "faithful": false,
+            "attribution_was_right": true,
+            "cache_hit": true,
+            "summary": "Sweep Merchant 004's 2.05-point success-rate shortfall is driven primarily by concentration in higher-decline issuers like Punjab National Bank (91.20%) and Ban"
+          },
+          {
+            "merchant": "sweep_007",
+            "injected": [
+              "bank_concentration",
+              "no_soft_decline_retry"
+            ],
+            "true": "bank_concentration",
+            "pred": "none_of_the_above",
+            "correct": false,
+            "n_txns": 60,
+            "rho": 0.0,
+            "implied_by_estimate": "no_soft_decline_retry",
+            "faithful": false,
+            "attribution_was_right": false,
+            "cache_hit": true,
+            "summary": "With only 60 transactions this month, every decomposed factor (bank, method, hour, amount_band) falls inside its own error bar, so no single root cause can be r"
+          },
+          {
+            "merchant": "sweep_008",
+            "injected": [
+              "amount_band_risk"
+            ],
+            "true": "amount_band_risk",
+            "pred": "no_soft_decline_retry",
+            "correct": false,
+            "n_txns": 1000,
+            "rho": 0.0,
+            "implied_by_estimate": "amount_band_risk",
+            "faithful": false,
+            "attribution_was_right": true,
+            "cache_hit": true,
+            "summary": "The only clearly measurable and actionable cause of Sweep Merchant 008's 1.55 pt success-rate gap is an unrecovered process gap of 0.66 pts from soft declines t"
+          },
+          {
+            "merchant": "sweep_012",
+            "injected": [
+              "amount_band_risk",
+              "method_mix_mismatch"
+            ],
+            "true": "amount_band_risk",
+            "pred": "midnight_billing_penalty",
+            "correct": false,
+            "n_txns": 400,
+            "rho": 0.8,
+            "implied_by_estimate": "amount_band_risk",
+            "faithful": false,
+            "attribution_was_right": true,
+            "cache_hit": true,
+            "summary": "Sweep Merchant 012's 0.85-point success-rate gap is primarily driven by a portion of mandate debits firing in the night window (-0.80 pts), with secondary drag "
+          },
+          {
+            "merchant": "sweep_014",
+            "injected": [
+              "bank_concentration",
+              "midnight_billing_penalty"
+            ],
+            "true": "bank_concentration",
+            "pred": "midnight_billing_penalty",
+            "correct": false,
+            "n_txns": 150,
+            "rho": 0.8,
+            "implied_by_estimate": "midnight_billing_penalty",
+            "faithful": true,
+            "attribution_was_right": false,
+            "cache_hit": true,
+            "summary": "Sweep Merchant 014 is losing ~3.1 points of success rate because 37.3% of payments fire in the high-decline night window, and another ~3.1 points because nearly"
+          },
+          {
+            "merchant": "sweep_015",
+            "injected": [
+              "method_mix_mismatch"
+            ],
+            "true": "method_mix_mismatch",
+            "pred": "none_of_the_above",
+            "correct": false,
+            "n_txns": 400,
+            "rho": 0.0,
+            "implied_by_estimate": "method_mix_mismatch",
+            "faithful": false,
+            "attribution_was_right": true,
+            "cache_hit": true,
+            "summary": "Sweep Merchant 015 is actually outperforming its cohort (92.25% vs 91.66% achievable), and every negative decomposition factor falls inside its own error bar, s"
+          },
+          {
+            "merchant": "sweep_017",
+            "injected": [
+              "amount_band_risk"
+            ],
+            "true": "amount_band_risk",
+            "pred": "no_soft_decline_retry",
+            "correct": false,
+            "n_txns": 150,
+            "rho": 0.0,
+            "implied_by_estimate": "amount_band_risk",
+            "faithful": false,
+            "attribution_was_right": true,
+            "cache_hit": true,
+            "summary": "The only directly measurable and actionable cause of Sweep Merchant 017's 1.40-point success-rate gap is an unretried process gap of 0.40 points — all other fac"
+          },
+          {
+            "merchant": "sweep_018",
+            "injected": [
+              "midnight_billing_penalty"
+            ],
+            "true": "midnight_billing_penalty",
+            "pred": "bank_concentration",
+            "correct": false,
+            "n_txns": 150,
+            "rho": 0.0,
+            "implied_by_estimate": "midnight_billing_penalty",
+            "faithful": false,
+            "attribution_was_right": true,
+            "cache_hit": true,
+            "summary": "Sweep Merchant 018 is actually outperforming its cohort by 2.22 points, but the biggest identifiable drag comes from heavy concentration on high-decline issuers"
+          },
+          {
+            "merchant": "sweep_019",
+            "injected": [
+              "method_mix_mismatch"
+            ],
+            "true": "method_mix_mismatch",
+            "pred": "none_of_the_above",
+            "correct": false,
+            "n_txns": 150,
+            "rho": 0.0,
+            "implied_by_estimate": "method_mix_mismatch",
+            "faithful": false,
+            "attribution_was_right": true,
+            "cache_hit": true,
+            "summary": "Sweep Merchant 019's 0.40-point success-rate gap is too small and statistically noisy to pin on any single root cause — every negative factor (bank, hour, amoun"
+          },
+          {
+            "merchant": "sweep_021",
+            "injected": [
+              "amount_band_risk"
+            ],
+            "true": "amount_band_risk",
+            "pred": "no_soft_decline_retry",
+            "correct": false,
+            "n_txns": 60,
+            "rho": 0.0,
+            "implied_by_estimate": "no_soft_decline_retry",
+            "faithful": true,
+            "attribution_was_right": false,
+            "cache_hit": true,
+            "summary": "Sweep Merchant 021 is already outperforming its cohort (95.00% vs 91.96% achievable), but the -3.04 pt gap versus its own potential is driven most by an unexpla"
+          },
+          {
+            "merchant": "sweep_022",
+            "injected": [
+              "amount_band_risk",
+              "method_mix_mismatch"
+            ],
+            "true": "amount_band_risk",
+            "pred": "bank_concentration",
+            "correct": false,
+            "n_txns": 150,
+            "rho": 0.0,
+            "implied_by_estimate": "amount_band_risk",
+            "faithful": false,
+            "attribution_was_right": true,
+            "cache_hit": true,
+            "summary": "Sweep Merchant 022 is beating its cohort benchmark (89.33% vs 87.35% achievable) but is leaving roughly 1.21 points on the table because over half its volume si"
+          },
+          {
+            "merchant": "sweep_023",
+            "injected": [
+              "bank_concentration",
+              "no_soft_decline_retry"
+            ],
+            "true": "bank_concentration",
+            "pred": "no_soft_decline_retry",
+            "correct": false,
+            "n_txns": 150,
+            "rho": 0.0,
+            "implied_by_estimate": "no_soft_decline_retry",
+            "faithful": true,
+            "attribution_was_right": false,
+            "cache_hit": true,
+            "summary": "Sweep Merchant 023's -1.68 pt success-rate gap is dominated by a +1.60 pt process gap — the largest measurable factor — suggesting unretried soft declines are t"
+          },
+          {
+            "merchant": "sweep_026",
+            "injected": [
+              "midnight_billing_penalty"
+            ],
+            "true": "midnight_billing_penalty",
+            "pred": "none_of_the_above",
+            "correct": false,
+            "n_txns": 400,
+            "rho": 0.0,
+            "implied_by_estimate": "midnight_billing_penalty",
+            "faithful": false,
+            "attribution_was_right": true,
+            "cache_hit": true,
+            "summary": "Sweep Merchant 026's -0.04 point gap versus cohort is negligible and within noise — every decomposed factor sits inside its error bar, and the merchant is alrea"
+          },
+          {
+            "merchant": "sweep_027",
+            "injected": [
+              "bank_concentration",
+              "midnight_billing_penalty"
+            ],
+            "true": "bank_concentration",
+            "pred": "amount_band_risk",
+            "correct": false,
+            "n_txns": 60,
+            "rho": 0.0,
+            "implied_by_estimate": "bank_concentration",
+            "faithful": false,
+            "attribution_was_right": true,
+            "cache_hit": true,
+            "summary": "Sweep Merchant 027's success rate is essentially at par with its cohort (gap of only -0.01 pts), but the medium-amount-band transactions are the single largest "
+          },
+          {
+            "merchant": "sweep_030",
+            "injected": [
+              "amount_band_risk"
+            ],
+            "true": "amount_band_risk",
+            "pred": "no_soft_decline_retry",
+            "correct": false,
+            "n_txns": 60,
+            "rho": 0.0,
+            "implied_by_estimate": "amount_band_risk",
+            "faithful": false,
+            "attribution_was_right": true,
+            "cache_hit": true,
+            "summary": "With 86.7% of payments in the large-amount band and a directly measured process gap of 0.50 pts, the most actionable and confirmed cause of Sweep Merchant 030's"
+          },
+          {
+            "merchant": "sweep_044",
+            "injected": [
+              "method_mix_mismatch"
+            ],
+            "true": "method_mix_mismatch",
+            "pred": "no_soft_decline_retry",
+            "correct": false,
+            "n_txns": 1000,
+            "rho": 0.0,
+            "implied_by_estimate": "method_mix_mismatch",
+            "faithful": false,
+            "attribution_was_right": true,
+            "cache_hit": true,
+            "summary": "With all four Shapley factors inside their error bars or unmeasurable, the only actionable signal is the directly computed process gap of +0.45 pts, pointing to"
+          },
+          {
+            "merchant": "sweep_046",
+            "injected": [
+              "method_mix_mismatch"
+            ],
+            "true": "method_mix_mismatch",
+            "pred": "no_soft_decline_retry",
+            "correct": false,
+            "n_txns": 400,
+            "rho": 0.0,
+            "implied_by_estimate": "method_mix_mismatch",
+            "faithful": false,
+            "attribution_was_right": true,
+            "cache_hit": true,
+            "summary": "The only firmly measurable and actionable gap for Sweep Merchant 046 is the 0.75-point process gap from unretried soft declines — all other factors are either i"
+          },
+          {
+            "merchant": "sweep_047",
+            "injected": [
+              "bank_concentration",
+              "midnight_billing_penalty"
+            ],
+            "true": "bank_concentration",
+            "pred": "midnight_billing_penalty",
+            "correct": false,
+            "n_txns": 150,
+            "rho": 0.2,
+            "implied_by_estimate": "midnight_billing_penalty",
+            "faithful": true,
+            "attribution_was_right": false,
+            "cache_hit": true,
+            "summary": "Sweep Merchant 047's 0.76-point success-rate gap is driven primarily by 26% of payments falling in the high-decline night window (+0.84 pts) and secondarily by "
+          },
+          {
+            "merchant": "sweep_048",
+            "injected": [
+              "bank_concentration",
+              "midnight_billing_penalty"
+            ],
+            "true": "bank_concentration",
+            "pred": "midnight_billing_penalty",
+            "correct": false,
+            "n_txns": 60,
+            "rho": 0.5,
+            "implied_by_estimate": "midnight_billing_penalty",
+            "faithful": true,
+            "attribution_was_right": false,
+            "cache_hit": true,
+            "summary": "Over half of Sweep Merchant 048's payments happen at night (56.7%) when banks decline more, and this alone costs 4.72 points of success rate — the single bigges"
+          },
+          {
+            "merchant": "sweep_052",
+            "injected": [
+              "method_mix_mismatch"
+            ],
+            "true": "method_mix_mismatch",
+            "pred": "amount_band_risk",
+            "correct": false,
+            "n_txns": 60,
+            "rho": 0.0,
+            "implied_by_estimate": "method_mix_mismatch",
+            "faithful": false,
+            "attribution_was_right": true,
+            "cache_hit": true,
+            "summary": "The only statistically reliable drag on Sweep Merchant 052's success rate is the amount-band mix, where medium and large ticket payments (average Rs 1916.98) ar"
+          },
+          {
+            "merchant": "sweep_056",
+            "injected": [
+              "bank_concentration",
+              "no_soft_decline_retry"
+            ],
+            "true": "bank_concentration",
+            "pred": "no_soft_decline_retry",
+            "correct": false,
+            "n_txns": 150,
+            "rho": 0.0,
+            "implied_by_estimate": "no_soft_decline_retry",
+            "faithful": true,
+            "attribution_was_right": false,
+            "cache_hit": true,
+            "summary": "The biggest recoverable opportunity for Sweep Merchant 056 is enabling soft-decline retries (2.20-point process gap), followed by reducing concentration on Airt"
+          },
+          {
+            "merchant": "sweep_058",
+            "injected": [
+              "midnight_billing_penalty",
+              "amount_band_risk"
+            ],
+            "true": "midnight_billing_penalty",
+            "pred": "none_of_the_above",
+            "correct": false,
+            "n_txns": 400,
+            "rho": 0.0,
+            "implied_by_estimate": "midnight_billing_penalty",
+            "faithful": false,
+            "attribution_was_right": true,
+            "cache_hit": true,
+            "summary": "Sweep Merchant 058 has a gap of only -0.04 pts versus its cohort benchmark, every decomposed factor is either inside its error bar or flagged not identified, an"
+          },
+          {
+            "merchant": "sweep_059",
+            "injected": [
+              "bank_concentration",
+              "midnight_billing_penalty"
+            ],
+            "true": "bank_concentration",
+            "pred": "midnight_billing_penalty",
+            "correct": false,
+            "n_txns": 60,
+            "rho": 0.0,
+            "implied_by_estimate": "midnight_billing_penalty",
+            "faithful": true,
+            "attribution_was_right": false,
+            "cache_hit": true,
+            "summary": "Sweep Merchant 059's 1.66-point success-rate gap is driven primarily by 31.7% of payments falling in the night window (the largest single factor at +0.79 pts) a"
+          }
+        ]
+      },
+      "mandate_violations": 0,
+      "ledger_entries": 41,
+      "chain_verified": true,
+      "chain_detail": "chain verified from genesis to head",
+      "efficiency_check": {
+        "sum_of_attributions_pts": 6.642798,
+        "v_of_grand_coalition_pts": 6.642798
+      }
+    },
+    "projected": {
+      "cohort_achievable_pct": 87.354,
+      "gap_pts": 6.592,
+      "gap_value_paise": 60117305,
+      "monthly_gmv_paise": 912026720,
+      "recoverable": {
+        "low_paise": 7186439,
+        "central_paise": 10959520,
+        "high_paise": 14706694,
+        "by_calibration_paise": {
+          "conservative": 7186439,
+          "central": 10959520,
+          "optimistic": 14706694
+        }
+      },
+      "recovered_this_run_paise": 216845,
+      "unrecoverable_paise": 61991178,
+      "unrecoverable_count": 90,
+      "assumptions": [
+        "Bank failure rates are MEASURED from NPCI; method, hour and amount effects are assumed priors (priors.py).",
+        "Retry success is an assumed model, not an observation (mock_rail.py). Figures are given as a range across three calibrations.",
+        "s_star is an input from cohort data, not a discovery. See the sensitivity slider."
+      ]
+    },
+    "decomposition": {
+      "s_obs": 0.8076271186440678,
+      "s_star": 0.8735432854658159,
+      "gap_pts": 6.591616682174816,
+      "residual_pts": -0.05118087989332043,
+      "process_gap_pts": 0.9406779661016947,
+      "clamp_rate": 0.2711864406779661,
+      "reliable": true,
+      "underpowered": false,
+      "degenerate_factors": [],
+      "effective_support": {
+        "bank": 8.360653769019226,
+        "method": 3.0635593966169714,
+        "hour": 2.4136149795283015,
+        "amount_band": 2.942954367721345
+      },
+      "coalition_values": {
+        "{}": 0.0,
+        "bank": 1.9649679450818747,
+        "method": 1.9123667106830444,
+        "hour": 5.370254625931192,
+        "amount_band": 3.4698480470875204,
+        "bank+method": 1.9434137100013738,
+        "bank+hour": 5.399444498055717,
+        "bank+amount_band": 3.493935783051516,
+        "method+hour": 5.347180004542729,
+        "method+amount_band": 3.447246049668695,
+        "hour+amount_band": 6.658110748109136,
+        "bank+method+hour": 5.376980770164986,
+        "bank+method+amount_band": 3.4711000405527104,
+        "bank+hour+amount_band": 6.672382003649813,
+        "method+hour+amount_band": 6.627640938910484,
+        "bank+method+hour+amount_band": 6.642797562068137
+      },
+      "factors": [
+        {
+          "factor": "bank",
+          "points": 0.5077,
+          "mae": 0.5732,
+          "inside_error_bar": true,
+          "identified": true,
+          "value_paise": 4630530
+        },
+        {
+          "factor": "method",
+          "points": 0.4588,
+          "mae": 0.5694,
+          "inside_error_bar": true,
+          "identified": true,
+          "value_paise": 4184186
+        },
+        {
+          "factor": "hour",
+          "points": 3.7897,
+          "mae": 0.5681,
+          "inside_error_bar": false,
+          "identified": true,
+          "value_paise": 34562633
+        },
+        {
+          "factor": "amount_band",
+          "points": 1.8866,
+          "mae": 0.5776,
+          "inside_error_bar": false,
+          "identified": true,
+          "value_paise": 17206738
+        }
+      ]
+    },
+    "bank_health": {
+      "period": "2025-08",
+      "banks": [
+        {
+          "bank": "State Bank of India",
+          "share_pct": 28.9,
+          "merchant_fail_pct": 16.13,
+          "npci_bd_pct": 5.92,
+          "npci_td_pct": 0.42,
+          "npci_approved_pct": 93.66,
+          "in_npci_top50": true
+        },
+        {
+          "bank": "HDFC Bank Ltd.",
+          "share_pct": 8.64,
+          "merchant_fail_pct": 13.73,
+          "npci_bd_pct": 4.63,
+          "npci_td_pct": 0.01,
+          "npci_approved_pct": 95.37,
+          "in_npci_top50": true
+        },
+        {
+          "bank": "Bank of Baroda",
+          "share_pct": 6.53,
+          "merchant_fail_pct": 23.38,
+          "npci_bd_pct": 8.5,
+          "npci_td_pct": 0.05,
+          "npci_approved_pct": 91.44,
+          "in_npci_top50": true
+        },
+        {
+          "bank": "Punjab National Bank",
+          "share_pct": 6.36,
+          "merchant_fail_pct": 30.67,
+          "npci_bd_pct": 8.61,
+          "npci_td_pct": 0.19,
+          "npci_approved_pct": 91.2,
+          "in_npci_top50": true
+        },
+        {
+          "bank": "Union Bank of India",
+          "share_pct": 6.19,
+          "merchant_fail_pct": 13.7,
+          "npci_bd_pct": 7.02,
+          "npci_td_pct": 0.75,
+          "npci_approved_pct": 92.23,
+          "in_npci_top50": true
+        },
+        {
+          "bank": "Canara Bank",
+          "share_pct": 5.59,
+          "merchant_fail_pct": 22.73,
+          "npci_bd_pct": 6.92,
+          "npci_td_pct": 0.36,
+          "npci_approved_pct": 92.73,
+          "in_npci_top50": true
+        },
+        {
+          "bank": "Kotak Mahindra Bank",
+          "share_pct": 5.34,
+          "merchant_fail_pct": 17.46,
+          "npci_bd_pct": 7.47,
+          "npci_td_pct": 0.13,
+          "npci_approved_pct": 92.39,
+          "in_npci_top50": true
+        },
+        {
+          "bank": "Axis Bank Ltd.",
+          "share_pct": 4.75,
+          "merchant_fail_pct": 19.64,
+          "npci_bd_pct": 5.03,
+          "npci_td_pct": 0.02,
+          "npci_approved_pct": 94.96,
+          "in_npci_top50": true
+        },
+        {
+          "bank": "ICICI Bank Ltd.",
+          "share_pct": 4.32,
+          "merchant_fail_pct": 13.73,
+          "npci_bd_pct": 3.82,
+          "npci_td_pct": 0.52,
+          "npci_approved_pct": 95.66,
+          "in_npci_top50": true
+        },
+        {
+          "bank": "Airtel Payments Bank Limited",
+          "share_pct": 3.81,
+          "merchant_fail_pct": 28.89,
+          "npci_bd_pct": 14.05,
+          "npci_td_pct": 0.12,
+          "npci_approved_pct": 85.83,
+          "in_npci_top50": true
+        }
+      ]
+    },
+    "diagnosis": {
+      "hypotheses": [
+        {
+          "factor": "bank",
+          "attribution_pts": 0.51,
+          "root_cause_label": "none_of_the_above",
+          "hypothesis": "The bank mix factor contributes only 0.51 points to the gap, which is smaller than its own measured error bar of 0.57 points, so no reliable bank-concentration signal can be extracted. While banks like Punjab National Bank (91.20% approval) and Bank of Baroda (91.44% approval) have lower approval rates, the attribution is too noisy to act on confidently.",
+          "evidence": [
+            "bank attribution 0.51 pts is inside its own error bar of +/- 0.57 pts",
+            "Punjab National Bank approved%% 91.20",
+            "Bank of Baroda approved%% 91.44"
+          ],
+          "recommended_action": "Investigate bank-level decline codes once a larger transaction sample is available to confirm whether bank concentration is a real driver.",
+          "action_type": "investigation"
+        },
+        {
+          "factor": "method",
+          "attribution_pts": 0.46,
+          "root_cause_label": "none_of_the_above",
+          "hypothesis": "The method factor contributes only 0.46 points to the gap, which is smaller than its own measured error bar of 0.57 points, so no reliable method-mix signal can be extracted. The payment method distribution cannot be confirmed as a meaningful cause of the gap at this sample size.",
+          "evidence": [
+            "method attribution 0.46 pts is inside its own error bar of +/- 0.57 pts",
+            "upi_mandate share 31.5%",
+            "netbanking share 5.1%"
+          ],
+          "recommended_action": "Monitor method-level success rates over a larger transaction volume before making any routing or method-mix changes.",
+          "action_type": "investigation"
+        },
+        {
+          "factor": "hour",
+          "attribution_pts": 3.79,
+          "root_cause_label": "midnight_billing_penalty",
+          "hypothesis": "59.8% of CloudSync Pro's payments are processed during the night window, where bank decline rates are known to run higher, and this single factor accounts for 3.79 of the 6.59-point gap. Shifting or spreading recurring billing attempts away from the night window toward morning or afternoon would be the highest-impact change available.",
+          "evidence": [
+            "hour attribution 3.79 pts, the largest single factor in the decomposition",
+            "night share of payments 59.8%",
+            "morning share 9.5%",
+            "afternoon share 16.5%",
+            "total gap 6.59 points"
+          ],
+          "recommended_action": "Reschedule the bulk of recurring billing jobs from the night window (23:00–05:59) to the morning or afternoon window to reduce bank-side decline rates.",
+          "action_type": "auto_execute"
+        },
+        {
+          "factor": "amount_band",
+          "attribution_pts": 1.89,
+          "root_cause_label": "amount_band_risk",
+          "hypothesis": "45.6% of transactions fall in the large amount band, and with an average ticket of Rs 7729.04, a disproportionate share of volume sits in a tier where issuer risk engines apply stricter scrutiny, contributing 1.89 points to the gap. Offering an EMI or split-payment option for large-ticket transactions could reduce issuer-side declines in this band.",
+          "evidence": [
+            "amount_band attribution 1.89 pts",
+            "large band share 45.6%",
+            "average ticket Rs 7729.04",
+            "amount_band error bar +/- 0.58 pts, attribution 1.89 pts exceeds it"
+          ],
+          "recommended_action": "Enable EMI or instalment options for transactions in the large amount band to reduce issuer risk-engine declines on high-ticket payments.",
+          "action_type": "merchant_action"
+        },
+        {
+          "factor": "process_gap",
+          "attribution_pts": 0.94,
+          "root_cause_label": "no_soft_decline_retry",
+          "hypothesis": "The directly computed process gap of 0.94 points indicates that recoverable (soft) decline responses are not being retried, leaving nearly 1 point of success rate on the table through a purely operational omission. Implementing automatic retry logic for soft decline codes would recover these transactions without any customer friction.",
+          "evidence": [
+            "process_gap 0.94 pts computed directly",
+            "total gap 6.59 points, process_gap represents a measurable share of it"
+          ],
+          "recommended_action": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval.",
+          "action_type": "auto_execute"
+        }
+      ],
+      "primary_label": "midnight_billing_penalty",
+      "summary": "Nearly 60% of CloudSync Pro's payments fire during the night window, and this alone explains 3.79 of the 6.59-point success-rate gap — rescheduling billing to daytime hours is the single highest-impact fix available."
+    },
+    "plan": {
+      "headline": "5 fixes proposed, 2 withheld because the attribution is inside its own error bar.",
+      "withheld": [
+        {
+          "factor": "bank",
+          "label": "none_of_the_above",
+          "attribution_pts": 0.51,
+          "mae": 0.5732,
+          "downgraded_from": "investigation",
+          "downgraded_to": "investigation",
+          "reason": "attribution 0.51 pts is inside its own measured error of +/-0.57 pts -- the engine cannot tell this from zero"
+        },
+        {
+          "factor": "method",
+          "label": "none_of_the_above",
+          "attribution_pts": 0.46,
+          "mae": 0.5694,
+          "downgraded_from": "investigation",
+          "downgraded_to": "investigation",
+          "reason": "attribution 0.46 pts is inside its own measured error of +/-0.57 pts -- the engine cannot tell this from zero"
+        }
+      ],
+      "actions": 41
+    },
+    "gate": {
+      "decisions": {
+        "allow": 14,
+        "step_up": 18,
+        "deny": 9
+      },
+      "reason_codes": [
+        "DENY_AMOUNT_ABOVE_CEILING",
+        "OK_ESCALATION",
+        "OK_MERCHANT_ACTION",
+        "OK_WITHIN_MANDATE",
+        "STEP_UP_ABOVE_AUTO_LIMIT"
+      ]
+    },
+    "ledger": [
+      {
+        "sequence": 0,
+        "timestamp": "2026-08-25T18:05:21.488210+00:00",
+        "txn_id": "merchant:cloudsync",
+        "proposed_action": {
+          "action_type": "flag_for_investigation",
+          "txn_id": "merchant:cloudsync",
+          "amount_paise": 0,
+          "target_bank": null,
+          "scheduled_time": null,
+          "reason": "bank: attribution 0.51 pts is inside its own measured error of +/-0.57 pts -- the engine cannot tell this from zero",
+          "requires_merchant_approval": false
+        },
+        "gate_decision": "allow",
+        "gate_reason": "OK_ESCALATION",
+        "outcome": "escalated",
+        "prev_hash": "0000000000000000000000000000000000000000000000000000000000000000",
+        "entry_hash": "aade348c139f866974347b800d16494f517eec799229e2f3127f3327748dd5cb"
+      },
+      {
+        "sequence": 1,
+        "timestamp": "2026-08-25T18:05:21.488210+00:00",
+        "txn_id": "merchant:cloudsync",
+        "proposed_action": {
+          "action_type": "flag_for_investigation",
+          "txn_id": "merchant:cloudsync",
+          "amount_paise": 0,
+          "target_bank": null,
+          "scheduled_time": null,
+          "reason": "method: attribution 0.46 pts is inside its own measured error of +/-0.57 pts -- the engine cannot tell this from zero",
+          "requires_merchant_approval": false
+        },
+        "gate_decision": "allow",
+        "gate_reason": "OK_ESCALATION",
+        "outcome": "escalated",
+        "prev_hash": "aade348c139f866974347b800d16494f517eec799229e2f3127f3327748dd5cb",
+        "entry_hash": "f2ebbb6edcbb670a53616e8c2826113eecccb97ef217eb2d3335cdc58be40930"
+      },
+      {
+        "sequence": 2,
+        "timestamp": "2026-08-25T18:05:21.488210+00:00",
+        "txn_id": "merchant:cloudsync",
+        "proposed_action": {
+          "action_type": "reschedule_billing_window",
+          "txn_id": "merchant:cloudsync",
+          "amount_paise": 0,
+          "target_bank": null,
+          "scheduled_time": null,
+          "reason": "Reschedule the bulk of recurring billing jobs from the night window (23:00–05:59) to the morning or afternoon window to reduce bank-side decline rates.",
+          "requires_merchant_approval": false
+        },
+        "gate_decision": "allow",
+        "gate_reason": "OK_WITHIN_MANDATE",
+        "outcome": "exception",
+        "prev_hash": "f2ebbb6edcbb670a53616e8c2826113eecccb97ef217eb2d3335cdc58be40930",
+        "entry_hash": "34c9e3e9fcfdc2dbcd7a297f76f6c5bc4cb4cf3052906436f228aa85bb79f11f"
+      },
+      {
+        "sequence": 3,
+        "timestamp": "2026-08-25T18:05:21.488210+00:00",
+        "txn_id": "merchant:cloudsync",
+        "proposed_action": {
+          "action_type": "enable_multi_bank_routing",
+          "txn_id": "merchant:cloudsync",
+          "amount_paise": 0,
+          "target_bank": null,
+          "scheduled_time": null,
+          "reason": "Enable EMI or instalment options for transactions in the large amount band to reduce issuer risk-engine declines on high-ticket payments.",
+          "requires_merchant_approval": true
+        },
+        "gate_decision": "step_up",
+        "gate_reason": "OK_MERCHANT_ACTION",
+        "outcome": "merchant_action",
+        "prev_hash": "34c9e3e9fcfdc2dbcd7a297f76f6c5bc4cb4cf3052906436f228aa85bb79f11f",
+        "entry_hash": "b4273a4d697c5c413eabd93157c8a8f4f6e386eced30f2075bf3171fe3ec59eb"
+      },
+      {
+        "sequence": 4,
+        "timestamp": "2026-08-25T18:05:21.488210+00:00",
+        "txn_id": "pay_cloudsync_0060",
+        "proposed_action": {
+          "action_type": "retry_soft_decline",
+          "txn_id": "pay_cloudsync_0060",
+          "amount_paise": 2481652,
+          "target_bank": "Punjab National Bank",
+          "scheduled_time": null,
+          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (credit_limit_exceeded), unretried",
+          "requires_merchant_approval": false
+        },
+        "gate_decision": "deny",
+        "gate_reason": "DENY_AMOUNT_ABOVE_CEILING",
+        "outcome": "denied",
+        "prev_hash": "b4273a4d697c5c413eabd93157c8a8f4f6e386eced30f2075bf3171fe3ec59eb",
+        "entry_hash": "c0eba73d6f69a2a69f5e4237c83cddf47c7d9b5ea8fe9496d8b30bf94fbbd1a3"
+      },
+      {
+        "sequence": 5,
+        "timestamp": "2026-08-25T18:05:21.488210+00:00",
+        "txn_id": "pay_cloudsync_0792",
+        "proposed_action": {
+          "action_type": "retry_soft_decline",
+          "txn_id": "pay_cloudsync_0792",
+          "amount_paise": 2455690,
+          "target_bank": "India Post Payments Bank Limited",
+          "scheduled_time": null,
+          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (payment_session_expired), unretried",
+          "requires_merchant_approval": false
+        },
+        "gate_decision": "deny",
+        "gate_reason": "DENY_AMOUNT_ABOVE_CEILING",
+        "outcome": "denied",
+        "prev_hash": "c0eba73d6f69a2a69f5e4237c83cddf47c7d9b5ea8fe9496d8b30bf94fbbd1a3",
+        "entry_hash": "15a7674e9bbaa78419977a7f0fc34d3a29caad4d9eb446a4e601ef4ae50d73dc"
+      },
+      {
+        "sequence": 6,
+        "timestamp": "2026-08-25T18:05:21.488210+00:00",
+        "txn_id": "pay_cloudsync_0043",
+        "proposed_action": {
+          "action_type": "retry_soft_decline",
+          "txn_id": "pay_cloudsync_0043",
+          "amount_paise": 2340343,
+          "target_bank": "HDFC Bank Ltd.",
+          "scheduled_time": null,
+          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (payment_declined), unretried",
+          "requires_merchant_approval": false
+        },
+        "gate_decision": "deny",
+        "gate_reason": "DENY_AMOUNT_ABOVE_CEILING",
+        "outcome": "denied",
+        "prev_hash": "15a7674e9bbaa78419977a7f0fc34d3a29caad4d9eb446a4e601ef4ae50d73dc",
+        "entry_hash": "d7b927221e6a096f4ccb03f722f44aa7bf02eb4ea803330efb9be94ed858dfa2"
+      },
+      {
+        "sequence": 7,
+        "timestamp": "2026-08-25T18:05:21.488210+00:00",
+        "txn_id": "pay_cloudsync_0310",
+        "proposed_action": {
+          "action_type": "retry_soft_decline",
+          "txn_id": "pay_cloudsync_0310",
+          "amount_paise": 2132228,
+          "target_bank": "India Post Payments Bank Limited",
+          "scheduled_time": null,
+          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (credit_limit_exceeded), unretried",
+          "requires_merchant_approval": false
+        },
+        "gate_decision": "deny",
+        "gate_reason": "DENY_AMOUNT_ABOVE_CEILING",
+        "outcome": "denied",
+        "prev_hash": "d7b927221e6a096f4ccb03f722f44aa7bf02eb4ea803330efb9be94ed858dfa2",
+        "entry_hash": "b1371e888a9327ff14aa63d4f0390983937be5e89ca40793fb7ff9626353b322"
+      },
+      {
+        "sequence": 8,
+        "timestamp": "2026-08-25T18:05:21.488210+00:00",
+        "txn_id": "pay_cloudsync_0180",
+        "proposed_action": {
+          "action_type": "retry_soft_decline",
+          "txn_id": "pay_cloudsync_0180",
+          "amount_paise": 1932553,
+          "target_bank": "Union Bank of India",
+          "scheduled_time": null,
+          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (transaction_limit_exceeded), unretried",
+          "requires_merchant_approval": false
+        },
+        "gate_decision": "deny",
+        "gate_reason": "DENY_AMOUNT_ABOVE_CEILING",
+        "outcome": "denied",
+        "prev_hash": "b1371e888a9327ff14aa63d4f0390983937be5e89ca40793fb7ff9626353b322",
+        "entry_hash": "bb4af7fc3ad7fb150944c4ceb0375e6f0aeb91b09bca91e6a11b6dfa99341e01"
+      },
+      {
+        "sequence": 9,
+        "timestamp": "2026-08-25T18:05:21.488210+00:00",
+        "txn_id": "pay_cloudsync_0893",
+        "proposed_action": {
+          "action_type": "retry_soft_decline",
+          "txn_id": "pay_cloudsync_0893",
+          "amount_paise": 1893692,
+          "target_bank": "Indian Overseas Bank",
+          "scheduled_time": null,
+          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (payment_declined), unretried",
+          "requires_merchant_approval": false
+        },
+        "gate_decision": "deny",
+        "gate_reason": "DENY_AMOUNT_ABOVE_CEILING",
+        "outcome": "denied",
+        "prev_hash": "bb4af7fc3ad7fb150944c4ceb0375e6f0aeb91b09bca91e6a11b6dfa99341e01",
+        "entry_hash": "d9e8a301cdb57913dbb57494e882783407c08405371b7ec281755e07bf298c2b"
+      },
+      {
+        "sequence": 10,
+        "timestamp": "2026-08-25T18:05:21.488210+00:00",
+        "txn_id": "pay_cloudsync_0381",
+        "proposed_action": {
+          "action_type": "retry_soft_decline",
+          "txn_id": "pay_cloudsync_0381",
+          "amount_paise": 1690135,
+          "target_bank": "Kotak Mahindra Bank",
+          "scheduled_time": null,
+          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (payment_declined), unretried",
+          "requires_merchant_approval": false
+        },
+        "gate_decision": "deny",
+        "gate_reason": "DENY_AMOUNT_ABOVE_CEILING",
+        "outcome": "denied",
+        "prev_hash": "d9e8a301cdb57913dbb57494e882783407c08405371b7ec281755e07bf298c2b",
+        "entry_hash": "7788d91ac78bf2c9026779b3f730acbe02fa22589e8b22b320afa6c480e47785"
+      },
+      {
+        "sequence": 11,
+        "timestamp": "2026-08-25T18:05:21.488210+00:00",
+        "txn_id": "pay_cloudsync_0092",
+        "proposed_action": {
+          "action_type": "retry_soft_decline",
+          "txn_id": "pay_cloudsync_0092",
+          "amount_paise": 1689159,
+          "target_bank": "State Bank of India",
+          "scheduled_time": null,
+          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (card_declined), unretried",
+          "requires_merchant_approval": false
+        },
+        "gate_decision": "deny",
+        "gate_reason": "DENY_AMOUNT_ABOVE_CEILING",
+        "outcome": "denied",
+        "prev_hash": "7788d91ac78bf2c9026779b3f730acbe02fa22589e8b22b320afa6c480e47785",
+        "entry_hash": "711580012ccf63c0d85550c0641d76562833f5f87a49e3c0433d944a3bcbdcf8"
+      },
+      {
+        "sequence": 12,
+        "timestamp": "2026-08-25T18:05:21.489209+00:00",
+        "txn_id": "pay_cloudsync_0529",
+        "proposed_action": {
+          "action_type": "retry_soft_decline",
+          "txn_id": "pay_cloudsync_0529",
+          "amount_paise": 1556452,
+          "target_bank": "Bank Of India",
+          "scheduled_time": null,
+          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (credit_not_permitted), unretried",
+          "requires_merchant_approval": false
+        },
+        "gate_decision": "deny",
+        "gate_reason": "DENY_AMOUNT_ABOVE_CEILING",
+        "outcome": "denied",
+        "prev_hash": "711580012ccf63c0d85550c0641d76562833f5f87a49e3c0433d944a3bcbdcf8",
+        "entry_hash": "fa0aff0c56146fdb515b94eddd003f691f5d7e08fb63203cb8c01a324679d2b3"
+      },
+      {
+        "sequence": 13,
+        "timestamp": "2026-08-25T18:05:21.489209+00:00",
+        "txn_id": "pay_cloudsync_0167",
+        "proposed_action": {
+          "action_type": "retry_soft_decline",
+          "txn_id": "pay_cloudsync_0167",
+          "amount_paise": 1474527,
+          "target_bank": "Punjab National Bank",
+          "scheduled_time": null,
+          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (transaction_daily_count_exceeded), unretried",
+          "requires_merchant_approval": false
+        },
+        "gate_decision": "step_up",
+        "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
+        "outcome": "merchant_action",
+        "prev_hash": "fa0aff0c56146fdb515b94eddd003f691f5d7e08fb63203cb8c01a324679d2b3",
+        "entry_hash": "09ea25fead67972dc0e515873512fbd1a4bd382a6b9b90ada919d574bf9f779d"
+      },
+      {
+        "sequence": 14,
+        "timestamp": "2026-08-25T18:05:21.489209+00:00",
+        "txn_id": "pay_cloudsync_0572",
+        "proposed_action": {
+          "action_type": "retry_soft_decline",
+          "txn_id": "pay_cloudsync_0572",
+          "amount_paise": 1271054,
+          "target_bank": "State Bank of India",
+          "scheduled_time": null,
+          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (transaction_daily_count_exceeded), unretried",
+          "requires_merchant_approval": false
+        },
+        "gate_decision": "step_up",
+        "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
+        "outcome": "merchant_action",
+        "prev_hash": "09ea25fead67972dc0e515873512fbd1a4bd382a6b9b90ada919d574bf9f779d",
+        "entry_hash": "abcdde20fd5b56a23e972798c7a1b1686e7c64add89cde10157d51e06749b4c8"
+      },
+      {
+        "sequence": 15,
+        "timestamp": "2026-08-25T18:05:21.489209+00:00",
+        "txn_id": "pay_cloudsync_1051",
+        "proposed_action": {
+          "action_type": "retry_soft_decline",
+          "txn_id": "pay_cloudsync_1051",
+          "amount_paise": 1114962,
+          "target_bank": "Bank Of India",
+          "scheduled_time": null,
+          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (transaction_daily_limit_exceeded), unretried",
+          "requires_merchant_approval": false
+        },
+        "gate_decision": "step_up",
+        "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
+        "outcome": "merchant_action",
+        "prev_hash": "abcdde20fd5b56a23e972798c7a1b1686e7c64add89cde10157d51e06749b4c8",
+        "entry_hash": "9046ff309a60eba4256e503773e3ee230a100dc886f9ef7eff074edd099e0528"
+      },
+      {
+        "sequence": 16,
+        "timestamp": "2026-08-25T18:05:21.489209+00:00",
+        "txn_id": "pay_cloudsync_0217",
+        "proposed_action": {
+          "action_type": "retry_soft_decline",
+          "txn_id": "pay_cloudsync_0217",
+          "amount_paise": 1108807,
+          "target_bank": "Punjab National Bank",
+          "scheduled_time": null,
+          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (debit_declined), unretried",
+          "requires_merchant_approval": false
+        },
+        "gate_decision": "step_up",
+        "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
+        "outcome": "merchant_action",
+        "prev_hash": "9046ff309a60eba4256e503773e3ee230a100dc886f9ef7eff074edd099e0528",
+        "entry_hash": "ba929b23ac42fb3fd2aca19a10f7cbac7aa415d9c1794362356c042185277f07"
+      },
+      {
+        "sequence": 17,
+        "timestamp": "2026-08-25T18:05:21.489209+00:00",
+        "txn_id": "pay_cloudsync_1177",
+        "proposed_action": {
+          "action_type": "retry_soft_decline",
+          "txn_id": "pay_cloudsync_1177",
+          "amount_paise": 1007394,
+          "target_bank": "State Bank of India",
+          "scheduled_time": null,
+          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (payment_session_expired), unretried",
+          "requires_merchant_approval": false
+        },
+        "gate_decision": "step_up",
+        "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
+        "outcome": "merchant_action",
+        "prev_hash": "ba929b23ac42fb3fd2aca19a10f7cbac7aa415d9c1794362356c042185277f07",
+        "entry_hash": "28742e5f5051a2cacb530127766ce2af74d3829e3d89f27fc8ce0fe2cbe24a2e"
+      },
+      {
+        "sequence": 18,
+        "timestamp": "2026-08-25T18:05:21.489209+00:00",
+        "txn_id": "pay_cloudsync_0027",
+        "proposed_action": {
+          "action_type": "retry_soft_decline",
+          "txn_id": "pay_cloudsync_0027",
+          "amount_paise": 984263,
+          "target_bank": "India Post Payments Bank Limited",
+          "scheduled_time": null,
+          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (credit_limit_exceeded), unretried",
+          "requires_merchant_approval": false
+        },
+        "gate_decision": "step_up",
+        "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
+        "outcome": "merchant_action",
+        "prev_hash": "28742e5f5051a2cacb530127766ce2af74d3829e3d89f27fc8ce0fe2cbe24a2e",
+        "entry_hash": "341ae912681399066dcff4ca2577b680b742cab81d415d284a87584ba9c1d33c"
+      },
+      {
+        "sequence": 19,
+        "timestamp": "2026-08-25T18:05:21.489209+00:00",
+        "txn_id": "pay_cloudsync_0000",
+        "proposed_action": {
+          "action_type": "retry_soft_decline",
+          "txn_id": "pay_cloudsync_0000",
+          "amount_paise": 941987,
+          "target_bank": "Indian Bank",
+          "scheduled_time": null,
+          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (payment_pending), unretried",
+          "requires_merchant_approval": false
+        },
+        "gate_decision": "step_up",
+        "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
+        "outcome": "merchant_action",
+        "prev_hash": "341ae912681399066dcff4ca2577b680b742cab81d415d284a87584ba9c1d33c",
+        "entry_hash": "4107e685ef28f77210b699de4b30df0c42e6035294b8378beca0e886561446de"
+      },
+      {
+        "sequence": 20,
+        "timestamp": "2026-08-25T18:05:21.489209+00:00",
+        "txn_id": "pay_cloudsync_0708",
+        "proposed_action": {
+          "action_type": "retry_soft_decline",
+          "txn_id": "pay_cloudsync_0708",
+          "amount_paise": 808232,
+          "target_bank": "State Bank of India",
+          "scheduled_time": null,
+          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (payment_pending), unretried",
+          "requires_merchant_approval": false
+        },
+        "gate_decision": "step_up",
+        "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
+        "outcome": "merchant_action",
+        "prev_hash": "4107e685ef28f77210b699de4b30df0c42e6035294b8378beca0e886561446de",
+        "entry_hash": "6c1a3a218f5aea0ceeb82caea11070e948515333f2d6751d936dac9bc76297e7"
+      },
+      {
+        "sequence": 21,
+        "timestamp": "2026-08-25T18:05:21.489209+00:00",
+        "txn_id": "pay_cloudsync_0932",
+        "proposed_action": {
+          "action_type": "retry_soft_decline",
+          "txn_id": "pay_cloudsync_0932",
+          "amount_paise": 589022,
+          "target_bank": "Bank of Baroda",
+          "scheduled_time": null,
+          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (debit_declined), unretried",
+          "requires_merchant_approval": false
+        },
+        "gate_decision": "step_up",
+        "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
+        "outcome": "merchant_action",
+        "prev_hash": "6c1a3a218f5aea0ceeb82caea11070e948515333f2d6751d936dac9bc76297e7",
+        "entry_hash": "16278034ad15a505396feabb3b3205119d4962f57009274daecfe2cd4e54a919"
+      },
+      {
+        "sequence": 22,
+        "timestamp": "2026-08-25T18:05:21.489209+00:00",
+        "txn_id": "pay_cloudsync_0848",
+        "proposed_action": {
+          "action_type": "retry_soft_decline",
+          "txn_id": "pay_cloudsync_0848",
+          "amount_paise": 497014,
+          "target_bank": "State Bank of India",
+          "scheduled_time": null,
+          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (card_declined), unretried",
+          "requires_merchant_approval": false
+        },
+        "gate_decision": "step_up",
+        "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
+        "outcome": "merchant_action",
+        "prev_hash": "16278034ad15a505396feabb3b3205119d4962f57009274daecfe2cd4e54a919",
+        "entry_hash": "95c43027742c0f10a1e0974f7e740aaf582d612d2122985964f61ebe74fdb03d"
+      },
+      {
+        "sequence": 23,
+        "timestamp": "2026-08-25T18:05:21.489209+00:00",
+        "txn_id": "pay_cloudsync_0380",
+        "proposed_action": {
+          "action_type": "retry_soft_decline",
+          "txn_id": "pay_cloudsync_0380",
+          "amount_paise": 481603,
+          "target_bank": "State Bank of India",
+          "scheduled_time": null,
+          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (payment_session_expired), unretried",
+          "requires_merchant_approval": false
+        },
+        "gate_decision": "step_up",
+        "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
+        "outcome": "merchant_action",
+        "prev_hash": "95c43027742c0f10a1e0974f7e740aaf582d612d2122985964f61ebe74fdb03d",
+        "entry_hash": "12e93fea42ccbbe2cce5b1e2540e180feac1c206ff0d799e5fc7d98c3e5eb48c"
+      },
+      {
+        "sequence": 24,
+        "timestamp": "2026-08-25T18:05:21.489209+00:00",
+        "txn_id": "pay_cloudsync_0369",
+        "proposed_action": {
+          "action_type": "retry_soft_decline",
+          "txn_id": "pay_cloudsync_0369",
+          "amount_paise": 458947,
+          "target_bank": "State Bank of India",
+          "scheduled_time": null,
+          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (card_declined), unretried",
+          "requires_merchant_approval": false
+        },
+        "gate_decision": "step_up",
+        "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
+        "outcome": "merchant_action",
+        "prev_hash": "12e93fea42ccbbe2cce5b1e2540e180feac1c206ff0d799e5fc7d98c3e5eb48c",
+        "entry_hash": "ff415d3a6e86366e9d8827e1c9603ecf51c7285487d2b3719d17dd1cb85065a3"
+      },
+      {
+        "sequence": 25,
+        "timestamp": "2026-08-25T18:05:21.489209+00:00",
+        "txn_id": "pay_cloudsync_0045",
+        "proposed_action": {
+          "action_type": "retry_soft_decline",
+          "txn_id": "pay_cloudsync_0045",
+          "amount_paise": 412444,
+          "target_bank": "Punjab National Bank",
+          "scheduled_time": null,
+          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (insufficient_funds), unretried",
+          "requires_merchant_approval": false
+        },
+        "gate_decision": "step_up",
+        "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
+        "outcome": "merchant_action",
+        "prev_hash": "ff415d3a6e86366e9d8827e1c9603ecf51c7285487d2b3719d17dd1cb85065a3",
+        "entry_hash": "ad058468fe588244bfdc856a19f972fc1bb2bba35c6be236624d42a0e586783a"
+      },
+      {
+        "sequence": 26,
+        "timestamp": "2026-08-25T18:05:21.489209+00:00",
+        "txn_id": "pay_cloudsync_0429",
+        "proposed_action": {
+          "action_type": "retry_soft_decline",
+          "txn_id": "pay_cloudsync_0429",
+          "amount_paise": 411255,
+          "target_bank": "Bank of Baroda",
+          "scheduled_time": null,
+          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (credit_limit_exceeded), unretried",
+          "requires_merchant_approval": false
+        },
+        "gate_decision": "step_up",
+        "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
+        "outcome": "merchant_action",
+        "prev_hash": "ad058468fe588244bfdc856a19f972fc1bb2bba35c6be236624d42a0e586783a",
+        "entry_hash": "09b80d1bd09d117be3c4d14b28e45acb02286d1e4d801b75a4e9e172d90d1c62"
+      },
+      {
+        "sequence": 27,
+        "timestamp": "2026-08-25T18:05:21.489209+00:00",
+        "txn_id": "pay_cloudsync_0573",
+        "proposed_action": {
+          "action_type": "retry_soft_decline",
+          "txn_id": "pay_cloudsync_0573",
+          "amount_paise": 389747,
+          "target_bank": "Axis Bank Ltd.",
+          "scheduled_time": null,
+          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (payment_declined), unretried",
+          "requires_merchant_approval": false
+        },
+        "gate_decision": "step_up",
+        "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
+        "outcome": "merchant_action",
+        "prev_hash": "09b80d1bd09d117be3c4d14b28e45acb02286d1e4d801b75a4e9e172d90d1c62",
+        "entry_hash": "fbb55f55197c05e4970e85f09d91379b2abee2d8504920399421552d65c62f50"
+      },
+      {
+        "sequence": 28,
+        "timestamp": "2026-08-25T18:05:21.490211+00:00",
+        "txn_id": "pay_cloudsync_1072",
+        "proposed_action": {
+          "action_type": "retry_soft_decline",
+          "txn_id": "pay_cloudsync_1072",
+          "amount_paise": 384986,
+          "target_bank": "HDFC Bank Ltd.",
+          "scheduled_time": null,
+          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (payment_pending), unretried",
+          "requires_merchant_approval": false
+        },
+        "gate_decision": "step_up",
+        "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
+        "outcome": "merchant_action",
+        "prev_hash": "fbb55f55197c05e4970e85f09d91379b2abee2d8504920399421552d65c62f50",
+        "entry_hash": "98e6276dd490cd154d21c689ca9daf3d92db849b5bb24076cea79e9ae6d6edad"
+      },
+      {
+        "sequence": 29,
+        "timestamp": "2026-08-25T18:05:21.490211+00:00",
+        "txn_id": "pay_cloudsync_0426",
+        "proposed_action": {
+          "action_type": "retry_soft_decline",
+          "txn_id": "pay_cloudsync_0426",
+          "amount_paise": 382862,
+          "target_bank": "Kotak Mahindra Bank",
+          "scheduled_time": null,
+          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (funds_blocked_by_mandate), unretried",
+          "requires_merchant_approval": false
+        },
+        "gate_decision": "step_up",
+        "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
+        "outcome": "merchant_action",
+        "prev_hash": "98e6276dd490cd154d21c689ca9daf3d92db849b5bb24076cea79e9ae6d6edad",
+        "entry_hash": "6b3d5ef03c0758a47cad4599ae166d91f0ee02b50818a02f87e3a0567a204661"
+      },
+      {
+        "sequence": 30,
+        "timestamp": "2026-08-25T18:05:21.490211+00:00",
+        "txn_id": "pay_cloudsync_1133",
+        "proposed_action": {
+          "action_type": "retry_soft_decline",
+          "txn_id": "pay_cloudsync_1133",
+          "amount_paise": 272417,
+          "target_bank": "State Bank of India",
+          "scheduled_time": null,
+          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (payment_declined), unretried",
+          "requires_merchant_approval": false
+        },
+        "gate_decision": "allow",
+        "gate_reason": "OK_WITHIN_MANDATE",
+        "outcome": "exception",
+        "prev_hash": "6b3d5ef03c0758a47cad4599ae166d91f0ee02b50818a02f87e3a0567a204661",
+        "entry_hash": "bfe779636a199baf23d77cda06b43dc291b1fe18ee414c0a15e219827fe06939"
+      },
+      {
+        "sequence": 31,
+        "timestamp": "2026-08-25T18:05:21.490211+00:00",
+        "txn_id": "pay_cloudsync_0245",
+        "proposed_action": {
+          "action_type": "retry_soft_decline",
+          "txn_id": "pay_cloudsync_0245",
+          "amount_paise": 257319,
+          "target_bank": "Central Bank of India",
+          "scheduled_time": null,
+          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (insufficient_funds), unretried",
+          "requires_merchant_approval": false
+        },
+        "gate_decision": "allow",
+        "gate_reason": "OK_WITHIN_MANDATE",
+        "outcome": "exception",
+        "prev_hash": "bfe779636a199baf23d77cda06b43dc291b1fe18ee414c0a15e219827fe06939",
+        "entry_hash": "9aa6c83489a4be356eb47cd670c1f1247077175365fdc6c16dd1d9914acb9388"
+      },
+      {
+        "sequence": 32,
+        "timestamp": "2026-08-25T18:05:21.490211+00:00",
+        "txn_id": "pay_cloudsync_0502",
+        "proposed_action": {
+          "action_type": "retry_soft_decline",
+          "txn_id": "pay_cloudsync_0502",
+          "amount_paise": 170674,
+          "target_bank": "Central Bank of India",
+          "scheduled_time": null,
+          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (request_timed_out), unretried",
+          "requires_merchant_approval": false
+        },
+        "gate_decision": "allow",
+        "gate_reason": "OK_WITHIN_MANDATE",
+        "outcome": "executed",
+        "prev_hash": "9aa6c83489a4be356eb47cd670c1f1247077175365fdc6c16dd1d9914acb9388",
+        "entry_hash": "d40c390503ed7d593164ca3bcbeb024d5e9f7a96e6f4d6e6e1e336036e0015ba"
+      },
+      {
+        "sequence": 33,
+        "timestamp": "2026-08-25T18:05:21.490211+00:00",
+        "txn_id": "pay_cloudsync_0150",
+        "proposed_action": {
+          "action_type": "retry_soft_decline",
+          "txn_id": "pay_cloudsync_0150",
+          "amount_paise": 163061,
+          "target_bank": "India Post Payments Bank Limited",
+          "scheduled_time": null,
+          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (payment_pending), unretried",
+          "requires_merchant_approval": false
+        },
+        "gate_decision": "allow",
+        "gate_reason": "OK_WITHIN_MANDATE",
+        "outcome": "exception",
+        "prev_hash": "d40c390503ed7d593164ca3bcbeb024d5e9f7a96e6f4d6e6e1e336036e0015ba",
+        "entry_hash": "d4bfef3a837c52541d2d3ef1497df3a970279adc1716abac8fa9680c5b553945"
+      },
+      {
+        "sequence": 34,
+        "timestamp": "2026-08-25T18:05:21.490211+00:00",
+        "txn_id": "pay_cloudsync_0233",
+        "proposed_action": {
+          "action_type": "retry_soft_decline",
+          "txn_id": "pay_cloudsync_0233",
+          "amount_paise": 141910,
+          "target_bank": "Indian Overseas Bank",
+          "scheduled_time": null,
+          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (payment_pending_approval), unretried",
+          "requires_merchant_approval": false
+        },
+        "gate_decision": "allow",
+        "gate_reason": "OK_WITHIN_MANDATE",
+        "outcome": "exception",
+        "prev_hash": "d4bfef3a837c52541d2d3ef1497df3a970279adc1716abac8fa9680c5b553945",
+        "entry_hash": "e7d270d012185244147a78901b0ff9884c4cdd664ad86e647574f762d38d0744"
+      },
+      {
+        "sequence": 35,
+        "timestamp": "2026-08-25T18:05:21.490211+00:00",
+        "txn_id": "pay_cloudsync_0929",
+        "proposed_action": {
+          "action_type": "retry_soft_decline",
+          "txn_id": "pay_cloudsync_0929",
+          "amount_paise": 71387,
+          "target_bank": "Airtel Payments Bank Limited",
+          "scheduled_time": null,
+          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (payment_pending), unretried",
+          "requires_merchant_approval": false
+        },
+        "gate_decision": "allow",
+        "gate_reason": "OK_WITHIN_MANDATE",
+        "outcome": "exception",
+        "prev_hash": "e7d270d012185244147a78901b0ff9884c4cdd664ad86e647574f762d38d0744",
+        "entry_hash": "a0f72c6e5014489c8034c4cfb5b81ca856f3a475ae7438b17f3af73da0361e00"
+      },
+      {
+        "sequence": 36,
+        "timestamp": "2026-08-25T18:05:21.490211+00:00",
+        "txn_id": "pay_cloudsync_0459",
+        "proposed_action": {
+          "action_type": "retry_soft_decline",
+          "txn_id": "pay_cloudsync_0459",
+          "amount_paise": 60964,
+          "target_bank": "Airtel Payments Bank Limited",
+          "scheduled_time": null,
+          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (debit_declined), unretried",
+          "requires_merchant_approval": false
+        },
+        "gate_decision": "allow",
+        "gate_reason": "OK_WITHIN_MANDATE",
+        "outcome": "exception",
+        "prev_hash": "a0f72c6e5014489c8034c4cfb5b81ca856f3a475ae7438b17f3af73da0361e00",
+        "entry_hash": "89eedaf64b8e8af6e61f71d3192a205082b15d8c35b1ebe6bda52792c24984ad"
+      },
+      {
+        "sequence": 37,
+        "timestamp": "2026-08-25T18:05:21.490763+00:00",
+        "txn_id": "pay_cloudsync_0811",
+        "proposed_action": {
+          "action_type": "retry_soft_decline",
+          "txn_id": "pay_cloudsync_0811",
+          "amount_paise": 59348,
+          "target_bank": "State Bank of India",
+          "scheduled_time": null,
+          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (payment_pending_approval), unretried",
+          "requires_merchant_approval": false
+        },
+        "gate_decision": "allow",
+        "gate_reason": "OK_WITHIN_MANDATE",
+        "outcome": "exception",
+        "prev_hash": "89eedaf64b8e8af6e61f71d3192a205082b15d8c35b1ebe6bda52792c24984ad",
+        "entry_hash": "a22dfcd04683524338dc8404257ab6df5abaafd9a74ff5a41439ed07ef6e0ba0"
+      },
+      {
+        "sequence": 38,
+        "timestamp": "2026-08-25T18:05:21.490763+00:00",
+        "txn_id": "pay_cloudsync_0528",
+        "proposed_action": {
+          "action_type": "retry_soft_decline",
+          "txn_id": "pay_cloudsync_0528",
+          "amount_paise": 53113,
+          "target_bank": "Canara Bank",
+          "scheduled_time": null,
+          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (insufficient_funds), unretried",
+          "requires_merchant_approval": false
+        },
+        "gate_decision": "allow",
+        "gate_reason": "OK_WITHIN_MANDATE",
+        "outcome": "exception",
+        "prev_hash": "a22dfcd04683524338dc8404257ab6df5abaafd9a74ff5a41439ed07ef6e0ba0",
+        "entry_hash": "1fb43f343549a57f4742a9005812c204a08eb4437e94146acd37a45cac27ee5e"
+      },
+      {
+        "sequence": 39,
+        "timestamp": "2026-08-25T18:05:21.490763+00:00",
+        "txn_id": "pay_cloudsync_0087",
+        "proposed_action": {
+          "action_type": "retry_soft_decline",
+          "txn_id": "pay_cloudsync_0087",
+          "amount_paise": 46563,
+          "target_bank": "Punjab National Bank",
+          "scheduled_time": null,
+          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (transaction_daily_count_exceeded), unretried",
+          "requires_merchant_approval": false
+        },
+        "gate_decision": "allow",
+        "gate_reason": "OK_WITHIN_MANDATE",
+        "outcome": "exception",
+        "prev_hash": "1fb43f343549a57f4742a9005812c204a08eb4437e94146acd37a45cac27ee5e",
+        "entry_hash": "f6366f69e6203f576cebeebe835bc9a861ecbe16126e4fbdfacfd89dbca66e08"
+      },
+      {
+        "sequence": 40,
+        "timestamp": "2026-08-25T18:05:21.490763+00:00",
+        "txn_id": "pay_cloudsync_0082",
+        "proposed_action": {
+          "action_type": "retry_soft_decline",
+          "txn_id": "pay_cloudsync_0082",
+          "amount_paise": 46171,
+          "target_bank": "State Bank of India",
+          "scheduled_time": null,
+          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (payment_declined), unretried",
+          "requires_merchant_approval": false
+        },
+        "gate_decision": "allow",
+        "gate_reason": "OK_WITHIN_MANDATE",
+        "outcome": "executed",
+        "prev_hash": "f6366f69e6203f576cebeebe835bc9a861ecbe16126e4fbdfacfd89dbca66e08",
+        "entry_hash": "c33948da8832d04226534c3e3dacbea8eb268bdf6cf223f726d0e2b5292ac839"
+      }
+    ],
+    "exceptions": {
+      "unrecoverable_transactions": [
+        {
+          "txn_id": "pay_cloudsync_0009",
+          "amount_paise": 1679038,
+          "error_code": "incorrect_cvv",
+          "error_class": "auth_failure",
+          "why": "authentication failed -- only the customer can complete it"
+        },
+        {
+          "txn_id": "pay_cloudsync_0026",
+          "amount_paise": 20547,
+          "error_code": "invalid_email",
+          "error_class": "hard_decline",
+          "why": "hard decline -- the instrument or configuration is permanently unusable"
+        },
+        {
+          "txn_id": "pay_cloudsync_0028",
+          "amount_paise": 58987,
+          "error_code": "merchant_not_activated",
+          "error_class": "hard_decline",
+          "why": "hard decline -- the instrument or configuration is permanently unusable"
+        },
+        {
+          "txn_id": "pay_cloudsync_0075",
+          "amount_paise": 1423661,
+          "error_code": "payment_method_not_enabled",
+          "error_class": "hard_decline",
+          "why": "hard decline -- the instrument or configuration is permanently unusable"
+        },
+        {
+          "txn_id": "pay_cloudsync_0088",
+          "amount_paise": 1761335,
+          "error_code": "otp_expired",
+          "error_class": "auth_failure",
+          "why": "authentication failed -- only the customer can complete it"
+        },
+        {
+          "txn_id": "pay_cloudsync_0104",
+          "amount_paise": 258146,
+          "error_code": "authentication_failed",
+          "error_class": "auth_failure",
+          "why": "authentication failed -- only the customer can complete it"
+        },
+        {
+          "txn_id": "pay_cloudsync_0107",
+          "amount_paise": 59097,
+          "error_code": "incorrect_otp",
+          "error_class": "auth_failure",
+          "why": "authentication failed -- only the customer can complete it"
+        },
+        {
+          "txn_id": "pay_cloudsync_0108",
+          "amount_paise": 1723696,
+          "error_code": "merchant_not_activated",
+          "error_class": "hard_decline",
+          "why": "hard decline -- the instrument or configuration is permanently unusable"
+        },
+        {
+          "txn_id": "pay_cloudsync_0138",
+          "amount_paise": 2420187,
+          "error_code": "beneficiary_account_does_not_exist",
+          "error_class": "hard_decline",
+          "why": "hard decline -- the instrument or configuration is permanently unusable"
+        },
+        {
+          "txn_id": "pay_cloudsync_0141",
+          "amount_paise": 82274,
+          "error_code": "incorrect_otp",
+          "error_class": "auth_failure",
+          "why": "authentication failed -- only the customer can complete it"
+        },
+        {
+          "txn_id": "pay_cloudsync_0159",
+          "amount_paise": 33710,
+          "error_code": "invalid_email",
+          "error_class": "hard_decline",
+          "why": "hard decline -- the instrument or configuration is permanently unusable"
+        },
+        {
+          "txn_id": "pay_cloudsync_0201",
+          "amount_paise": 94141,
+          "error_code": "invalid_request",
+          "error_class": "hard_decline",
+          "why": "hard decline -- the instrument or configuration is permanently unusable"
+        },
+        {
+          "txn_id": "pay_cloudsync_0203",
+          "amount_paise": 33553,
+          "error_code": "emi_plan_unavailable",
+          "error_class": "hard_decline",
+          "why": "hard decline -- the instrument or configuration is permanently unusable"
+        },
+        {
+          "txn_id": "pay_cloudsync_0215",
+          "amount_paise": 1333172,
+          "error_code": "beneficiary_account_does_not_exist",
+          "error_class": "hard_decline",
+          "why": "hard decline -- the instrument or configuration is permanently unusable"
+        },
+        {
+          "txn_id": "pay_cloudsync_0237",
+          "amount_paise": 2099289,
+          "error_code": "pin_attempts_exceeded",
+          "error_class": "auth_failure",
+          "why": "authentication failed -- only the customer can complete it"
+        },
+        {
+          "txn_id": "pay_cloudsync_0243",
+          "amount_paise": 41390,
+          "error_code": "upi_collect_not_enabled",
+          "error_class": "hard_decline",
+          "why": "hard decline -- the instrument or configuration is permanently unusable"
+        },
+        {
+          "txn_id": "pay_cloudsync_0266",
+          "amount_paise": 213324,
+          "error_code": "pin_attempts_exceeded",
+          "error_class": "auth_failure",
+          "why": "authentication failed -- only the customer can complete it"
+        },
+        {
+          "txn_id": "pay_cloudsync_0270",
+          "amount_paise": 99420,
+          "error_code": "payment_risk_check_failed",
+          "error_class": "hard_decline",
+          "why": "hard decline -- the instrument or configuration is permanently unusable"
+        },
+        {
+          "txn_id": "pay_cloudsync_0287",
+          "amount_paise": 92381,
+          "error_code": "order_already_paid",
+          "error_class": "hard_decline",
+          "why": "hard decline -- the instrument or configuration is permanently unusable"
+        },
+        {
+          "txn_id": "pay_cloudsync_0289",
+          "amount_paise": 486175,
+          "error_code": "payment_amount_tampered",
+          "error_class": "hard_decline",
+          "why": "hard decline -- the instrument or configuration is permanently unusable"
+        },
+        {
+          "txn_id": "pay_cloudsync_0296",
+          "amount_paise": 2111922,
+          "error_code": "live_mode_not_enabled",
+          "error_class": "hard_decline",
+          "why": "hard decline -- the instrument or configuration is permanently unusable"
+        },
+        {
+          "txn_id": "pay_cloudsync_0299",
+          "amount_paise": 995728,
+          "error_code": "pin_attempts_exceeded",
+          "error_class": "auth_failure",
+          "why": "authentication failed -- only the customer can complete it"
+        },
+        {
+          "txn_id": "pay_cloudsync_0303",
+          "amount_paise": 63774,
+          "error_code": "credit_limit_expired",
+          "error_class": "hard_decline",
+          "why": "hard decline -- the instrument or configuration is permanently unusable"
+        },
+        {
+          "txn_id": "pay_cloudsync_0316",
+          "amount_paise": 1246961,
+          "error_code": "incorrect_atm_pin",
+          "error_class": "auth_failure",
+          "why": "authentication failed -- only the customer can complete it"
+        },
+        {
+          "txn_id": "pay_cloudsync_0324",
+          "amount_paise": 1508598,
+          "error_code": "mismatch_in_transaction_details",
+          "error_class": "hard_decline",
+          "why": "hard decline -- the instrument or configuration is permanently unusable"
+        },
+        {
+          "txn_id": "pay_cloudsync_0337",
+          "amount_paise": 334256,
+          "error_code": "payment_risk_check_failed",
+          "error_class": "hard_decline",
+          "why": "hard decline -- the instrument or configuration is permanently unusable"
+        },
+        {
+          "txn_id": "pay_cloudsync_0351",
+          "amount_paise": 74871,
+          "error_code": "bank_account_invalid",
+          "error_class": "hard_decline",
+          "why": "hard decline -- the instrument or configuration is permanently unusable"
+        },
+        {
+          "txn_id": "pay_cloudsync_0376",
+          "amount_paise": 1317495,
+          "error_code": "incorrect_cvv",
+          "error_class": "auth_failure",
+          "why": "authentication failed -- only the customer can complete it"
+        },
+        {
+          "txn_id": "pay_cloudsync_0386",
+          "amount_paise": 1423170,
+          "error_code": "credit_limit_expired",
+          "error_class": "hard_decline",
+          "why": "hard decline -- the instrument or configuration is permanently unusable"
+        },
+        {
+          "txn_id": "pay_cloudsync_0407",
+          "amount_paise": 240497,
+          "error_code": "pin_not_set",
+          "error_class": "auth_failure",
+          "why": "authentication failed -- only the customer can complete it"
+        },
+        {
+          "txn_id": "pay_cloudsync_0412",
+          "amount_paise": 95278,
+          "error_code": "incorrect_cvv",
+          "error_class": "auth_failure",
+          "why": "authentication failed -- only the customer can complete it"
+        },
+        {
+          "txn_id": "pay_cloudsync_0428",
+          "amount_paise": 928090,
+          "error_code": "pin_attempts_exceeded",
+          "error_class": "auth_failure",
+          "why": "authentication failed -- only the customer can complete it"
+        },
+        {
+          "txn_id": "pay_cloudsync_0448",
+          "amount_paise": 222199,
+          "error_code": "credit_limit_not_approved",
+          "error_class": "hard_decline",
+          "why": "hard decline -- the instrument or configuration is permanently unusable"
+        },
+        {
+          "txn_id": "pay_cloudsync_0474",
+          "amount_paise": 1019171,
+          "error_code": "mismatch_in_transaction_details",
+          "error_class": "hard_decline",
+          "why": "hard decline -- the instrument or configuration is permanently unusable"
+        },
+        {
+          "txn_id": "pay_cloudsync_0490",
+          "amount_paise": 2475983,
+          "error_code": "otp_attempts_exceeded",
+          "error_class": "auth_failure",
+          "why": "authentication failed -- only the customer can complete it"
+        },
+        {
+          "txn_id": "pay_cloudsync_0508",
+          "amount_paise": 57377,
+          "error_code": "payment_amount_tampered",
+          "error_class": "hard_decline",
+          "why": "hard decline -- the instrument or configuration is permanently unusable"
+        },
+        {
+          "txn_id": "pay_cloudsync_0514",
+          "amount_paise": 1186191,
+          "error_code": "incorrect_otp",
+          "error_class": "auth_failure",
+          "why": "authentication failed -- only the customer can complete it"
+        },
+        {
+          "txn_id": "pay_cloudsync_0517",
+          "amount_paise": 1792765,
+          "error_code": "invalid_order_id",
+          "error_class": "hard_decline",
+          "why": "hard decline -- the instrument or configuration is permanently unusable"
+        },
+        {
+          "txn_id": "pay_cloudsync_0518",
+          "amount_paise": 558892,
+          "error_code": "incorrect_pin",
+          "error_class": "auth_failure",
+          "why": "authentication failed -- only the customer can complete it"
+        },
+        {
+          "txn_id": "pay_cloudsync_0538",
+          "amount_paise": 434909,
+          "error_code": "compliance_violation",
+          "error_class": "hard_decline",
+          "why": "hard decline -- the instrument or configuration is permanently unusable"
+        },
+        {
+          "txn_id": "pay_cloudsync_0540",
+          "amount_paise": 27739,
+          "error_code": "incorrect_otp",
+          "error_class": "auth_failure",
+          "why": "authentication failed -- only the customer can complete it"
+        },
+        {
+          "txn_id": "pay_cloudsync_0555",
+          "amount_paise": 1537867,
+          "error_code": "incorrect_pin",
+          "error_class": "auth_failure",
+          "why": "authentication failed -- only the customer can complete it"
+        },
+        {
+          "txn_id": "pay_cloudsync_0564",
+          "amount_paise": 65280,
+          "error_code": "amount_less_than_minimum_amount",
+          "error_class": "hard_decline",
+          "why": "hard decline -- the instrument or configuration is permanently unusable"
+        },
+        {
+          "txn_id": "pay_cloudsync_0567",
+          "amount_paise": 43548,
+          "error_code": "incorrect_pin",
+          "error_class": "auth_failure",
+          "why": "authentication failed -- only the customer can complete it"
+        },
+        {
+          "txn_id": "pay_cloudsync_0581",
+          "amount_paise": 1508326,
+          "error_code": "mismatch_in_transaction_details",
+          "error_class": "hard_decline",
+          "why": "hard decline -- the instrument or configuration is permanently unusable"
+        },
+        {
+          "txn_id": "pay_cloudsync_0582",
+          "amount_paise": 497170,
+          "error_code": "incorrect_cvv",
+          "error_class": "auth_failure",
+          "why": "authentication failed -- only the customer can complete it"
+        },
+        {
+          "txn_id": "pay_cloudsync_0608",
+          "amount_paise": 1316280,
+          "error_code": "psp_not_registered",
+          "error_class": "hard_decline",
+          "why": "hard decline -- the instrument or configuration is permanently unusable"
+        },
+        {
+          "txn_id": "pay_cloudsync_0619",
+          "amount_paise": 1242633,
+          "error_code": "invalid_mobile_number",
+          "error_class": "hard_decline",
+          "why": "hard decline -- the instrument or configuration is permanently unusable"
+        },
+        {
+          "txn_id": "pay_cloudsync_0643",
+          "amount_paise": 139660,
+          "error_code": "bank_account_invalid",
+          "error_class": "hard_decline",
+          "why": "hard decline -- the instrument or configuration is permanently unusable"
+        },
+        {
+          "txn_id": "pay_cloudsync_0651",
+          "amount_paise": 603917,
+          "error_code": "pin_not_set",
+          "error_class": "auth_failure",
+          "why": "authentication failed -- only the customer can complete it"
+        }
+      ],
+      "method_failures": []
+    },
+    "classifications": {
+      "amount_less_than_minimum_amount": {
+        "code": "amount_less_than_minimum_amount",
+        "category": "hard_decline",
+        "recoverable": false,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "authentication_failed": {
+        "code": "authentication_failed",
+        "category": "auth_failure",
+        "recoverable": false,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "bank_account_invalid": {
+        "code": "bank_account_invalid",
+        "category": "hard_decline",
+        "recoverable": false,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "bank_not_enabled": {
+        "code": "bank_not_enabled",
+        "category": "hard_decline",
+        "recoverable": false,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "beneficiary_account_does_not_exist": {
+        "code": "beneficiary_account_does_not_exist",
+        "category": "hard_decline",
+        "recoverable": false,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "beneficiary_account_dormant": {
+        "code": "beneficiary_account_dormant",
+        "category": "hard_decline",
+        "recoverable": false,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "capture_failed": {
+        "code": "capture_failed",
+        "category": "technical",
+        "recoverable": true,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "card_declined": {
+        "code": "card_declined",
+        "category": "soft_decline",
+        "recoverable": true,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "collect_request_pending": {
+        "code": "collect_request_pending",
+        "category": "soft_decline",
+        "recoverable": true,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "compliance_violation": {
+        "code": "compliance_violation",
+        "category": "hard_decline",
+        "recoverable": false,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "credit_limit_exceeded": {
+        "code": "credit_limit_exceeded",
+        "category": "soft_decline",
+        "recoverable": true,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "credit_limit_expired": {
+        "code": "credit_limit_expired",
+        "category": "hard_decline",
+        "recoverable": false,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "credit_limit_not_approved": {
+        "code": "credit_limit_not_approved",
+        "category": "hard_decline",
+        "recoverable": false,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "credit_not_permitted": {
+        "code": "credit_not_permitted",
+        "category": "technical",
+        "recoverable": true,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "debit_declined": {
+        "code": "debit_declined",
+        "category": "soft_decline",
+        "recoverable": true,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "duplicate_refund_id": {
+        "code": "duplicate_refund_id",
+        "category": "hard_decline",
+        "recoverable": false,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "duplicate_rrn_found": {
+        "code": "duplicate_rrn_found",
+        "category": "technical",
+        "recoverable": true,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "emi_plan_unavailable": {
+        "code": "emi_plan_unavailable",
+        "category": "hard_decline",
+        "recoverable": false,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "funds_blocked_by_mandate": {
+        "code": "funds_blocked_by_mandate",
+        "category": "soft_decline",
+        "recoverable": true,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "gateway_technical_error": {
+        "code": "gateway_technical_error",
+        "category": "technical",
+        "recoverable": true,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "incorrect_atm_pin": {
+        "code": "incorrect_atm_pin",
+        "category": "auth_failure",
+        "recoverable": false,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "incorrect_card_details": {
+        "code": "incorrect_card_details",
+        "category": "auth_failure",
+        "recoverable": false,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "incorrect_cvv": {
+        "code": "incorrect_cvv",
+        "category": "auth_failure",
+        "recoverable": false,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "incorrect_otp": {
+        "code": "incorrect_otp",
+        "category": "auth_failure",
+        "recoverable": false,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "incorrect_pin": {
+        "code": "incorrect_pin",
+        "category": "auth_failure",
+        "recoverable": false,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "insufficient_funds": {
+        "code": "insufficient_funds",
+        "category": "soft_decline",
+        "recoverable": true,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "invalid_currency": {
+        "code": "invalid_currency",
+        "category": "hard_decline",
+        "recoverable": false,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "invalid_email": {
+        "code": "invalid_email",
+        "category": "hard_decline",
+        "recoverable": false,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "invalid_mobile_number": {
+        "code": "invalid_mobile_number",
+        "category": "hard_decline",
+        "recoverable": false,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "invalid_order_id": {
+        "code": "invalid_order_id",
+        "category": "hard_decline",
+        "recoverable": false,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "invalid_request": {
+        "code": "invalid_request",
+        "category": "hard_decline",
+        "recoverable": false,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "issuer_technical_error": {
+        "code": "issuer_technical_error",
+        "category": "technical",
+        "recoverable": true,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "live_mode_not_enabled": {
+        "code": "live_mode_not_enabled",
+        "category": "hard_decline",
+        "recoverable": false,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "mcc_amount_limit_exceeded": {
+        "code": "mcc_amount_limit_exceeded",
+        "category": "hard_decline",
+        "recoverable": false,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "merchant_not_activated": {
+        "code": "merchant_not_activated",
+        "category": "hard_decline",
+        "recoverable": false,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "mismatch_in_transaction_details": {
+        "code": "mismatch_in_transaction_details",
+        "category": "hard_decline",
+        "recoverable": false,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "order_already_paid": {
+        "code": "order_already_paid",
+        "category": "hard_decline",
+        "recoverable": false,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "order_amount_mismatch": {
+        "code": "order_amount_mismatch",
+        "category": "hard_decline",
+        "recoverable": false,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "otp_attempts_exceeded": {
+        "code": "otp_attempts_exceeded",
+        "category": "auth_failure",
+        "recoverable": false,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "otp_expired": {
+        "code": "otp_expired",
+        "category": "auth_failure",
+        "recoverable": false,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "payment_amount_tampered": {
+        "code": "payment_amount_tampered",
+        "category": "hard_decline",
+        "recoverable": false,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "payment_cancelled": {
+        "code": "payment_cancelled",
+        "category": "auth_failure",
+        "recoverable": false,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "payment_collect_request_expired": {
+        "code": "payment_collect_request_expired",
+        "category": "soft_decline",
+        "recoverable": true,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "payment_declined": {
+        "code": "payment_declined",
+        "category": "soft_decline",
+        "recoverable": true,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "payment_method_not_enabled": {
+        "code": "payment_method_not_enabled",
+        "category": "hard_decline",
+        "recoverable": false,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "payment_pending": {
+        "code": "payment_pending",
+        "category": "soft_decline",
+        "recoverable": true,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "payment_pending_approval": {
+        "code": "payment_pending_approval",
+        "category": "soft_decline",
+        "recoverable": true,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "payment_risk_check_failed": {
+        "code": "payment_risk_check_failed",
+        "category": "hard_decline",
+        "recoverable": false,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "payment_session_expired": {
+        "code": "payment_session_expired",
+        "category": "soft_decline",
+        "recoverable": true,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "pin_attempts_exceeded": {
+        "code": "pin_attempts_exceeded",
+        "category": "auth_failure",
+        "recoverable": false,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "pin_not_set": {
+        "code": "pin_not_set",
+        "category": "auth_failure",
+        "recoverable": false,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "psp_not_registered": {
+        "code": "psp_not_registered",
+        "category": "hard_decline",
+        "recoverable": false,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "recurring_payment_not_enabled": {
+        "code": "recurring_payment_not_enabled",
+        "category": "hard_decline",
+        "recoverable": false,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "reqauth_mandate_not_acknowledged": {
+        "code": "reqauth_mandate_not_acknowledged",
+        "category": "technical",
+        "recoverable": true,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "request_timed_out": {
+        "code": "request_timed_out",
+        "category": "technical",
+        "recoverable": true,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "transaction_daily_count_exceeded": {
+        "code": "transaction_daily_count_exceeded",
+        "category": "soft_decline",
+        "recoverable": true,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "transaction_daily_limit_exceeded": {
+        "code": "transaction_daily_limit_exceeded",
+        "category": "soft_decline",
+        "recoverable": true,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "transaction_frequency_limit_exceeded": {
+        "code": "transaction_frequency_limit_exceeded",
+        "category": "soft_decline",
+        "recoverable": true,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "transaction_limit_exceeded": {
+        "code": "transaction_limit_exceeded",
+        "category": "soft_decline",
+        "recoverable": true,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "upi_collect_not_enabled": {
+        "code": "upi_collect_not_enabled",
+        "category": "hard_decline",
+        "recoverable": false,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "verification_failed": {
+        "code": "verification_failed",
+        "category": "technical",
+        "recoverable": true,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      }
+    },
+    "needs_review": []
+  },
+  "pending_actions": [
+    {
+      "group_id": "retry_soft_decline",
+      "action_type": "retry_soft_decline",
+      "title": "Retry 37 unretried soft declines",
+      "why": "Recoverable failures the merchant never retried. Worth Rs 322,339.",
+      "count": 37,
+      "total_paise": 32233937,
+      "auto": true,
+      "actions": [
+        {
+          "action_type": "retry_soft_decline",
+          "txn_id": "pay_cloudsync_0060",
+          "amount_paise": 2481652,
+          "target_bank": "Punjab National Bank",
+          "scheduled_time": null,
+          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (credit_limit_exceeded), unretried",
+          "requires_merchant_approval": false
+        },
+        {
+          "action_type": "retry_soft_decline",
+          "txn_id": "pay_cloudsync_0792",
+          "amount_paise": 2455690,
+          "target_bank": "India Post Payments Bank Limited",
+          "scheduled_time": null,
+          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (payment_session_expired), unretried",
+          "requires_merchant_approval": false
+        },
+        {
+          "action_type": "retry_soft_decline",
+          "txn_id": "pay_cloudsync_0043",
+          "amount_paise": 2340343,
+          "target_bank": "HDFC Bank Ltd.",
+          "scheduled_time": null,
+          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (payment_declined), unretried",
+          "requires_merchant_approval": false
+        },
+        {
+          "action_type": "retry_soft_decline",
+          "txn_id": "pay_cloudsync_0310",
+          "amount_paise": 2132228,
+          "target_bank": "India Post Payments Bank Limited",
+          "scheduled_time": null,
+          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (credit_limit_exceeded), unretried",
+          "requires_merchant_approval": false
+        },
+        {
+          "action_type": "retry_soft_decline",
+          "txn_id": "pay_cloudsync_0180",
+          "amount_paise": 1932553,
+          "target_bank": "Union Bank of India",
+          "scheduled_time": null,
+          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (transaction_limit_exceeded), unretried",
+          "requires_merchant_approval": false
+        },
+        {
+          "action_type": "retry_soft_decline",
+          "txn_id": "pay_cloudsync_0893",
+          "amount_paise": 1893692,
+          "target_bank": "Indian Overseas Bank",
+          "scheduled_time": null,
+          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (payment_declined), unretried",
+          "requires_merchant_approval": false
+        },
+        {
+          "action_type": "retry_soft_decline",
+          "txn_id": "pay_cloudsync_0381",
+          "amount_paise": 1690135,
+          "target_bank": "Kotak Mahindra Bank",
+          "scheduled_time": null,
+          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (payment_declined), unretried",
+          "requires_merchant_approval": false
+        },
+        {
+          "action_type": "retry_soft_decline",
+          "txn_id": "pay_cloudsync_0092",
+          "amount_paise": 1689159,
+          "target_bank": "State Bank of India",
+          "scheduled_time": null,
+          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (card_declined), unretried",
+          "requires_merchant_approval": false
+        },
+        {
+          "action_type": "retry_soft_decline",
+          "txn_id": "pay_cloudsync_0529",
+          "amount_paise": 1556452,
+          "target_bank": "Bank Of India",
+          "scheduled_time": null,
+          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (credit_not_permitted), unretried",
+          "requires_merchant_approval": false
+        },
+        {
+          "action_type": "retry_soft_decline",
+          "txn_id": "pay_cloudsync_0167",
+          "amount_paise": 1474527,
+          "target_bank": "Punjab National Bank",
+          "scheduled_time": null,
+          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (transaction_daily_count_exceeded), unretried",
+          "requires_merchant_approval": false
+        },
+        {
+          "action_type": "retry_soft_decline",
+          "txn_id": "pay_cloudsync_0572",
+          "amount_paise": 1271054,
+          "target_bank": "State Bank of India",
+          "scheduled_time": null,
+          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (transaction_daily_count_exceeded), unretried",
+          "requires_merchant_approval": false
+        },
+        {
+          "action_type": "retry_soft_decline",
+          "txn_id": "pay_cloudsync_1051",
+          "amount_paise": 1114962,
+          "target_bank": "Bank Of India",
+          "scheduled_time": null,
+          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (transaction_daily_limit_exceeded), unretried",
+          "requires_merchant_approval": false
+        },
+        {
+          "action_type": "retry_soft_decline",
+          "txn_id": "pay_cloudsync_0217",
+          "amount_paise": 1108807,
+          "target_bank": "Punjab National Bank",
+          "scheduled_time": null,
+          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (debit_declined), unretried",
+          "requires_merchant_approval": false
+        },
+        {
+          "action_type": "retry_soft_decline",
+          "txn_id": "pay_cloudsync_1177",
+          "amount_paise": 1007394,
+          "target_bank": "State Bank of India",
+          "scheduled_time": null,
+          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (payment_session_expired), unretried",
+          "requires_merchant_approval": false
+        },
+        {
+          "action_type": "retry_soft_decline",
+          "txn_id": "pay_cloudsync_0027",
+          "amount_paise": 984263,
+          "target_bank": "India Post Payments Bank Limited",
+          "scheduled_time": null,
+          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (credit_limit_exceeded), unretried",
+          "requires_merchant_approval": false
+        },
+        {
+          "action_type": "retry_soft_decline",
+          "txn_id": "pay_cloudsync_0000",
+          "amount_paise": 941987,
+          "target_bank": "Indian Bank",
+          "scheduled_time": null,
+          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (payment_pending), unretried",
+          "requires_merchant_approval": false
+        },
+        {
+          "action_type": "retry_soft_decline",
+          "txn_id": "pay_cloudsync_0708",
+          "amount_paise": 808232,
+          "target_bank": "State Bank of India",
+          "scheduled_time": null,
+          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (payment_pending), unretried",
+          "requires_merchant_approval": false
+        },
+        {
+          "action_type": "retry_soft_decline",
+          "txn_id": "pay_cloudsync_0932",
+          "amount_paise": 589022,
+          "target_bank": "Bank of Baroda",
+          "scheduled_time": null,
+          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (debit_declined), unretried",
+          "requires_merchant_approval": false
+        },
+        {
+          "action_type": "retry_soft_decline",
+          "txn_id": "pay_cloudsync_0848",
+          "amount_paise": 497014,
+          "target_bank": "State Bank of India",
+          "scheduled_time": null,
+          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (card_declined), unretried",
+          "requires_merchant_approval": false
+        },
+        {
+          "action_type": "retry_soft_decline",
+          "txn_id": "pay_cloudsync_0380",
+          "amount_paise": 481603,
+          "target_bank": "State Bank of India",
+          "scheduled_time": null,
+          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (payment_session_expired), unretried",
+          "requires_merchant_approval": false
+        },
+        {
+          "action_type": "retry_soft_decline",
+          "txn_id": "pay_cloudsync_0369",
+          "amount_paise": 458947,
+          "target_bank": "State Bank of India",
+          "scheduled_time": null,
+          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (card_declined), unretried",
+          "requires_merchant_approval": false
+        },
+        {
+          "action_type": "retry_soft_decline",
+          "txn_id": "pay_cloudsync_0045",
+          "amount_paise": 412444,
+          "target_bank": "Punjab National Bank",
+          "scheduled_time": null,
+          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (insufficient_funds), unretried",
+          "requires_merchant_approval": false
+        },
+        {
+          "action_type": "retry_soft_decline",
+          "txn_id": "pay_cloudsync_0429",
+          "amount_paise": 411255,
+          "target_bank": "Bank of Baroda",
+          "scheduled_time": null,
+          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (credit_limit_exceeded), unretried",
+          "requires_merchant_approval": false
+        },
+        {
+          "action_type": "retry_soft_decline",
+          "txn_id": "pay_cloudsync_0573",
+          "amount_paise": 389747,
+          "target_bank": "Axis Bank Ltd.",
+          "scheduled_time": null,
+          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (payment_declined), unretried",
+          "requires_merchant_approval": false
+        },
+        {
+          "action_type": "retry_soft_decline",
+          "txn_id": "pay_cloudsync_1072",
+          "amount_paise": 384986,
+          "target_bank": "HDFC Bank Ltd.",
+          "scheduled_time": null,
+          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (payment_pending), unretried",
+          "requires_merchant_approval": false
+        },
+        {
+          "action_type": "retry_soft_decline",
+          "txn_id": "pay_cloudsync_0426",
+          "amount_paise": 382862,
+          "target_bank": "Kotak Mahindra Bank",
+          "scheduled_time": null,
+          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (funds_blocked_by_mandate), unretried",
+          "requires_merchant_approval": false
+        },
+        {
+          "action_type": "retry_soft_decline",
+          "txn_id": "pay_cloudsync_1133",
+          "amount_paise": 272417,
+          "target_bank": "State Bank of India",
+          "scheduled_time": null,
+          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (payment_declined), unretried",
+          "requires_merchant_approval": false
+        },
+        {
+          "action_type": "retry_soft_decline",
+          "txn_id": "pay_cloudsync_0245",
+          "amount_paise": 257319,
+          "target_bank": "Central Bank of India",
+          "scheduled_time": null,
+          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (insufficient_funds), unretried",
+          "requires_merchant_approval": false
+        },
+        {
+          "action_type": "retry_soft_decline",
+          "txn_id": "pay_cloudsync_0502",
+          "amount_paise": 170674,
+          "target_bank": "Central Bank of India",
+          "scheduled_time": null,
+          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (request_timed_out), unretried",
+          "requires_merchant_approval": false
+        },
+        {
+          "action_type": "retry_soft_decline",
+          "txn_id": "pay_cloudsync_0150",
+          "amount_paise": 163061,
+          "target_bank": "India Post Payments Bank Limited",
+          "scheduled_time": null,
+          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (payment_pending), unretried",
+          "requires_merchant_approval": false
+        },
+        {
+          "action_type": "retry_soft_decline",
+          "txn_id": "pay_cloudsync_0233",
+          "amount_paise": 141910,
+          "target_bank": "Indian Overseas Bank",
+          "scheduled_time": null,
+          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (payment_pending_approval), unretried",
+          "requires_merchant_approval": false
+        },
+        {
+          "action_type": "retry_soft_decline",
+          "txn_id": "pay_cloudsync_0929",
+          "amount_paise": 71387,
+          "target_bank": "Airtel Payments Bank Limited",
+          "scheduled_time": null,
+          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (payment_pending), unretried",
+          "requires_merchant_approval": false
+        },
+        {
+          "action_type": "retry_soft_decline",
+          "txn_id": "pay_cloudsync_0459",
+          "amount_paise": 60964,
+          "target_bank": "Airtel Payments Bank Limited",
+          "scheduled_time": null,
+          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (debit_declined), unretried",
+          "requires_merchant_approval": false
+        },
+        {
+          "action_type": "retry_soft_decline",
+          "txn_id": "pay_cloudsync_0811",
+          "amount_paise": 59348,
+          "target_bank": "State Bank of India",
+          "scheduled_time": null,
+          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (payment_pending_approval), unretried",
+          "requires_merchant_approval": false
+        },
+        {
+          "action_type": "retry_soft_decline",
+          "txn_id": "pay_cloudsync_0528",
+          "amount_paise": 53113,
+          "target_bank": "Canara Bank",
+          "scheduled_time": null,
+          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (insufficient_funds), unretried",
+          "requires_merchant_approval": false
+        },
+        {
+          "action_type": "retry_soft_decline",
+          "txn_id": "pay_cloudsync_0087",
+          "amount_paise": 46563,
+          "target_bank": "Punjab National Bank",
+          "scheduled_time": null,
+          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (transaction_daily_count_exceeded), unretried",
+          "requires_merchant_approval": false
+        },
+        {
+          "action_type": "retry_soft_decline",
+          "txn_id": "pay_cloudsync_0082",
+          "amount_paise": 46171,
+          "target_bank": "State Bank of India",
+          "scheduled_time": null,
+          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (payment_declined), unretried",
+          "requires_merchant_approval": false
+        }
+      ]
+    },
+    {
+      "group_id": "enable_multi_bank_routing",
+      "action_type": "enable_multi_bank_routing",
+      "title": "Enable multi-bank routing",
+      "why": "Spread volume off the issuer carrying the concentration.",
+      "count": 1,
+      "total_paise": 0,
+      "auto": false,
+      "actions": [
+        {
+          "action_type": "enable_multi_bank_routing",
+          "txn_id": "merchant:cloudsync",
+          "amount_paise": 0,
+          "target_bank": null,
+          "scheduled_time": null,
+          "reason": "Enable EMI or instalment options for transactions in the large amount band to reduce issuer risk-engine declines on high-ticket payments.",
+          "requires_merchant_approval": true
+        }
+      ]
+    },
+    {
+      "group_id": "flag_for_investigation",
+      "action_type": "flag_for_investigation",
+      "title": "Flag 2 findings for investigation",
+      "why": "Signals too weak to act on. The agent refuses rather than guessing.",
+      "count": 2,
+      "total_paise": 0,
+      "auto": false,
+      "actions": [
+        {
+          "action_type": "flag_for_investigation",
+          "txn_id": "merchant:cloudsync",
+          "amount_paise": 0,
+          "target_bank": null,
+          "scheduled_time": null,
+          "reason": "bank: attribution 0.51 pts is inside its own measured error of +/-0.57 pts -- the engine cannot tell this from zero",
+          "requires_merchant_approval": false
+        },
+        {
+          "action_type": "flag_for_investigation",
+          "txn_id": "merchant:cloudsync",
+          "amount_paise": 0,
+          "target_bank": null,
+          "scheduled_time": null,
+          "reason": "method: attribution 0.46 pts is inside its own measured error of +/-0.57 pts -- the engine cannot tell this from zero",
+          "requires_merchant_approval": false
+        }
+      ]
+    },
+    {
+      "group_id": "reschedule_billing_window",
+      "action_type": "reschedule_billing_window",
+      "title": "Move the billing window out of the night",
+      "why": "Shift the recurring charge into business hours, where banks decline less.",
+      "count": 1,
+      "total_paise": 0,
+      "auto": true,
+      "actions": [
+        {
+          "action_type": "reschedule_billing_window",
+          "txn_id": "merchant:cloudsync",
+          "amount_paise": 0,
+          "target_bank": null,
+          "scheduled_time": null,
+          "reason": "Reschedule the bulk of recurring billing jobs from the night window (23:00–05:59) to the morning or afternoon window to reduce bank-side decline rates.",
+          "requires_merchant_approval": false
+        }
+      ]
+    }
+  ],
+  "applied": []
+}
