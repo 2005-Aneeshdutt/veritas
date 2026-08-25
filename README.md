@@ -16,7 +16,7 @@ diagnosis, then refuses to act on anything inside it.**
 
 ---
 
-## The four things that are actually new
+## The six things that are actually new
 
 **1. The error bars change what the agent does.**
 `evals/results/attribution_mae_by_factor.json` is not a slide. `plan.py` loads
@@ -41,7 +41,22 @@ honestly: it makes the output **consistent, not more accurate** — violations
 29 → 0, accuracy 60.0% → 61.7%, which is noise. Two different properties,
 reported separately.
 
-**4. The book view, not the merchant view.**
+**4. It grades its own forecasts after the fix lands.**
+Apply a fix, let a month pass, re-run: *predicted +3.22 points, measured
++3.24*. Across 8 fixes the mean absolute forecast error is **0.69 points**, and
+the mean error is **−0.22** — slightly pessimistic, which is the safer
+direction to be wrong in. Billing-window fixes forecast best (MAE 0.34);
+ticket-size fixes worst (1.18). One cause is **excluded and explained** rather
+than reported, because the harness cannot validate it.
+
+**5. It watches the ecosystem, not just the merchant.**
+NPCI publishes bank performance monthly and it moves. The drift monitor
+compares three-month windows and prices the damage: **₹413 Cr/month** across
+India from this quarter's degradation alone, with the exposed merchants on your
+own book named and costed. Proactive rather than reactive, and running entirely
+on real published data.
+
+**6. The book view, not the merchant view.**
 Merchants already have dashboards. What a payments platform does not have is
 *"across our whole book, where is revenue leaking, who do we call on Monday,
 and what is each call worth?"* Across the 8 demo merchants: **₹5.45L
@@ -98,6 +113,20 @@ answer is defensible — **I did not move ground truth to match it.**
 More useful than the 60% is where the error lives: the attribution itself caps
 the model at 75%, and the model then follows what it was shown 63% of the time.
 Two weak links, both now visible.
+
+---
+
+## Does it scale?
+
+**4.2 merchants/sec, 1,445 payments/sec** on one core over the full 200-merchant
+sweep — p90 of 622 ms per merchant. A million merchants is **2.1 hours on 32
+cores**, and sharding by merchant is embarrassingly parallel.
+
+The model steps are deliberately excluded from that figure and reported
+separately, because they do not need to run per merchant per night:
+classification is a committed lookup for every published code, and the
+hypothesiser only runs where there is a gap worth explaining. Timing them in
+would misrepresent how this would actually be deployed.
 
 ---
 
@@ -279,6 +308,8 @@ python evals/run_s_star_sensitivity.py
 python evals/run_stress_test.py
 python evals/run_npci_finding.py
 python evals/run_backtest.py               # out-of-sample, real NPCI data
+python evals/run_outcome_eval.py           # forecast accuracy after a fix
+python evals/run_scale_benchmark.py        # throughput at book scale
 pytest -q                                  # 63 tests
 ```
 
