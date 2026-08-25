@@ -1,0 +1,21 @@
+{
+  "note": "Deterministic pipeline only: cohort, 16-coalition decomposition, process gap and the uncertainty gate. LLM steps are excluded because they do not need to run per merchant per night -- classification is a committed lookup for every published code, and the hypothesiser only runs where there is a gap worth explaining.",
+  "n_merchants": 200,
+  "n_payments": 69410,
+  "wall_seconds": 48.031,
+  "merchants_per_second": 4.2,
+  "payments_per_second": 1445.0,
+  "per_merchant_ms": {
+    "mean": 240.15,
+    "p50": 137.13,
+    "p90": 621.8,
+    "p99": 687.62,
+    "max": 709.27
+  },
+  "actionable_merchants": 8,
+  "projected": {
+    "note": "Straight-line extrapolation on one core. Real deployment would shard by merchant, which is embarrassingly parallel.",
+    "one_million_merchants_hours_single_core": 66.71,
+    "one_million_merchants_hours_32_cores": 2.08
+  }
+}
