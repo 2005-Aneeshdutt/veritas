@@ -37,7 +37,7 @@ from fastapi.responses import PlainTextResponse
 from doctor.apply import apply_group
 from doctor.baseline import Baseline
 from doctor.drift import build_drift_report
-from doctor.outreach import as_eml, compose
+from doctor.outreach import as_eml, compose, send, smtp_configured
 from doctor.portfolio import build_portfolio, ledger_csv, portfolio_csv
 from doctor.generator import GeneratedMerchant
 from doctor.graph import git_commit, run_diagnosis
@@ -86,6 +86,7 @@ def health() -> dict:
         "commit": git_commit(),
         "models": {"fast": MODEL_FAST, "reasoning": MODEL_REASONING, "temperature": 0},
         "sweep_present": (RESULTS / "attribution_mae_by_factor.json").exists(),
+        "smtp_configured": smtp_configured(),
         # Newest first. Sorting by name would be alphabetical on a random
         # hex id, which is how a demo ends up opening a months-old run.
         "runs_available": [
@@ -191,6 +192,16 @@ def drift() -> dict:
     have a gap; this watches NPCI's published series and says so first.
     """
     return json.loads(build_drift_report().model_dump_json())
+
+
+@app.post("/api/run/{run_id}/email/send")
+def run_email_send(run_id: str, to: str) -> dict:
+    """Send for real, if SMTP is configured. Says so plainly when it is not."""
+    p = RUNS / (run_id + ".json")
+    if not p.exists():
+        raise HTTPException(404, "no such run: %s" % run_id)
+    email = compose(json.loads(p.read_text(encoding="utf-8")))
+    return json.loads(send(email, to).model_dump_json())
 
 
 @app.get("/api/evals")
