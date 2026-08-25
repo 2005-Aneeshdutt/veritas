@@ -27,6 +27,9 @@ export default function ValidationPage() {
   const rc = e.root_cause_accuracy ?? {};
   const ladder = e.baseline_ladder ?? {};
   const stress = e.stress_test ?? {};
+  const outcome = e.outcome_accuracy ?? {};
+  const scale = e.scale_benchmark ?? {};
+  const backtest = e.backtest_npci ?? {};
 
   return (
     <div className="space-y-6">
@@ -201,6 +204,46 @@ export default function ValidationPage() {
             )}
           </div>
 
+          {/* outcome: did the fix work */}
+          {outcome.overall && (
+            <Card className="border-l-2 border-l-mint">
+              <SectionHeader
+                eyebrow="After the fix lands"
+                title="Grading the forecast against what actually moved"
+                sub="The attribution error says how well the engine explains the past. This says how well it predicts the consequence of acting on that explanation."
+              />
+              <div className="grid sm:grid-cols-3 gap-3">
+                <Stat
+                  label="forecast error"
+                  v={`${outcome.overall.mean_forecast_error_pts > 0 ? "+" : ""}${
+                    outcome.overall.mean_forecast_error_pts
+                  } pts`}
+                />
+                <Stat label="mean absolute" v={`${outcome.overall.mae_pts} pts`} />
+                <Stat
+                  label="within its own error bar"
+                  v={`${outcome.overall.within_own_error_bar}/${outcome.n_fixes}`}
+                />
+              </div>
+              <Table
+                head={["cause fixed", "n", "predicted", "measured", "MAE"]}
+                rows={Object.entries(outcome.by_cause ?? {}).map(([k, v]: any) => [
+                  k.replace(/_/g, " "),
+                  v.n,
+                  `${v.mean_predicted_pts > 0 ? "+" : ""}${v.mean_predicted_pts}`,
+                  `${v.mean_measured_pts > 0 ? "+" : ""}${v.mean_measured_pts}`,
+                  v.mae_pts,
+                ])}
+              />
+              {outcome.excluded_from_headline && (
+                <p className="text-[11px] text-amber mt-3 leading-relaxed">
+                  <strong>{outcome.excluded_from_headline.causes.join(", ")}</strong>{" "}
+                  is excluded from the headline: {outcome.excluded_from_headline.why}
+                </p>
+              )}
+            </Card>
+          )}
+
           {/* baseline ladder */}
           {ladder.headline && (
             <Card className="border-l-2 border-l-gold">
@@ -323,6 +366,28 @@ export default function ValidationPage() {
               </p>
             </Card>
           </div>
+
+          {scale.n_merchants && (
+            <Card>
+              <SectionHeader
+                eyebrow="Could this run nightly over a book"
+                title="Throughput"
+                sub="Deterministic pipeline only. The model steps are excluded because they do not need to run per merchant per night."
+              />
+              <div className="grid sm:grid-cols-4 gap-3">
+                <Stat label="merchants / sec" v={`${scale.merchants_per_second}`} />
+                <Stat
+                  label="payments / sec"
+                  v={Number(scale.payments_per_second).toLocaleString("en-IN")}
+                />
+                <Stat label="p90 per merchant" v={`${scale.per_merchant_ms?.p90} ms`} />
+                <Stat
+                  label="1M merchants, 32 cores"
+                  v={`${scale.projected?.one_million_merchants_hours_32_cores} h`}
+                />
+              </div>
+            </Card>
+          )}
 
           {stress.cases && (
             <Card>
@@ -468,6 +533,37 @@ export default function ValidationPage() {
               </>
             )}
           </Card>
+
+          {backtest.by_horizon && (
+            <Card className="border-l-2 border-l-mint">
+              <SectionHeader
+                eyebrow="Data I did not generate"
+                title="Out-of-sample backtest on real NPCI tables"
+                sub="Walk-forward over 42 banks and 32 months, never looking ahead. The fair objection to every other eval here is that the estimator was checked against my own generator; this is not."
+              />
+              <Table
+                head={["predictor", "1-month MAE", "3-month MAE"]}
+                rows={["persistence", "smoothed", "rolling3", "global"].map((k) => [
+                  k,
+                  backtest.by_horizon.horizon_1m?.[k]?.mae_pts ?? "—",
+                  backtest.by_horizon.horizon_3m?.[k]?.mae_pts ?? "—",
+                ])}
+              />
+              <p className="text-sm text-muted mt-3 leading-relaxed">
+                <strong className="text-ink">It went against me.</strong> Smoothing the
+                history loses to simply using the most recent published month — bank
+                rates behave close to a random walk. The baseline already pinned one
+                NPCI period; that was instinct, and it is now measured. The finding
+                that matters more:{" "}
+                <span className="text-mint">
+                  knowing which bank cuts error{" "}
+                  {(1 / backtest.by_horizon.horizon_1m.persistence_vs_global).toFixed(1)}×
+                </span>{" "}
+                versus ignoring it, which is what makes bank a real factor rather than
+                noise.
+              </p>
+            </Card>
+          )}
 
           {e.failure_cases_md && (
             <Card>
