@@ -1,0 +1,207 @@
+{
+  "note": "Headline is T vs B3, never T vs B0. B3 is error-code-aware retry, what a good engineer builds. B1/B2/B3 do not track the merchant's prior attempts and therefore breach stopping rule 1 -- the cap_violations column is how much of their recovery is bought with attempts the agent is forbidden to make.",
+  "max_attempts_per_payment": 3,
+  "n_merchants": 200,
+  "absolute_paise_by_calibration": {
+    "B0_do_nothing": {
+      "conservative": {
+        "recovered_paise": 0,
+        "attempts": 0,
+        "wasted_attempts": 0,
+        "cap_violations": 0
+      },
+      "central": {
+        "recovered_paise": 0,
+        "attempts": 0,
+        "wasted_attempts": 0,
+        "cap_violations": 0
+      },
+      "optimistic": {
+        "recovered_paise": 0,
+        "attempts": 0,
+        "wasted_attempts": 0,
+        "cap_violations": 0
+      }
+    },
+    "B1_retry_once": {
+      "conservative": {
+        "recovered_paise": 337636456,
+        "attempts": 8256,
+        "wasted_attempts": 3075,
+        "cap_violations": 0
+      },
+      "central": {
+        "recovered_paise": 493914373,
+        "attempts": 8256,
+        "wasted_attempts": 3075,
+        "cap_violations": 0
+      },
+      "optimistic": {
+        "recovered_paise": 645270699,
+        "attempts": 8256,
+        "wasted_attempts": 3075,
+        "cap_violations": 0
+      }
+    },
+    "B2_backoff_3x": {
+      "conservative": {
+        "recovered_paise": 1173471355,
+        "attempts": 24768,
+        "wasted_attempts": 9225,
+        "cap_violations": 11538
+      },
+      "central": {
+        "recovered_paise": 1611430881,
+        "attempts": 24768,
+        "wasted_attempts": 9225,
+        "cap_violations": 11538
+      },
+      "optimistic": {
+        "recovered_paise": 1957085782,
+        "attempts": 24768,
+        "wasted_attempts": 9225,
+        "cap_violations": 11538
+      }
+    },
+    "B3_error_code_aware": {
+      "conservative": {
+        "recovered_paise": 1353693430,
+        "attempts": 15543,
+        "wasted_attempts": 0,
+        "cap_violations": 8463
+      },
+      "central": {
+        "recovered_paise": 1822711155,
+        "attempts": 15543,
+        "wasted_attempts": 0,
+        "cap_violations": 8463
+      },
+      "optimistic": {
+        "recovered_paise": 2163959208,
+        "attempts": 15543,
+        "wasted_attempts": 0,
+        "cap_violations": 8463
+      }
+    },
+    "T_revenue_doctor": {
+      "conservative": {
+        "recovered_paise": 781601174,
+        "attempts": 7080,
+        "wasted_attempts": 0,
+        "cap_violations": 0
+      },
+      "central": {
+        "recovered_paise": 1141966952,
+        "attempts": 7080,
+        "wasted_attempts": 0,
+        "cap_violations": 0
+      },
+      "optimistic": {
+        "recovered_paise": 1474709114,
+        "attempts": 7080,
+        "wasted_attempts": 0,
+        "cap_violations": 0
+      }
+    }
+  },
+  "ratios_vs_b3": {
+    "conservative": {
+      "B0_do_nothing": {
+        "recovered_vs_b3": 0.0,
+        "attempts_vs_b3": 0.0,
+        "recovered_per_attempt_paise": 0
+      },
+      "B1_retry_once": {
+        "recovered_vs_b3": 0.2494,
+        "attempts_vs_b3": 0.5312,
+        "recovered_per_attempt_paise": 40896
+      },
+      "B2_backoff_3x": {
+        "recovered_vs_b3": 0.8669,
+        "attempts_vs_b3": 1.5935,
+        "recovered_per_attempt_paise": 47379
+      },
+      "B3_error_code_aware": {
+        "recovered_vs_b3": 1.0,
+        "attempts_vs_b3": 1.0,
+        "recovered_per_attempt_paise": 87093
+      },
+      "T_revenue_doctor": {
+        "recovered_vs_b3": 0.5774,
+        "attempts_vs_b3": 0.4555,
+        "recovered_per_attempt_paise": 110396
+      }
+    },
+    "central": {
+      "B0_do_nothing": {
+        "recovered_vs_b3": 0.0,
+        "attempts_vs_b3": 0.0,
+        "recovered_per_attempt_paise": 0
+      },
+      "B1_retry_once": {
+        "recovered_vs_b3": 0.271,
+        "attempts_vs_b3": 0.5312,
+        "recovered_per_attempt_paise": 59825
+      },
+      "B2_backoff_3x": {
+        "recovered_vs_b3": 0.8841,
+        "attempts_vs_b3": 1.5935,
+        "recovered_per_attempt_paise": 65061
+      },
+      "B3_error_code_aware": {
+        "recovered_vs_b3": 1.0,
+        "attempts_vs_b3": 1.0,
+        "recovered_per_attempt_paise": 117269
+      },
+      "T_revenue_doctor": {
+        "recovered_vs_b3": 0.6265,
+        "attempts_vs_b3": 0.4555,
+        "recovered_per_attempt_paise": 161295
+      }
+    },
+    "optimistic": {
+      "B0_do_nothing": {
+        "recovered_vs_b3": 0.0,
+        "attempts_vs_b3": 0.0,
+        "recovered_per_attempt_paise": 0
+      },
+      "B1_retry_once": {
+        "recovered_vs_b3": 0.2982,
+        "attempts_vs_b3": 0.5312,
+        "recovered_per_attempt_paise": 78158
+      },
+      "B2_backoff_3x": {
+        "recovered_vs_b3": 0.9044,
+        "attempts_vs_b3": 1.5935,
+        "recovered_per_attempt_paise": 79017
+      },
+      "B3_error_code_aware": {
+        "recovered_vs_b3": 1.0,
+        "attempts_vs_b3": 1.0,
+        "recovered_per_attempt_paise": 139224
+      },
+      "T_revenue_doctor": {
+        "recovered_vs_b3": 0.6815,
+        "attempts_vs_b3": 0.4555,
+        "recovered_per_attempt_paise": 208292
+      }
+    }
+  },
+  "headline": {
+    "t_vs_b3_recovered_ratio_range": [
+      0.5774,
+      0.6815
+    ],
+    "t_vs_b3_attempts_ratio_range": [
+      0.4555,
+      0.4555
+    ],
+    "t_vs_b3_efficiency_ratio_range": [
+      1.2676,
+      1.4961
+    ],
+    "b3_cap_violations": 8463,
+    "t_cap_violations": 0,
+    "interpretation": "T recovers 58-68% of B3's total using 46-46% of its attempts, at 1.27-1.50x the recovery per attempt. B3 reaches its total partly by exceeding the 3-attempt cap on 8463 payments; T breaches it on 0."
+  }
+}
