@@ -149,7 +149,7 @@ export default function FlowPage({ params }: { params: { runId: string } }) {
             <select
               value={speed}
               onChange={(e) => setSpeed(parseFloat(e.target.value))}
-              className="glass-raised px-2 py-1.5 text-xs num"
+              className="card-raised px-2 py-1.5 text-xs num"
             >
               {[0.5, 1, 2, 4].map((s) => (
                 <option key={s} value={s}>
@@ -159,14 +159,14 @@ export default function FlowPage({ params }: { params: { runId: string } }) {
             </select>
             <button
               onClick={() => stepBy(-1)}
-              className="glass-raised px-2.5 py-1.5 text-xs hover:border-gold/40 transition-colors"
+              className="card-raised px-2.5 py-1.5 text-xs hover:border-brand/40 transition-colors"
               title="previous node"
             >
               ‹
             </button>
             <button
               onClick={() => stepBy(1)}
-              className="glass-raised px-2.5 py-1.5 text-xs hover:border-gold/40 transition-colors"
+              className="card-raised px-2.5 py-1.5 text-xs hover:border-brand/40 transition-colors"
               title="next node"
             >
               ›
@@ -182,8 +182,8 @@ export default function FlowPage({ params }: { params: { runId: string } }) {
             ) : (
               <button
                 onClick={replay}
-                className="px-4 py-1.5 rounded-lg bg-gold text-void text-xs font-semibold
-                           hover:bg-gold-glow transition-colors shadow-glow"
+                className="px-4 py-1.5 rounded-lg bg-brand text-brand-ink text-xs font-semibold
+                           hover:brightness-110 transition-colors shadow-xs"
               >
                 ▶ replay run
               </button>
@@ -195,19 +195,19 @@ export default function FlowPage({ params }: { params: { runId: string } }) {
       {/* what is happening right now, in one sentence */}
       <Stagger i={1}>
         <div
-          className={`glass px-5 py-3.5 flex items-center gap-4 transition-colors ${
-            playing ? "border-gold/40" : ""
+          className={`card px-5 py-3.5 flex items-center gap-4 transition-colors ${
+            playing ? "border-brand/40" : ""
           }`}
         >
           <span
             className={`w-2 h-2 rounded-full shrink-0 ${
-              playing ? "bg-gold animate-breathe" : "bg-faint"
+              playing ? "bg-brand animate-breathe" : "bg-faint"
             }`}
           />
           <div className="min-w-0 flex-1 text-sm">
             {live ? (
               <>
-                <span className="text-gold font-medium">{live.title}</span>
+                <span className="text-brand font-medium">{live.title}</span>
                 <span className="text-muted"> &mdash; {live.line}</span>
               </>
             ) : (
@@ -221,14 +221,14 @@ export default function FlowPage({ params }: { params: { runId: string } }) {
 
       {/* progress */}
       <Stagger i={2}>
-        <div className="glass px-4 py-2.5 flex items-center gap-4">
+        <div className="card px-4 py-2.5 flex items-center gap-4">
           <div className="eyebrow shrink-0">
             {step !== null ? `step ${step + 1}` : playing ? "streaming" : "complete"} ·{" "}
             {done}/{rec.traces.length}
           </div>
-          <div className="flex-1 h-1 rounded-full bg-white/[0.05] overflow-hidden">
+          <div className="flex-1 h-1 rounded-full bg-raised overflow-hidden">
             <div
-              className="h-full bg-gradient-to-r from-gold-dim to-gold transition-[width] duration-500"
+              className="h-full bg-gradient-to-r from-brand to-brand transition-[width] duration-500"
               style={{ width: `${(done / rec.traces.length) * 100}%` }}
             />
           </div>
@@ -250,19 +250,19 @@ export default function FlowPage({ params }: { params: { runId: string } }) {
               <defs>
                 <marker id="arrow" markerWidth="7" markerHeight="7" refX="6" refY="3.5"
                         orient="auto">
-                  <path d="M0,0 L7,3.5 L0,7 Z" fill="#E5B94E" opacity="0.85" />
+                  <path d="M0,0 L7,3.5 L0,7 Z" fill="rgb(var(--brand))" opacity="0.85" />
                 </marker>
                 <marker id="arrowDim" markerWidth="7" markerHeight="7" refX="6" refY="3.5"
                         orient="auto">
-                  <path d="M0,0 L7,3.5 L0,7 Z" fill="#2A3548" />
+                  <path d="M0,0 L7,3.5 L0,7 Z" fill="rgb(var(--edge))" />
                 </marker>
                 <linearGradient id="llmGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="rgba(167,139,250,0.16)" />
-                  <stop offset="100%" stopColor="rgba(167,139,250,0.03)" />
+                  <stop offset="0%" stopColor="rgb(var(--iris) / 0.18)" />
+                  <stop offset="100%" stopColor="rgb(var(--iris) / 0.04)" />
                 </linearGradient>
                 <linearGradient id="detGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="rgba(96,165,250,0.13)" />
-                  <stop offset="100%" stopColor="rgba(96,165,250,0.03)" />
+                  <stop offset="0%" stopColor="rgb(var(--sky) / 0.15)" />
+                  <stop offset="100%" stopColor="rgb(var(--sky) / 0.04)" />
                 </linearGradient>
               </defs>
 
@@ -283,7 +283,7 @@ export default function FlowPage({ params }: { params: { runId: string } }) {
                     key={`${from}-${to}`}
                     d={`M ${x1} ${y1} C ${mx} ${y1}, ${mx} ${y2}, ${x2} ${y2}`}
                     fill="none"
-                    stroke={live ? "#E5B94E" : "#1B2333"}
+                    stroke={live ? "rgb(var(--brand))" : "rgb(var(--line))"}
                     strokeWidth={live ? 1.7 : 1.1}
                     strokeDasharray={live ? "0" : "4 4"}
                     markerEnd={live ? "url(#arrow)" : "url(#arrowDim)"}
@@ -302,13 +302,13 @@ export default function FlowPage({ params }: { params: { runId: string } }) {
                 const stroke =
                   status === "ok"
                     ? llm
-                      ? "#A78BFA"
-                      : "#60A5FA"
+                      ? "rgb(var(--iris))"
+                      : "rgb(var(--sky))"
                     : status === "running"
-                    ? "#E5B94E"
+                    ? "rgb(var(--brand))"
                     : status === "error"
-                    ? "#FB7185"
-                    : "#1B2333";
+                    ? "rgb(var(--rose))"
+                    : "rgb(var(--line))";
                 return (
                   <g
                     key={id}
@@ -323,7 +323,7 @@ export default function FlowPage({ params }: { params: { runId: string } }) {
                       height={NODE_H}
                       rx={10}
                       fill={llm ? "url(#llmGrad)" : "url(#detGrad)"}
-                      stroke={active ? "#E5B94E" : stroke}
+                      stroke={active ? "rgb(var(--brand))" : stroke}
                       strokeWidth={active ? 2.2 : 1.3}
                       strokeDasharray={status === "skipped" ? "5 4" : "0"}
                       className={status === "running" ? "animate-pulseRing" : ""}
@@ -332,8 +332,8 @@ export default function FlowPage({ params }: { params: { runId: string } }) {
                       x={x(pos.c) + NODE_W / 2}
                       y={y(pos.r) + 24}
                       textAnchor="middle"
-                      fill="#F2F5FA"
-                      style={{ fontSize: 12, fontWeight: 600, fontFamily: "Space Grotesk, sans-serif" }}
+                      fill="rgb(var(--ink))"
+                      style={{ fontSize: 12, fontWeight: 600, fontFamily: "Inter, sans-serif" }}
                     >
                       {d.title}
                     </text>
@@ -341,7 +341,7 @@ export default function FlowPage({ params }: { params: { runId: string } }) {
                       x={x(pos.c) + NODE_W / 2}
                       y={y(pos.r) + 40}
                       textAnchor="middle"
-                      fill={llm ? "#A78BFA" : "#60A5FA"}
+                      fill={llm ? "rgb(var(--iris))" : "rgb(var(--sky))"}
                       style={{ fontSize: 8.5, fontFamily: "JetBrains Mono, monospace", letterSpacing: "0.08em" }}
                     >
                       {llm ? "LLM" : "DETERMINISTIC"}
@@ -351,7 +351,7 @@ export default function FlowPage({ params }: { params: { runId: string } }) {
                         x={x(pos.c) + NODE_W - 8}
                         y={y(pos.r) + 14}
                         textAnchor="end"
-                        fill="#5C6880"
+                        fill="rgb(var(--faint))"
                         style={{ fontSize: 8, fontFamily: "JetBrains Mono, monospace" }}
                       >
                         {t.duration_ms}ms
@@ -362,7 +362,7 @@ export default function FlowPage({ params }: { params: { runId: string } }) {
                         x={x(pos.c) + NODE_W / 2}
                         y={y(pos.r) + 52}
                         textAnchor="middle"
-                        fill="#5C6880"
+                        fill="rgb(var(--faint))"
                         style={{ fontSize: 7.5, fontFamily: "JetBrains Mono, monospace" }}
                       >
                         not taken
@@ -376,11 +376,11 @@ export default function FlowPage({ params }: { params: { runId: string } }) {
             <div className="flex flex-wrap items-center gap-4 mt-3 pt-3 border-t border-line
                             text-[11px] text-muted">
               <span className="flex items-center gap-1.5">
-                <i className="w-2.5 h-2.5 rounded border border-iris/60 bg-iris/15 inline-block" />
+                <i className="w-2.5 h-2.5 rounded border border-iris/60 bg-iris-soft inline-block" />
                 model judgement
               </span>
               <span className="flex items-center gap-1.5">
-                <i className="w-2.5 h-2.5 rounded border border-sky/60 bg-sky/15 inline-block" />
+                <i className="w-2.5 h-2.5 rounded border border-sky/60 bg-sky-soft inline-block" />
                 deterministic
               </span>
               <span className="flex items-center gap-1.5">
@@ -397,7 +397,7 @@ export default function FlowPage({ params }: { params: { runId: string } }) {
         {/* ─────────────────────────────────────────── inspector */}
         <Stagger i={3}>
           <Card className="!p-0 overflow-hidden flex flex-col" >
-            <div className="px-5 py-4 border-b border-line bg-glass">
+            <div className="px-5 py-4 border-b border-line bg-surface">
               <div className="flex items-center gap-2 flex-wrap">
                 <h3 className="font-display font-bold">{doc?.title ?? selected}</h3>
                 <span className={doc?.kind === "llm" ? "chip-llm" : "chip-det"}>
@@ -419,7 +419,7 @@ export default function FlowPage({ params }: { params: { runId: string } }) {
                 </div>
               ) : (
                 <>
-                  <div className="glass-raised p-3 border-l-2 border-l-gold/60">
+                  <div className="card-raised p-3 border-l-2 border-l-brand/60">
                     <div className="eyebrow mb-1.5">what just happened</div>
                     <p className="text-sm leading-relaxed">{narrate(sel)}</p>
                   </div>
@@ -446,7 +446,7 @@ export default function FlowPage({ params }: { params: { runId: string } }) {
                         <span className="chip-neutral">{sel.model}</span>
                         <span className="chip-neutral">temperature 0</span>
                         {sel.cache_hit && (
-                          <span className="chip bg-mint/10 text-mint border-mint/30">
+                          <span className="chip bg-mint-soft text-mint border-mint/30">
                             served from cache
                           </span>
                         )}
@@ -493,7 +493,7 @@ export default function FlowPage({ params }: { params: { runId: string } }) {
                 </summary>
                 <div className="space-y-3 mt-3">
                   <p className="text-xs text-muted leading-relaxed">{doc?.why}</p>
-                  <p className="text-xs text-muted leading-relaxed border-l-2 border-l-gold/40 pl-3">
+                  <p className="text-xs text-muted leading-relaxed border-l-2 border-l-brand/40 pl-3">
                     {doc?.inspect}
                   </p>
                 </div>
@@ -517,7 +517,7 @@ export default function FlowPage({ params }: { params: { runId: string } }) {
                 key={t.seq}
                 onClick={() => setSelected(t.node)}
                 className={`block w-full text-left px-2 py-1 rounded transition-colors ${
-                  selected === t.node ? "bg-gold/10" : "hover:bg-white/[0.04]"
+                  selected === t.node ? "bg-brand-soft" : "hover:bg-raised"
                 }`}
               >
                 <span className="text-faint">{String(t.seq).padStart(2, "0")}</span>{" "}
@@ -629,7 +629,7 @@ function Facts({ trace }: { trace: NodeTrace }) {
   return (
     <div className="grid grid-cols-2 gap-2">
       {pick.slice(0, 6).map(([k, v]) => (
-        <div key={k} className="glass-raised px-3 py-2">
+        <div key={k} className="card-raised px-3 py-2">
           <div className="eyebrow truncate">{k.replace(/_/g, " ")}</div>
           <div className="num text-sm mt-0.5">
             {typeof v === "boolean" ? (v ? "yes" : "no") : fmt(v)}
@@ -653,7 +653,7 @@ function KV({ k, v, accent }: { k: string; v: string; accent?: boolean }) {
   return (
     <div className="flex items-baseline gap-2 text-xs">
       <span className="eyebrow">{k}</span>
-      <span className={`num ${accent ? "text-gold" : "text-ink"}`}>{v}</span>
+      <span className={`num ${accent ? "text-brand" : "text-ink"}`}>{v}</span>
     </div>
   );
 }
@@ -664,12 +664,12 @@ function Reveal({ label, children }: { label: string; children: string }) {
     <div>
       <button
         onClick={() => setOpen(!open)}
-        className="eyebrow text-gold hover:text-gold-glow transition-colors flex items-center gap-1"
+        className="eyebrow text-brand hover:text-brand transition-colors flex items-center gap-1"
       >
         <span>{open ? "▾" : "▸"}</span> {label}
       </button>
       {open && (
-        <pre className="mt-2 p-3 bg-void/70 rounded-lg border border-line font-mono
+        <pre className="mt-2 p-3 bg-subtle rounded-lg border border-line font-mono
                         text-[10px] leading-relaxed whitespace-pre-wrap
                         max-h-72 overflow-y-auto text-muted animate-rise">
           {children}
@@ -698,7 +698,7 @@ function Block({
         <span>{show ? "▾" : "▸"}</span> {label}
       </button>
       {show && (
-        <pre className="mt-2 p-3 bg-void/70 rounded-lg border border-line font-mono
+        <pre className="mt-2 p-3 bg-subtle rounded-lg border border-line font-mono
                         text-[10px] leading-relaxed whitespace-pre-wrap
                         max-h-64 overflow-y-auto text-muted animate-rise">
           {JSON.stringify(data, null, 2)}
