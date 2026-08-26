@@ -353,27 +353,33 @@ the broken rules back.
 I was confident enough that I ran it on 8 merchants first and got **62.5% →
 75.0%**. A twelve-point jump.
 
-**What happened on all 60:**
+**What happened on all 60 — and then again later:**
 
-| | verifier off | verifier on |
-|---|---|---|
-| root-cause accuracy | 60.0% | 61.7% |
-| merchants with violations | **23** | **1** |
-| fixed / broken | — | **8 / 7** |
+| merchant set | accuracy off → on | fixed / broken | violations |
+|---|---|---|---|
+| original | 60.0% → 61.7% | 8 / 7 | 29 → 0 |
+| after regenerating | 65.0% → 70.0% | 9 / 6 | 28 → 1 |
 
-**+1.67 points is noise.** Eight merchants improved, seven regressed, and the
-confidence intervals overlap almost entirely. The 8-merchant sample had simply
-been a lucky draw, which is exactly the trap this whole project is built to
-avoid — and I nearly walked into it with my own result.
+**+1.67 points was noise.** Eight merchants improved, seven regressed,
+intervals overlapping almost entirely. The 8-merchant pilot had been a lucky
+draw — exactly the trap this project exists to avoid, and I nearly walked into
+it with my own result.
 
-**What the verifier actually does.** Violations fell from 29 to 0. The model
-was **contradicting its own evidence even on merchants it got right** — naming
-a primary cause other than the largest identified factor 19 times, and citing
-**10 figures that appear nowhere in the data it was given.**
+Then the merchant data changed for an unrelated reason, I re-ran, and got
+**+5.00**. Very tempting. But 9 fixed against 6 broken is a net of three
+merchants out of sixty, the intervals still overlap heavily, and **an effect
+that moves from +1.7 to +5.0 between two runs of the same experiment is not an
+effect.** The point estimate is reported; the claim is not made.
+
+**What the verifier definitely does.** Violations collapse in both runs — 29→0
+and 28→1. The model was **contradicting its own evidence even on merchants it
+got right**, naming a primary cause other than the largest identified factor 20
+times, and citing **8 figures that appear nowhere in the data it was given.**
 
 So the honest conclusion is not "the verifier made the model smarter". It is:
 
-> **The verifier makes the output consistent, not more accurate.**
+> **The verifier makes the output consistent. Whether it also makes it more
+> accurate is not established by this data.**
 > Those are different properties, and conflating them is the easy mistake.
 
 **How I got out.** I shipped it anyway, and reported both numbers separately.
@@ -384,8 +390,9 @@ been the single most tempting piece of dishonesty available to me in this
 project.
 
 **Lesson:** I would have believed the 8-merchant result if I had not already
-built the habit of running the full sweep. Small samples flatter the thing you
-just built.
+built the habit of running the full sweep. And I would have believed the +5.00
+if I had not already been burned by the +12. Small samples flatter the thing
+you just built — and so does the first favourable re-run.
 
 ---
 
