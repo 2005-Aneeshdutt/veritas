@@ -1,0 +1,22 @@
+# Everything the pipeline generates is compared byte-for-byte by
+# scripts/verify_reproducibility.py. Without this, a checkout on Windows gets
+# CRLF, the generators write LF, and every file reads as changed -- the check
+# then fails on line endings rather than on a number having moved.
+#
+# The generators pin newline="\n" at the point of writing; this pins the other
+# half, so it holds whoever clones the repo.
+
+*.json          text eol=lf
+*.md            text eol=lf
+*.py            text eol=lf
+*.csv           text eol=lf
+
+data/**         text eol=lf
+evals/results/** text eol=lf
+llm_cache/**    text eol=lf
+
+# Binary sources -- never touch these.
+*.xlsx          binary
+*.pdf           binary
+*.png           binary
+*.gz            binary
