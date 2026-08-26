@@ -82,19 +82,23 @@ export default function ExceptionsPage({ params }: { params: { runId: string } }
   const ex = r.exceptions;
   const p = r.projected;
 
-  const byClass: Record<string, any[]> = {};
+  // The row list is capped by the API for payload size. Counts and rupee
+  // totals come from the server's aggregate over every unrecoverable payment,
+  // so the bar and the group headers reconcile with the figure above them;
+  // only the expandable tables are a sample, and they say so.
+  const sample: Record<string, any[]> = {};
   for (const t of ex.unrecoverable_transactions) {
-    (byClass[t.error_class ?? "unknown"] ||= []).push(t);
+    (sample[t.error_class ?? "unknown"] ||= []).push(t);
   }
-  const groups = Object.entries(byClass)
-    .map(([k, rows]) => ({
-      key: k,
-      rows,
-      total: rows.reduce((a: number, t: any) => a + t.amount_paise, 0),
-      meta: CLASS_META[k] ?? CLASS_META.unknown,
-    }))
-    .sort((a, b) => b.total - a.total);
-  const grandTotal = groups.reduce((a, g) => a + g.total, 0) || 1;
+  const groups = (ex.unrecoverable_by_class ?? []).map((g: any) => ({
+    key: g.error_class,
+    count: g.count,
+    total: g.total_paise,
+    rows: sample[g.error_class] ?? [],
+    meta: CLASS_META[g.error_class] ?? CLASS_META.unknown,
+  }));
+  const grandTotal = groups.reduce((a: number, g: any) => a + g.total, 0) || 1;
+  const truncated = ex.unrecoverable_transactions.length < p.unrecoverable_count;
 
   return (
     <div className="space-y-6">
@@ -188,6 +192,11 @@ export default function ExceptionsPage({ params }: { params: { runId: string } }
                 ₹<Ticker value={p.unrecoverable_paise / 100} decimals={0} />
               </div>
               <div className="eyebrow">{p.unrecoverable_count} payments</div>
+              {truncated && (
+                <div className="text-[10px] text-faint mt-1">
+                  totals cover all {p.unrecoverable_count}
+                </div>
+              )}
             </div>
           </div>
 
@@ -240,7 +249,7 @@ export default function ExceptionsPage({ params }: { params: { runId: string } }
                         <div className="num text-sm text-amber">
                           {inr(g.total, { compact: true })}
                         </div>
-                        <div className="eyebrow">{g.rows.length} payments</div>
+                        <div className="eyebrow">{g.count} payments</div>
                       </div>
                       <span className="text-brand w-3 shrink-0">
                         {isOpen ? "−" : "+"}
@@ -252,7 +261,14 @@ export default function ExceptionsPage({ params }: { params: { runId: string } }
                   </button>
 
                   {isOpen && (
-                    <div className="border-t border-line max-h-72 overflow-y-auto animate-rise">
+                    <div className="border-t border-line animate-rise">
+                      {g.rows.length < g.count && (
+                        <div className="px-4 py-2 text-[11px] text-faint border-b border-line">
+                          showing {g.rows.length} of {g.count} — the full list is in
+                          the run record, not truncated there
+                        </div>
+                      )}
+                      <div className="max-h-72 overflow-y-auto">
                       <table className="w-full text-[11px] num">
                         <thead className="sticky top-0 bg-surface">
                           <tr className="eyebrow border-b border-line">
@@ -273,6 +289,7 @@ export default function ExceptionsPage({ params }: { params: { runId: string } }
                           ))}
                         </tbody>
                       </table>
+                      </div>
                     </div>
                   )}
                 </div>
