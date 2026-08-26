@@ -25,6 +25,7 @@ export function Logo({ size = "sm" }: { size?: "sm" | "lg" }) {
 
 const NAV = [
   { href: "/portfolio", label: "Book" },
+  { href: "/live", label: "Live" },
   { href: "/drift", label: "Drift" },
 ];
 
