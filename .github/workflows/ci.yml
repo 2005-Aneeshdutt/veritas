@@ -41,8 +41,10 @@ jobs:
           PYTHONPATH: src
         run: |
           python - <<'PY'
-          import glob, json, sys
-          newest = max(glob.glob("data/runs/run_*.json"), key=lambda p: p)
+          import glob, json, os, sys
+          # By write time. Sorting by name is alphabetical on a random hex
+          # id, which would check a committed run instead of the fresh one.
+          newest = max(glob.glob("data/runs/run_*.json"), key=os.path.getmtime)
           rec = json.load(open(newest, encoding="utf-8"))
           if rec["used_stubs"]:
               sys.exit("Run used stub responses -- the committed cache is incomplete.")
