@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { TopBar } from "@/components/Chrome";
 import { Card, Eyebrow, Loading, Stagger, Ticker } from "@/components/ui";
 import { inr } from "@/lib/types";
 
@@ -11,25 +12,25 @@ const BAND: Record<
 > = {
   urgent: {
     label: "Act now",
-    tone: "text-rose border-rose/30 bg-rose/[0.06]",
+    tone: "text-rose border-rose/30 bg-rose-soft",
     dot: "bg-rose",
     blurb: "material money on the table and a cause we can name",
   },
   review: {
     label: "Review",
-    tone: "text-amber border-amber/30 bg-amber/[0.06]",
+    tone: "text-amber border-amber/30 bg-amber-soft",
     dot: "bg-amber",
     blurb: "a real gap, smaller than the urgent band",
   },
   insufficient_data: {
     label: "Not enough data",
-    tone: "text-muted border-line bg-white/[0.03]",
+    tone: "text-muted border-line bg-raised",
     dot: "bg-faint",
     blurb: "too few payments to resolve a gap this size — no call yet",
   },
   healthy: {
     label: "Healthy",
-    tone: "text-mint border-mint/30 bg-mint/[0.06]",
+    tone: "text-mint border-mint/30 bg-mint-soft",
     dot: "bg-mint",
     blurb: "at or near what their category achieves",
   },
@@ -67,16 +68,34 @@ export default function PortfolioPage() {
     setBusy(false);
   }
 
-  if (!pf) return <div className="max-w-[1400px] mx-auto px-6 py-10"><Loading label="scanning the book" /></div>;
+  // The chrome renders immediately, so the theme toggle and re-scan button are
+  // there while the book is still loading rather than appearing after it.
+  const shell = (body: React.ReactNode) => (
+    <div className="min-h-screen bg-canvas">
+      <TopBar
+        right={
+          <>
+            <a href="/api/portfolio.csv" className="btn-quiet h-8 px-3 text-xs">
+              Export CSV
+            </a>
+            <button onClick={refreshAll} disabled={busy} className="btn-primary h-8 px-3 text-xs">
+              {busy ? "Scanning…" : "Re-scan the book"}
+            </button>
+          </>
+        }
+      />
+      <main className="max-w-[1400px] mx-auto px-6 py-8 space-y-6">{body}</main>
+    </div>
+  );
+
+  if (!pf) return shell(<Loading label="scanning the book" />);
   if (!pf.merchants?.length)
-    return (
-      <div className="max-w-[1400px] mx-auto px-6 py-10">
-        <Card>
-          <div className="text-sm text-muted font-mono">
-            No runs yet. Diagnose a merchant first, or hit “Re-scan the book”.
-          </div>
-        </Card>
-      </div>
+    return shell(
+      <Card>
+        <div className="text-sm text-muted">
+          No runs yet. Diagnose a merchant first, or hit “Re-scan the book”.
+        </div>
+      </Card>
     );
 
   const rows =
@@ -86,59 +105,16 @@ export default function PortfolioPage() {
   ).length;
   const maxRec = Math.max(...pf.merchants.map((r: any) => r.recoverable_central_paise), 1);
 
-  return (
-    <div className="min-h-screen">
-      <div
-        className="pointer-events-none fixed inset-0 bg-grid opacity-40"
-        style={{
-          backgroundSize: "56px 56px",
-          maskImage: "radial-gradient(900px 500px at 50% 0%, #000, transparent 70%)",
-        }}
-      />
-
-      <nav className="sticky top-0 z-40 border-b border-line bg-void/85 backdrop-blur-xl">
-        <div className="max-w-[1400px] mx-auto px-6 h-14 flex items-center gap-4">
-          <Link href="/" className="flex items-center gap-2 group">
-            <span className="w-6 h-6 rounded-md bg-gradient-to-br from-gold to-gold-dim
-                             grid place-items-center text-void text-xs font-bold">
-              R
-            </span>
-            <span className="font-display font-bold text-sm group-hover:text-gold transition-colors">
-              Revenue Doctor
-            </span>
-          </Link>
-          <span className="chip-neutral">book view</span>
-          <Link href="/drift" className="text-xs link-quiet">
-            ecosystem drift
-          </Link>
-          <div className="ml-auto flex items-center gap-2">
-            <a
-              href="/api/portfolio.csv"
-              className="glass-raised px-3 py-1.5 text-xs hover:border-gold/40 transition-colors"
-            >
-              ↓ export to Sheets
-            </a>
-            <button
-              onClick={refreshAll}
-              disabled={busy}
-              className="px-3 py-1.5 rounded-lg bg-gold text-void text-xs font-semibold
-                         hover:bg-gold-glow transition-colors disabled:opacity-60"
-            >
-              {busy ? "scanning…" : "Re-scan the book"}
-            </button>
-          </div>
-        </div>
-      </nav>
-
-      <div className="relative max-w-[1400px] mx-auto px-6 py-7 space-y-6">
+  return shell(
+    <>
         {/* ───────────────────────────────────── headline */}
         <Stagger>
           <Card className="!p-0 overflow-hidden">
-            <div className="bg-gold-sheen px-6 py-6">
+            <div className="bg-brand-soft px-6 py-6">
               <Eyebrow>Across the entire merchant book</Eyebrow>
               <div className="flex flex-wrap items-end gap-x-10 gap-y-4 mt-3">
                 <div>
-                  <div className="text-5xl font-display font-bold text-gold leading-none">
+                  <div className="text-5xl font-display font-bold text-brand leading-none">
                     <Ticker
                       value={pf.total_recoverable_central_paise / 100}
                       prefix="₹"
@@ -186,8 +162,8 @@ export default function PortfolioPage() {
                 onClick={() => setBand("all")}
                 className={`chip ${
                   band === "all"
-                    ? "bg-gold/12 text-gold border-gold/30"
-                    : "bg-white/[0.03] text-muted border-line"
+                    ? "bg-brand-soft text-brand border-brand/30"
+                    : "bg-raised text-muted border-line"
                 }`}
               >
                 all {pf.merchants.length}
@@ -197,7 +173,7 @@ export default function PortfolioPage() {
                   key={k}
                   onClick={() => setBand(k)}
                   className={`chip ${
-                    band === k ? BAND[k].tone : "bg-white/[0.03] text-muted border-line"
+                    band === k ? BAND[k].tone : "bg-raised text-muted border-line"
                   }`}
                 >
                   <span className={`w-1.5 h-1.5 rounded-full ${BAND[k].dot}`} />
@@ -217,7 +193,7 @@ export default function PortfolioPage() {
                 <Link
                   key={r.merchant_id}
                   href={`/run/${r.run_id}`}
-                  className="glass p-4 flex items-center gap-4 hover:border-gold/40
+                  className="card p-4 flex items-center gap-4 hover:border-brand/40
                              hover:-translate-y-0.5 transition-all duration-300 group"
                 >
                   <span className={`w-2 h-10 rounded-full shrink-0 ${b.dot}`} />
@@ -247,9 +223,9 @@ export default function PortfolioPage() {
                   </div>
 
                   <div className="flex-1 min-w-0 hidden md:block">
-                    <div className="h-1.5 rounded-full bg-white/[0.05] overflow-hidden">
+                    <div className="h-1.5 rounded-full bg-raised overflow-hidden">
                       <div
-                        className="h-full rounded-full bg-gradient-to-r from-gold-dim to-gold"
+                        className="h-full rounded-full bg-gradient-to-r bg-brand"
                         style={{
                           width: `${
                             (r.recoverable_central_paise / maxRec) * 100
@@ -268,7 +244,7 @@ export default function PortfolioPage() {
 
                   <div className="w-24 shrink-0 text-right hidden sm:block">
                     {r.fixes_auto > 0 ? (
-                      <span className="chip bg-gold/10 text-gold border-gold/30">
+                      <span className="chip bg-brand-soft text-brand border-brand/30">
                         {r.fixes_auto} auto-fix
                       </span>
                     ) : (
@@ -276,7 +252,7 @@ export default function PortfolioPage() {
                     )}
                   </div>
 
-                  <span className="text-gold shrink-0 group-hover:translate-x-1 transition-transform">
+                  <span className="text-brand shrink-0 group-hover:translate-x-1 transition-transform">
                     →
                   </span>
                 </Link>
@@ -299,7 +275,7 @@ export default function PortfolioPage() {
               </p>
               <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3 mt-4">
                 {Object.entries(pf.by_cause).map(([cause, v]: any) => (
-                  <div key={cause} className="glass-raised p-4">
+                  <div key={cause} className="card-raised p-4">
                     <div className="text-sm font-medium">
                       {CAUSE_LABEL[cause] ?? cause}
                     </div>
@@ -317,7 +293,6 @@ export default function PortfolioPage() {
             </Card>
           </Stagger>
         )}
-      </div>
-    </div>
+    </>
   );
 }
