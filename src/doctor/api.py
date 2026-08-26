@@ -41,6 +41,7 @@ from doctor.outreach import as_eml, compose, send, smtp_configured
 from doctor.portfolio import build_portfolio, ledger_csv, portfolio_csv
 from doctor.generator import GeneratedMerchant
 from doctor.graph import git_commit, run_diagnosis
+from doctor.live import LiveMonitor, in_arrival_order
 from doctor.llm import MODEL_FAST, MODEL_REASONING
 from doctor.run import load_mandate, load_merchant
 from doctor.trace import RunRecord
@@ -344,6 +345,76 @@ async def stream(merchant: str, calibration: str = "central", pace_ms: float = 0
             yield _sse(kind, payload)
             if delay and kind == "step":
                 await asyncio.sleep(delay)
+
+    return StreamingResponse(
+        gen(),
+        media_type="text/event-stream",
+        headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"},
+    )
+
+
+@app.get("/api/live/{merchant}/stream")
+async def live_feed(merchant: str, rate: int = 60, limit: int = 0):
+    """Payments arriving one at a time, with an online detector watching.
+
+    The batch pages explain a month after it has happened. This is the same
+    month replayed in payment order with a rolling-window detector running over
+    it, so a bank going bad is something you watch rather than read about.
+
+    `rate` is payments per second, purely a playback speed. The detector state
+    does not depend on it: the same stream at any rate produces the same alerts
+    at the same payment numbers, which is worth checking on camera.
+    """
+    if merchant not in MERCHANTS:
+        raise HTTPException(400, "unknown merchant: %s" % merchant)
+
+    m = load_merchant(merchant)
+    monitor = LiveMonitor(Baseline())
+    txns = list(in_arrival_order(m.transactions))
+    if limit > 0:
+        txns = txns[:limit]
+    delay = 1.0 / max(1, min(rate, 2000))
+
+    async def gen():
+        yield _sse(
+            "start",
+            {
+                "merchant": merchant,
+                "merchant_name": m.profile.name,
+                "total": len(txns),
+                "rate": rate,
+            },
+        )
+        for t in txns:
+            alert = monitor.observe(t)
+            yield _sse(
+                "payment",
+                {
+                    "txn_id": t.txn_id,
+                    "bank": t.bank,
+                    "method": t.method.value,
+                    "hour": t.hour,
+                    "amount_paise": t.amount_paise,
+                    "succeeded": t.succeeded,
+                    "error_code": t.error_code,
+                    "error_class": t.error_class.value if t.error_class else None,
+                },
+            )
+            if alert is not None:
+                # The interesting event. Sent as its own type so the UI can
+                # stop the feed and put the evidence on screen.
+                yield _sse("alert", alert.__dict__)
+            if monitor.n_seen % 25 == 0:
+                yield _sse("stats", monitor.snapshot())
+            await asyncio.sleep(delay)
+        yield _sse("stats", monitor.snapshot())
+        yield _sse(
+            "done",
+            {
+                **monitor.snapshot(),
+                "alerts_detail": [a.__dict__ for a in monitor.alerted.values()],
+            },
+        )
 
     return StreamingResponse(
         gen(),
