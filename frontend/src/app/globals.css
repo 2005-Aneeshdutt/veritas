@@ -1,124 +1,208 @@
-@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;450;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap");
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* ---------------------------------------------------------------- themes */
+/* Light is the default, the way Stripe's own surfaces are. Dark is a full
+   re-map rather than an inversion, so contrast stays deliberate in both. */
+
 :root {
+  --canvas: 255 255 255;
+  --subtle: 246 249 252;
+  --surface: 255 255 255;
+  --raised: 246 249 252;
+  --line: 227 232 238;
+  --edge: 206 214 224;
+
+  --brand: 99 91 255;
+  --brand-soft: 240 239 255;
+  --brand-ink: 255 255 255;
+
+  --mint: 14 159 110;
+  --mint-soft: 222 247 236;
+  --rose: 224 36 36;
+  --rose-soft: 253 232 232;
+  --sky: 5 112 222;
+  --sky-soft: 225 239 254;
+  --amber: 194 120 3;
+  --amber-soft: 253 246 178;
+  --iris: 124 58 237;
+  --iris-soft: 237 235 254;
+
+  --ink: 10 37 64;
+  --muted: 66 84 102;
+  --faint: 135 146 162;
+
+  --shadow: 10 37 64;
+
+  --grad-a: 111 214 255;
+  --grad-b: 138 124 255;
+  --grad-c: 255 138 190;
+
+  color-scheme: light;
+}
+
+.dark {
+  --canvas: 8 12 22;
+  --subtle: 14 19 32;
+  --surface: 17 23 38;
+  --raised: 23 30 48;
+  --line: 34 44 66;
+  --edge: 48 61 88;
+
+  --brand: 139 133 255;
+  --brand-soft: 30 32 72;
+  --brand-ink: 10 14 25;
+
+  --mint: 52 211 153;
+  --mint-soft: 16 48 42;
+  --rose: 248 113 113;
+  --rose-soft: 60 24 30;
+  --sky: 96 165 250;
+  --sky-soft: 17 38 68;
+  --amber: 251 191 36;
+  --amber-soft: 58 44 12;
+  --iris: 167 139 250;
+  --iris-soft: 41 32 74;
+
+  --ink: 240 244 250;
+  --muted: 160 172 190;
+  --faint: 108 122 143;
+
+  --shadow: 0 0 0;
+
+  --grad-a: 32 96 140;
+  --grad-b: 78 68 168;
+  --grad-c: 138 60 105;
+
   color-scheme: dark;
 }
+
+/* -------------------------------------------------------------- base */
 
 html {
   scroll-behavior: smooth;
 }
 
 body {
-  @apply bg-void text-ink font-body antialiased;
-  /* Two soft light sources rather than a flat fill, so large dark areas have
-     somewhere for the eye to rest. */
-  background-image:
-    radial-gradient(900px 500px at 12% -8%, rgba(229, 185, 78, 0.07), transparent 60%),
-    radial-gradient(800px 480px at 92% 4%, rgba(96, 165, 250, 0.055), transparent 62%),
-    radial-gradient(1000px 700px at 50% 110%, rgba(167, 139, 250, 0.045), transparent 60%);
-  background-attachment: fixed;
+  @apply bg-canvas text-ink font-body antialiased;
+  -webkit-font-smoothing: antialiased;
 }
 
 h1, h2, h3, h4 {
-  @apply font-display tracking-[-0.02em];
+  @apply font-display tracking-tightest;
 }
 
-/* ---------------------------------------------------------------- surfaces */
-
-.glass {
-  @apply bg-glass border border-line/80 rounded-xl backdrop-blur-xl shadow-lift;
+/* Theme changes should not animate every element on the page. */
+.theme-transition,
+.theme-transition * {
+  transition: background-color 180ms ease, border-color 180ms ease,
+    color 180ms ease;
 }
 
-.glass-raised {
-  @apply bg-raised/70 border border-line rounded-xl backdrop-blur-xl;
-}
+/* ---------------------------------------------------------- surfaces */
 
-.hairline {
-  @apply border-b border-line/70;
-}
+@layer components {
+  .card {
+    @apply bg-surface border border-line rounded-xl shadow-xs;
+  }
+  .card-raised {
+    @apply bg-raised border border-line rounded-lg;
+  }
+  .card-lift {
+    @apply bg-surface border border-line rounded-xl shadow-card
+           hover:shadow-lift transition-shadow duration-200;
+  }
 
-/* The MEASURED / PROJECTED wall. These two classes are the thesis rendered,
-   and nothing else in the app may style a headline metric. */
-.panel-measured {
-  @apply rounded-xl border border-mint/25 bg-mint/[0.045];
-  box-shadow: inset 0 1px 0 0 rgba(52, 211, 153, 0.12);
-}
-.panel-projected {
-  @apply rounded-xl border border-amber/25 bg-hatch;
-  box-shadow: inset 0 1px 0 0 rgba(251, 191, 36, 0.12);
+  /* The MEASURED / PROJECTED wall. Still the thesis, rendered. */
+  .panel-measured {
+    @apply rounded-xl border border-mint/30 bg-mint-soft;
+  }
+  .panel-projected {
+    @apply rounded-xl border border-amber/30 bg-hatch;
+  }
+
+  .chip {
+    @apply inline-flex items-center gap-1 font-mono text-[10px] uppercase
+           tracking-[0.07em] px-1.5 py-0.5 rounded border whitespace-nowrap;
+  }
+  .chip-measured { @apply chip bg-mint-soft text-mint border-mint/30; }
+  .chip-projected { @apply chip bg-amber-soft text-amber border-amber/40; }
+  .chip-llm { @apply chip bg-iris-soft text-iris border-iris/30; }
+  .chip-det { @apply chip bg-sky-soft text-sky border-sky/30; }
+  .chip-warn { @apply chip bg-rose-soft text-rose border-rose/30; }
+  .chip-neutral { @apply chip bg-raised text-muted border-line; }
+  .chip-brand { @apply chip bg-brand-soft text-brand border-brand/30; }
+
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2
+           text-sm font-semibold transition-all duration-150
+           disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+  .btn-primary {
+    @apply btn bg-brand text-brand-ink hover:brightness-110 shadow-xs;
+  }
+  .btn-secondary {
+    @apply btn bg-surface text-ink border border-line hover:border-edge shadow-xs;
+  }
+  .btn-quiet {
+    @apply btn text-muted hover:text-ink hover:bg-raised;
+  }
+
+  .field {
+    @apply w-full rounded-lg border border-line bg-surface px-3 py-2 text-sm
+           text-ink placeholder:text-faint outline-none
+           focus:border-brand focus:shadow-ring transition-shadow;
+  }
+
+  .eyebrow {
+    @apply font-mono text-[10px] uppercase tracking-[0.12em] text-faint;
+  }
+
+  .num {
+    @apply font-mono tabular-nums;
+  }
+
+  .link-quiet {
+    @apply text-muted hover:text-ink transition-colors;
+  }
 }
 
 /* "we don't know what this is", without needing a caption */
-.hatched {
-  @apply bg-hatch;
-}
+.hatched { @apply bg-hatch; }
 
-/* ------------------------------------------------------------------ chips */
-
-/* Declared in @layer components so the variants can @apply .chip itself --
-   Tailwind only resolves a custom class inside @apply when it lives in a
-   layer it controls. */
-@layer components {
-  .chip {
-    @apply inline-flex items-center gap-1 font-mono text-[10px] uppercase
-           tracking-[0.09em] px-1.5 py-0.5 rounded border whitespace-nowrap;
-  }
-  .chip-measured { @apply chip bg-mint/10 text-mint border-mint/30; }
-  .chip-projected { @apply chip bg-amber/10 text-amber border-amber/30; }
-  .chip-llm { @apply chip bg-iris/10 text-iris border-iris/30; }
-  .chip-det { @apply chip bg-sky/10 text-sky border-sky/30; }
-  .chip-warn { @apply chip bg-rose/10 text-rose border-rose/30; }
-  .chip-neutral { @apply chip bg-white/[0.04] text-muted border-line; }
-}
-
-/* ------------------------------------------------------------------ atoms */
-
-.eyebrow {
-  @apply font-mono text-[10px] uppercase tracking-[0.16em] text-faint;
-}
-
-.num {
-  @apply font-mono tabular-nums;
-}
-
-.link-quiet {
-  @apply text-muted hover:text-ink transition-colors;
-}
-
-/* A focus ring that is visible on dark glass without being ugly. */
 :where(a, button, input, select, [tabindex]):focus-visible {
-  @apply outline-none ring-2 ring-gold/60 ring-offset-2 ring-offset-void rounded;
+  @apply outline-none ring-2 ring-brand/50 ring-offset-2 rounded;
+  --tw-ring-offset-color: rgb(var(--canvas));
 }
 
-/* Shimmer used while a value is still loading. */
 .shimmer {
   background: linear-gradient(
     90deg,
-    rgba(255, 255, 255, 0.04) 25%,
-    rgba(255, 255, 255, 0.10) 37%,
-    rgba(255, 255, 255, 0.04) 63%
+    rgb(var(--line) / 0.35) 25%,
+    rgb(var(--line) / 0.7) 37%,
+    rgb(var(--line) / 0.35) 63%
   );
   background-size: 200% 100%;
   @apply animate-sweep rounded;
 }
 
-/* --------------------------------------------------------------- scrollbar */
+/* ------------------------------------------------------------ scrollbar */
 
-::-webkit-scrollbar { width: 9px; height: 9px; }
+::-webkit-scrollbar { width: 10px; height: 10px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb {
-  background: #1B2333;
+  background: rgb(var(--edge));
   border-radius: 999px;
-  border: 2px solid transparent;
+  border: 3px solid transparent;
   background-clip: padding-box;
 }
-::-webkit-scrollbar-thumb:hover { background: #2A3548; background-clip: padding-box; }
-
-/* ------------------------------------------------------- reduced motion */
+::-webkit-scrollbar-thumb:hover {
+  background: rgb(var(--faint));
+  background-clip: padding-box;
+}
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
