@@ -42,6 +42,28 @@ const PAD = 16;
 const x = (c: number) => PAD + c * COL_W;
 const y = (r: number) => PAD + r * ROW_H;
 
+/** A sub-step streamed from a running node. Live only; never persisted. */
+interface LiveStep {
+  node: string;
+  message: string;
+  i: number;
+  n: number;
+  detail?: Record<string, any>;
+}
+
+/** Colour a sub-step by what it actually did, so denials stand out. */
+function stepTone(x: LiveStep): string {
+  const d = x.detail ?? {};
+  if (d.decision === "deny") return "text-rose";
+  if (d.decision === "step_up") return "text-amber";
+  if (d.decision === "allow") return "text-mint";
+  if (d.succeeded === true) return "text-mint";
+  if (d.succeeded === false) return "text-faint";
+  if (d.source === "model") return "text-iris";
+  if (d.coalition) return "text-muted";
+  return "text-muted";
+}
+
 export default function FlowPage({ params }: { params: { runId: string } }) {
   const [rec, setRec] = useState<RunRecord | null>(null);
   const [traces, setTraces] = useState<NodeTrace[]>([]);
@@ -51,6 +73,10 @@ export default function FlowPage({ params }: { params: { runId: string } }) {
   // finishes before you have said the node name is useless.
   const [speed, setSpeed] = useState(1);
   const [step, setStep] = useState<number | null>(null);
+  //: Sub-steps streamed from a live run: one line per coalition computed, per
+  //: action gated, per payment retried. Real work, not a progress animation.
+  const [steps, setSteps] = useState<LiveStep[]>([]);
+  const [mode, setMode] = useState<"idle" | "replay" | "live">("idle");
   const esRef = useRef<EventSource | null>(null);
   const logRef = useRef<HTMLDivElement>(null);
 
@@ -65,8 +91,8 @@ export default function FlowPage({ params }: { params: { runId: string } }) {
   }, [params.runId]);
 
   useEffect(() => {
-    logRef.current?.scrollTo({ top: logRef.current.scrollHeight, behavior: "smooth" });
-  }, [traces.length]);
+    logRef.current?.scrollTo({ top: logRef.current.scrollHeight });
+  }, [traces.length, steps.length]);
 
   const byNode = useMemo(() => {
     const m: Record<string, NodeTrace> = {};
@@ -80,8 +106,10 @@ export default function FlowPage({ params }: { params: { runId: string } }) {
     if (!rec) return;
     esRef.current?.close();
     setTraces([]);
+    setSteps([]);
     setStep(null);
     setPlaying(true);
+    setMode("replay");
     const es = new EventSource(`/api/replay/${params.runId}?speed=${speed}`);
     esRef.current = es;
     es.addEventListener("trace", (e: any) => {
@@ -99,10 +127,55 @@ export default function FlowPage({ params }: { params: { runId: string } }) {
     };
   }
 
+  /**
+   * Run the graph for real and watch it work.
+   *
+   * Not the replay: this executes the pipeline on the server and streams both
+   * node transitions and the sub-steps inside them. `pace_ms` throttles how
+   * fast the browser is FED, never how fast the work runs -- so nothing here
+   * is padding. A 16-coalition decomposition emits 16 lines because it
+   * computed 16 values.
+   */
+  function runLive() {
+    if (!rec) return;
+    esRef.current?.close();
+    setTraces([]);
+    setSteps([]);
+    setStep(null);
+    setPlaying(true);
+    setMode("live");
+    const pace = Math.round(24 / speed);
+    const es = new EventSource(
+      `/api/run/${rec.merchant_id}/stream?pace_ms=${pace}`
+    );
+    esRef.current = es;
+    es.addEventListener("trace", (e: any) => {
+      const t: NodeTrace = JSON.parse(e.data);
+      setTraces((prev) =>
+        [...prev.filter((x) => x.seq !== t.seq), t].sort((a, b) => a.seq - b.seq)
+      );
+      setSelected(t.node);
+    });
+    es.addEventListener("step", (e: any) => {
+      const p: LiveStep = JSON.parse(e.data);
+      setSteps((prev) => [...prev.slice(-400), p]);
+    });
+    es.addEventListener("done", () => {
+      setPlaying(false);
+      es.close();
+    });
+    es.onerror = () => {
+      setPlaying(false);
+      es.close();
+    };
+  }
+
   function stopAndReset() {
     esRef.current?.close();
     setPlaying(false);
     setTraces(rec?.traces ?? []);
+    setSteps([]);
+    setMode("idle");
     setStep(null);
   }
 
@@ -183,13 +256,24 @@ export default function FlowPage({ params }: { params: { runId: string } }) {
                 ■ stop
               </button>
             ) : (
-              <button
-                onClick={replay}
-                className="px-4 py-1.5 rounded-lg bg-brand text-brand-ink text-xs font-semibold
-                           hover:brightness-110 transition-colors shadow-xs"
-              >
-                ▶ replay run
-              </button>
+              <>
+                <button
+                  onClick={replay}
+                  className="px-3 py-1.5 rounded-lg card-raised text-xs font-semibold
+                             hover:border-brand/40 transition-colors"
+                  title="Stream the recorded run. No API calls."
+                >
+                  ▶ replay
+                </button>
+                <button
+                  onClick={runLive}
+                  className="px-4 py-1.5 rounded-lg bg-brand text-brand-ink text-xs font-semibold
+                             hover:brightness-110 transition-colors shadow-xs"
+                  title="Execute the graph now and stream every sub-step as it happens."
+                >
+                  ● run live
+                </button>
+              </>
             )}
           </div>
         </div>
@@ -215,7 +299,10 @@ export default function FlowPage({ params }: { params: { runId: string } }) {
               </>
             ) : (
               <span className="text-muted">
-                Press replay to watch the agent run one node at a time.
+                <span className="text-ink">Run live</span> executes the graph now and
+                streams every coalition, gate decision and retry as it happens.{" "}
+                <span className="text-ink">Replay</span> re-streams the recorded run
+                with no API calls.
               </span>
             )}
           </div>
@@ -510,38 +597,84 @@ export default function FlowPage({ params }: { params: { runId: string } }) {
       {/* ─────────────────────────────────────────────── log */}
       <Stagger i={4}>
         <Card className="!p-0 overflow-hidden">
-          <div className="px-4 py-2.5 border-b border-line flex items-center gap-2">
+          <div className="px-4 py-2.5 border-b border-line flex items-center gap-3 flex-wrap">
             <span className="eyebrow">execution log</span>
-            <span className="text-[11px] text-faint">click a line to inspect that node</span>
+            <span className="text-[11px] text-faint">
+              click a node line to inspect it
+            </span>
+            {mode === "live" && (
+              <span className="chip-warn">
+                <span className="w-1.5 h-1.5 rounded-full bg-rose animate-breathe" />
+                live
+              </span>
+            )}
+            {steps.length > 0 && (
+              <span className="ml-auto text-[11px] text-faint num">
+                {steps.length} sub-steps
+              </span>
+            )}
           </div>
-          <div ref={logRef} className="font-mono text-[11px] p-3 space-y-0.5
-                                       max-h-56 overflow-y-auto">
-            {traces.map((t) => (
-              <button
-                key={t.seq}
-                onClick={() => setSelected(t.node)}
-                className={`block w-full text-left px-2 py-1 rounded transition-colors ${
-                  selected === t.node ? "bg-brand-soft" : "hover:bg-raised"
-                }`}
-              >
-                <span className="text-faint">{String(t.seq).padStart(2, "0")}</span>{" "}
-                <span className={t.kind === "llm" ? "text-iris" : "text-sky"}>
-                  [{t.node.toUpperCase()}]
-                </span>{" "}
-                <span className="text-faint">{t.duration_ms}ms</span>{" "}
-                <span
-                  className={
-                    t.status === "skipped" ? "text-faint italic" : "text-muted"
-                  }
-                >
-                  {t.status === "skipped"
-                    ? t.output_summary?.reason
-                    : summarise(t)}
-                </span>
-              </button>
-            ))}
+          <div
+            ref={logRef}
+            className="font-mono text-[11px] p-3 space-y-0.5 h-72 overflow-y-auto"
+          >
+            {traces.map((t) => {
+              // The sub-steps this node emitted while it was working.
+              const mine = steps.filter((x) => x.node === t.node);
+              return (
+                <div key={t.seq}>
+                  <button
+                    onClick={() => setSelected(t.node)}
+                    className={`block w-full text-left px-2 py-1 rounded transition-colors ${
+                      selected === t.node ? "bg-brand-soft" : "hover:bg-raised"
+                    }`}
+                  >
+                    <span className="text-faint">
+                      {String(t.seq).padStart(2, "0")}
+                    </span>{" "}
+                    <span className={t.kind === "llm" ? "text-iris" : "text-sky"}>
+                      [{t.node.toUpperCase()}]
+                    </span>{" "}
+                    {t.status === "running" ? (
+                      <span className="text-brand animate-breathe">working…</span>
+                    ) : (
+                      <>
+                        <span className="text-faint">{t.duration_ms}ms</span>{" "}
+                        <span
+                          className={
+                            t.status === "skipped"
+                              ? "text-faint italic"
+                              : "text-muted"
+                          }
+                        >
+                          {t.status === "skipped"
+                            ? t.output_summary?.reason
+                            : summarise(t)}
+                        </span>
+                      </>
+                    )}
+                  </button>
+
+                  {mine.map((x, k) => (
+                    <div
+                      key={k}
+                      className="pl-8 pr-2 py-[1px] text-[10.5px] flex items-baseline gap-2"
+                    >
+                      <span className="text-faint w-14 shrink-0 text-right">
+                        {x.n ? `${x.i}/${x.n}` : ""}
+                      </span>
+                      <span className={stepTone(x)}>{x.message}</span>
+                    </div>
+                  ))}
+                </div>
+              );
+            })}
             {traces.length === 0 && (
-              <div className="text-faint px-2 py-1">press replay to stream the run…</div>
+              <div className="text-faint px-2 py-1">
+                press <span className="text-ink">run live</span> to execute the graph
+                and watch every step, or <span className="text-ink">replay</span> the
+                recorded run…
+              </div>
             )}
           </div>
         </Card>
