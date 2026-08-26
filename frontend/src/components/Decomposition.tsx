@@ -2,11 +2,12 @@
 
 import { FACTOR_LABELS, FactorRow, inr, pts } from "@/lib/types";
 
+/** Factor colours, as CSS variables so they follow the theme. */
 const COLORS: Record<string, string> = {
-  bank: "#60A5FA",
-  method: "#A78BFA",
-  hour: "#C9A84C",
-  amount_band: "#34D399",
+  bank: "rgb(var(--sky))",
+  method: "rgb(var(--iris))",
+  hour: "rgb(var(--brand))",
+  amount_band: "rgb(var(--mint))",
 };
 
 /**
@@ -46,11 +47,11 @@ export function DecompositionStrip({
             className="relative group transition-opacity hover:opacity-80"
             style={{
               width: `${(f.points / total) * 100}%`,
-              background: COLORS[f.factor] ?? "#475569",
+              background: COLORS[f.factor] ?? "rgb(var(--faint))",
               opacity: f.identified ? 1 : 0.35,
             }}
           >
-            <span className="absolute inset-0 flex items-center justify-center text-[11px] font-mono font-medium text-bg">
+            <span className="absolute inset-0 flex items-center justify-center text-[11px] font-mono font-medium text-canvas">
               {f.points >= 0.4 ? f.points.toFixed(1) : ""}
             </span>
           </button>
@@ -69,7 +70,7 @@ export function DecompositionStrip({
           <span key={f.factor} className="flex items-center gap-1.5">
             <i
               className="w-2.5 h-2.5 rounded-sm inline-block"
-              style={{ background: COLORS[f.factor] ?? "#475569" }}
+              style={{ background: COLORS[f.factor] ?? "rgb(var(--faint))" }}
             />
             {FACTOR_LABELS[f.factor] ?? f.factor} {pts(f.points)}
             {f.mae != null && <span className="text-faint">± {f.mae.toFixed(2)}</span>}
