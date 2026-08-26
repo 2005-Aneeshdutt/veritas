@@ -126,7 +126,10 @@ export default function FlowPage({ params }: { params: { runId: string } }) {
     ? { title: NODE_DOCS[latest.node]?.title ?? latest.node, line: narrate(latest) }
     : null;
   const done = traces.filter((t) => t.status !== "running").length;
-  const llmNodes = rec.traces.filter((t) => t.kind === "llm").length;
+  // Calls that actually left the process, not the number of nodes allowed
+  // to make one. A cached node or one served from the taxonomy makes
+  // none, and counting it anyway overstates what ran.
+  const modelCalls = rec.llm_calls;
 
   return (
     <div className="space-y-5">
@@ -233,7 +236,8 @@ export default function FlowPage({ params }: { params: { runId: string } }) {
             />
           </div>
           <div className="num text-xs text-muted shrink-0">
-            {rec.duration_ms} ms · {llmNodes} model calls · ₹{rec.llm_cost_inr.toFixed(2)}
+            {rec.duration_ms} ms · {modelCalls} model call
+            {modelCalls === 1 ? "" : "s"} · ₹{rec.llm_cost_inr.toFixed(2)}
           </div>
         </div>
       </Stagger>
