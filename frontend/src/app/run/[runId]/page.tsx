@@ -17,6 +17,7 @@ import { ApplyFix } from "@/components/ApplyFix";
 import { EmailPanel } from "@/components/EmailPanel";
 import { FACTOR_DOCS, GLOSSARY } from "@/lib/explain";
 import { RunRecord, inr, pts } from "@/lib/types";
+import { AskPanel } from "@/components/AskPanel";
 
 const FACTOR_COLOR: Record<string, string> = {
   bank: "rgb(var(--sky))",
@@ -395,8 +396,13 @@ export default function Overview({ params }: { params: { runId: string } }) {
         </div>
       </Stagger>
 
-      {/* ───────────────────────────────────────────── outreach */}
+      {/* ───────────────────────────────────────────── ask */}
       <Stagger i={4}>
+        <AskPanel runId={params.runId} />
+      </Stagger>
+
+      {/* ───────────────────────────────────────────── outreach */}
+      <Stagger i={5}>
         <EmailPanel runId={params.runId} />
       </Stagger>
 

@@ -84,6 +84,10 @@ export default function ProvePage() {
     "build"
   );
   const [showBytes, setShowBytes] = useState(false);
+  const [composing, setComposing] = useState(false);
+  //: The spec the model chose, and why. Shown so the exam it set is legible
+  //: rather than a black box that happens to be hard.
+  const [adversary, setAdversary] = useState<any>(null);
   const esRef = useRef<EventSource | null>(null);
 
   useEffect(() => {
@@ -113,6 +117,30 @@ export default function ProvePage() {
     setMag(Math.round((0.5 + Math.random() * 3.5) * 10) / 10);
     setRho(Math.random() < 0.5 ? 0 : Math.round(Math.random() * 8) / 10);
     if (cats.length) setMcc(cats[Math.floor(Math.random() * cats.length)].mcc);
+  }
+
+  /**
+   * Hand the exam over to the model.
+   *
+   * It picks a point inside a fixed space — batch size, causes, magnitude,
+   * correlation — and every value is clamped server-side to what the
+   * generator accepts. Asking a model to attack the system is worth more
+   * than asking it to describe one.
+   */
+  async function letModelChoose() {
+    setComposing(true);
+    try {
+      const r = await fetch("/api/prove/adversarial", { method: "POST" });
+      const d = await r.json();
+      setAdversary(d);
+      setN(d.n_txns);
+      setCauses(d.causes);
+      setMag(d.magnitude_pts);
+      setRho(d.rho);
+    } catch {
+      setAdversary(null);
+    }
+    setComposing(false);
   }
 
   async function seal() {
@@ -194,12 +222,19 @@ export default function ProvePage() {
             <div className="flex items-center gap-3 flex-wrap">
               <StepBadge n={1} on={stage === "build"} done={stage !== "build"} />
               <h2 className="text-lg font-semibold">Set the exam</h2>
-              <button
-                onClick={surpriseMe}
-                className="btn-quiet h-8 px-3 text-xs ml-auto"
-              >
-                Surprise me
-              </button>
+              <div className="ml-auto flex items-center gap-2">
+                <button onClick={surpriseMe} className="btn-quiet h-8 px-3 text-xs">
+                  Surprise me
+                </button>
+                <button
+                  onClick={letModelChoose}
+                  disabled={composing}
+                  className="btn-secondary h-8 px-3 text-xs"
+                  title="Ask the model to design the exam it thinks will break the engine."
+                >
+                  {composing ? "designing…" : "Let the model break it"}
+                </button>
+              </div>
             </div>
 
             <div className="grid md:grid-cols-2 gap-6 mt-5">
@@ -289,6 +324,22 @@ export default function ProvePage() {
                 </div>
               </div>
             </div>
+
+            {adversary && (
+              <div className="card-raised border-l-2 border-l-iris p-4 mt-5 animate-rise">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span className="chip-llm">the model set this exam</span>
+                  {adversary.clamped && (
+                    <span className="chip-warn">
+                      asked for values outside the allowed range — clamped
+                    </span>
+                  )}
+                </div>
+                <p className="text-sm text-muted mt-2 leading-relaxed">
+                  {adversary.reasoning}
+                </p>
+              </div>
+            )}
 
             <button
               onClick={seal}
