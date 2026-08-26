@@ -122,8 +122,14 @@ def node_classify(s: State) -> State:
             codes[x.error_code] = codes.get(x.error_code, 0) + 1
 
     last = None
-    for code in sorted(codes):
+    for i, code in enumerate(sorted(codes), 1):
         c, res = clf.classify(code)
+        s.tracer.step(
+            "classify",
+            "%-42s -> %-14s %.2f" % (code, c.category.value, c.confidence),
+            i, len(codes),
+            source="model" if res is not None else "taxonomy",
+        )
         s.classifications[code] = c
         if res is not None:
             last = res
@@ -218,7 +224,11 @@ def node_decompose(s: State) -> State:
     t = s.tracer.start("decompose")
     mae = load_mae()
     dec = ShapleyDecomposer(s.baseline, s.cohort).decompose(
-        s.transactions, mae_by_factor=mae
+        s.transactions,
+        mae_by_factor=mae,
+        on_coalition=lambda i, n, label, val: s.tracer.step(
+            "decompose", "v(%s) = %+.3f pts" % (label, val), i, n, coalition=label
+        ),
     )
     s.decomposition = dec
     succ = sum(1 for x in s.transactions if x.succeeded)
@@ -319,10 +329,18 @@ def node_gate(s: State) -> State:
     now = datetime.now(timezone.utc)
     ctx = GateContext(now=now, attempts_by_txn={}, original_failure_at={})
     counts = {"allow": 0, "step_up": 0, "deny": 0}
-    for action in s.plan.actions:
+    total = len(s.plan.actions)
+    for i, action in enumerate(s.plan.actions, 1):
         g = evaluate(action, s.mandate, ctx)
         s.gate_results.append(g)
         counts[g.decision.value] += 1
+        s.tracer.step(
+            "gate",
+            "%s  %s  %s" % (g.decision.value.upper(), action.txn_id, g.reason_code),
+            i, total,
+            decision=g.decision.value,
+            amount_paise=action.amount_paise,
+        )
     s.tracer.finish(
         t,
         output_summary={"decisions": counts, "total": len(s.plan.actions)},
@@ -356,6 +374,17 @@ def node_execute(s: State) -> State:
                 txn_id=a.txn_id, proposed_action=a, gate_decision=g.decision,
                 gate_reason=g.reason_code,
                 outcome="executed" if out.succeeded else "exception",
+            )
+            s.tracer.step(
+                "execute",
+                "%s  %s  %s" % (
+                    "recovered" if out.succeeded else "no conversion",
+                    a.txn_id,
+                    "Rs %s" % format(out.amount_recovered_paise // 100, ",d"),
+                ),
+                executed, len(s.gate_results),
+                recovered_paise=out.amount_recovered_paise,
+                succeeded=out.succeeded,
             )
         else:
             s.ledger.append(

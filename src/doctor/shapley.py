@@ -246,8 +246,17 @@ class ShapleyDecomposer:
         return (num / total_w) - s_obs, clamp_rate
 
     def decompose(
-        self, txns: Sequence[Transaction], *, mae_by_factor: dict[str, float] | None = None
+        self,
+        txns: Sequence[Transaction],
+        *,
+        mae_by_factor: dict[str, float] | None = None,
+        on_coalition=None,
     ) -> Decomposition:
+        """`on_coalition(i, n, label, value)` fires per coalition, if given.
+
+        Purely observational -- it cannot change the result, and the default
+        None keeps the CLI and eval paths identical to before.
+        """
         n = len(FACTORS)
         s_obs = observed_rate(txns)
         s_star = self.cohort.s_star
@@ -266,6 +275,12 @@ class ShapleyDecomposer:
                 v[S] = val
                 if S:
                     clamp_rates.append(cr)
+                if on_coalition is not None:
+                    on_coalition(
+                        len(v), 1 << n,
+                        "+".join(f for f in FACTORS if f in S) or "{}",
+                        val * 100.0,
+                    )
 
         attributions: list[FactorAttribution] = []
         for i in FACTORS:
