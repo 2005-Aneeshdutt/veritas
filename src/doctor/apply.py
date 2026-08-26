@@ -182,8 +182,20 @@ def apply_group(
         raise IndexError("no pending fix at index %d" % group_index)
     group = groups[group_index]
 
-    applied_ids = {a["group_id"] for a in (rec.get("applied") or [])}
-    if group["group_id"] in applied_ids:
+    prior = [
+        a for a in (rec.get("applied") or []) if a["group_id"] == group["group_id"]
+    ]
+    # Actions the kernel held for the merchant last time. They were gated but
+    # never sent, so they are still outstanding -- confirming is what releases
+    # them, and refusing to reopen the group would strand them forever.
+    held: list[str] = []
+    for a in prior:
+        for tid in a.get("awaiting_confirmation", []):
+            if tid not in held:
+                held.append(tid)
+
+    resuming = bool(prior) and confirmed and bool(held)
+    if prior and not resuming:
         return ApplyResult(
             ok=False,
             group_id=group["group_id"],
@@ -192,23 +204,41 @@ def apply_group(
                 CheckStep(
                     key="already",
                     label="Already applied",
-                    detail="This fix has been applied in this run. Re-running it "
-                    "would burn attempts the mandate caps.",
+                    detail=(
+                        "This fix has been applied in this run. Re-running it "
+                        "would burn attempts the mandate caps."
+                        if not held
+                        else "%d actions are still waiting on your confirmation. "
+                        "Confirm them rather than re-running the group." % len(held)
+                    ),
                     status="info",
                 )
             ],
             headline="Already applied",
             already_applied=True,
+            # Surfaced so the UI can still offer the confirmation it is waiting on.
+            stepped_up=len(held),
             ledger_len=len(rec["report"].get("ledger", [])),
             chain_verified=rec["report"]["measured"].get("chain_verified", False),
         )
 
     actions = [ProposedAction.model_validate(a) for a in group["actions"]]
+    if resuming:
+        # Only the held actions. Everything else in the group already settled,
+        # and re-gating it would double-count the attempt.
+        order = {tid: i for i, tid in enumerate(held)}
+        actions = sorted(
+            (a for a in actions if a.txn_id in order), key=lambda a: order[a.txn_id]
+        )
+        if not actions:
+            raise IndexError("nothing left to confirm in %s" % group["group_id"])
 
-    # Attempt history from what has already been applied, so the cap is real.
+    # Attempt history from what actually reached the rail, so the cap counts
+    # real attempts. An action held for confirmation was never sent and must
+    # not consume one.
     attempts: dict[str, int] = {}
     for a in rec.get("applied") or []:
-        for tid in a.get("txn_ids", []):
+        for tid in a.get("executed_ids", a.get("txn_ids", [])):
             attempts[tid] = attempts.get(tid, 0) + 1
 
     ctx = GateContext(now=datetime.now(timezone.utc), attempts_by_txn=attempts)
@@ -230,6 +260,8 @@ def apply_group(
 
     allowed = stepped = denied = executed = 0
     recovered = 0
+    executed_ids: list[str] = []
+    held_now: list[str] = []
     for i, action in enumerate(actions):
         gate = evaluate(action, signed, ctx)
         outcome = "denied"
@@ -239,6 +271,7 @@ def apply_group(
         elif gate.decision is PolicyDecision.STEP_UP and not confirmed:
             stepped += 1
             outcome = "merchant_action"
+            held_now.append(action.txn_id)
         else:
             if gate.decision is PolicyDecision.STEP_UP:
                 stepped += 1
@@ -254,6 +287,7 @@ def apply_group(
                 )
                 recovered += out.amount_recovered_paise
                 executed += 1
+                executed_ids.append(action.txn_id)
                 outcome = "executed" if out.succeeded else "exception"
                 attempts[action.txn_id] = attempts.get(action.txn_id, 0) + 1
             else:
@@ -307,7 +341,11 @@ def apply_group(
         )
     )
 
-    if recovered:
+    if recovered and stepped and not confirmed:
+        headline = "%s recovered; %d await your confirmation" % (
+            _rs(recovered), stepped
+        )
+    elif recovered:
         headline = "%s recovered across %d payments" % (_rs(recovered), executed)
     elif stepped and not confirmed:
         headline = "%d actions need your confirmation" % stepped
@@ -325,11 +363,22 @@ def apply_group(
     rec["report"]["projected"]["recovered_this_run_paise"] = (
         rec["report"]["projected"].get("recovered_this_run_paise", 0) + recovered
     )
+    if resuming:
+        # These are no longer waiting on anyone; whatever happened to them just
+        # happened, and is recorded in the entry appended below.
+        settled = {a.txn_id for a in actions}
+        for a in prior:
+            a["awaiting_confirmation"] = [
+                t for t in a.get("awaiting_confirmation", []) if t not in settled
+            ]
     (rec.setdefault("applied", [])).append(
         {
             "group_id": group["group_id"],
             "title": group["title"],
             "txn_ids": [a.txn_id for a in actions],
+            "executed_ids": executed_ids,
+            "awaiting_confirmation": held_now,
+            "confirmed": confirmed,
             "allowed": allowed,
             "stepped_up": stepped,
             "denied": denied,
