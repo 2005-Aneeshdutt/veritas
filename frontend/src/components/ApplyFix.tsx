@@ -112,8 +112,8 @@ export function ApplyFix({
         return (
           <div
             key={g.group_id}
-            className={`glass overflow-hidden transition-all duration-300 ${
-              open ? "border-gold/40" : ""
+            className={`card overflow-hidden transition-all duration-300 ${
+              open ? "border-brand/40" : ""
             }`}
           >
             {/* header */}
@@ -122,10 +122,10 @@ export function ApplyFix({
                 className={`w-10 h-10 rounded-lg grid place-items-center text-lg shrink-0
                   ${
                     finished
-                      ? "bg-mint/12 text-mint border border-mint/30"
+                      ? "bg-mint-soft text-mint border border-mint/30"
                       : g.auto
-                      ? "bg-gold/12 text-gold border border-gold/30"
-                      : "bg-white/[0.04] text-muted border border-line"
+                      ? "bg-brand-soft text-brand border border-brand/30"
+                      : "bg-raised text-muted border border-line"
                   }`}
               >
                 {finished ? "✓" : ICON[g.action_type] ?? "•"}
@@ -135,7 +135,7 @@ export function ApplyFix({
                 <div className="flex items-center gap-2 flex-wrap">
                   <span className="font-semibold text-sm">{g.title}</span>
                   {g.auto ? (
-                    <span className="chip bg-gold/10 text-gold border-gold/30">
+                    <span className="chip bg-brand-soft text-brand border-brand/30">
                       agent can run this
                     </span>
                   ) : (
@@ -160,8 +160,8 @@ export function ApplyFix({
                 className={`shrink-0 px-4 py-2 rounded-lg text-sm font-semibold
                   transition-all disabled:opacity-60 ${
                     finished
-                      ? "bg-mint/15 text-mint border border-mint/40"
-                      : "bg-gold text-void hover:bg-gold-glow shadow-glow"
+                      ? "bg-mint-soft text-mint border border-mint/40"
+                      : "bg-brand text-brand-ink hover:brightness-110 shadow-xs"
                   }`}
               >
                 {finished ? "applied" : running ? "applying…" : "Apply fix"}
@@ -170,7 +170,7 @@ export function ApplyFix({
 
             {/* live walkthrough */}
             {open && (
-              <div className="border-t border-line bg-void/40 p-4 space-y-2 animate-rise">
+              <div className="border-t border-line bg-subtle p-4 space-y-2 animate-rise">
                 {(result?.steps ?? []).slice(0, shown).map((s, k) => (
                   <div
                     key={s.key}
@@ -181,10 +181,10 @@ export function ApplyFix({
                       className={`w-5 h-5 rounded-full grid place-items-center text-[10px]
                         shrink-0 mt-0.5 ${
                           s.status === "pass"
-                            ? "bg-mint/15 text-mint"
+                            ? "bg-mint-soft text-mint"
                             : s.status === "fail"
-                            ? "bg-rose/15 text-rose"
-                            : "bg-white/[0.06] text-muted"
+                            ? "bg-rose-soft text-rose"
+                            : "bg-raised text-muted"
                         }`}
                     >
                       {s.status === "pass" ? "✓" : s.status === "fail" ? "✕" : "•"}
@@ -200,8 +200,8 @@ export function ApplyFix({
 
                 {/* still revealing */}
                 {!result && (
-                  <div className="flex items-center gap-2 text-[11px] text-gold pt-1">
-                    <span className="w-1.5 h-1.5 rounded-full bg-gold animate-breathe" />
+                  <div className="flex items-center gap-2 text-[11px] text-brand pt-1">
+                    <span className="w-1.5 h-1.5 rounded-full bg-brand animate-breathe" />
                     checking the mandate…
                   </div>
                 )}
@@ -218,7 +218,7 @@ export function ApplyFix({
                         {result.headline}
                       </span>
                       {result.chain_verified && (
-                        <span className="chip bg-mint/10 text-mint border-mint/30">
+                        <span className="chip bg-mint-soft text-mint border-mint/30">
                           chain verified
                         </span>
                       )}
@@ -243,7 +243,7 @@ export function ApplyFix({
                     {result.stepped_up > 0 && !result.already_applied && (
                       <button
                         onClick={() => apply(i, true)}
-                        className="mt-3 px-3 py-1.5 rounded-lg bg-amber/15 text-amber
+                        className="mt-3 px-3 py-1.5 rounded-lg bg-amber-soft text-amber
                                    border border-amber/40 text-xs font-semibold
                                    hover:bg-amber/25 transition-colors"
                       >
@@ -279,7 +279,7 @@ function Mini({
       ? "text-rose"
       : "text-ink";
   return (
-    <div className="glass-raised px-3 py-2">
+    <div className="card-raised px-3 py-2">
       <div className={`num text-lg font-semibold ${c}`}>{v}</div>
       <div className="eyebrow">{label}</div>
     </div>
