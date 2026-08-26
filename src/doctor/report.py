@@ -207,6 +207,12 @@ def build_report(s) -> dict:
         },
         "ledger": [e.model_dump(mode="json") for e in s.ledger.entries],
         "exceptions": {
+            # The row list is capped so the payload stays small, but the
+            # breakdown must describe every unrecoverable payment -- a bar
+            # chart drawn from the first 50 of 113 would be a lie with a
+            # legend on it.
+            "unrecoverable_by_class": _by_class(unrecoverable),
+            "unrecoverable_sample_size": min(50, len(unrecoverable)),
             "unrecoverable_transactions": [
                 {
                     "txn_id": t.txn_id,
@@ -231,6 +237,21 @@ def _gate_counts(gate_results) -> dict:
     for g in gate_results:
         out[g.decision.value] += 1
     return out
+
+
+def _by_class(txns) -> list[dict]:
+    """Count and value every unrecoverable payment, grouped by error class.
+
+    Computed over the whole list rather than the capped sample, so the totals
+    on the exceptions page reconcile with the headline figure above them.
+    """
+    agg: dict[str, dict] = {}
+    for t in txns:
+        key = t.error_class.value if t.error_class else "unknown"
+        row = agg.setdefault(key, {"error_class": key, "count": 0, "total_paise": 0})
+        row["count"] += 1
+        row["total_paise"] += t.amount_paise
+    return sorted(agg.values(), key=lambda r: -r["total_paise"])
 
 
 def _why_unrecoverable(t) -> str:
