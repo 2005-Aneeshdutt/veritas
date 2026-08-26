@@ -76,6 +76,33 @@ def changed_results() -> list[str]:
     return out
 
 
+def show_first_difference(rel: str, context: int = 60) -> None:
+    """Print the first byte at which the file stopped matching what is committed.
+
+    Deliberately compares raw bytes against the committed blob rather than
+    printing `git diff`. Line-ending filters can make git's diff come back
+    empty on a file it has just listed as changed, which tells you nothing.
+    A byte offset and the text either side of it always says what moved.
+    """
+    print("  %s" % rel)
+    committed = subprocess.run(
+        ["git", "show", "HEAD:" + rel], cwd=ROOT, capture_output=True
+    ).stdout
+    current = (ROOT / rel).read_bytes()
+
+    if committed == current:
+        print("    identical as bytes -- only the index or file mode moved")
+        return
+
+    n = min(len(committed), len(current))
+    i = next((k for k in range(n) if committed[k] != current[k]), n)
+    a = committed[max(0, i - context): i + context].decode("utf-8", "replace")
+    b = current[max(0, i - context): i + context].decode("utf-8", "replace")
+    print("    first difference at byte %d of %d" % (i, len(committed)))
+    print("    committed: %s" % a.replace("\n", " "))
+    print("    regenerated: %s" % b.replace("\n", " "))
+
+
 def main() -> int:
     print("Reproducibility check")
     print("  regenerating data and re-running every deterministic eval,")
@@ -96,13 +123,8 @@ def main() -> int:
         print("Either the code changed without the results being re-committed,")
         print("or something non-deterministic crept into the pipeline.")
         print("")
-        # Show what moved, not just where. Telling someone that
-        # merchant_074.json changed without showing the value is the
-        # difference between a check they can act on and one they cannot.
-        subprocess.run(
-            ["git", "--no-pager", "diff", "--unified=1", "--"] + diffs[:MAX_DIFF_FILES],
-            cwd=ROOT,
-        )
+        for d in diffs[:MAX_DIFF_FILES]:
+            show_first_difference(d)
         if len(diffs) > MAX_DIFF_FILES:
             print("... and %d more file(s)" % (len(diffs) - MAX_DIFF_FILES))
         return 1
