@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Card, Eyebrow, Info, Loading, SectionHeader, Stagger } from "@/components/ui";
 import { FACTOR_DOCS, GLOSSARY } from "@/lib/explain";
 
@@ -74,6 +74,7 @@ export default function ValidationPage() {
       {/* ══════════════════════════════════════════════ ACCURACY */}
       {tab === "accuracy" && (
         <div className="space-y-5 animate-rise">
+          <LiveSweep />
           <Card>
             <SectionHeader
               eyebrow="Per factor, across 200 merchants"
@@ -661,5 +662,162 @@ function Table({ head, rows }: { head: string[]; rows: any[][] }) {
         ))}
       </tbody>
     </table>
+  );
+}
+
+/* ------------------------------------------------------------ live sweep */
+
+/**
+ * Re-measure the error bar in front of you.
+ *
+ * Not a re-read of the committed JSON. This re-runs the decomposer over each
+ * of the 200 sweep merchants and scores it against the analytic ground truth
+ * that merchant was built with, streaming one result at a time. It converges
+ * onto the published figure because it is the same computation that produced
+ * it -- which is the whole claim, demonstrated rather than asserted.
+ */
+function LiveSweep() {
+  const [running, setRunning] = useState(false);
+  const [i, setI] = useState(0);
+  const [total, setTotal] = useState(200);
+  const [mae, setMae] = useState<Record<string, number> | null>(null);
+  const [primary, setPrimary] = useState<number | null>(null);
+  const [rows, setRows] = useState<any[]>([]);
+  const [done, setDone] = useState<any>(null);
+  const esRef = useRef<EventSource | null>(null);
+  const listRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => () => esRef.current?.close(), []);
+  useEffect(() => {
+    listRef.current?.scrollTo({ top: 0 });
+  }, [rows.length]);
+
+  function run() {
+    esRef.current?.close();
+    setRunning(true);
+    setI(0);
+    setRows([]);
+    setMae(null);
+    setPrimary(null);
+    setDone(null);
+
+    const es = new EventSource("/api/validate/stream?rate=60");
+    esRef.current = es;
+    es.addEventListener("start", (e: any) => setTotal(JSON.parse(e.data).total));
+    es.addEventListener("merchant", (e: any) => {
+      const d = JSON.parse(e.data);
+      setI(d.i);
+      setMae(d.running_mae);
+      setPrimary(d.running_primary_pct);
+      setRows((prev) => [d, ...prev.slice(0, 39)]);
+    });
+    es.addEventListener("done", (e: any) => {
+      setDone(JSON.parse(e.data));
+      setRunning(false);
+      es.close();
+    });
+    es.onerror = () => {
+      setRunning(false);
+      es.close();
+    };
+  }
+
+  const pct = total ? (i / total) * 100 : 0;
+
+  return (
+    <Card className="!p-0 overflow-hidden">
+      <div className="p-5 flex items-start justify-between gap-6 flex-wrap">
+        <div className="min-w-0">
+          <Eyebrow>Measure it again, now</Eyebrow>
+          <h3 className="text-lg font-semibold mt-1">
+            Re-run the validation on all {total} merchants
+          </h3>
+          <p className="text-sm text-muted mt-1.5 max-w-2xl leading-relaxed">
+            This does not re-read a file. It runs the decomposer over every sweep
+            merchant and scores it against the ground truth that merchant was
+            constructed with. Watch the error converge — it lands on the published
+            figure because it is the computation that produced it.
+          </p>
+        </div>
+        <button
+          onClick={run}
+          disabled={running}
+          className="btn-primary shrink-0"
+        >
+          {running ? `Scoring ${i}/${total}…` : done ? "Run it again" : "Re-measure"}
+        </button>
+      </div>
+
+      {(running || done) && (
+        <>
+          <div className="h-1 bg-raised">
+            <div
+              className="h-full bg-brand transition-[width] duration-150"
+              style={{ width: `${pct}%` }}
+            />
+          </div>
+
+          <div className="grid grid-cols-2 md:grid-cols-5 divide-x divide-line border-t border-line">
+            {mae &&
+              Object.entries(mae).map(([k, v]) => (
+                <div key={k} className="px-4 py-3">
+                  <div className="eyebrow">{FACTOR_DOCS[k]?.label ?? k}</div>
+                  <div className="num text-lg font-semibold text-brand mt-0.5">
+                    ± {v.toFixed(4)}
+                  </div>
+                  {done && (
+                    <div className="text-[10px] text-faint mt-0.5">
+                      committed ± {done.committed?.[k]?.mae?.toFixed(4)}
+                    </div>
+                  )}
+                </div>
+              ))}
+            <div className="px-4 py-3">
+              <div className="eyebrow">primary cause found</div>
+              <div className="num text-lg font-semibold text-mint mt-0.5">
+                {primary === null ? "—" : `${primary.toFixed(2)}%`}
+              </div>
+            </div>
+          </div>
+
+          <div
+            ref={listRef}
+            className="font-mono text-[11px] max-h-56 overflow-y-auto border-t border-line
+                       divide-y divide-line/50"
+          >
+            {rows.map((r) => (
+              <div key={r.i} className="px-4 py-1.5 flex items-center gap-3">
+                <span className="text-faint w-10 shrink-0 text-right">{r.i}</span>
+                <span className="w-40 truncate shrink-0 text-muted">
+                  {r.merchant_id}
+                </span>
+                <span className="w-20 text-faint shrink-0">n={r.n}</span>
+                <span className="flex-1 min-w-0 truncate text-muted">
+                  {r.true_primary ? `truth: ${r.true_primary}` : "nothing injected"}
+                </span>
+                <span
+                  className={`w-28 truncate shrink-0 ${
+                    r.correct === null
+                      ? "text-faint"
+                      : r.correct
+                      ? "text-mint"
+                      : "text-rose"
+                  }`}
+                >
+                  {r.correct === null
+                    ? "—"
+                    : r.correct
+                    ? "✓ found"
+                    : `✗ ${r.found_primary}`}
+                </span>
+                <span className="num text-faint w-16 text-right shrink-0">
+                  {r.worst_err.toFixed(3)}
+                </span>
+              </div>
+            ))}
+          </div>
+        </>
+      )}
+    </Card>
   );
 }
