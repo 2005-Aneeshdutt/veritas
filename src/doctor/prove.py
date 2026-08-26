@@ -329,3 +329,85 @@ def verify_seal(payload: dict, seal: str) -> bool:
 def canonical_bytes(payload: dict) -> str:
     """The exact bytes hashed, as text, so the check can be done by hand."""
     return canonical_json(payload).decode("utf-8")
+
+# --------------------------------------------------------------------------
+# letting the model set the exam
+# --------------------------------------------------------------------------
+
+ADVERSARY_SYSTEM = """You design exams that break a payment-attribution engine.
+
+The engine decomposes a merchant's success-rate gap across four factors using
+Shapley values, and reports a measured error of about 0.57 points per factor.
+Its published failure list says it misses the primary cause on 2.5% of
+merchants, and every one of those misses was an UNDERPOWERED BATCH -- too few
+payments for the gap to be resolved four ways.
+
+Design ONE merchant that is most likely to defeat it. You may set:
+  n_txns        40 to 8000   (small is harder for it)
+  causes        one or more of: bank_concentration, midnight_billing_penalty,
+                amount_band_risk, method_mix_mismatch, no_soft_decline_retry
+  magnitude_pts 0.3 to 5.0   (near its 0.57 error bar is harder)
+  rho           0.0 to 0.8   (correlated causes break the independence
+                              assumption its reweighting relies on)
+
+Think about what actually makes attribution hard: too little data, two causes
+of nearly equal size so the ranking is a coin flip, and correlation so the
+marginal reweighting cannot separate them.
+
+Reply with JSON and nothing else:
+{"n_txns": 0, "causes": [], "magnitude_pts": 0.0, "rho": 0.0,
+ "reasoning": "one sentence on why this should break it"}
+"""
+
+
+class AdversarialSpec(BaseModel):
+    """What the model chose, after clamping to what the generator accepts."""
+
+    n_txns: int
+    causes: list[str]
+    magnitude_pts: float
+    rho: float
+    reasoning: str
+    #: True when the model asked for something outside the allowed range and
+    #: it was clamped rather than honoured.
+    clamped: bool = False
+
+
+def compose_adversarial(client=None) -> AdversarialSpec:
+    """Ask the model to design a merchant that defeats the engine.
+
+    Every value is clamped to what the generator accepts. The model is picking
+    a point inside a fixed space, not handing over an arbitrary payload -- the
+    same containment the planner uses, applied to a different model call.
+    """
+    from .llm import MODEL_REASONING, LLMClient
+
+    client = client or LLMClient()
+    res = client.complete(
+        system=ADVERSARY_SYSTEM,
+        prompt="Design the exam. Reply with the JSON object only.",
+        model=MODEL_REASONING,
+        schema_name="adversarial_challenge",
+        max_tokens=400,
+    )
+    d = res.parsed if isinstance(res.parsed, dict) else {}
+
+    raw_n = int(d.get("n_txns") or 900)
+    raw_mag = float(d.get("magnitude_pts") or 2.0)
+    raw_rho = float(d.get("rho") or 0.0)
+    causes = [c for c in (d.get("causes") or []) if c in CAUSES] or [
+        "midnight_billing_penalty"
+    ]
+
+    n = max(40, min(raw_n, 8000))
+    mag = max(0.3, min(raw_mag, 5.0))
+    rho = max(0.0, min(raw_rho, 0.8))
+
+    return AdversarialSpec(
+        n_txns=n,
+        causes=causes,
+        magnitude_pts=round(mag, 2),
+        rho=round(rho, 2),
+        reasoning=str(d.get("reasoning") or "")[:400],
+        clamped=(n, mag, rho) != (raw_n, raw_mag, raw_rho),
+    )
