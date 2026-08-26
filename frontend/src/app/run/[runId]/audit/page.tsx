@@ -183,7 +183,15 @@ export default function AuditPage({ params }: { params: { runId: string } }) {
             v={m.chain_verified ? "verified" : "broken"}
             tone={m.chain_verified ? "good" : "bad"}
           />
-          <Sum label="gate decisions" v={Object.values(r.gate.decisions).reduce((a: any, b: any) => a + b, 0)} />
+          <Sum
+            label="gated at diagnosis"
+            v={Object.values(r.gate.decisions).reduce((a: any, b: any) => a + b, 0)}
+            info={
+              "Actions the kernel judged during the diagnosis run. Fixes you " +
+              "approve afterwards are gated again and appended, so the ledger " +
+              "below is longer than this once anything has been applied."
+            }
+          />
         </div>
       </Stagger>
 
