@@ -27,6 +27,7 @@ const NAV = [
   { href: "/portfolio", label: "Book" },
   { href: "/live", label: "Live" },
   { href: "/drift", label: "Drift" },
+  { href: "/prove", label: "Prove it" },
 ];
 
 /** The top bar every signed-in page shares. */
