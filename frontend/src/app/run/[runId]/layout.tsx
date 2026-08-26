@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+import { TopBar } from "@/components/Chrome";
 import { Merchant } from "@/lib/types";
 
 const TABS = [
@@ -36,7 +37,7 @@ export default function RunLayout({
   }, [params.runId]);
 
   async function switchTo(id: string) {
-    if (id === current) return;
+    if (!id || id === current) return;
     setSwitching(true);
     const r = await fetch(`/api/run?merchant=${id}`, { method: "POST" });
     const rec = await r.json();
@@ -45,91 +46,59 @@ export default function RunLayout({
   }
 
   return (
-    <div className="min-h-screen">
-      <div
-        className="pointer-events-none fixed inset-0 bg-grid opacity-40"
-        style={{
-          backgroundSize: "56px 56px",
-          maskImage: "radial-gradient(900px 500px at 50% 0%, #000, transparent 70%)",
-        }}
+    <div className="min-h-screen bg-canvas">
+      <TopBar
+        right={
+          <>
+            {switching && (
+              <span className="eyebrow animate-breathe">re-running…</span>
+            )}
+            <label className="sr-only" htmlFor="merchant">
+              Merchant
+            </label>
+            <select
+              id="merchant"
+              value={current}
+              disabled={switching || merchants.length === 0}
+              onChange={(e) => switchTo(e.target.value)}
+              className="field h-8 py-0 pr-8 text-sm max-w-[15rem]"
+            >
+              {merchants.length === 0 && <option value="">Loading…</option>}
+              {merchants.map((m) => (
+                <option key={m.merchant_id} value={m.merchant_id}>
+                  {m.name}
+                </option>
+              ))}
+            </select>
+          </>
+        }
       />
 
-      <nav className="sticky top-0 z-40 border-b border-line bg-void/85 backdrop-blur-xl">
-        <div className="max-w-[1400px] mx-auto px-6">
-          {/* row 1 — identity + merchant switcher */}
-          <div className="flex items-center gap-4 h-14">
-            <Link href="/" className="flex items-center gap-2 shrink-0 group">
-              <span className="w-6 h-6 rounded-md bg-gradient-to-br from-gold to-gold-dim
-                               flex items-center justify-center text-void text-xs font-bold">
-                R
-              </span>
-              <span className="font-display font-bold text-sm group-hover:text-gold transition-colors">
-                Revenue Doctor
-              </span>
-            </Link>
-
-            <Link
-              href="/portfolio"
-              className="text-xs text-muted hover:text-gold transition-colors whitespace-nowrap"
-            >
-              book view
-            </Link>
-            <Link
-              href="/drift"
-              className="text-xs text-muted hover:text-gold transition-colors whitespace-nowrap"
-            >
-              drift
-            </Link>
-
-            <div className="h-5 w-px bg-line" />
-
-            <div className="flex items-center gap-1 overflow-x-auto">
-              {merchants.map((m) => (
-                <button
-                  key={m.merchant_id}
-                  onClick={() => switchTo(m.merchant_id)}
-                  disabled={switching}
-                  className={`px-2.5 py-1 rounded-md text-xs whitespace-nowrap transition-colors
-                    ${
-                      m.merchant_id === current
-                        ? "bg-gold/15 text-gold border border-gold/30"
-                        : "text-muted hover:text-ink hover:bg-white/[0.04] border border-transparent"
-                    }`}
-                >
-                  {m.name}
-                </button>
-              ))}
-              {switching && (
-                <span className="eyebrow ml-2 animate-breathe">re-running…</span>
-              )}
-            </div>
-          </div>
-
-          {/* row 2 — pages */}
-          <div className="flex items-center gap-1 -mb-px overflow-x-auto">
-            {TABS.map((t) => {
-              const href = base + t.href;
-              const active = path === href;
-              return (
-                <Link
-                  key={t.href}
-                  href={href}
-                  title={t.hint}
-                  className={`px-3 py-2.5 text-sm whitespace-nowrap border-b-2 transition-colors ${
-                    active
-                      ? "border-gold text-ink"
-                      : "border-transparent text-muted hover:text-ink"
-                  }`}
-                >
-                  {t.label}
-                </Link>
-              );
-            })}
-          </div>
+      {/* sub-nav — the six views of one merchant */}
+      <div className="sticky top-14 z-30 border-b border-line bg-canvas/85 backdrop-blur-xl">
+        <div className="max-w-[1400px] mx-auto px-6 flex items-center gap-1 -mb-px overflow-x-auto">
+          {TABS.map((t) => {
+            const href = base + t.href;
+            const active = path === href;
+            return (
+              <Link
+                key={t.href}
+                href={href}
+                title={t.hint}
+                className={`px-3 py-2.5 text-sm whitespace-nowrap border-b-2 transition-colors ${
+                  active
+                    ? "border-brand text-ink"
+                    : "border-transparent text-muted hover:text-ink"
+                }`}
+              >
+                {t.label}
+              </Link>
+            );
+          })}
         </div>
-      </nav>
+      </div>
 
-      <div className="relative max-w-[1400px] mx-auto px-6 py-7">{children}</div>
+      <main className="max-w-[1400px] mx-auto px-6 py-8">{children}</main>
     </div>
   );
 }
