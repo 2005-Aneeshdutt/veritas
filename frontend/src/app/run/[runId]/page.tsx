@@ -28,6 +28,9 @@ const FACTOR_COLOR: Record<string, string> = {
 export default function Overview({ params }: { params: { runId: string } }) {
   const [rec, setRec] = useState<RunRecord | null>(null);
   const [sens, setSens] = useState<any>(null);
+  //: How far the retry model is from a known truth. Measured, so the
+  //: PROJECTED label above can carry a figure instead of only a caveat.
+  const [recov, setRecov] = useState<any>(null);
   const [mode, setMode] = useState<"today" | "doctor">("doctor");
   const [shift, setShift] = useState(0);
   const [copied, setCopied] = useState(false);
@@ -36,7 +39,10 @@ export default function Overview({ params }: { params: { runId: string } }) {
     fetch(`/api/run/${params.runId}`).then((r) => r.json()).then(setRec);
     fetch("/api/evals")
       .then((r) => r.json())
-      .then((e) => setSens(e.s_star_sensitivity))
+      .then((e) => {
+        setSens(e.s_star_sensitivity);
+        setRecov(e.recovery_accuracy ?? null);
+      })
       .catch(() => {});
   }, [params.runId]);
 
@@ -120,6 +126,21 @@ export default function Overview({ params }: { params: { runId: string } }) {
                   </span>
                   <span className="chip-projected">projected</span>
                 </div>
+                {recov?.by_calibration?.central && (
+                  <div className="text-xs text-muted mt-2 max-w-xl leading-relaxed">
+                    <span className="chip-measured mr-1.5">measured</span>
+                    Against a known retry outcome for every recoverable failure
+                    across {recov.by_calibration.central.merchants_scored} merchants,
+                    this calibration forecasts{" "}
+                    <span className="text-ink">
+                      {(recov.by_calibration.central.portfolio_ratio * 100).toFixed(0)}%
+                    </span>{" "}
+                    of what a retry truly recovers
+                    {recov.range_brackets_the_truth
+                      ? ", and the published range brackets the truth."
+                      : "."}
+                  </div>
+                )}
                 <div className="text-sm text-muted mt-2">
                   {m.transactions.toLocaleString()} payments · {m.failures} failed ·{" "}
                   <span className="text-ink">{gate.allow} actions executed</span> under a
@@ -141,7 +162,7 @@ export default function Overview({ params }: { params: { runId: string } }) {
                 { compact: true }
               )}`}
               sub="range across 3 calibrations"
-              info="Shipped as a range, never one number — retry success is a modelled assumption, not an observation."
+              info="Shipped as a range, never one number — retry success is a modelled assumption. evals/results/recovery_accuracy.json measures how far that assumption sits from a known truth, and confirms the range brackets it."
             />
             <Tile
               label="unrecoverable"
