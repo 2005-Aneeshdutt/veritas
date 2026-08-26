@@ -35,6 +35,7 @@ from chitragupta.rails.mock_rail import Calibration
 from fastapi.responses import PlainTextResponse
 
 from doctor.apply import apply_group
+from doctor.assistant import ask as assistant_ask
 from doctor.baseline import Baseline
 from doctor.drift import build_drift_report, simulate_exposure
 from doctor.outreach import as_eml, compose, send, smtp_configured
@@ -46,6 +47,7 @@ from doctor.prove import (
     CATEGORIES,
     CAUSES,
     blind_batch,
+    compose_adversarial,
     load_challenge,
     new_challenge,
     score,
@@ -201,6 +203,23 @@ def drift() -> dict:
     have a gap; this watches NPCI's published series and says so first.
     """
     return json.loads(build_drift_report().model_dump_json())
+
+
+@app.post("/api/run/{run_id}/ask")
+def run_ask(run_id: str, q: str) -> dict:
+    """Ask about one run. Every figure in the reply is checked against it.
+
+    The reply is REFUSED rather than shown with a warning when a figure
+    survives that cannot be found in the record -- a caveat under a wrong
+    number is still a wrong number on a screen.
+    """
+    p = RUNS / (run_id + ".json")
+    if not p.exists():
+        raise HTTPException(404, "no such run: %s" % run_id)
+    if len(q or "") > 500:
+        raise HTTPException(400, "question too long")
+    rec = json.loads(p.read_text(encoding="utf-8"))
+    return json.loads(assistant_ask(rec, q).model_dump_json())
 
 
 @app.get("/api/drift/simulate")
@@ -403,6 +422,18 @@ def prove_options() -> dict:
             "setting an easier exam, so the vocabulary here is identical to it."
         ),
     }
+
+
+@app.post("/api/prove/adversarial")
+def prove_adversarial() -> dict:
+    """Let the model design the exam it thinks will break the engine.
+
+    It picks a point inside a fixed space -- batch size, causes, magnitude,
+    correlation -- and every value is clamped to what the generator accepts.
+    The model is choosing an input, never handing over a payload.
+    """
+    spec = compose_adversarial()
+    return json.loads(spec.model_dump_json())
 
 
 @app.post("/api/prove/new")
