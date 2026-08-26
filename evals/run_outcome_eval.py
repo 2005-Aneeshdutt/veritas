@@ -140,7 +140,7 @@ def main() -> int:
         "fixes": [json.loads(o.model_dump_json()) for o in rows],
     }
     (RESULTS / "outcome_accuracy.json").write_text(
-        json.dumps(out, indent=2), encoding="utf-8"
+        json.dumps(out, indent=2), encoding="utf-8", newline="\n"
     )
 
     ov = out["overall"]

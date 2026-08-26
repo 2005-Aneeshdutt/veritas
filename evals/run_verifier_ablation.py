@@ -192,7 +192,7 @@ def main() -> int:
     }
     RESULTS.mkdir(parents=True, exist_ok=True)
     (RESULTS / "verifier_ablation.json").write_text(
-        json.dumps(out, indent=2), encoding="utf-8"
+        json.dumps(out, indent=2), encoding="utf-8", newline="\n"
     )
 
     print("\n%-22s %10s %10s" % ("", "verifier off", "verifier on"))

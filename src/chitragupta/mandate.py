@@ -135,7 +135,9 @@ def _main() -> int:
     assert signed.verify(), "freshly signed mandate failed to verify"
 
     (out / ("%s_mandate.json" % args.merchant)).write_text(
-        json.dumps(signed.model_dump(mode="json"), indent=2), encoding="utf-8"
+        json.dumps(signed.model_dump(mode="json"), indent=2),
+        encoding="utf-8",
+        newline="\n",
     )
     (out / ("%s_signing_key.hex" % args.merchant)).write_text(
         priv.private_bytes(

@@ -386,7 +386,7 @@ def apply_group(
             "at": datetime.now(timezone.utc).isoformat(),
         }
     )
-    path.write_text(json.dumps(rec, indent=2), encoding="utf-8")
+    path.write_text(json.dumps(rec, indent=2), encoding="utf-8", newline="\n")
 
     return ApplyResult(
         ok=executed > 0 or (not group.get("auto") and denied == 0),

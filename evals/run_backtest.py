@@ -195,7 +195,7 @@ def main() -> int:
         ],
     }
     (RESULTS / "backtest_npci.json").write_text(
-        json.dumps(out, indent=2), encoding="utf-8"
+        json.dumps(out, indent=2), encoding="utf-8", newline="\n"
     )
 
     print("\nout-of-sample MAE, in points of failure rate")

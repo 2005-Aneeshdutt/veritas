@@ -197,7 +197,7 @@ def main() -> int:
     }
     RESULTS.mkdir(parents=True, exist_ok=True)
     (RESULTS / "root_cause_accuracy.json").write_text(
-        json.dumps(out, indent=2), encoding="utf-8"
+        json.dumps(out, indent=2), encoding="utf-8", newline="\n"
     )
 
     print("\nroot-cause accuracy %.1f%%  (95%% CI %.1f - %.1f)  n=%d"

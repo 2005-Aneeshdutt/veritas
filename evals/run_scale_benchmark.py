@@ -104,7 +104,7 @@ def main() -> int:
         },
     }
     (RESULTS / "scale_benchmark.json").write_text(
-        json.dumps(out, indent=2), encoding="utf-8"
+        json.dumps(out, indent=2), encoding="utf-8", newline="\n"
     )
 
     print("\n%.2f s wall for %d merchants" % (wall, len(merchants)))

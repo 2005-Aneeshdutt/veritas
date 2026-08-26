@@ -232,7 +232,7 @@ def main() -> int:
         "q3_failure_mix_stability": q3_failure_mix_stability(rem),
         "q4_seasonality": q4_seasonality(rem),
     }
-    (RESULTS / "npci_finding.json").write_text(json.dumps(out, indent=2), encoding="utf-8")
+    (RESULTS / "npci_finding.json").write_text(json.dumps(out, indent=2), encoding="utf-8", newline="\n")
 
     q1, q2, q3, q4 = (out["q1_cross_bank_td_correlation"], out["q2_three_year_trends"],
                       out["q3_failure_mix_stability"], out["q4_seasonality"])

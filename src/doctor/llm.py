@@ -356,7 +356,7 @@ class LLMClient:
                 indent=2,
                 ensure_ascii=False,
             ),
-            encoding="utf-8",
+            encoding="utf-8", newline="\n",
         )
         r = LLMResult(
             text=text,

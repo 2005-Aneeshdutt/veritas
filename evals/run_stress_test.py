@@ -199,7 +199,7 @@ def main() -> int:
         ],
     }
     (RESULTS / "stress_test.json").write_text(
-        json.dumps(summary, indent=2), encoding="utf-8"
+        json.dumps(summary, indent=2), encoding="utf-8", newline="\n"
     )
 
     print(

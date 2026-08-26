@@ -626,6 +626,6 @@ def run_diagnosis(
     )
     RUNS_DIR.mkdir(parents=True, exist_ok=True)
     (RUNS_DIR / (run_id + ".json")).write_text(
-        rec.model_dump_json(indent=2), encoding="utf-8"
+        rec.model_dump_json(indent=2), encoding="utf-8", newline="\n"
     )
     return rec

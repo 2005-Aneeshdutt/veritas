@@ -319,7 +319,7 @@ def main() -> int:
         },
     }
     (RESULTS / "baseline_ladder.json").write_text(
-        json.dumps(out, indent=2), encoding="utf-8"
+        json.dumps(out, indent=2), encoding="utf-8", newline="\n"
     )
 
     print(

@@ -219,7 +219,7 @@ def main() -> int:
         "demo_merchants": demos,
     }
     (RESULTS / "s_star_sensitivity.json").write_text(
-        json.dumps(out, indent=2), encoding="utf-8"
+        json.dumps(out, indent=2), encoding="utf-8", newline="\n"
     )
 
     print("PART A -- level of s_star (%d merchants)" % len(merchants))

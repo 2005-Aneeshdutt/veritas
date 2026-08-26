@@ -214,6 +214,7 @@ def main() -> int:
             ensure_ascii=False,
         ),
         encoding="utf-8",
+        newline="\n",
     )
     print("wrote %s" % OUT.relative_to(ROOT))
     print("  %d codes" % len(records))

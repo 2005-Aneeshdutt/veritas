@@ -139,7 +139,9 @@ CAUSE_POOL = [
 def write(path: Path, merchant) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(
-        json.dumps(merchant.model_dump(mode="json"), indent=2), encoding="utf-8"
+        json.dumps(merchant.model_dump(mode="json"), indent=2),
+        encoding="utf-8",
+        newline="\n",
     )
 
 

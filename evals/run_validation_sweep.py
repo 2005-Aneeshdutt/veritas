@@ -125,7 +125,7 @@ def main() -> int:
             "n": len(errs),
         }
     (RESULTS / "attribution_mae_by_factor.json").write_text(
-        json.dumps(by_factor, indent=2), encoding="utf-8"
+        json.dumps(by_factor, indent=2), encoding="utf-8", newline="\n"
     )
 
     # --- degradation vs correlation --------------------------------------
@@ -143,7 +143,7 @@ def main() -> int:
             "primary_cause_accuracy": _primary_accuracy(group, "shapley_primary"),
         }
     (RESULTS / "correlation_degradation.json").write_text(
-        json.dumps(corr, indent=2), encoding="utf-8"
+        json.dumps(corr, indent=2), encoding="utf-8", newline="\n"
     )
 
     # --- degradation vs batch size ---------------------------------------
@@ -162,7 +162,7 @@ def main() -> int:
             "primary_cause_accuracy": _primary_accuracy(group, "shapley_primary"),
         }
     (RESULTS / "batch_size_power.json").write_text(
-        json.dumps(power, indent=2), encoding="utf-8"
+        json.dumps(power, indent=2), encoding="utf-8", newline="\n"
     )
 
     # --- process gap ------------------------------------------------------
@@ -193,7 +193,7 @@ def main() -> int:
             },
             indent=2,
         ),
-        encoding="utf-8",
+        encoding="utf-8", newline="\n",
     )
 
     # --- naive vs shapley -------------------------------------------------
@@ -232,7 +232,7 @@ def main() -> int:
         "when_they_disagree": _disagreement_breakdown(scored),
     }
     (RESULTS / "naive_vs_shapley.json").write_text(
-        json.dumps(nvs, indent=2), encoding="utf-8"
+        json.dumps(nvs, indent=2), encoding="utf-8", newline="\n"
     )
 
     _write_failure_cases(rows)
@@ -322,7 +322,7 @@ def _write_failure_cases(rows) -> None:
         "picking the larger is close to a coin flip and the ranking metric is "
         "harsher than the underlying error warrants.",
     ]
-    (RESULTS / "failure_cases.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
+    (RESULTS / "failure_cases.md").write_text("\n".join(lines) + "\n", encoding="utf-8", newline="\n")
 
 
 def _reason(r) -> str:
