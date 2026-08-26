@@ -1,7 +1,14 @@
 # Revenue Doctor
 
+[![CI](https://github.com/2005-Aneeshdutt/Nidaan/actions/workflows/ci.yml/badge.svg)](https://github.com/2005-Aneeshdutt/Nidaan/actions/workflows/ci.yml)
+
 **Razorpay AI Buildathon — Track 03: AI Revenue Recovery**
 Aneesh Dutt · PES University · [github.com/2005-Aneeshdutt](https://github.com/2005-Aneeshdutt)
+
+CI runs four jobs on every push: the test suite, **a full diagnosis with no API
+key** (proving the committed cache is complete), **a reproducibility check that
+regenerates everything and fails if a single committed number moves**, and the
+frontend build.
 
 Every merchant can see their payment success rate. Nobody tells them what it
 *should* be, whose fault the shortfall is, or what it is worth per month.
@@ -295,8 +302,10 @@ rules never consult a model. See [`ARCHITECTURE.md`](ARCHITECTURE.md).
 ## Run it
 
 ```bash
-python -m pip install -e ".[dev]"
-bash scripts/dev.sh          # backend :8000 + frontend :3000
+make setup      # python + frontend dependencies
+make demo       # backend :8000 + frontend :3000
+make test       # 63 tests
+make verify     # regenerate everything, fail if any committed number moved
 ```
 
 `dev.sh` preflights the data files and prints whether the LLM is keyed,
