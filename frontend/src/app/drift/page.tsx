@@ -169,6 +169,11 @@ export default function DriftPage() {
           </Card>
         </Stagger>
 
+        {/* the intervention */}
+        <Stagger i={3}>
+          <Intervention report={d} />
+        </Stagger>
+
         {/* improving */}
         <Stagger i={4}>
           <Card>
@@ -277,6 +282,180 @@ function Shell({ children }: { children: React.ReactNode }) {
     <div className="min-h-screen bg-canvas">
       <TopBar />
       <main className="max-w-[1400px] mx-auto px-6 py-8">{children}</main>
+    </div>
+  );
+}
+
+/* --------------------------------------------------------- intervention */
+
+const SIM_MERCHANTS = [
+  "quickmart", "cloudsync", "techbazaar", "chaipoint",
+  "medisure", "voltbill", "urbanthread", "fuelstop",
+];
+
+/**
+ * Detection is only half of it.
+ *
+ * A degradation that clears both thresholds becomes a typed action and is put
+ * to the merchant's signed mandate — the same kernel every other action goes
+ * through. On the current data nothing clears them, which is stated rather
+ * than engineered around; the counterfactual below exercises the real gate
+ * against a supposed movement so the machinery is visible without the demo
+ * data being re-weighted until it looked busy.
+ */
+function Intervention({ report }: { report: any }) {
+  const [merchant, setMerchant] = useState("quickmart");
+  const [banks, setBanks] = useState<string[]>([]);
+  const [bank, setBank] = useState("");
+  const [delta, setDelta] = useState(2.0);
+  const [sim, setSim] = useState<any>(null);
+  const [busy, setBusy] = useState(false);
+
+  useEffect(() => {
+    fetch(`/api/run?merchant=${merchant}`, { method: "POST" })
+      .then((r) => r.json())
+      .then((rec) => {
+        const bs = (rec.report?.bank_health?.banks ?? []).map((b: any) => b.bank);
+        setBanks(bs);
+        setBank(bs[0] ?? "");
+      })
+      .catch(() => setBanks([]));
+  }, [merchant]);
+
+  async function run() {
+    if (!bank) return;
+    setBusy(true);
+    const q = new URLSearchParams({
+      merchant,
+      bank,
+      delta_pts: String(delta),
+    });
+    const r = await fetch(`/api/drift/simulate?${q}`);
+    setSim(r.ok ? await r.json() : null);
+    setBusy(false);
+  }
+
+  const e = sim?.exposure;
+
+  return (
+    <Card>
+      <Eyebrow>Detection is half of it</Eyebrow>
+      <h2 className="text-lg font-semibold mt-1">
+        {report.interventions_proposed > 0
+          ? `${report.interventions_proposed} interventions put to a mandate`
+          : "Nothing on this book clears the bar for an intervention"}
+      </h2>
+      <p className="text-sm text-muted mt-1.5 max-w-3xl leading-relaxed">
+        A degradation worth more than ₹5,000/month on a bank that moved at least
+        1.00 point becomes a typed action, gated against the merchant&apos;s signed
+        mandate. Today the issuers that degraded are small regional banks and this
+        book routes through the large nationals, so the honest count is{" "}
+        {report.interventions_proposed}. Rather than re-weighting the merchants
+        until the feature looked busy, ask the counterfactual directly.
+      </p>
+
+      <div className="card-raised p-4 mt-4">
+        <div className="flex items-center gap-2 flex-wrap">
+          <span className="chip-projected">hypothetical</span>
+          <span className="text-xs text-muted">
+            real bank mix, real volume, real mandate — only the movement is supposed
+          </span>
+        </div>
+
+        <div className="flex items-end gap-3 flex-wrap mt-3">
+          <div>
+            <div className="eyebrow mb-1">merchant</div>
+            <select
+              value={merchant}
+              onChange={(ev) => setMerchant(ev.target.value)}
+              className="field h-9 py-0 text-sm w-44"
+            >
+              {SIM_MERCHANTS.map((m) => (
+                <option key={m} value={m}>{m}</option>
+              ))}
+            </select>
+          </div>
+          <div>
+            <div className="eyebrow mb-1">if this issuer degraded</div>
+            <select
+              value={bank}
+              onChange={(ev) => setBank(ev.target.value)}
+              className="field h-9 py-0 text-sm w-60"
+            >
+              {banks.map((b) => (
+                <option key={b} value={b}>{b}</option>
+              ))}
+            </select>
+          </div>
+          <div className="min-w-[10rem]">
+            <div className="eyebrow mb-1">by {delta.toFixed(1)} points</div>
+            <input
+              type="range" min={0.2} max={6} step={0.1} value={delta}
+              onChange={(ev) => setDelta(Number(ev.target.value))}
+              className="w-full accent-brand"
+            />
+          </div>
+          <button onClick={run} disabled={busy || !bank} className="btn-primary h-9 px-4 text-sm">
+            {busy ? "gating…" : "What would the agent do?"}
+          </button>
+        </div>
+
+        {e && (
+          <div className="mt-4 pt-4 border-t border-line animate-rise">
+            <div className="grid sm:grid-cols-4 gap-3">
+              <Fig k="share of volume" v={`${e.share_pct.toFixed(1)}%`} />
+              <Fig k="monthly exposure" v={inr(e.exposure_paise)} tone="text-amber" />
+              <Fig
+                k="clears the bar"
+                v={e.actionable ? "yes" : "no"}
+                tone={e.actionable ? "text-mint" : "text-faint"}
+              />
+              <Fig
+                k="mandate says"
+                v={e.gate_decision ?? "—"}
+                tone={
+                  e.gate_decision === "deny"
+                    ? "text-rose"
+                    : e.gate_decision === "step_up"
+                    ? "text-amber"
+                    : e.gate_decision
+                    ? "text-mint"
+                    : "text-faint"
+                }
+              />
+            </div>
+
+            {e.proposed_action ? (
+              <div className="card-raised p-3 mt-3">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span className="chip-brand">
+                    {e.proposed_action.action_type}
+                  </span>
+                  <span className="chip-neutral">{e.gate_reason}</span>
+                  <span className="num text-[11px] text-faint ml-auto">
+                    amount ₹0 — a routing change moves no money
+                  </span>
+                </div>
+                <p className="text-xs text-muted mt-2 leading-relaxed">
+                  {e.proposed_action.reason}
+                </p>
+                <p className="text-[11px] text-faint mt-2">{e.rationale}</p>
+              </div>
+            ) : (
+              <p className="text-xs text-muted mt-3">{e.rationale}</p>
+            )}
+          </div>
+        )}
+      </div>
+    </Card>
+  );
+}
+
+function Fig({ k, v, tone }: { k: string; v: string; tone?: string }) {
+  return (
+    <div>
+      <div className="eyebrow">{k}</div>
+      <div className={`num text-sm mt-0.5 ${tone ?? ""}`}>{v}</div>
     </div>
   );
 }
