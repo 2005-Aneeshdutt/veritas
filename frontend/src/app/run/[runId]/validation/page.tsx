@@ -61,7 +61,7 @@ export default function ValidationPage() {
               onClick={() => setTab(k)}
               className={`px-4 py-2 text-sm border-b-2 -mb-px transition-colors ${
                 tab === k
-                  ? "border-gold text-ink"
+                  ? "border-brand text-ink"
                   : "border-transparent text-muted hover:text-ink"
               }`}
             >
@@ -82,9 +82,9 @@ export default function ValidationPage() {
             />
             <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
               {Object.entries(mae).map(([k, v]: any) => (
-                <div key={k} className="glass-raised p-4">
+                <div key={k} className="card-raised p-4">
                   <div className="eyebrow">{FACTOR_DOCS[k]?.label ?? k}</div>
-                  <div className="text-2xl font-display font-bold text-gold mt-1.5">
+                  <div className="text-2xl font-display font-bold text-brand mt-1.5">
                     ± {v.mae}
                   </div>
                   <div className="text-[11px] text-muted mt-1">points, mean abs error</div>
@@ -190,7 +190,7 @@ export default function ValidationPage() {
                   </>
                 )}
                 {rc.healthy_merchants && (
-                  <div className="glass-raised p-3 mt-3 text-xs">
+                  <div className="card-raised p-3 mt-3 text-xs">
                     On genuinely healthy merchants it said{" "}
                     <span className="num text-mint">none_of_the_above</span>{" "}
                     <span className="text-ink">
@@ -246,7 +246,7 @@ export default function ValidationPage() {
 
           {/* baseline ladder */}
           {ladder.headline && (
-            <Card className="border-l-2 border-l-gold">
+            <Card className="border-l-2 border-l-brand">
               <SectionHeader
                 eyebrow="Recovered how much — compared to what?"
                 title="Against the strongest baseline, not the easiest"
@@ -273,10 +273,10 @@ export default function ValidationPage() {
                         <tr
                           key={name}
                           className={`border-b border-line/40 ${
-                            isT ? "bg-gold/[0.06]" : ""
+                            isT ? "bg-brand-soft" : ""
                           }`}
                         >
-                          <td className={`py-2 font-body ${isT ? "text-gold font-semibold" : ""}`}>
+                          <td className={`py-2 font-body ${isT ? "text-brand font-semibold" : ""}`}>
                             {name.replace(/_/g, " ")}
                           </td>
                           <td className="text-right">
@@ -429,7 +429,7 @@ export default function ValidationPage() {
                   </tbody>
                 </table>
               </div>
-              <div className="glass-raised p-3 mt-4 text-sm text-mint">
+              <div className="card-raised p-3 mt-4 text-sm text-mint">
                 ✓ Zero crashes, and no silent failures — every case where error rose
                 materially was flagged to the user.
               </div>
@@ -467,7 +467,7 @@ export default function ValidationPage() {
               provenance field, a source and a range.
             </p>
             {sens.part_a_s_star_level && (
-              <div className="glass-raised p-3 mt-3 text-sm text-mint leading-relaxed">
+              <div className="card-raised p-3 mt-3 text-sm text-mint leading-relaxed">
                 By contrast, the level of the cohort benchmark moves the attributions by
                 exactly{" "}
                 <span className="num">
@@ -480,7 +480,7 @@ export default function ValidationPage() {
             )}
           </Card>
 
-          <Card className="border-l-2 border-l-gold">
+          <Card className="border-l-2 border-l-brand">
             <SectionHeader
               eyebrow="Was the complicated method necessary?"
               title="For ranking, no. For rupees, decisively yes."
@@ -504,11 +504,11 @@ export default function ValidationPage() {
               <>
                 <p className="text-sm mt-4 leading-relaxed">
                   So I measured what Shapley actually buys.{" "}
-                  <span className="text-gold">Its magnitudes add up and naive&apos;s
+                  <span className="text-brand">Its magnitudes add up and naive&apos;s
                   do not</span> — and every output of this product is a rupee figure
                   derived from a magnitude, not a ranking.
                 </p>
-                <div className="glass-raised p-4 mt-3 num text-xs space-y-1.5">
+                <div className="card-raised p-4 mt-3 num text-xs space-y-1.5">
                   <div className="eyebrow">sum of attributions ÷ v(N) — 1.000 is perfect</div>
                   <div className="flex justify-between">
                     <span>Shapley</span>
@@ -574,7 +574,7 @@ export default function ValidationPage() {
               />
               <pre className="font-mono text-[10px] leading-relaxed overflow-x-auto
                               text-muted whitespace-pre-wrap max-h-96 overflow-y-auto
-                              glass-raised p-4">
+                              card-raised p-4">
                 {e.failure_cases_md}
               </pre>
             </Card>
@@ -598,7 +598,7 @@ function Row({ k, v }: { k: string; v: any }) {
 
 function Stat({ label, v }: { label: string; v: string }) {
   return (
-    <div className="glass-raised p-4">
+    <div className="card-raised p-4">
       <div className="eyebrow">{label}</div>
       <div className="text-2xl font-display font-bold mt-1">{v}</div>
     </div>
@@ -608,7 +608,7 @@ function Stat({ label, v }: { label: string; v: string }) {
 function BigStat({ value, label, ci }: { value: string; label: string; ci: string }) {
   return (
     <div className="flex items-baseline gap-3">
-      <span className="text-4xl font-display font-bold text-gold">{value}</span>
+      <span className="text-4xl font-display font-bold text-brand">{value}</span>
       <div>
         <div className="text-sm">{label}</div>
         <div className="eyebrow mt-0.5">{ci}</div>
@@ -624,9 +624,9 @@ function ErrBar({ label, v }: { label: string; v: number }) {
         <span className="text-muted">{label}</span>
         <span className="num">{(v * 100).toFixed(1)}%</span>
       </div>
-      <div className="h-1 rounded-full bg-white/[0.05] overflow-hidden mt-1">
+      <div className="h-1 rounded-full bg-raised overflow-hidden mt-1">
         <div
-          className="h-full bg-gradient-to-r from-gold-dim to-gold"
+          className="h-full bg-gradient-to-r from-brand to-brand"
           style={{ width: `${v * 100}%` }}
         />
       </div>
