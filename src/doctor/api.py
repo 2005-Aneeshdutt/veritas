@@ -36,7 +36,7 @@ from fastapi.responses import PlainTextResponse
 
 from doctor.apply import apply_group
 from doctor.baseline import Baseline
-from doctor.drift import build_drift_report
+from doctor.drift import build_drift_report, simulate_exposure
 from doctor.outreach import as_eml, compose, send, smtp_configured
 from doctor.portfolio import build_portfolio, ledger_csv, portfolio_csv
 from doctor.generator import GeneratedMerchant
@@ -201,6 +201,37 @@ def drift() -> dict:
     have a gap; this watches NPCI's published series and says so first.
     """
     return json.loads(build_drift_report().model_dump_json())
+
+
+@app.get("/api/drift/simulate")
+def drift_simulate(merchant: str, bank: str, delta_pts: float = 2.0) -> dict:
+    """What would the agent do if this issuer moved by this much?
+
+    A labelled hypothetical. Everything it touches is real -- the merchant's
+    actual bank mix and volume, the real action type, the real signed mandate.
+    Only the movement is supposed, because on the current data no merchant on
+    this book is materially exposed and re-weighting them until the feature had
+    something to show would be dishonest.
+    """
+    if merchant not in MERCHANTS:
+        raise HTTPException(400, "unknown merchant: %s" % merchant)
+    if not -10.0 <= delta_pts <= 25.0:
+        raise HTTPException(400, "delta_pts out of range")
+    try:
+        exposure = simulate_exposure(merchant, bank, delta_pts)
+    except FileNotFoundError as e:
+        raise HTTPException(404, str(e))
+    except ValueError as e:
+        raise HTTPException(400, str(e))
+    return {
+        "hypothetical": True,
+        "note": (
+            "Supposed movement, real everything else: this merchant's own bank "
+            "mix and volume, the real action type, and their real signed "
+            "mandate."
+        ),
+        "exposure": json.loads(exposure.model_dump_json()),
+    }
 
 
 @app.post("/api/run/{run_id}/email/send")
