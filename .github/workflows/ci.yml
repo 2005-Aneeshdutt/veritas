@@ -1,0 +1,80 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  tests:
+    name: Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: python -m pip install -e ".[dev]"
+      - run: pytest -q
+
+  offline:
+    # The claim is that a clone runs with no API key at all, because every LLM
+    # response is cached and committed. This is where that claim is checked
+    # rather than asserted -- no secrets are available to this job.
+    name: Runs with no API key
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: python -m pip install -e ".[dev]"
+      - name: Diagnose a merchant end to end
+        run: python -m doctor.run --merchant quickmart
+        env:
+          PYTHONPATH: src
+      - name: Fail if the run fell back to stubs
+        env:
+          PYTHONPATH: src
+        run: |
+          python - <<'PY'
+          import glob, json, sys
+          newest = max(glob.glob("data/runs/run_*.json"), key=lambda p: p)
+          rec = json.load(open(newest, encoding="utf-8"))
+          if rec["used_stubs"]:
+              sys.exit("Run used stub responses -- the committed cache is incomplete.")
+          print("cache hit rate: %.0f%%" % (100 * rec["cache_hit_rate"]))
+          PY
+
+  reproducible:
+    # RULE 3 made mechanical: regenerate everything and fail if a single
+    # committed figure moves.
+    name: Committed results reproduce
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: python -m pip install -e ".[dev]"
+      - run: python scripts/verify_reproducibility.py
+
+  frontend:
+    name: Frontend builds
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - run: npm ci
+      - run: npm run build
