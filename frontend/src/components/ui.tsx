@@ -16,22 +16,15 @@ export function Card({
 }: {
   children: ReactNode;
   className?: string;
-  glow?: "gold" | "mint" | "rose";
+  glow?: "brand" | "mint" | "rose";
   onClick?: () => void;
 }) {
-  const glowCls =
-    glow === "gold"
-      ? "hover:shadow-glow"
-      : glow === "mint"
-      ? "hover:shadow-glow-mint"
-      : glow === "rose"
-      ? "hover:shadow-glow-rose"
-      : "";
+  const glowCls = glow ? "hover:shadow-card" : "";
   return (
     <div
       onClick={onClick}
-      className={`glass p-5 transition-all duration-300 ${glowCls} ${
-        onClick ? "cursor-pointer hover:-translate-y-0.5" : ""
+      className={`card p-5 transition-shadow duration-200 ${glowCls} ${
+        onClick ? "cursor-pointer" : ""
       } ${className}`}
     >
       {children}
@@ -81,8 +74,8 @@ export function Info({ text, children }: { text: string; children?: ReactNode })
       {children ?? (
         <span
           className="ml-1 w-3.5 h-3.5 inline-flex items-center justify-center rounded-full
-                     border border-line text-[9px] text-faint hover:text-gold
-                     hover:border-gold/50 transition-colors cursor-help"
+                     border border-line text-[9px] text-faint hover:text-brand
+                     hover:border-brand/50 transition-colors cursor-help"
         >
           ?
         </span>
@@ -90,8 +83,8 @@ export function Info({ text, children }: { text: string; children?: ReactNode })
       {open && (
         <span
           className="absolute z-50 bottom-full left-1/2 -translate-x-1/2 mb-2 w-72
-                     glass-raised p-3 text-xs leading-relaxed text-muted
-                     font-body normal-case tracking-normal animate-rise shadow-lift"
+                     card-raised p-3 text-xs leading-relaxed text-muted
+                     font-body normal-case tracking-normal animate-rise shadow-card"
         >
           {text}
         </span>
@@ -232,11 +225,11 @@ export function Wall({
       </section>
 
       <div className="hidden xl:flex flex-col items-center px-2">
-        <div className="w-px flex-1 bg-gradient-to-b from-transparent via-line to-transparent" />
+        <div className="w-px flex-1 bg-line" />
         <div className="py-4 eyebrow [writing-mode:vertical-rl] rotate-180">
           the wall
         </div>
-        <div className="w-px flex-1 bg-gradient-to-b from-transparent via-line to-transparent" />
+        <div className="w-px flex-1 bg-line" />
       </div>
 
       <section>
@@ -257,7 +250,7 @@ export function Wall({
 export function Bar({
   value,
   max,
-  color = "#E5B94E",
+  color = "rgb(var(--brand))",
   hatched,
 }: {
   value: number;
@@ -267,7 +260,7 @@ export function Bar({
 }) {
   const pct = max > 0 ? Math.max(0, Math.min(100, (value / max) * 100)) : 0;
   return (
-    <div className="h-1.5 w-full rounded-full bg-white/[0.05] overflow-hidden">
+    <div className="h-1.5 w-full rounded-full bg-raised overflow-hidden">
       <div
         className={`h-full rounded-full transition-[width] duration-700 ${
           hatched ? "hatched" : ""
@@ -280,7 +273,7 @@ export function Bar({
 
 export function Spark({
   values,
-  color = "#E5B94E",
+  color = "rgb(var(--brand))",
   height = 28,
 }: {
   values: number[];
@@ -315,7 +308,7 @@ export function Spark({
 
 export function Empty({ label }: { label: string }) {
   return (
-    <div className="glass p-10 text-center">
+    <div className="card p-10 text-center">
       <div className="text-sm text-muted font-mono">{label}</div>
     </div>
   );
