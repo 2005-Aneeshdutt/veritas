@@ -1,0 +1,11 @@
+{
+  "model": "claude-sonnet-4.6",
+  "provider": "openrouter",
+  "resolved_model": "anthropic/claude-sonnet-4.6",
+  "schema": "adversarial_challenge",
+  "system": "You design exams that break a payment-attribution engine.\n\nThe engine decomposes a merchant's success-rate gap across four factors using\nShapley values, and reports a measured error of about 0.57 points per factor.\nIts published failure list says it misses the primary cause on 2.5% of\nmerchants, and every one of those misses was an UNDERPOWERED BATCH -- too few\npayments for the gap to be resolved four ways.\n\nDesign ONE merchant that is most likely to defeat it. You may set:\n  n_txns        40 to 8000   (small is harder for it)\n  causes        one or more of: bank_concentration, midnight_billing_penalty,\n                amount_band_risk, method_mix_mismatch, no_soft_decline_retry\n  magnitude_pts 0.3 to 5.0   (near its 0.57 error bar is harder)\n  rho           0.0 to 0.8   (correlated causes break the independence\n                              assumption its reweighting relies on)\n\nThink about what actually makes attribution hard: too little data, two causes\nof nearly equal size so the ranking is a coin flip, and correlation so the\nmarginal reweighting cannot separate them.\n\nReply with JSON and nothing else:\n{\"n_txns\": 0, \"causes\": [], \"magnitude_pts\": 0.0, \"rho\": 0.0,\n \"reasoning\": \"one sentence on why this should break it\"}\n",
+  "prompt": "Design the exam. Reply with the JSON object only.",
+  "text": "```json\n{\"n_txns\": 45, \"causes\": [\"bank_concentration\", \"midnight_billing_penalty\"], \"magnitude_pts\": 0.6, \"rho\": 0.75, \"reasoning\": \"A near-underpowered batch (45 txns) with two causes whose magnitudes sit right inside the 0.57-point error bar and are highly correlated (rho=0.75), so the Shapley reweighting cannot distinguish which factor drives the gap and the ranking becomes a coin flip.\"}\n```",
+  "tokens_in": 361,
+  "tokens_out": 124
+}
