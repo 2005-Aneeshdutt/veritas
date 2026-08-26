@@ -1,12 +1,12 @@
 {
-  "run_id": "run_c5bc4f2d",
-  "merchant_id": "urbanthread",
-  "merchant_name": "UrbanThread",
-  "mcc": "5691",
+  "run_id": "run_406d3ae4",
+  "merchant_id": "techbazaar",
+  "merchant_name": "TechBazaar",
+  "mcc": "5732",
   "seed": 20260824,
-  "started_at": 1787729668.04212,
-  "duration_ms": 2622,
-  "commit": "7caadd3",
+  "started_at": 1787735949.4052508,
+  "duration_ms": 2555,
+  "commit": "263a1ec",
   "models": {
     "fast": "claude-haiku-4.5",
     "reasoning": "claude-sonnet-4.6",
@@ -18,22 +18,22 @@
   "used_stubs": false,
   "traces": [
     {
-      "run_id": "run_c5bc4f2d",
+      "run_id": "run_406d3ae4",
       "seq": 0,
       "node": "ingest",
       "kind": "deterministic",
       "status": "ok",
-      "started_at": 1787729670.2930315,
-      "duration_ms": 26,
+      "started_at": 1787735951.4449105,
+      "duration_ms": 25,
       "input_summary": {
-        "merchant": "urbanthread",
-        "mcc": "5691"
+        "merchant": "techbazaar",
+        "mcc": "5732"
       },
       "output_summary": {
-        "transactions": 870,
-        "failures": 103,
-        "observed_success_pct": 88.16,
-        "wilson_halfwidth_pts": 2.149
+        "transactions": 940,
+        "failures": 131,
+        "observed_success_pct": 86.06,
+        "wilson_halfwidth_pts": 2.214
       },
       "branch_taken": null,
       "model": null,
@@ -46,30 +46,30 @@
       "confidence": null,
       "reason_codes": [],
       "intermediates": {
-        "cohort_s_star_pct": 89.782
+        "cohort_s_star_pct": 88.071
       }
     },
     {
-      "run_id": "run_c5bc4f2d",
+      "run_id": "run_406d3ae4",
       "seq": 1,
       "node": "classify",
       "kind": "llm",
       "status": "ok",
-      "started_at": 1787729670.3196044,
-      "duration_ms": 1,
+      "started_at": 1787735951.4700632,
+      "duration_ms": 2,
       "input_summary": {
-        "distinct_codes": 44,
-        "failures": 103
+        "distinct_codes": 48,
+        "failures": 131
       },
       "output_summary": {
-        "from_taxonomy": 44,
+        "from_taxonomy": 48,
         "from_llm": 0,
         "low_confidence": 0,
         "classes": {
-          "auth_failure": 14,
-          "hard_decline": 22,
-          "soft_decline": 63,
-          "technical": 4
+          "hard_decline": 33,
+          "auth_failure": 21,
+          "technical": 3,
+          "soft_decline": 74
         }
       },
       "branch_taken": "bank_health",
@@ -85,12 +85,12 @@
       "intermediates": {}
     },
     {
-      "run_id": "run_c5bc4f2d",
+      "run_id": "run_406d3ae4",
       "seq": 2,
       "node": "human_review",
       "kind": "deterministic",
       "status": "skipped",
-      "started_at": 1787729670.3215919,
+      "started_at": 1787735951.472064,
       "duration_ms": 0,
       "input_summary": {},
       "output_summary": {
@@ -109,20 +109,24 @@
       "intermediates": {}
     },
     {
-      "run_id": "run_c5bc4f2d",
+      "run_id": "run_406d3ae4",
       "seq": 3,
       "node": "bank_health",
       "kind": "deterministic",
       "status": "ok",
-      "started_at": 1787729670.322972,
-      "duration_ms": 4,
+      "started_at": 1787735951.4730618,
+      "duration_ms": 2,
       "input_summary": {},
       "output_summary": {
         "banks_examined": 10,
         "worse_than_npci_baseline": [
+          "State Bank of India",
           "HDFC Bank Ltd.",
-          "Punjab National Bank",
-          "Union Bank of India"
+          "Union Bank of India",
+          "Canara Bank",
+          "Axis Bank Ltd.",
+          "Kotak Mahindra Bank",
+          "ICICI Bank Ltd."
         ],
         "npci_period": "2025-08"
       },
@@ -142,8 +146,8 @@
         "bank_table": [
           {
             "bank": "State Bank of India",
-            "share_pct": 27.82,
-            "merchant_fail_pct": 9.09,
+            "share_pct": 28.19,
+            "merchant_fail_pct": 11.32,
             "npci_bd_pct": 5.92,
             "npci_td_pct": 0.42,
             "npci_approved_pct": 93.66,
@@ -151,53 +155,53 @@
           },
           {
             "bank": "HDFC Bank Ltd.",
-            "share_pct": 8.28,
-            "merchant_fail_pct": 11.11,
+            "share_pct": 8.3,
+            "merchant_fail_pct": 12.82,
             "npci_bd_pct": 4.63,
             "npci_td_pct": 0.01,
             "npci_approved_pct": 95.37,
             "in_npci_top50": true
           },
           {
-            "bank": "Punjab National Bank",
-            "share_pct": 7.01,
-            "merchant_fail_pct": 22.95,
-            "npci_bd_pct": 8.61,
-            "npci_td_pct": 0.19,
-            "npci_approved_pct": 91.2,
-            "in_npci_top50": true
-          },
-          {
             "bank": "Bank of Baroda",
-            "share_pct": 6.9,
-            "merchant_fail_pct": 8.33,
+            "share_pct": 7.02,
+            "merchant_fail_pct": 10.61,
             "npci_bd_pct": 8.5,
             "npci_td_pct": 0.05,
             "npci_approved_pct": 91.44,
             "in_npci_top50": true
           },
           {
-            "bank": "Canara Bank",
-            "share_pct": 5.75,
-            "merchant_fail_pct": 10.0,
-            "npci_bd_pct": 6.92,
-            "npci_td_pct": 0.36,
-            "npci_approved_pct": 92.73,
+            "bank": "Punjab National Bank",
+            "share_pct": 6.6,
+            "merchant_fail_pct": 9.68,
+            "npci_bd_pct": 8.61,
+            "npci_td_pct": 0.19,
+            "npci_approved_pct": 91.2,
             "in_npci_top50": true
           },
           {
             "bank": "Union Bank of India",
-            "share_pct": 5.75,
-            "merchant_fail_pct": 12.0,
+            "share_pct": 5.85,
+            "merchant_fail_pct": 18.18,
             "npci_bd_pct": 7.02,
             "npci_td_pct": 0.75,
             "npci_approved_pct": 92.23,
             "in_npci_top50": true
           },
           {
+            "bank": "Canara Bank",
+            "share_pct": 5.53,
+            "merchant_fail_pct": 17.31,
+            "npci_bd_pct": 6.92,
+            "npci_td_pct": 0.36,
+            "npci_approved_pct": 92.73,
+            "in_npci_top50": true
+          },
+          {
             "bank": "Axis Bank Ltd.",
-            "share_pct": 5.63,
-            "merchant_fail_pct": 4.08,
+            "share_pct": 5.53,
+            "merchant_fail_pct": 7.69,
             "npci_bd_pct": 5.03,
             "npci_td_pct": 0.02,
             "npci_approved_pct": 94.96,
@@ -205,8 +209,8 @@
           },
           {
             "bank": "Kotak Mahindra Bank",
-            "share_pct": 5.4,
-            "merchant_fail_pct": 8.51,
+            "share_pct": 5.32,
+            "merchant_fail_pct": 16.0,
             "npci_bd_pct": 7.47,
             "npci_td_pct": 0.13,
             "npci_approved_pct": 92.39,
@@ -214,8 +218,8 @@
           },
           {
             "bank": "Airtel Payments Bank Limited",
-            "share_pct": 4.48,
-            "merchant_fail_pct": 17.95,
+            "share_pct": 4.36,
+            "merchant_fail_pct": 19.51,
             "npci_bd_pct": 14.05,
             "npci_td_pct": 0.12,
             "npci_approved_pct": 85.83,
@@ -223,8 +227,8 @@
           },
           {
             "bank": "ICICI Bank Ltd.",
-            "share_pct": 4.14,
-            "merchant_fail_pct": 2.78,
+            "share_pct": 3.94,
+            "merchant_fail_pct": 13.51,
             "npci_bd_pct": 3.82,
             "npci_td_pct": 0.52,
             "npci_approved_pct": 95.66,
@@ -234,28 +238,28 @@
       }
     },
     {
-      "run_id": "run_c5bc4f2d",
+      "run_id": "run_406d3ae4",
       "seq": 4,
       "node": "decompose",
       "kind": "deterministic",
       "status": "ok",
-      "started_at": 1787729670.327986,
-      "duration_ms": 307,
+      "started_at": 1787735951.4770758,
+      "duration_ms": 422,
       "input_summary": {},
       "output_summary": {
-        "gap_pts": 1.621,
+        "gap_pts": 2.007,
         "attributions": {
-          "bank": -0.145,
-          "method": 2.224,
-          "hour": -0.304,
-          "amount_band": -0.175
+          "bank": -0.341,
+          "method": 0.826,
+          "hour": -0.457,
+          "amount_band": 1.528
         },
-        "residual_pts": 0.022,
-        "process_gap_pts": 0.621,
+        "residual_pts": 0.451,
+        "process_gap_pts": 0.574,
         "degenerate_factors": [
-          "method"
+          "amount_band"
         ],
-        "clamp_rate": 0.0
+        "clamp_rate": 0.01
       },
       "branch_taken": null,
       "model": null,
@@ -274,27 +278,27 @@
       "intermediates": {
         "coalition_values": {
           "{}": 0.0,
-          "bank": -0.6494,
-          "method": 1.6961,
-          "hour": -0.8606,
-          "amount_band": -0.7513,
-          "bank+method": 1.6893,
-          "bank+hour": -0.7694,
-          "bank+amount_band": -0.6601,
-          "method+hour": 1.5818,
-          "method+amount_band": 1.7246,
-          "hour+amount_band": -0.8707,
-          "bank+method+hour": 1.5676,
-          "bank+method+amount_band": 1.7194,
-          "bank+hour+amount_band": -0.7809,
-          "method+hour+amount_band": 1.6114,
-          "bank+method+hour+amount_band": 1.599
+          "bank": -1.5779,
+          "method": -0.0543,
+          "hour": -1.7524,
+          "amount_band": 0.655,
+          "bank+method": 0.0322,
+          "bank+hour": -1.622,
+          "bank+amount_band": 0.6988,
+          "method+hour": -0.0916,
+          "method+amount_band": 1.5136,
+          "hour+amount_band": 0.6463,
+          "bank+method+hour": -0.0048,
+          "bank+method+amount_band": 1.5771,
+          "bank+hour+amount_band": 0.6895,
+          "method+hour+amount_band": 1.4919,
+          "bank+method+hour+amount_band": 1.5561
         },
         "effective_support": {
-          "bank": 8.706,
-          "method": 1.211,
-          "hour": 3.264,
-          "amount_band": 2.69
+          "bank": 8.6,
+          "method": 1.591,
+          "hour": 3.377,
+          "amount_band": 1.076
         },
         "mae_by_factor": {
           "bank": 0.5732,
@@ -305,16 +309,16 @@
       }
     },
     {
-      "run_id": "run_c5bc4f2d",
+      "run_id": "run_406d3ae4",
       "seq": 5,
       "node": "hypothesise",
       "kind": "llm",
       "status": "ok",
-      "started_at": 1787729670.6350124,
-      "duration_ms": 2,
+      "started_at": 1787735951.8998063,
+      "duration_ms": 20,
       "input_summary": {},
       "output_summary": {
-        "primary_label": "no_soft_decline_retry",
+        "primary_label": "method_mix_mismatch",
         "hypotheses": [
           {
             "factor": "bank",
@@ -323,8 +327,8 @@
           },
           {
             "factor": "method",
-            "label": "none_of_the_above",
-            "action_type": "investigation"
+            "label": "method_mix_mismatch",
+            "action_type": "merchant_action"
           },
           {
             "factor": "hour",
@@ -333,7 +337,7 @@
           },
           {
             "factor": "amount_band",
-            "label": "none_of_the_above",
+            "label": "amount_band_risk",
             "action_type": "investigation"
           },
           {
@@ -342,17 +346,17 @@
             "action_type": "auto_execute"
           }
         ],
-        "summary": "All four Shapley factors are statistically noise at UrbanThread's current volume, but the directly measured process gap of 0.62 points points to missed retries on soft declines as the one actionable lever to close the 1.62-point success-rate gap.",
+        "summary": "TechBazaar's 2.01 pt success-rate gap is most reliably explained by a heavy reliance on cards (77.2% of volume) at an average ticket of Rs 14580.39 — shifting more volume to UPI and activating soft-decline retries are the two actions with the clearest evidence behind them.",
         "verified": true,
         "verification_attempts": 1,
         "violations": []
       },
       "branch_taken": null,
       "model": "claude-sonnet-4.6",
-      "prompt": "MERCHANT\n  name: UrbanThread\n  mcc: 5691 (apparel)\n  transactions this month: 870\n  average ticket: Rs 2894.37\n\nSUCCESS RATE\n  observed:            88.16%\n  cohort achievable:   89.78%\n  gap:                 1.62 points\n\nDECOMPOSITION (Shapley, points of the gap)\n  bank          -0.14 pts +/- 0.57 measured error   [INSIDE ITS OWN ERROR BAR]\n  method        +2.22 pts +/- 0.57 measured error   [NOT IDENTIFIED - merchant has effectively one value here]\n  hour          -0.30 pts +/- 0.57 measured error   [INSIDE ITS OWN ERROR BAR]\n  amount_band   -0.18 pts +/- 0.58 measured error   [INSIDE ITS OWN ERROR BAR]\n  residual      +0.02 pts   [unexplained residual]\n  process_gap   +0.62 pts   [process gap, computed directly, NOT decomposed]\n\nMERCHANT BANK MIX vs NPCI NATIONAL DATA (period 2025-08)\n  bank                              share   NPCI BD%%  NPCI TD%%  approved%%\n  State Bank of India               27.8%     5.92     0.42     93.66\n  HDFC Bank Ltd.                     8.3%     4.63     0.01     95.37\n  Punjab National Bank               7.0%     8.61     0.19     91.20\n  Bank of Baroda                     6.9%     8.50     0.05     91.44\n  Canara Bank                        5.7%     6.92     0.36     92.73\n  Union Bank of India                5.7%     7.02     0.75     92.23\n\nHOUR DISTRIBUTION (share of payments)\n  afternoon       38.4%\n  evening         31.5%\n  morning         23.6%\n  night            6.6%\n\nMETHOD DISTRIBUTION (share of payments)\n  card            90.5%\n  upi              8.6%\n  netbanking       0.9%\n\nAMOUNT BAND DISTRIBUTION (share of payments)\n  medium          42.6%\n  small           42.2%\n  large            9.0%\n  micro            6.2%\n\nProduce the JSON object now.",
-      "raw_response": "```json\n{\n  \"hypotheses\": [\n    {\n      \"factor\": \"bank\",\n      \"attribution_pts\": -0.14,\n      \"root_cause_label\": \"none_of_the_above\",\n      \"hypothesis\": \"The bank mix factor contributes only -0.14 points to the gap, which is smaller than its own measured error bar of +/- 0.57 points. No reliable conclusion can be drawn about whether UrbanThread's issuer concentration is causing failures.\",\n      \"evidence\": [\n        \"bank attribution -0.14 pts is inside its own error bar of +/- 0.57\",\n        \"largest issuer share is State Bank of India at 27.8% with approved rate 93.66%\"\n      ],\n      \"recommended_action\": \"Gather more transaction volume to reduce the error bar before acting on bank mix changes.\",\n      \"action_type\": \"investigation\"\n    },\n    {\n      \"factor\": \"method\",\n      \"attribution_pts\": 2.22,\n      \"root_cause_label\": \"none_of_the_above\",\n      \"hypothesis\": \"The method factor shows +2.22 points attribution but is flagged NOT IDENTIFIED because UrbanThread has effectively one payment method value, meaning the decomposition could not be measured reliably. It is unclear whether the card-heavy mix (90.5% of payments) is helping or hurting relative to the cohort.\",\n      \"evidence\": [\n        \"method attribution +2.22 pts flagged NOT IDENTIFIED\",\n        \"card share is 90.5% of payments\",\n        \"upi share is 8.6% of payments\"\n      ],\n      \"recommended_action\": \"Investigate cohort method benchmarks to determine whether expanding UPI or other rails would improve success rates.\",\n      \"action_type\": \"investigation\"\n    },\n    {\n      \"factor\": \"hour\",\n      \"attribution_pts\": -0.30,\n      \"root_cause_label\": \"none_of_the_above\",\n      \"hypothesis\": \"The hour factor contributes only -0.30 points, which falls inside its own error bar of +/- 0.57 points, so no statistically reliable conclusion about timing can be drawn. The night window (23:00-05:59) accounts for only 6.6% of payments, limiting any midnight billing penalty effect.\",\n      \"evidence\": [\n        \"hour attribution -0.30 pts is inside its own error bar of +/- 0.57\",\n        \"night share is only 6.6% of payments\"\n      ],\n      \"recommended_action\": \"Monitor night-window failure rates separately once volume grows to reduce the error bar.\",\n      \"action_type\": \"investigation\"\n    },\n    {\n      \"factor\": \"amount_band\",\n      \"attribution_pts\": -0.18,\n      \"root_cause_label\": \"none_of_the_above\",\n      \"hypothesis\": \"The amount_band factor contributes only -0.18 points, which is inside its own error bar of +/- 0.58 points, so no reliable signal about ticket-size risk exists. The average ticket of Rs 2894.37 and large-band share of 9.0% do not produce a measurable drag at current volumes.\",\n      \"evidence\": [\n        \"amount_band attribution -0.18 pts is inside its own error bar of +/- 0.58\",\n        \"average ticket is Rs 2894.37\",\n        \"large amount band share is 9.0%\"\n      ],\n      \"recommended_action\": \"Accumulate more transactions in the large amount band before drawing conclusions about high-ticket decline rates.\",\n      \"action_type\": \"investigation\"\n    },\n    {\n      \"factor\": \"process_gap\",\n      \"attribution_pts\": 0.62,\n      \"root_cause_label\": \"no_soft_decline_retry\",\n      \"hypothesis\": \"The process gap of +0.62 points is the only factor with a clear, directly computed signal in this decomposition, suggesting that recoverable failures are not being retried and that 0.62 points of the gap could be closed through operational improvements. Implementing soft-decline retry logic would allow the platform to automatically re-attempt transactions that fail with retriable error codes.\",\n      \"evidence\": [\n        \"process_gap is +0.62 pts computed directly\",\n        \"overall gap between observed 88.16% and cohort achievable 89.78% is 1.62 points\",\n        \"870 transactions this month means even small recovery rates translate to meaningful order counts\"\n      ],\n      \"recommended_action\": \"Enable automatic soft-decline retry for retriable failure codes on UrbanThread's payment flows.\",\n      \"action_type\": \"auto_execute\"\n    }\n  ],\n  \"primary_label\": \"no_soft_decline_retry\",\n  \"summary\": \"All four Shapley factors are statistically noise at UrbanThread's current volume, but the directly measured process gap of 0.62 points points to missed retries on soft declines as the one actionable lever to close the 1.62-point success-rate gap.\"\n}\n```",
-      "tokens_in": 1232,
-      "tokens_out": 1204,
+      "prompt": "MERCHANT\n  name: TechBazaar\n  mcc: 5732 (electronics)\n  transactions this month: 940\n  average ticket: Rs 14580.39\n\nSUCCESS RATE\n  observed:            86.06%\n  cohort achievable:   88.07%\n  gap:                 2.01 points\n\nDECOMPOSITION (Shapley, points of the gap)\n  bank          -0.34 pts +/- 0.57 measured error   [INSIDE ITS OWN ERROR BAR]\n  method        +0.83 pts +/- 0.57 measured error\n  hour          -0.46 pts +/- 0.57 measured error   [INSIDE ITS OWN ERROR BAR]\n  amount_band   +1.53 pts +/- 0.58 measured error   [NOT IDENTIFIED - merchant has effectively one value here]\n  residual      +0.45 pts   [unexplained residual]\n  process_gap   +0.57 pts   [process gap, computed directly, NOT decomposed]\n\nMERCHANT BANK MIX vs NPCI NATIONAL DATA (period 2025-08)\n  bank                              share   NPCI BD%%  NPCI TD%%  approved%%\n  State Bank of India               28.2%     5.92     0.42     93.66\n  HDFC Bank Ltd.                     8.3%     4.63     0.01     95.37\n  Bank of Baroda                     7.0%     8.50     0.05     91.44\n  Punjab National Bank               6.6%     8.61     0.19     91.20\n  Union Bank of India                5.9%     7.02     0.75     92.23\n  Canara Bank                        5.5%     6.92     0.36     92.73\n\nHOUR DISTRIBUTION (share of payments)\n  afternoon       36.8%\n  evening         29.5%\n  morning         26.1%\n  night            7.7%\n\nMETHOD DISTRIBUTION (share of payments)\n  card            77.2%\n  upi             16.9%\n  netbanking       5.9%\n\nAMOUNT BAND DISTRIBUTION (share of payments)\n  large           96.4%\n  medium           2.3%\n  small            1.2%\n  micro            0.1%\n\nProduce the JSON object now.",
+      "raw_response": "```json\n{\n  \"hypotheses\": [\n    {\n      \"factor\": \"bank\",\n      \"attribution_pts\": -0.34,\n      \"root_cause_label\": \"none_of_the_above\",\n      \"hypothesis\": \"The bank mix factor contributes -0.34 pts to the gap, but this is smaller than its own measured error bar of ±0.57 pts, so no reliable conclusion can be drawn. The apparent drag from issuers such as Bank of Baroda (91.44% approval) and Punjab National Bank (91.20% approval) cannot be distinguished from noise at this sample size.\",\n      \"evidence\": [\n        \"bank attribution -0.34 pts is inside its own error bar of ±0.57\",\n        \"Bank of Baroda approved%% 91.44\",\n        \"Punjab National Bank approved%% 91.20\",\n        \"State Bank of India holds the largest share at 28.2%\"\n      ],\n      \"recommended_action\": \"Collect more transaction volume to reduce the error bar below 0.34 pts before acting on bank mix; no routing change is warranted yet.\",\n      \"action_type\": \"investigation\"\n    },\n    {\n      \"factor\": \"method\",\n      \"attribution_pts\": 0.83,\n      \"root_cause_label\": \"method_mix_mismatch\",\n      \"hypothesis\": \"Cards account for 77.2% of TechBazaar's payment volume, and for high-ticket electronics purchases cards tend to attract more issuer-side friction than UPI, which represents only 16.9% of volume. Shifting more transactions toward UPI could recover a portion of the 0.83 pts that the method mix is currently costing relative to the achievable cohort benchmark.\",\n      \"evidence\": [\n        \"card share 77.2%\",\n        \"upi share 16.9%\",\n        \"method attribution +0.83 pts\",\n        \"average ticket Rs 14580.39\",\n        \"method error bar ±0.57 pts — attribution exceeds error bar\"\n      ],\n      \"recommended_action\": \"Promote UPI as the default or first-displayed payment option at checkout to shift volume away from cards toward the higher-performing rail.\",\n      \"action_type\": \"merchant_action\"\n    },\n    {\n      \"factor\": \"hour\",\n      \"attribution_pts\": -0.46,\n      \"root_cause_label\": \"none_of_the_above\",\n      \"hypothesis\": \"The hour factor shows -0.46 pts attribution, but this falls inside its own error bar of ±0.57 pts, so the timing pattern cannot be confirmed as a real cause. Night-window traffic is only 7.7%, which is low enough that midnight billing penalty cannot be established from the available data.\",\n      \"evidence\": [\n        \"hour attribution -0.46 pts is inside its own error bar of ±0.57\",\n        \"night share 7.7%\",\n        \"afternoon share 36.8%\"\n      ],\n      \"recommended_action\": \"Tag transactions by precise hour and monitor night-window (23:00–05:59) decline rates separately over the next month before drawing conclusions.\",\n      \"action_type\": \"investigation\"\n    },\n    {\n      \"factor\": \"amount_band\",\n      \"attribution_pts\": 1.53,\n      \"root_cause_label\": \"amount_band_risk\",\n      \"hypothesis\": \"This factor is flagged NOT IDENTIFIED because 96.4% of TechBazaar's transactions fall in the large band, leaving no meaningful comparison group to measure the effect — the decomposition could not isolate it. However, with an average ticket of Rs 14580.39 and 96.4% of volume in the large band, issuer risk controls on high-value transactions are a plausible but unconfirmed contributor to the gap.\",\n      \"evidence\": [\n        \"amount_band flagged NOT IDENTIFIED\",\n        \"large band share 96.4%\",\n        \"average ticket Rs 14580.39\",\n        \"amount_band attribution +1.53 pts ±0.58\"\n      ],\n      \"recommended_action\": \"Investigate issuer decline reason codes specifically for large-band transactions to determine whether high-ticket risk rules are triggering declines.\",\n      \"action_type\": \"investigation\"\n    },\n    {\n      \"factor\": \"process_gap\",\n      \"attribution_pts\": 0.57,\n      \"root_cause_label\": \"no_soft_decline_retry\",\n      \"hypothesis\": \"The process gap of 0.57 pts is computed directly and represents recoverable failures that are not being retried — soft declines such as insufficient funds or temporary bank unavailability that a retry would resolve. Implementing automatic retry logic for soft-decline response codes could recover up to 0.57 pts of the 2.01 pt gap without any change to the payment mix or routing.\",\n      \"evidence\": [\n        \"process_gap +0.57 pts computed directly\",\n        \"overall gap 2.01 pts\",\n        \"observed success rate 86.06%\",\n        \"cohort achievable 88.07%\"\n      ],\n      \"recommended_action\": \"Enable automatic soft-decline retry on the payment gateway for eligible response codes (e.g. temporary bank unavailability, do-not-honour retryable).\",\n      \"action_type\": \"auto_execute\"\n    }\n  ],\n  \"primary_label\": \"method_mix_mismatch\",\n  \"summary\": \"TechBazaar's 2.01 pt success-rate gap is most reliably explained by a heavy reliance on cards (77.2% of volume) at an average ticket of Rs 14580.39 — shifting more volume to UPI and activating soft-decline retries are the two actions with the clearest evidence behind them.\"\n}\n```",
+      "tokens_in": 1219,
+      "tokens_out": 1373,
       "cache_hit": true,
       "stub": false,
       "confidence": null,
@@ -362,54 +366,45 @@
       "intermediates": {}
     },
     {
-      "run_id": "run_c5bc4f2d",
+      "run_id": "run_406d3ae4",
       "seq": 6,
       "node": "plan",
       "kind": "deterministic",
       "status": "ok",
-      "started_at": 1787729670.6380079,
-      "duration_ms": 1,
+      "started_at": 1787735951.91981,
+      "duration_ms": 4,
       "input_summary": {},
       "output_summary": {
         "actions": 22,
-        "withheld": 4,
-        "headline": "5 fixes proposed, 4 withheld because the attribution is inside its own error bar.",
+        "withheld": 3,
+        "headline": "5 fixes proposed, 3 withheld because the attribution is inside its own error bar.",
         "withheld_detail": [
           {
             "factor": "bank",
             "label": "none_of_the_above",
-            "attribution_pts": -0.14,
+            "attribution_pts": -0.34,
             "mae": 0.5732,
             "downgraded_from": "investigation",
             "downgraded_to": "investigation",
-            "reason": "attribution -0.14 pts is inside its own measured error of +/-0.57 pts -- the engine cannot tell this from zero"
-          },
-          {
-            "factor": "method",
-            "label": "none_of_the_above",
-            "attribution_pts": 2.22,
-            "mae": 0.5694,
-            "downgraded_from": "investigation",
-            "downgraded_to": "investigation",
-            "reason": "factor not identified -- the merchant has effectively one value here, so there is nothing to reweight toward and the attribution is unmeasurable rather than small"
+            "reason": "attribution -0.34 pts is inside its own measured error of +/-0.57 pts -- the engine cannot tell this from zero"
           },
           {
             "factor": "hour",
             "label": "none_of_the_above",
-            "attribution_pts": -0.3,
+            "attribution_pts": -0.46,
             "mae": 0.5681,
             "downgraded_from": "investigation",
             "downgraded_to": "investigation",
-            "reason": "attribution -0.30 pts is inside its own measured error of +/-0.57 pts -- the engine cannot tell this from zero"
+            "reason": "attribution -0.46 pts is inside its own measured error of +/-0.57 pts -- the engine cannot tell this from zero"
           },
           {
             "factor": "amount_band",
-            "label": "none_of_the_above",
-            "attribution_pts": -0.18,
+            "label": "amount_band_risk",
+            "attribution_pts": 1.53,
             "mae": 0.5776,
             "downgraded_from": "investigation",
             "downgraded_to": "investigation",
-            "reason": "attribution -0.18 pts is inside its own measured error of +/-0.58 pts -- the engine cannot tell this from zero"
+            "reason": "factor not identified -- the merchant has effectively one value here, so there is nothing to reweight toward and the attribution is unmeasurable rather than small"
           }
         ]
       },
@@ -435,19 +430,19 @@
       }
     },
     {
-      "run_id": "run_c5bc4f2d",
+      "run_id": "run_406d3ae4",
       "seq": 7,
       "node": "gate",
       "kind": "deterministic",
       "status": "ok",
-      "started_at": 1787729670.6404612,
-      "duration_ms": 16,
+      "started_at": 1787735951.9248064,
+      "duration_ms": 24,
       "input_summary": {},
       "output_summary": {
         "decisions": {
-          "allow": 15,
-          "step_up": 5,
-          "deny": 2
+          "allow": 6,
+          "step_up": 16,
+          "deny": 0
         },
         "total": 22
       },
@@ -461,26 +456,26 @@
       "stub": null,
       "confidence": null,
       "reason_codes": [
-        "DENY_AMOUNT_ABOVE_CEILING",
         "OK_ESCALATION",
+        "OK_MERCHANT_ACTION",
         "OK_WITHIN_MANDATE",
         "STEP_UP_ABOVE_AUTO_LIMIT"
       ],
       "intermediates": {}
     },
     {
-      "run_id": "run_c5bc4f2d",
+      "run_id": "run_406d3ae4",
       "seq": 8,
       "node": "execute",
       "kind": "deterministic",
       "status": "ok",
-      "started_at": 1787729670.658072,
-      "duration_ms": 2,
+      "started_at": 1787735951.9514022,
+      "duration_ms": 3,
       "input_summary": {},
       "output_summary": {
-        "executed": 11,
-        "recovered_paise": 567932,
-        "recovered_inr": 5679.32,
+        "executed": 3,
+        "recovered_paise": 0,
+        "recovered_inr": 0.0,
         "ledger_entries": 22,
         "chain_verified": true,
         "calibration": "central"
@@ -500,13 +495,13 @@
       "intermediates": {}
     },
     {
-      "run_id": "run_c5bc4f2d",
+      "run_id": "run_406d3ae4",
       "seq": 9,
       "node": "report",
       "kind": "deterministic",
       "status": "ok",
-      "started_at": 1787729670.6610694,
-      "duration_ms": 3,
+      "started_at": 1787735951.955416,
+      "duration_ms": 4,
       "input_summary": {},
       "output_summary": {
         "measured_keys": [
@@ -555,12 +550,12 @@
   ],
   "report": {
     "merchant": {
-      "merchant_id": "urbanthread",
-      "name": "UrbanThread",
-      "mcc": "5691",
-      "mcc_description": "apparel",
-      "monthly_txn_count": 870,
-      "avg_ticket_paise": 289437
+      "merchant_id": "techbazaar",
+      "name": "TechBazaar",
+      "mcc": "5732",
+      "mcc_description": "electronics",
+      "monthly_txn_count": 940,
+      "avg_ticket_paise": 1458039
     },
     "run": {
       "seed": 20260824,
@@ -568,14 +563,14 @@
       "calibration": "central"
     },
     "measured": {
-      "observed_success_pct": 88.161,
+      "observed_success_pct": 86.064,
       "observed_success_ci_pct": [
-        85.845,
-        90.142
+        83.703,
+        88.131
       ],
-      "wilson_halfwidth_pts": 2.149,
-      "transactions": 870,
-      "failures": 103,
+      "wilson_halfwidth_pts": 2.214,
+      "transactions": 940,
+      "failures": 131,
       "attribution_mae_by_factor": {
         "bank": {
           "mae": 0.5732,
@@ -1150,28 +1145,28 @@
       "chain_verified": true,
       "chain_detail": "chain verified from genesis to head",
       "efficiency_check": {
-        "sum_of_attributions_pts": 1.598987,
-        "v_of_grand_coalition_pts": 1.598987
+        "sum_of_attributions_pts": 1.556076,
+        "v_of_grand_coalition_pts": 1.556076
       }
     },
     "projected": {
-      "cohort_achievable_pct": 89.782,
-      "gap_pts": 1.621,
-      "gap_value_paise": 4082802,
-      "monthly_gmv_paise": 251810190,
+      "cohort_achievable_pct": 88.071,
+      "gap_pts": 2.007,
+      "gap_value_paise": 27511558,
+      "monthly_gmv_paise": 1370556660,
       "recoverable": {
-        "low_paise": 1662718,
-        "central_paise": 2415407,
-        "high_paise": 3140873,
+        "low_paise": 5638344,
+        "central_paise": 8713811,
+        "high_paise": 11789275,
         "by_calibration_paise": {
-          "conservative": 1662718,
-          "central": 2415407,
-          "optimistic": 3140873
+          "conservative": 5638344,
+          "central": 8713811,
+          "optimistic": 11789275
         }
       },
-      "recovered_this_run_paise": 567932,
-      "unrecoverable_paise": 15009792,
-      "unrecoverable_count": 36,
+      "recovered_this_run_paise": 0,
+      "unrecoverable_paise": 83720729,
+      "unrecoverable_count": 54,
       "assumptions": [
         "Bank failure rates are MEASURED from NPCI; method, hour and amount effects are assumed priors (priors.py).",
         "Retry success is an assumed model, not an observation (mock_rail.py). Figures are given as a range across three calibrations.",
@@ -1179,73 +1174,73 @@
       ]
     },
     "decomposition": {
-      "s_obs": 0.8816091954022989,
-      "s_star": 0.8978230055673191,
-      "gap_pts": 1.6213810165020215,
-      "residual_pts": 0.022394494497013362,
-      "process_gap_pts": 0.6206896551724138,
-      "clamp_rate": 0.0,
+      "s_obs": 0.8606382978723405,
+      "s_star": 0.8807115716020302,
+      "gap_pts": 2.00732737296897,
+      "residual_pts": 0.45125103099412645,
+      "process_gap_pts": 0.5744680851063829,
+      "clamp_rate": 0.009574468085106383,
       "reliable": true,
       "underpowered": true,
       "degenerate_factors": [
-        "method"
+        "amount_band"
       ],
       "effective_support": {
-        "bank": 8.705803869246166,
-        "method": 1.210927625916315,
-        "hour": 3.2638224108043774,
-        "amount_band": 2.6904347207905306
+        "bank": 8.599848169271796,
+        "method": 1.5909770212214298,
+        "hour": 3.3769787582074033,
+        "amount_band": 1.075669371665924
       },
       "coalition_values": {
         "{}": 0.0,
-        "bank": -0.6494251454907118,
-        "method": 1.6960737159744332,
-        "hour": -0.8605884899439364,
-        "amount_band": -0.7512942681773938,
-        "bank+method": 1.689276319084776,
-        "bank+hour": -0.7694449304206707,
-        "bank+amount_band": -0.6600587479426268,
-        "method+hour": 1.5818098897475097,
-        "method+amount_band": 1.7245826336892756,
-        "hour+amount_band": -0.8707238149045615,
-        "bank+method+hour": 1.567632903765137,
-        "bank+method+amount_band": 1.7194376601988526,
-        "bank+hour+amount_band": -0.7809424150257094,
-        "method+hour+amount_band": 1.61135863919587,
-        "bank+method+hour+amount_band": 1.5989865220050081
+        "bank": -1.5779156753834123,
+        "method": -0.05432209456933679,
+        "hour": -1.7524432752833774,
+        "amount_band": 0.6549825295821154,
+        "bank+method": 0.032244517191026834,
+        "bank+hour": -1.6220129355712598,
+        "bank+amount_band": 0.6988233139754496,
+        "method+hour": -0.09163991822381812,
+        "method+amount_band": 1.5136282684580449,
+        "hour+amount_band": 0.6463064218894754,
+        "bank+method+hour": -0.0048370536658959296,
+        "bank+method+amount_band": 1.5771320325661087,
+        "bank+hour+amount_band": 0.6895123508495304,
+        "method+hour+amount_band": 1.491850702010089,
+        "bank+method+hour+amount_band": 1.5560763419748436
       },
       "factors": [
         {
           "factor": "bank",
-          "points": -0.1449,
+          "points": -0.3406,
           "mae": 0.5732,
           "inside_error_bar": true,
           "identified": true,
-          "value_paise": -364988
+          "value_paise": -4667567
         },
         {
           "factor": "method",
-          "points": 2.2236,
+          "points": 0.8256,
           "mae": 0.5694,
           "inside_error_bar": false,
-          "identified": false,
-          "value_paise": 5599344
+          "identified": true,
+          "value_paise": 11315502
         },
         {
           "factor": "hour",
-          "points": -0.3044,
+          "points": -0.4566,
           "mae": 0.5681,
           "inside_error_bar": true,
           "identified": true,
-          "value_paise": -766464
+          "value_paise": -6257457
         },
         {
           "factor": "amount_band",
-          "points": -0.1753,
+          "points": 1.5276,
           "mae": 0.5776,
-          "inside_error_bar": true,
-          "identified": true,
-          "value_paise": -441479
+          "inside_error_bar": false,
+          "identified": false,
+          "value_paise": 20936429
         }
       ]
     },
@@ -1254,8 +1249,8 @@
       "banks": [
         {
           "bank": "State Bank of India",
-          "share_pct": 27.82,
-          "merchant_fail_pct": 9.09,
+          "share_pct": 28.19,
+          "merchant_fail_pct": 11.32,
           "npci_bd_pct": 5.92,
           "npci_td_pct": 0.42,
           "npci_approved_pct": 93.66,
@@ -1263,53 +1258,53 @@
         },
         {
           "bank": "HDFC Bank Ltd.",
-          "share_pct": 8.28,
-          "merchant_fail_pct": 11.11,
+          "share_pct": 8.3,
+          "merchant_fail_pct": 12.82,
           "npci_bd_pct": 4.63,
           "npci_td_pct": 0.01,
           "npci_approved_pct": 95.37,
           "in_npci_top50": true
         },
         {
-          "bank": "Punjab National Bank",
-          "share_pct": 7.01,
-          "merchant_fail_pct": 22.95,
-          "npci_bd_pct": 8.61,
-          "npci_td_pct": 0.19,
-          "npci_approved_pct": 91.2,
-          "in_npci_top50": true
-        },
-        {
           "bank": "Bank of Baroda",
-          "share_pct": 6.9,
-          "merchant_fail_pct": 8.33,
+          "share_pct": 7.02,
+          "merchant_fail_pct": 10.61,
           "npci_bd_pct": 8.5,
           "npci_td_pct": 0.05,
           "npci_approved_pct": 91.44,
           "in_npci_top50": true
         },
         {
-          "bank": "Canara Bank",
-          "share_pct": 5.75,
-          "merchant_fail_pct": 10.0,
-          "npci_bd_pct": 6.92,
-          "npci_td_pct": 0.36,
-          "npci_approved_pct": 92.73,
+          "bank": "Punjab National Bank",
+          "share_pct": 6.6,
+          "merchant_fail_pct": 9.68,
+          "npci_bd_pct": 8.61,
+          "npci_td_pct": 0.19,
+          "npci_approved_pct": 91.2,
           "in_npci_top50": true
         },
         {
           "bank": "Union Bank of India",
-          "share_pct": 5.75,
-          "merchant_fail_pct": 12.0,
+          "share_pct": 5.85,
+          "merchant_fail_pct": 18.18,
           "npci_bd_pct": 7.02,
           "npci_td_pct": 0.75,
           "npci_approved_pct": 92.23,
           "in_npci_top50": true
         },
         {
+          "bank": "Canara Bank",
+          "share_pct": 5.53,
+          "merchant_fail_pct": 17.31,
+          "npci_bd_pct": 6.92,
+          "npci_td_pct": 0.36,
+          "npci_approved_pct": 92.73,
+          "in_npci_top50": true
+        },
+        {
           "bank": "Axis Bank Ltd.",
-          "share_pct": 5.63,
-          "merchant_fail_pct": 4.08,
+          "share_pct": 5.53,
+          "merchant_fail_pct": 7.69,
           "npci_bd_pct": 5.03,
           "npci_td_pct": 0.02,
           "npci_approved_pct": 94.96,
@@ -1317,8 +1312,8 @@
         },
         {
           "bank": "Kotak Mahindra Bank",
-          "share_pct": 5.4,
-          "merchant_fail_pct": 8.51,
+          "share_pct": 5.32,
+          "merchant_fail_pct": 16.0,
           "npci_bd_pct": 7.47,
           "npci_td_pct": 0.13,
           "npci_approved_pct": 92.39,
@@ -1326,8 +1321,8 @@
         },
         {
           "bank": "Airtel Payments Bank Limited",
-          "share_pct": 4.48,
-          "merchant_fail_pct": 17.95,
+          "share_pct": 4.36,
+          "merchant_fail_pct": 19.51,
           "npci_bd_pct": 14.05,
           "npci_td_pct": 0.12,
           "npci_approved_pct": 85.83,
@@ -1335,8 +1330,8 @@
         },
         {
           "bank": "ICICI Bank Ltd.",
-          "share_pct": 4.14,
-          "merchant_fail_pct": 2.78,
+          "share_pct": 3.94,
+          "merchant_fail_pct": 13.51,
           "npci_bd_pct": 3.82,
           "npci_td_pct": 0.52,
           "npci_approved_pct": 95.66,
@@ -1348,122 +1343,120 @@
       "hypotheses": [
         {
           "factor": "bank",
-          "attribution_pts": -0.14,
+          "attribution_pts": -0.34,
           "root_cause_label": "none_of_the_above",
-          "hypothesis": "The bank mix factor contributes only -0.14 points to the gap, which is smaller than its own measured error bar of +/- 0.57 points. No reliable conclusion can be drawn about whether UrbanThread's issuer concentration is causing failures.",
+          "hypothesis": "The bank mix factor contributes -0.34 pts to the gap, but this is smaller than its own measured error bar of ±0.57 pts, so no reliable conclusion can be drawn. The apparent drag from issuers such as Bank of Baroda (91.44% approval) and Punjab National Bank (91.20% approval) cannot be distinguished from noise at this sample size.",
           "evidence": [
-            "bank attribution -0.14 pts is inside its own error bar of +/- 0.57",
-            "largest issuer share is State Bank of India at 27.8% with approved rate 93.66%"
+            "bank attribution -0.34 pts is inside its own error bar of ±0.57",
+            "Bank of Baroda approved%% 91.44",
+            "Punjab National Bank approved%% 91.20",
+            "State Bank of India holds the largest share at 28.2%"
           ],
-          "recommended_action": "Gather more transaction volume to reduce the error bar before acting on bank mix changes.",
+          "recommended_action": "Collect more transaction volume to reduce the error bar below 0.34 pts before acting on bank mix; no routing change is warranted yet.",
           "action_type": "investigation"
         },
         {
           "factor": "method",
-          "attribution_pts": 2.22,
-          "root_cause_label": "none_of_the_above",
-          "hypothesis": "The method factor shows +2.22 points attribution but is flagged NOT IDENTIFIED because UrbanThread has effectively one payment method value, meaning the decomposition could not be measured reliably. It is unclear whether the card-heavy mix (90.5% of payments) is helping or hurting relative to the cohort.",
+          "attribution_pts": 0.83,
+          "root_cause_label": "method_mix_mismatch",
+          "hypothesis": "Cards account for 77.2% of TechBazaar's payment volume, and for high-ticket electronics purchases cards tend to attract more issuer-side friction than UPI, which represents only 16.9% of volume. Shifting more transactions toward UPI could recover a portion of the 0.83 pts that the method mix is currently costing relative to the achievable cohort benchmark.",
           "evidence": [
-            "method attribution +2.22 pts flagged NOT IDENTIFIED",
-            "card share is 90.5% of payments",
-            "upi share is 8.6% of payments"
+            "card share 77.2%",
+            "upi share 16.9%",
+            "method attribution +0.83 pts",
+            "average ticket Rs 14580.39",
+            "method error bar ±0.57 pts — attribution exceeds error bar"
           ],
-          "recommended_action": "Investigate cohort method benchmarks to determine whether expanding UPI or other rails would improve success rates.",
-          "action_type": "investigation"
+          "recommended_action": "Promote UPI as the default or first-displayed payment option at checkout to shift volume away from cards toward the higher-performing rail.",
+          "action_type": "merchant_action"
         },
         {
           "factor": "hour",
-          "attribution_pts": -0.3,
+          "attribution_pts": -0.46,
           "root_cause_label": "none_of_the_above",
-          "hypothesis": "The hour factor contributes only -0.30 points, which falls inside its own error bar of +/- 0.57 points, so no statistically reliable conclusion about timing can be drawn. The night window (23:00-05:59) accounts for only 6.6% of payments, limiting any midnight billing penalty effect.",
+          "hypothesis": "The hour factor shows -0.46 pts attribution, but this falls inside its own error bar of ±0.57 pts, so the timing pattern cannot be confirmed as a real cause. Night-window traffic is only 7.7%, which is low enough that midnight billing penalty cannot be established from the available data.",
           "evidence": [
-            "hour attribution -0.30 pts is inside its own error bar of +/- 0.57",
-            "night share is only 6.6% of payments"
+            "hour attribution -0.46 pts is inside its own error bar of ±0.57",
+            "night share 7.7%",
+            "afternoon share 36.8%"
           ],
-          "recommended_action": "Monitor night-window failure rates separately once volume grows to reduce the error bar.",
+          "recommended_action": "Tag transactions by precise hour and monitor night-window (23:00–05:59) decline rates separately over the next month before drawing conclusions.",
           "action_type": "investigation"
         },
         {
           "factor": "amount_band",
-          "attribution_pts": -0.18,
-          "root_cause_label": "none_of_the_above",
-          "hypothesis": "The amount_band factor contributes only -0.18 points, which is inside its own error bar of +/- 0.58 points, so no reliable signal about ticket-size risk exists. The average ticket of Rs 2894.37 and large-band share of 9.0% do not produce a measurable drag at current volumes.",
+          "attribution_pts": 1.53,
+          "root_cause_label": "amount_band_risk",
+          "hypothesis": "This factor is flagged NOT IDENTIFIED because 96.4% of TechBazaar's transactions fall in the large band, leaving no meaningful comparison group to measure the effect — the decomposition could not isolate it. However, with an average ticket of Rs 14580.39 and 96.4% of volume in the large band, issuer risk controls on high-value transactions are a plausible but unconfirmed contributor to the gap.",
           "evidence": [
-            "amount_band attribution -0.18 pts is inside its own error bar of +/- 0.58",
-            "average ticket is Rs 2894.37",
-            "large amount band share is 9.0%"
+            "amount_band flagged NOT IDENTIFIED",
+            "large band share 96.4%",
+            "average ticket Rs 14580.39",
+            "amount_band attribution +1.53 pts ±0.58"
           ],
-          "recommended_action": "Accumulate more transactions in the large amount band before drawing conclusions about high-ticket decline rates.",
+          "recommended_action": "Investigate issuer decline reason codes specifically for large-band transactions to determine whether high-ticket risk rules are triggering declines.",
           "action_type": "investigation"
         },
         {
           "factor": "process_gap",
-          "attribution_pts": 0.62,
+          "attribution_pts": 0.57,
           "root_cause_label": "no_soft_decline_retry",
-          "hypothesis": "The process gap of +0.62 points is the only factor with a clear, directly computed signal in this decomposition, suggesting that recoverable failures are not being retried and that 0.62 points of the gap could be closed through operational improvements. Implementing soft-decline retry logic would allow the platform to automatically re-attempt transactions that fail with retriable error codes.",
+          "hypothesis": "The process gap of 0.57 pts is computed directly and represents recoverable failures that are not being retried — soft declines such as insufficient funds or temporary bank unavailability that a retry would resolve. Implementing automatic retry logic for soft-decline response codes could recover up to 0.57 pts of the 2.01 pt gap without any change to the payment mix or routing.",
           "evidence": [
-            "process_gap is +0.62 pts computed directly",
-            "overall gap between observed 88.16% and cohort achievable 89.78% is 1.62 points",
-            "870 transactions this month means even small recovery rates translate to meaningful order counts"
+            "process_gap +0.57 pts computed directly",
+            "overall gap 2.01 pts",
+            "observed success rate 86.06%",
+            "cohort achievable 88.07%"
           ],
-          "recommended_action": "Enable automatic soft-decline retry for retriable failure codes on UrbanThread's payment flows.",
+          "recommended_action": "Enable automatic soft-decline retry on the payment gateway for eligible response codes (e.g. temporary bank unavailability, do-not-honour retryable).",
           "action_type": "auto_execute"
         }
       ],
-      "primary_label": "no_soft_decline_retry",
-      "summary": "All four Shapley factors are statistically noise at UrbanThread's current volume, but the directly measured process gap of 0.62 points points to missed retries on soft declines as the one actionable lever to close the 1.62-point success-rate gap."
+      "primary_label": "method_mix_mismatch",
+      "summary": "TechBazaar's 2.01 pt success-rate gap is most reliably explained by a heavy reliance on cards (77.2% of volume) at an average ticket of Rs 14580.39 — shifting more volume to UPI and activating soft-decline retries are the two actions with the clearest evidence behind them."
     },
     "plan": {
-      "headline": "5 fixes proposed, 4 withheld because the attribution is inside its own error bar.",
+      "headline": "5 fixes proposed, 3 withheld because the attribution is inside its own error bar.",
       "withheld": [
         {
           "factor": "bank",
           "label": "none_of_the_above",
-          "attribution_pts": -0.14,
+          "attribution_pts": -0.34,
           "mae": 0.5732,
           "downgraded_from": "investigation",
           "downgraded_to": "investigation",
-          "reason": "attribution -0.14 pts is inside its own measured error of +/-0.57 pts -- the engine cannot tell this from zero"
-        },
-        {
-          "factor": "method",
-          "label": "none_of_the_above",
-          "attribution_pts": 2.22,
-          "mae": 0.5694,
-          "downgraded_from": "investigation",
-          "downgraded_to": "investigation",
-          "reason": "factor not identified -- the merchant has effectively one value here, so there is nothing to reweight toward and the attribution is unmeasurable rather than small"
+          "reason": "attribution -0.34 pts is inside its own measured error of +/-0.57 pts -- the engine cannot tell this from zero"
         },
         {
           "factor": "hour",
           "label": "none_of_the_above",
-          "attribution_pts": -0.3,
+          "attribution_pts": -0.46,
           "mae": 0.5681,
           "downgraded_from": "investigation",
           "downgraded_to": "investigation",
-          "reason": "attribution -0.30 pts is inside its own measured error of +/-0.57 pts -- the engine cannot tell this from zero"
+          "reason": "attribution -0.46 pts is inside its own measured error of +/-0.57 pts -- the engine cannot tell this from zero"
         },
         {
           "factor": "amount_band",
-          "label": "none_of_the_above",
-          "attribution_pts": -0.18,
+          "label": "amount_band_risk",
+          "attribution_pts": 1.53,
           "mae": 0.5776,
           "downgraded_from": "investigation",
           "downgraded_to": "investigation",
-          "reason": "attribution -0.18 pts is inside its own measured error of +/-0.58 pts -- the engine cannot tell this from zero"
+          "reason": "factor not identified -- the merchant has effectively one value here, so there is nothing to reweight toward and the attribution is unmeasurable rather than small"
         }
       ],
       "actions": 22
     },
     "gate": {
       "decisions": {
-        "allow": 15,
-        "step_up": 5,
-        "deny": 2
+        "allow": 6,
+        "step_up": 16,
+        "deny": 0
       },
       "reason_codes": [
-        "DENY_AMOUNT_ABOVE_CEILING",
         "OK_ESCALATION",
+        "OK_MERCHANT_ACTION",
         "OK_WITHIN_MANDATE",
         "STEP_UP_ABOVE_AUTO_LIMIT"
       ]
@@ -1471,705 +1464,810 @@
     "ledger": [
       {
         "sequence": 0,
-        "timestamp": "2026-08-26T07:34:30.658072+00:00",
-        "txn_id": "merchant:urbanthread",
+        "timestamp": "2026-08-26T09:19:11.951402+00:00",
+        "txn_id": "merchant:techbazaar",
         "proposed_action": {
           "action_type": "flag_for_investigation",
-          "txn_id": "merchant:urbanthread",
+          "txn_id": "merchant:techbazaar",
           "amount_paise": 0,
           "target_bank": null,
           "scheduled_time": null,
-          "reason": "bank: attribution -0.14 pts is inside its own measured error of +/-0.57 pts -- the engine cannot tell this from zero",
+          "reason": "bank: attribution -0.34 pts is inside its own measured error of +/-0.57 pts -- the engine cannot tell this from zero",
           "requires_merchant_approval": false
         },
         "gate_decision": "allow",
         "gate_reason": "OK_ESCALATION",
         "outcome": "escalated",
         "prev_hash": "0000000000000000000000000000000000000000000000000000000000000000",
-        "entry_hash": "a91a79b5896ba960196c423d52f8019e571ad48e1a3e99892314ffd7d6e8c16f"
+        "entry_hash": "b92a67cee4bec5f5816f4ca0f618f2b00feb7e557c8b8e4525cee76fec8c6cac"
       },
       {
         "sequence": 1,
-        "timestamp": "2026-08-26T07:34:30.659131+00:00",
-        "txn_id": "merchant:urbanthread",
+        "timestamp": "2026-08-26T09:19:11.951402+00:00",
+        "txn_id": "merchant:techbazaar",
         "proposed_action": {
-          "action_type": "flag_for_investigation",
-          "txn_id": "merchant:urbanthread",
+          "action_type": "update_payment_method",
+          "txn_id": "merchant:techbazaar",
           "amount_paise": 0,
           "target_bank": null,
           "scheduled_time": null,
-          "reason": "method: factor not identified -- the merchant has effectively one value here, so there is nothing to reweight toward and the attribution is unmeasurable rather than small",
-          "requires_merchant_approval": false
+          "reason": "Promote UPI as the default or first-displayed payment option at checkout to shift volume away from cards toward the higher-performing rail.",
+          "requires_merchant_approval": true
         },
-        "gate_decision": "allow",
-        "gate_reason": "OK_ESCALATION",
-        "outcome": "escalated",
-        "prev_hash": "a91a79b5896ba960196c423d52f8019e571ad48e1a3e99892314ffd7d6e8c16f",
-        "entry_hash": "9434c785bf8e73a8a06779fd2391c985c6dd4638436d88d0fedfa0b4514b3038"
+        "gate_decision": "step_up",
+        "gate_reason": "OK_MERCHANT_ACTION",
+        "outcome": "merchant_action",
+        "prev_hash": "b92a67cee4bec5f5816f4ca0f618f2b00feb7e557c8b8e4525cee76fec8c6cac",
+        "entry_hash": "89c739c2081e10ad0af8cffaf8f4e5d418185e38ac68e04db1c9c73e9967dd87"
       },
       {
         "sequence": 2,
-        "timestamp": "2026-08-26T07:34:30.659131+00:00",
-        "txn_id": "merchant:urbanthread",
+        "timestamp": "2026-08-26T09:19:11.951402+00:00",
+        "txn_id": "merchant:techbazaar",
         "proposed_action": {
           "action_type": "flag_for_investigation",
-          "txn_id": "merchant:urbanthread",
+          "txn_id": "merchant:techbazaar",
           "amount_paise": 0,
           "target_bank": null,
           "scheduled_time": null,
-          "reason": "hour: attribution -0.30 pts is inside its own measured error of +/-0.57 pts -- the engine cannot tell this from zero",
+          "reason": "hour: attribution -0.46 pts is inside its own measured error of +/-0.57 pts -- the engine cannot tell this from zero",
           "requires_merchant_approval": false
         },
         "gate_decision": "allow",
         "gate_reason": "OK_ESCALATION",
         "outcome": "escalated",
-        "prev_hash": "9434c785bf8e73a8a06779fd2391c985c6dd4638436d88d0fedfa0b4514b3038",
-        "entry_hash": "1aa749db5bfa4bcfade70e5016ec0e74c5247160957048cb28f3cde17396f888"
+        "prev_hash": "89c739c2081e10ad0af8cffaf8f4e5d418185e38ac68e04db1c9c73e9967dd87",
+        "entry_hash": "6fcbc1f5b42276ec3978f4a19efa472ee92dcd98dd12c997fc2bd24a4756f2b5"
       },
       {
         "sequence": 3,
-        "timestamp": "2026-08-26T07:34:30.659131+00:00",
-        "txn_id": "merchant:urbanthread",
+        "timestamp": "2026-08-26T09:19:11.952401+00:00",
+        "txn_id": "merchant:techbazaar",
         "proposed_action": {
           "action_type": "flag_for_investigation",
-          "txn_id": "merchant:urbanthread",
+          "txn_id": "merchant:techbazaar",
           "amount_paise": 0,
           "target_bank": null,
           "scheduled_time": null,
-          "reason": "amount_band: attribution -0.18 pts is inside its own measured error of +/-0.58 pts -- the engine cannot tell this from zero",
+          "reason": "amount_band: factor not identified -- the merchant has effectively one value here, so there is nothing to reweight toward and the attribution is unmeasurable rather than small",
           "requires_merchant_approval": false
         },
         "gate_decision": "allow",
         "gate_reason": "OK_ESCALATION",
         "outcome": "escalated",
-        "prev_hash": "1aa749db5bfa4bcfade70e5016ec0e74c5247160957048cb28f3cde17396f888",
-        "entry_hash": "d1d0edcc0474b98f86bab546842a41325385fac60f1df6c95cdd044925d6d648"
+        "prev_hash": "6fcbc1f5b42276ec3978f4a19efa472ee92dcd98dd12c997fc2bd24a4756f2b5",
+        "entry_hash": "48b11a60acf921afb78c187169ec1c82a7fc845ac4f18bf510458dd963fe1786"
       },
       {
         "sequence": 4,
-        "timestamp": "2026-08-26T07:34:30.659131+00:00",
-        "txn_id": "pay_urbanthread_0717",
+        "timestamp": "2026-08-26T09:19:11.952401+00:00",
+        "txn_id": "pay_techbazaar_0538",
         "proposed_action": {
           "action_type": "retry_soft_decline",
-          "txn_id": "pay_urbanthread_0717",
-          "amount_paise": 2080823,
-          "target_bank": "India Post Payments Bank Limited",
+          "txn_id": "pay_techbazaar_0538",
+          "amount_paise": 2426705,
+          "target_bank": "State Bank of India",
           "scheduled_time": null,
-          "reason": "Enable automatic soft-decline retry for retriable failure codes on UrbanThread's payment flows. (payment_session_expired), unretried",
+          "reason": "Enable automatic soft-decline retry on the payment gateway for eligible response codes (e.g. temporary bank unavailability, do-not-honour retryable). (debit_declined), unretried",
           "requires_merchant_approval": false
         },
-        "gate_decision": "deny",
-        "gate_reason": "DENY_AMOUNT_ABOVE_CEILING",
-        "outcome": "denied",
-        "prev_hash": "d1d0edcc0474b98f86bab546842a41325385fac60f1df6c95cdd044925d6d648",
-        "entry_hash": "39b01b1510a164793c87264f0c2502b2bdb5058acfaf633c4d00ac5ede78a6f0"
+        "gate_decision": "step_up",
+        "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
+        "outcome": "merchant_action",
+        "prev_hash": "48b11a60acf921afb78c187169ec1c82a7fc845ac4f18bf510458dd963fe1786",
+        "entry_hash": "ab35bf44725177c016abecf882ea3755614a4f580b630671dc43c8a3b60769b4"
       },
       {
         "sequence": 5,
-        "timestamp": "2026-08-26T07:34:30.659131+00:00",
-        "txn_id": "pay_urbanthread_0245",
+        "timestamp": "2026-08-26T09:19:11.952401+00:00",
+        "txn_id": "pay_techbazaar_0369",
         "proposed_action": {
           "action_type": "retry_soft_decline",
-          "txn_id": "pay_urbanthread_0245",
-          "amount_paise": 1814752,
-          "target_bank": "Central Bank of India",
+          "txn_id": "pay_techbazaar_0369",
+          "amount_paise": 2405515,
+          "target_bank": "State Bank of India",
           "scheduled_time": null,
-          "reason": "Enable automatic soft-decline retry for retriable failure codes on UrbanThread's payment flows. (duplicate_rrn_found), unretried",
+          "reason": "Enable automatic soft-decline retry on the payment gateway for eligible response codes (e.g. temporary bank unavailability, do-not-honour retryable). (transaction_daily_count_exceeded), unretried",
           "requires_merchant_approval": false
         },
-        "gate_decision": "deny",
-        "gate_reason": "DENY_AMOUNT_ABOVE_CEILING",
-        "outcome": "denied",
-        "prev_hash": "39b01b1510a164793c87264f0c2502b2bdb5058acfaf633c4d00ac5ede78a6f0",
-        "entry_hash": "bb9f78a490c306cee5a6c26da13c3d2c0c1a10144b1e601977a3e375643e6b06"
+        "gate_decision": "step_up",
+        "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
+        "outcome": "merchant_action",
+        "prev_hash": "ab35bf44725177c016abecf882ea3755614a4f580b630671dc43c8a3b60769b4",
+        "entry_hash": "f7e2779eb89259c2ef840001e5072b8f8ca2215b9bd73a30dea72c76dc064c26"
       },
       {
         "sequence": 6,
-        "timestamp": "2026-08-26T07:34:30.659131+00:00",
-        "txn_id": "pay_urbanthread_0531",
+        "timestamp": "2026-08-26T09:19:11.952401+00:00",
+        "txn_id": "pay_techbazaar_0334",
         "proposed_action": {
           "action_type": "retry_soft_decline",
-          "txn_id": "pay_urbanthread_0531",
-          "amount_paise": 452672,
-          "target_bank": "Federal Bank Ltd.",
+          "txn_id": "pay_techbazaar_0334",
+          "amount_paise": 2310511,
+          "target_bank": "HDFC Bank Ltd.",
           "scheduled_time": null,
-          "reason": "Enable automatic soft-decline retry for retriable failure codes on UrbanThread's payment flows. (debit_declined), unretried",
+          "reason": "Enable automatic soft-decline retry on the payment gateway for eligible response codes (e.g. temporary bank unavailability, do-not-honour retryable). (transaction_daily_count_exceeded), unretried",
           "requires_merchant_approval": false
         },
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "bb9f78a490c306cee5a6c26da13c3d2c0c1a10144b1e601977a3e375643e6b06",
-        "entry_hash": "f5f2eb424778d7863fcbb7f5b568f33c6c3901bf7d7c0798dee91ce2a6631485"
+        "prev_hash": "f7e2779eb89259c2ef840001e5072b8f8ca2215b9bd73a30dea72c76dc064c26",
+        "entry_hash": "7cfaab406e11f9b1932c2b3295020a5b208776a8a70b21f0d0f0b778b43315fa"
       },
       {
         "sequence": 7,
-        "timestamp": "2026-08-26T07:34:30.659131+00:00",
-        "txn_id": "pay_urbanthread_0805",
+        "timestamp": "2026-08-26T09:19:11.952401+00:00",
+        "txn_id": "pay_techbazaar_0465",
         "proposed_action": {
           "action_type": "retry_soft_decline",
-          "txn_id": "pay_urbanthread_0805",
-          "amount_paise": 441530,
-          "target_bank": "Punjab National Bank",
+          "txn_id": "pay_techbazaar_0465",
+          "amount_paise": 2176012,
+          "target_bank": "State Bank of India",
           "scheduled_time": null,
-          "reason": "Enable automatic soft-decline retry for retriable failure codes on UrbanThread's payment flows. (payment_declined), unretried",
+          "reason": "Enable automatic soft-decline retry on the payment gateway for eligible response codes (e.g. temporary bank unavailability, do-not-honour retryable). (card_declined), unretried",
           "requires_merchant_approval": false
         },
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "f5f2eb424778d7863fcbb7f5b568f33c6c3901bf7d7c0798dee91ce2a6631485",
-        "entry_hash": "e6a74f64792e23fad3818cf207d6bc709eefd466ddc634e25db591985e60be93"
+        "prev_hash": "7cfaab406e11f9b1932c2b3295020a5b208776a8a70b21f0d0f0b778b43315fa",
+        "entry_hash": "138a9234c8325983338bf5975845ce70466a479f8b440fe57941840ee46fc961"
       },
       {
         "sequence": 8,
-        "timestamp": "2026-08-26T07:34:30.659131+00:00",
-        "txn_id": "pay_urbanthread_0187",
+        "timestamp": "2026-08-26T09:19:11.952401+00:00",
+        "txn_id": "pay_techbazaar_0186",
         "proposed_action": {
           "action_type": "retry_soft_decline",
-          "txn_id": "pay_urbanthread_0187",
-          "amount_paise": 397289,
-          "target_bank": "Central Bank of India",
+          "txn_id": "pay_techbazaar_0186",
+          "amount_paise": 1820199,
+          "target_bank": "State Bank of India",
           "scheduled_time": null,
-          "reason": "Enable automatic soft-decline retry for retriable failure codes on UrbanThread's payment flows. (card_declined), unretried",
+          "reason": "Enable automatic soft-decline retry on the payment gateway for eligible response codes (e.g. temporary bank unavailability, do-not-honour retryable). (payment_declined), unretried",
           "requires_merchant_approval": false
         },
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "e6a74f64792e23fad3818cf207d6bc709eefd466ddc634e25db591985e60be93",
-        "entry_hash": "531b96820770721b12131f766f281a1ac066b8b4b1e5c49a6194d81eb1820652"
+        "prev_hash": "138a9234c8325983338bf5975845ce70466a479f8b440fe57941840ee46fc961",
+        "entry_hash": "6a5b430ed1c88f101ebdf8a652b187b83ef97d4d605736016db9b5a8fb1ef0b3"
       },
       {
         "sequence": 9,
-        "timestamp": "2026-08-26T07:34:30.659131+00:00",
-        "txn_id": "pay_urbanthread_0250",
+        "timestamp": "2026-08-26T09:19:11.952401+00:00",
+        "txn_id": "pay_techbazaar_0331",
         "proposed_action": {
           "action_type": "retry_soft_decline",
-          "txn_id": "pay_urbanthread_0250",
-          "amount_paise": 378837,
-          "target_bank": "Canara Bank",
+          "txn_id": "pay_techbazaar_0331",
+          "amount_paise": 1813704,
+          "target_bank": "Central Bank of India",
           "scheduled_time": null,
-          "reason": "Enable automatic soft-decline retry for retriable failure codes on UrbanThread's payment flows. (transaction_daily_limit_exceeded), unretried",
+          "reason": "Enable automatic soft-decline retry on the payment gateway for eligible response codes (e.g. temporary bank unavailability, do-not-honour retryable). (payment_declined), unretried",
           "requires_merchant_approval": false
         },
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "531b96820770721b12131f766f281a1ac066b8b4b1e5c49a6194d81eb1820652",
-        "entry_hash": "7bedaf5818567a30250eb7371aa17836437da1d690ecde26beeef49347ba1e42"
+        "prev_hash": "6a5b430ed1c88f101ebdf8a652b187b83ef97d4d605736016db9b5a8fb1ef0b3",
+        "entry_hash": "06e529471d78b9509643c2284752f8753bafa1e240096d7e6082e702b09e5f7d"
       },
       {
         "sequence": 10,
-        "timestamp": "2026-08-26T07:34:30.659131+00:00",
-        "txn_id": "pay_urbanthread_0813",
+        "timestamp": "2026-08-26T09:19:11.952401+00:00",
+        "txn_id": "pay_techbazaar_0286",
         "proposed_action": {
           "action_type": "retry_soft_decline",
-          "txn_id": "pay_urbanthread_0813",
-          "amount_paise": 287533,
+          "txn_id": "pay_techbazaar_0286",
+          "amount_paise": 1771979,
           "target_bank": "State Bank of India",
           "scheduled_time": null,
-          "reason": "Enable automatic soft-decline retry for retriable failure codes on UrbanThread's payment flows. (transaction_daily_count_exceeded), unretried",
+          "reason": "Enable automatic soft-decline retry on the payment gateway for eligible response codes (e.g. temporary bank unavailability, do-not-honour retryable). (transaction_daily_limit_exceeded), unretried",
           "requires_merchant_approval": false
         },
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "7bedaf5818567a30250eb7371aa17836437da1d690ecde26beeef49347ba1e42",
-        "entry_hash": "a6bd2a3cbca4c60baa06dcd01806091fe21a55eeed5ce96623e04537e971d735"
+        "prev_hash": "06e529471d78b9509643c2284752f8753bafa1e240096d7e6082e702b09e5f7d",
+        "entry_hash": "b5544c160975ab2fad36de473927974073e1f6b5fa27b45ac38c7f5c77fc9b30"
       },
       {
         "sequence": 11,
-        "timestamp": "2026-08-26T07:34:30.659131+00:00",
-        "txn_id": "pay_urbanthread_0668",
+        "timestamp": "2026-08-26T09:19:11.952401+00:00",
+        "txn_id": "pay_techbazaar_0251",
         "proposed_action": {
           "action_type": "retry_soft_decline",
-          "txn_id": "pay_urbanthread_0668",
-          "amount_paise": 247367,
-          "target_bank": "India Post Payments Bank Limited",
+          "txn_id": "pay_techbazaar_0251",
+          "amount_paise": 1474527,
+          "target_bank": "Bank of Baroda",
           "scheduled_time": null,
-          "reason": "Enable automatic soft-decline retry for retriable failure codes on UrbanThread's payment flows. (payment_pending), unretried",
+          "reason": "Enable automatic soft-decline retry on the payment gateway for eligible response codes (e.g. temporary bank unavailability, do-not-honour retryable). (transaction_daily_count_exceeded), unretried",
           "requires_merchant_approval": false
         },
-        "gate_decision": "allow",
-        "gate_reason": "OK_WITHIN_MANDATE",
-        "outcome": "exception",
-        "prev_hash": "a6bd2a3cbca4c60baa06dcd01806091fe21a55eeed5ce96623e04537e971d735",
-        "entry_hash": "b302cb04cd06d72dcc065405802a214f832fb92a1216339f3cbdda4274c2f33b"
+        "gate_decision": "step_up",
+        "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
+        "outcome": "merchant_action",
+        "prev_hash": "b5544c160975ab2fad36de473927974073e1f6b5fa27b45ac38c7f5c77fc9b30",
+        "entry_hash": "d7e78f9cdca180e3c60ffaf7fc2862de64cd9c7de1dcd372b126aff64cbd5765"
       },
       {
         "sequence": 12,
-        "timestamp": "2026-08-26T07:34:30.659131+00:00",
-        "txn_id": "pay_urbanthread_0807",
+        "timestamp": "2026-08-26T09:19:11.952401+00:00",
+        "txn_id": "pay_techbazaar_0776",
         "proposed_action": {
           "action_type": "retry_soft_decline",
-          "txn_id": "pay_urbanthread_0807",
-          "amount_paise": 177058,
-          "target_bank": "India Post Payments Bank Limited",
+          "txn_id": "pay_techbazaar_0776",
+          "amount_paise": 1442926,
+          "target_bank": "State Bank of India",
           "scheduled_time": null,
-          "reason": "Enable automatic soft-decline retry for retriable failure codes on UrbanThread's payment flows. (payment_pending_approval), unretried",
+          "reason": "Enable automatic soft-decline retry on the payment gateway for eligible response codes (e.g. temporary bank unavailability, do-not-honour retryable). (payment_pending), unretried",
           "requires_merchant_approval": false
         },
-        "gate_decision": "allow",
-        "gate_reason": "OK_WITHIN_MANDATE",
-        "outcome": "executed",
-        "prev_hash": "b302cb04cd06d72dcc065405802a214f832fb92a1216339f3cbdda4274c2f33b",
-        "entry_hash": "fae197055ae5cb53dcb675a765b6f534e5e3219171f36376aae42e1cae75e639"
+        "gate_decision": "step_up",
+        "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
+        "outcome": "merchant_action",
+        "prev_hash": "d7e78f9cdca180e3c60ffaf7fc2862de64cd9c7de1dcd372b126aff64cbd5765",
+        "entry_hash": "8b97b6576ea184550da5322a94f5eb54b3ab4547848bab47b24f06ce1feb215d"
       },
       {
         "sequence": 13,
-        "timestamp": "2026-08-26T07:34:30.659131+00:00",
-        "txn_id": "pay_urbanthread_0203",
+        "timestamp": "2026-08-26T09:19:11.952401+00:00",
+        "txn_id": "pay_techbazaar_0058",
         "proposed_action": {
           "action_type": "retry_soft_decline",
-          "txn_id": "pay_urbanthread_0203",
-          "amount_paise": 172065,
-          "target_bank": "Bank of Baroda",
+          "txn_id": "pay_techbazaar_0058",
+          "amount_paise": 1326635,
+          "target_bank": "Union Bank of India",
           "scheduled_time": null,
-          "reason": "Enable automatic soft-decline retry for retriable failure codes on UrbanThread's payment flows. (card_declined), unretried",
+          "reason": "Enable automatic soft-decline retry on the payment gateway for eligible response codes (e.g. temporary bank unavailability, do-not-honour retryable). (card_declined), unretried",
           "requires_merchant_approval": false
         },
-        "gate_decision": "allow",
-        "gate_reason": "OK_WITHIN_MANDATE",
-        "outcome": "executed",
-        "prev_hash": "fae197055ae5cb53dcb675a765b6f534e5e3219171f36376aae42e1cae75e639",
-        "entry_hash": "87832c64129b616e2c9d8ed053b68aaade090c9e62e2ced718e248e8d8f52c86"
+        "gate_decision": "step_up",
+        "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
+        "outcome": "merchant_action",
+        "prev_hash": "8b97b6576ea184550da5322a94f5eb54b3ab4547848bab47b24f06ce1feb215d",
+        "entry_hash": "79c69c29250ea83e195a1ee2231eb6aedfa146371a61ea17bf8697b5438058ee"
       },
       {
         "sequence": 14,
-        "timestamp": "2026-08-26T07:34:30.659131+00:00",
-        "txn_id": "pay_urbanthread_0278",
+        "timestamp": "2026-08-26T09:19:11.952401+00:00",
+        "txn_id": "pay_techbazaar_0157",
         "proposed_action": {
           "action_type": "retry_soft_decline",
-          "txn_id": "pay_urbanthread_0278",
-          "amount_paise": 158767,
+          "txn_id": "pay_techbazaar_0157",
+          "amount_paise": 1216278,
           "target_bank": "Kotak Mahindra Bank",
           "scheduled_time": null,
-          "reason": "Enable automatic soft-decline retry for retriable failure codes on UrbanThread's payment flows. (payment_pending_approval), unretried",
+          "reason": "Enable automatic soft-decline retry on the payment gateway for eligible response codes (e.g. temporary bank unavailability, do-not-honour retryable). (payment_declined), unretried",
           "requires_merchant_approval": false
         },
-        "gate_decision": "allow",
-        "gate_reason": "OK_WITHIN_MANDATE",
-        "outcome": "exception",
-        "prev_hash": "87832c64129b616e2c9d8ed053b68aaade090c9e62e2ced718e248e8d8f52c86",
-        "entry_hash": "32dbaae980614961f49cef321455bf658e8a7f0332e2c88e509269925f6d27a9"
+        "gate_decision": "step_up",
+        "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
+        "outcome": "merchant_action",
+        "prev_hash": "79c69c29250ea83e195a1ee2231eb6aedfa146371a61ea17bf8697b5438058ee",
+        "entry_hash": "77c955ae0378b8b2942edcd6e4bbb6db3c06916be573e1f4455fe149d39147ac"
       },
       {
         "sequence": 15,
-        "timestamp": "2026-08-26T07:34:30.659131+00:00",
-        "txn_id": "pay_urbanthread_0756",
+        "timestamp": "2026-08-26T09:19:11.952401+00:00",
+        "txn_id": "pay_techbazaar_0746",
         "proposed_action": {
           "action_type": "retry_soft_decline",
-          "txn_id": "pay_urbanthread_0756",
-          "amount_paise": 113342,
-          "target_bank": "State Bank of India",
+          "txn_id": "pay_techbazaar_0746",
+          "amount_paise": 1136865,
+          "target_bank": "India Post Payments Bank Limited",
           "scheduled_time": null,
-          "reason": "Enable automatic soft-decline retry for retriable failure codes on UrbanThread's payment flows. (transaction_daily_count_exceeded), unretried",
+          "reason": "Enable automatic soft-decline retry on the payment gateway for eligible response codes (e.g. temporary bank unavailability, do-not-honour retryable). (transaction_daily_count_exceeded), unretried",
           "requires_merchant_approval": false
         },
-        "gate_decision": "allow",
-        "gate_reason": "OK_WITHIN_MANDATE",
-        "outcome": "executed",
-        "prev_hash": "32dbaae980614961f49cef321455bf658e8a7f0332e2c88e509269925f6d27a9",
-        "entry_hash": "13191d8d40ae75cfed8f8804e9690ec94fc79189c9161bff04b802dcfcbc45c2"
+        "gate_decision": "step_up",
+        "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
+        "outcome": "merchant_action",
+        "prev_hash": "77c955ae0378b8b2942edcd6e4bbb6db3c06916be573e1f4455fe149d39147ac",
+        "entry_hash": "787d30932908a2cae133eacbaeb364882d9a09611fc442600ffb8dc36f17c1c6"
       },
       {
         "sequence": 16,
-        "timestamp": "2026-08-26T07:34:30.659131+00:00",
-        "txn_id": "pay_urbanthread_0275",
+        "timestamp": "2026-08-26T09:19:11.952401+00:00",
+        "txn_id": "pay_techbazaar_0815",
         "proposed_action": {
           "action_type": "retry_soft_decline",
-          "txn_id": "pay_urbanthread_0275",
-          "amount_paise": 92810,
-          "target_bank": "Punjab National Bank",
+          "txn_id": "pay_techbazaar_0815",
+          "amount_paise": 1055013,
+          "target_bank": "Union Bank of India",
           "scheduled_time": null,
-          "reason": "Enable automatic soft-decline retry for retriable failure codes on UrbanThread's payment flows. (transaction_limit_exceeded), unretried",
+          "reason": "Enable automatic soft-decline retry on the payment gateway for eligible response codes (e.g. temporary bank unavailability, do-not-honour retryable). (card_declined), unretried",
           "requires_merchant_approval": false
         },
-        "gate_decision": "allow",
-        "gate_reason": "OK_WITHIN_MANDATE",
-        "outcome": "exception",
-        "prev_hash": "13191d8d40ae75cfed8f8804e9690ec94fc79189c9161bff04b802dcfcbc45c2",
-        "entry_hash": "021852de557fe585913cba252ea545d4e81d889bac2eff026f1b3832c0a277aa"
+        "gate_decision": "step_up",
+        "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
+        "outcome": "merchant_action",
+        "prev_hash": "787d30932908a2cae133eacbaeb364882d9a09611fc442600ffb8dc36f17c1c6",
+        "entry_hash": "da2e2541bc94b619496ec4083a309dbd7949b95cd6e51d1b8aec757c706f27ab"
       },
       {
         "sequence": 17,
-        "timestamp": "2026-08-26T07:34:30.659131+00:00",
-        "txn_id": "pay_urbanthread_0558",
+        "timestamp": "2026-08-26T09:19:11.953398+00:00",
+        "txn_id": "pay_techbazaar_0046",
         "proposed_action": {
           "action_type": "retry_soft_decline",
-          "txn_id": "pay_urbanthread_0558",
-          "amount_paise": 77299,
-          "target_bank": "State Bank of India",
+          "txn_id": "pay_techbazaar_0046",
+          "amount_paise": 1018683,
+          "target_bank": "Central Bank of India",
           "scheduled_time": null,
-          "reason": "Enable automatic soft-decline retry for retriable failure codes on UrbanThread's payment flows. (card_declined), unretried",
+          "reason": "Enable automatic soft-decline retry on the payment gateway for eligible response codes (e.g. temporary bank unavailability, do-not-honour retryable). (payment_declined), unretried",
           "requires_merchant_approval": false
         },
-        "gate_decision": "allow",
-        "gate_reason": "OK_WITHIN_MANDATE",
-        "outcome": "exception",
-        "prev_hash": "021852de557fe585913cba252ea545d4e81d889bac2eff026f1b3832c0a277aa",
-        "entry_hash": "cb9a5240817a8db08ee4ddcb8b9789f276f76d098f248be11025008612643f76"
+        "gate_decision": "step_up",
+        "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
+        "outcome": "merchant_action",
+        "prev_hash": "da2e2541bc94b619496ec4083a309dbd7949b95cd6e51d1b8aec757c706f27ab",
+        "entry_hash": "52d88db5e4d3ad337d1df0bf81513ef912e2286f99ca3bf6765b11184816aa7f"
       },
       {
         "sequence": 18,
-        "timestamp": "2026-08-26T07:34:30.659131+00:00",
-        "txn_id": "pay_urbanthread_0437",
+        "timestamp": "2026-08-26T09:19:11.953398+00:00",
+        "txn_id": "pay_techbazaar_0018",
         "proposed_action": {
           "action_type": "retry_soft_decline",
-          "txn_id": "pay_urbanthread_0437",
-          "amount_paise": 59296,
-          "target_bank": "Bank of Baroda",
+          "txn_id": "pay_techbazaar_0018",
+          "amount_paise": 858926,
+          "target_bank": "Indian Bank",
           "scheduled_time": null,
-          "reason": "Enable automatic soft-decline retry for retriable failure codes on UrbanThread's payment flows. (insufficient_funds), unretried",
+          "reason": "Enable automatic soft-decline retry on the payment gateway for eligible response codes (e.g. temporary bank unavailability, do-not-honour retryable). (debit_declined), unretried",
           "requires_merchant_approval": false
         },
-        "gate_decision": "allow",
-        "gate_reason": "OK_WITHIN_MANDATE",
-        "outcome": "executed",
-        "prev_hash": "cb9a5240817a8db08ee4ddcb8b9789f276f76d098f248be11025008612643f76",
-        "entry_hash": "48474dbddd4988478bd471696ebb8b5cc17fae7ac8e7342d733bf07e5120df30"
+        "gate_decision": "step_up",
+        "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
+        "outcome": "merchant_action",
+        "prev_hash": "52d88db5e4d3ad337d1df0bf81513ef912e2286f99ca3bf6765b11184816aa7f",
+        "entry_hash": "ac443d1088b745f472793f78e9e4003e6b5bfb0023b028f85630ed1b22517720"
       },
       {
         "sequence": 19,
-        "timestamp": "2026-08-26T07:34:30.659131+00:00",
-        "txn_id": "pay_urbanthread_0810",
+        "timestamp": "2026-08-26T09:19:11.953398+00:00",
+        "txn_id": "pay_techbazaar_0354",
         "proposed_action": {
           "action_type": "retry_soft_decline",
-          "txn_id": "pay_urbanthread_0810",
-          "amount_paise": 54136,
-          "target_bank": "Punjab National Bank",
+          "txn_id": "pay_techbazaar_0354",
+          "amount_paise": 767921,
+          "target_bank": "State Bank of India",
           "scheduled_time": null,
-          "reason": "Enable automatic soft-decline retry for retriable failure codes on UrbanThread's payment flows. (debit_declined), unretried",
+          "reason": "Enable automatic soft-decline retry on the payment gateway for eligible response codes (e.g. temporary bank unavailability, do-not-honour retryable). (transaction_limit_exceeded), unretried",
           "requires_merchant_approval": false
         },
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "48474dbddd4988478bd471696ebb8b5cc17fae7ac8e7342d733bf07e5120df30",
-        "entry_hash": "48b278763ef89401cf331b994f59365795d52fe2c8c985686718438ea365a54e"
+        "prev_hash": "ac443d1088b745f472793f78e9e4003e6b5bfb0023b028f85630ed1b22517720",
+        "entry_hash": "45d5124de4f04c7828bdd391d9a155f8603b621ebc50821980d705014d7b829b"
       },
       {
         "sequence": 20,
-        "timestamp": "2026-08-26T07:34:30.660097+00:00",
-        "txn_id": "pay_urbanthread_0068",
+        "timestamp": "2026-08-26T09:19:11.953398+00:00",
+        "txn_id": "pay_techbazaar_0770",
         "proposed_action": {
           "action_type": "retry_soft_decline",
-          "txn_id": "pay_urbanthread_0068",
-          "amount_paise": 52417,
-          "target_bank": "India Post Payments Bank Limited",
+          "txn_id": "pay_techbazaar_0770",
+          "amount_paise": 553370,
+          "target_bank": "Indusind Bank Ltd.",
           "scheduled_time": null,
-          "reason": "Enable automatic soft-decline retry for retriable failure codes on UrbanThread's payment flows. (payment_declined), unretried",
+          "reason": "Enable automatic soft-decline retry on the payment gateway for eligible response codes (e.g. temporary bank unavailability, do-not-honour retryable). (transaction_daily_count_exceeded), unretried",
           "requires_merchant_approval": false
         },
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "48b278763ef89401cf331b994f59365795d52fe2c8c985686718438ea365a54e",
-        "entry_hash": "f40d6bcc621b026a8c056e7439abd0a3f5de657cdd0716cd1b0c214482e5f1cf"
+        "prev_hash": "45d5124de4f04c7828bdd391d9a155f8603b621ebc50821980d705014d7b829b",
+        "entry_hash": "bff17f3faac0265dd4e8d553fdcab89812f2d5c0b6a9a18058ccb840f9cea829"
       },
       {
         "sequence": 21,
-        "timestamp": "2026-08-26T07:34:30.660097+00:00",
-        "txn_id": "pay_urbanthread_0175",
+        "timestamp": "2026-08-26T09:19:11.953398+00:00",
+        "txn_id": "pay_techbazaar_0635",
         "proposed_action": {
           "action_type": "retry_soft_decline",
-          "txn_id": "pay_urbanthread_0175",
-          "amount_paise": 46171,
-          "target_bank": "HDFC Bank Ltd.",
+          "txn_id": "pay_techbazaar_0635",
+          "amount_paise": 53113,
+          "target_bank": "Union Bank of India",
           "scheduled_time": null,
-          "reason": "Enable automatic soft-decline retry for retriable failure codes on UrbanThread's payment flows. (payment_declined), unretried",
+          "reason": "Enable automatic soft-decline retry on the payment gateway for eligible response codes (e.g. temporary bank unavailability, do-not-honour retryable). (insufficient_funds), unretried",
           "requires_merchant_approval": false
         },
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
-        "outcome": "executed",
-        "prev_hash": "f40d6bcc621b026a8c056e7439abd0a3f5de657cdd0716cd1b0c214482e5f1cf",
-        "entry_hash": "841aaf8674a24dd2f6e4619183673902d2c9da03e9555a8b57703ad6014b07d2"
+        "outcome": "exception",
+        "prev_hash": "bff17f3faac0265dd4e8d553fdcab89812f2d5c0b6a9a18058ccb840f9cea829",
+        "entry_hash": "c43a78165704f8347ae17322aa3b63525bd33ff11d33205f84985fb5b82c7ee9"
       }
     ],
     "exceptions": {
       "unrecoverable_by_class": [
         {
-          "error_class": "auth_failure",
-          "count": 14,
-          "total_paise": 9111195
+          "error_class": "hard_decline",
+          "count": 33,
+          "total_paise": 51404643
         },
         {
-          "error_class": "hard_decline",
-          "count": 22,
-          "total_paise": 5898597
+          "error_class": "auth_failure",
+          "count": 21,
+          "total_paise": 32316086
         }
       ],
-      "unrecoverable_sample_size": 36,
+      "unrecoverable_sample_size": 50,
       "unrecoverable_transactions": [
         {
-          "txn_id": "pay_urbanthread_0011",
-          "amount_paise": 32444,
-          "error_code": "refund_limit_crossed",
-          "error_class": "hard_decline",
-          "why": "hard decline -- the instrument or configuration is permanently unusable"
-        },
-        {
-          "txn_id": "pay_urbanthread_0013",
-          "amount_paise": 125717,
-          "error_code": "credit_limit_not_approved",
-          "error_class": "hard_decline",
-          "why": "hard decline -- the instrument or configuration is permanently unusable"
-        },
-        {
-          "txn_id": "pay_urbanthread_0018",
-          "amount_paise": 72502,
-          "error_code": "incorrect_otp",
-          "error_class": "auth_failure",
-          "why": "authentication failed -- only the customer can complete it"
-        },
-        {
-          "txn_id": "pay_urbanthread_0021",
-          "amount_paise": 13303,
+          "txn_id": "pay_techbazaar_0001",
+          "amount_paise": 2103053,
           "error_code": "invalid_amount",
           "error_class": "hard_decline",
           "why": "hard decline -- the instrument or configuration is permanently unusable"
         },
         {
-          "txn_id": "pay_urbanthread_0067",
-          "amount_paise": 92883,
-          "error_code": "payment_cancelled",
-          "error_class": "auth_failure",
-          "why": "authentication failed -- only the customer can complete it"
-        },
-        {
-          "txn_id": "pay_urbanthread_0119",
-          "amount_paise": 58987,
-          "error_code": "merchant_not_activated",
+          "txn_id": "pay_techbazaar_0010",
+          "amount_paise": 2311866,
+          "error_code": "card_type_invalid",
           "error_class": "hard_decline",
           "why": "hard decline -- the instrument or configuration is permanently unusable"
         },
         {
-          "txn_id": "pay_urbanthread_0132",
-          "amount_paise": 99287,
-          "error_code": "live_mode_not_enabled",
-          "error_class": "hard_decline",
-          "why": "hard decline -- the instrument or configuration is permanently unusable"
-        },
-        {
-          "txn_id": "pay_urbanthread_0169",
-          "amount_paise": 94645,
-          "error_code": "credit_limit_expired",
-          "error_class": "hard_decline",
-          "why": "hard decline -- the instrument or configuration is permanently unusable"
-        },
-        {
-          "txn_id": "pay_urbanthread_0223",
-          "amount_paise": 553853,
+          "txn_id": "pay_techbazaar_0013",
+          "amount_paise": 2233122,
           "error_code": "pin_not_set",
           "error_class": "auth_failure",
           "why": "authentication failed -- only the customer can complete it"
         },
         {
-          "txn_id": "pay_urbanthread_0294",
-          "amount_paise": 34014,
-          "error_code": "incorrect_atm_pin",
-          "error_class": "auth_failure",
-          "why": "authentication failed -- only the customer can complete it"
-        },
-        {
-          "txn_id": "pay_urbanthread_0331",
-          "amount_paise": 1725096,
-          "error_code": "incorrect_cardholder_name",
-          "error_class": "auth_failure",
-          "why": "authentication failed -- only the customer can complete it"
-        },
-        {
-          "txn_id": "pay_urbanthread_0342",
-          "amount_paise": 2289823,
-          "error_code": "incorrect_cardholder_name",
-          "error_class": "auth_failure",
-          "why": "authentication failed -- only the customer can complete it"
-        },
-        {
-          "txn_id": "pay_urbanthread_0367",
-          "amount_paise": 4129,
-          "error_code": "mcc_amount_limit_exceeded",
-          "error_class": "hard_decline",
-          "why": "hard decline -- the instrument or configuration is permanently unusable"
-        },
-        {
-          "txn_id": "pay_urbanthread_0400",
-          "amount_paise": 455166,
-          "error_code": "incorrect_card_expiry_date",
-          "error_class": "auth_failure",
-          "why": "authentication failed -- only the customer can complete it"
-        },
-        {
-          "txn_id": "pay_urbanthread_0401",
-          "amount_paise": 262887,
-          "error_code": "credit_limit_expired",
-          "error_class": "hard_decline",
-          "why": "hard decline -- the instrument or configuration is permanently unusable"
-        },
-        {
-          "txn_id": "pay_urbanthread_0407",
-          "amount_paise": 385898,
-          "error_code": "order_already_paid",
-          "error_class": "hard_decline",
-          "why": "hard decline -- the instrument or configuration is permanently unusable"
-        },
-        {
-          "txn_id": "pay_urbanthread_0429",
-          "amount_paise": 78564,
-          "error_code": "incorrect_otp",
-          "error_class": "auth_failure",
-          "why": "authentication failed -- only the customer can complete it"
-        },
-        {
-          "txn_id": "pay_urbanthread_0441",
-          "amount_paise": 319484,
+          "txn_id": "pay_techbazaar_0039",
+          "amount_paise": 2333409,
           "error_code": "bank_account_invalid",
           "error_class": "hard_decline",
           "why": "hard decline -- the instrument or configuration is permanently unusable"
         },
         {
-          "txn_id": "pay_urbanthread_0460",
-          "amount_paise": 204741,
-          "error_code": "payment_risk_check_failed",
+          "txn_id": "pay_techbazaar_0041",
+          "amount_paise": 908412,
+          "error_code": "invalid_mobile_number",
           "error_class": "hard_decline",
           "why": "hard decline -- the instrument or configuration is permanently unusable"
         },
         {
-          "txn_id": "pay_urbanthread_0468",
-          "amount_paise": 225253,
-          "error_code": "collect_on_mcc_blocked",
-          "error_class": "hard_decline",
-          "why": "hard decline -- the instrument or configuration is permanently unusable"
-        },
-        {
-          "txn_id": "pay_urbanthread_0499",
-          "amount_paise": 55124,
-          "error_code": "merchant_not_activated",
-          "error_class": "hard_decline",
-          "why": "hard decline -- the instrument or configuration is permanently unusable"
-        },
-        {
-          "txn_id": "pay_urbanthread_0504",
-          "amount_paise": 95278,
-          "error_code": "incorrect_cvv",
-          "error_class": "auth_failure",
-          "why": "authentication failed -- only the customer can complete it"
-        },
-        {
-          "txn_id": "pay_urbanthread_0540",
-          "amount_paise": 113483,
+          "txn_id": "pay_techbazaar_0045",
+          "amount_paise": 1666130,
           "error_code": "authentication_failed",
           "error_class": "auth_failure",
           "why": "authentication failed -- only the customer can complete it"
         },
         {
-          "txn_id": "pay_urbanthread_0611",
-          "amount_paise": 423191,
+          "txn_id": "pay_techbazaar_0053",
+          "amount_paise": 2038286,
+          "error_code": "invalid_mobile_number",
+          "error_class": "hard_decline",
+          "why": "hard decline -- the instrument or configuration is permanently unusable"
+        },
+        {
+          "txn_id": "pay_techbazaar_0056",
+          "amount_paise": 504705,
+          "error_code": "invalid_currency",
+          "error_class": "hard_decline",
+          "why": "hard decline -- the instrument or configuration is permanently unusable"
+        },
+        {
+          "txn_id": "pay_techbazaar_0098",
+          "amount_paise": 2277468,
+          "error_code": "merchant_not_activated",
+          "error_class": "hard_decline",
+          "why": "hard decline -- the instrument or configuration is permanently unusable"
+        },
+        {
+          "txn_id": "pay_techbazaar_0102",
+          "amount_paise": 977522,
+          "error_code": "amount_less_than_minimum_amount",
+          "error_class": "hard_decline",
+          "why": "hard decline -- the instrument or configuration is permanently unusable"
+        },
+        {
+          "txn_id": "pay_techbazaar_0110",
+          "amount_paise": 2144180,
+          "error_code": "live_mode_not_enabled",
+          "error_class": "hard_decline",
+          "why": "hard decline -- the instrument or configuration is permanently unusable"
+        },
+        {
+          "txn_id": "pay_techbazaar_0131",
+          "amount_paise": 1845142,
+          "error_code": "order_already_paid",
+          "error_class": "hard_decline",
+          "why": "hard decline -- the instrument or configuration is permanently unusable"
+        },
+        {
+          "txn_id": "pay_techbazaar_0151",
+          "amount_paise": 1694324,
+          "error_code": "credit_limit_expired",
+          "error_class": "hard_decline",
+          "why": "hard decline -- the instrument or configuration is permanently unusable"
+        },
+        {
+          "txn_id": "pay_techbazaar_0270",
+          "amount_paise": 1178984,
+          "error_code": "international_transaction_not_allowed",
+          "error_class": "hard_decline",
+          "why": "hard decline -- the instrument or configuration is permanently unusable"
+        },
+        {
+          "txn_id": "pay_techbazaar_0285",
+          "amount_paise": 716848,
+          "error_code": "emi_plan_unavailable",
+          "error_class": "hard_decline",
+          "why": "hard decline -- the instrument or configuration is permanently unusable"
+        },
+        {
+          "txn_id": "pay_techbazaar_0297",
+          "amount_paise": 2091513,
+          "error_code": "incorrect_card_expiry_date",
+          "error_class": "auth_failure",
+          "why": "authentication failed -- only the customer can complete it"
+        },
+        {
+          "txn_id": "pay_techbazaar_0325",
+          "amount_paise": 787520,
+          "error_code": "incorrect_cardholder_name",
+          "error_class": "auth_failure",
+          "why": "authentication failed -- only the customer can complete it"
+        },
+        {
+          "txn_id": "pay_techbazaar_0400",
+          "amount_paise": 1643595,
+          "error_code": "order_already_paid",
+          "error_class": "hard_decline",
+          "why": "hard decline -- the instrument or configuration is permanently unusable"
+        },
+        {
+          "txn_id": "pay_techbazaar_0425",
+          "amount_paise": 1930557,
+          "error_code": "incorrect_otp",
+          "error_class": "auth_failure",
+          "why": "authentication failed -- only the customer can complete it"
+        },
+        {
+          "txn_id": "pay_techbazaar_0426",
+          "amount_paise": 1765349,
+          "error_code": "incorrect_pin",
+          "error_class": "auth_failure",
+          "why": "authentication failed -- only the customer can complete it"
+        },
+        {
+          "txn_id": "pay_techbazaar_0436",
+          "amount_paise": 1184289,
+          "error_code": "duplicate_refund_id",
+          "error_class": "hard_decline",
+          "why": "hard decline -- the instrument or configuration is permanently unusable"
+        },
+        {
+          "txn_id": "pay_techbazaar_0469",
+          "amount_paise": 1286934,
+          "error_code": "emi_greater_than_max_amount",
+          "error_class": "hard_decline",
+          "why": "hard decline -- the instrument or configuration is permanently unusable"
+        },
+        {
+          "txn_id": "pay_techbazaar_0496",
+          "amount_paise": 513130,
+          "error_code": "authentication_failed",
+          "error_class": "auth_failure",
+          "why": "authentication failed -- only the customer can complete it"
+        },
+        {
+          "txn_id": "pay_techbazaar_0504",
+          "amount_paise": 1061991,
+          "error_code": "merchant_not_activated",
+          "error_class": "hard_decline",
+          "why": "hard decline -- the instrument or configuration is permanently unusable"
+        },
+        {
+          "txn_id": "pay_techbazaar_0509",
+          "amount_paise": 1966494,
+          "error_code": "incorrect_cvv",
+          "error_class": "auth_failure",
+          "why": "authentication failed -- only the customer can complete it"
+        },
+        {
+          "txn_id": "pay_techbazaar_0511",
+          "amount_paise": 523500,
+          "error_code": "beneficiary_account_does_not_exist",
+          "error_class": "hard_decline",
+          "why": "hard decline -- the instrument or configuration is permanently unusable"
+        },
+        {
+          "txn_id": "pay_techbazaar_0540",
+          "amount_paise": 2234285,
+          "error_code": "payment_amount_tampered",
+          "error_class": "hard_decline",
+          "why": "hard decline -- the instrument or configuration is permanently unusable"
+        },
+        {
+          "txn_id": "pay_techbazaar_0541",
+          "amount_paise": 1613504,
+          "error_code": "card_network_not_enabled",
+          "error_class": "hard_decline",
+          "why": "hard decline -- the instrument or configuration is permanently unusable"
+        },
+        {
+          "txn_id": "pay_techbazaar_0546",
+          "amount_paise": 2356939,
+          "error_code": "card_type_invalid",
+          "error_class": "hard_decline",
+          "why": "hard decline -- the instrument or configuration is permanently unusable"
+        },
+        {
+          "txn_id": "pay_techbazaar_0576",
+          "amount_paise": 1539232,
+          "error_code": "compliance_violation",
+          "error_class": "hard_decline",
+          "why": "hard decline -- the instrument or configuration is permanently unusable"
+        },
+        {
+          "txn_id": "pay_techbazaar_0577",
+          "amount_paise": 1019171,
+          "error_code": "mismatch_in_transaction_details",
+          "error_class": "hard_decline",
+          "why": "hard decline -- the instrument or configuration is permanently unusable"
+        },
+        {
+          "txn_id": "pay_techbazaar_0596",
+          "amount_paise": 2475983,
+          "error_code": "otp_attempts_exceeded",
+          "error_class": "auth_failure",
+          "why": "authentication failed -- only the customer can complete it"
+        },
+        {
+          "txn_id": "pay_techbazaar_0608",
+          "amount_paise": 782699,
           "error_code": "invalid_order_id",
           "error_class": "hard_decline",
           "why": "hard decline -- the instrument or configuration is permanently unusable"
         },
         {
-          "txn_id": "pay_urbanthread_0612",
+          "txn_id": "pay_techbazaar_0614",
+          "amount_paise": 1942174,
+          "error_code": "payment_amount_tampered",
+          "error_class": "hard_decline",
+          "why": "hard decline -- the instrument or configuration is permanently unusable"
+        },
+        {
+          "txn_id": "pay_techbazaar_0624",
+          "amount_paise": 1792765,
+          "error_code": "invalid_order_id",
+          "error_class": "hard_decline",
+          "why": "hard decline -- the instrument or configuration is permanently unusable"
+        },
+        {
+          "txn_id": "pay_techbazaar_0625",
           "amount_paise": 558892,
           "error_code": "incorrect_cardholder_name",
           "error_class": "auth_failure",
           "why": "authentication failed -- only the customer can complete it"
         },
         {
-          "txn_id": "pay_urbanthread_0616",
-          "amount_paise": 420369,
-          "error_code": "debit_instrument_inactive",
-          "error_class": "hard_decline",
-          "why": "hard decline -- the instrument or configuration is permanently unusable"
-        },
-        {
-          "txn_id": "pay_urbanthread_0643",
-          "amount_paise": 1624771,
-          "error_code": "emi_greater_than_max_amount",
-          "error_class": "hard_decline",
-          "why": "hard decline -- the instrument or configuration is permanently unusable"
-        },
-        {
-          "txn_id": "pay_urbanthread_0650",
-          "amount_paise": 2077248,
-          "error_code": "incorrect_pin",
+          "txn_id": "pay_techbazaar_0636",
+          "amount_paise": 1164557,
+          "error_code": "incorrect_otp",
           "error_class": "auth_failure",
           "why": "authentication failed -- only the customer can complete it"
         },
         {
-          "txn_id": "pay_urbanthread_0678",
-          "amount_paise": 352081,
+          "txn_id": "pay_techbazaar_0666",
+          "amount_paise": 2077248,
+          "error_code": "pin_not_set",
+          "error_class": "auth_failure",
+          "why": "authentication failed -- only the customer can complete it"
+        },
+        {
+          "txn_id": "pay_techbazaar_0689",
+          "amount_paise": 1958780,
+          "error_code": "otp_attempts_exceeded",
+          "error_class": "auth_failure",
+          "why": "authentication failed -- only the customer can complete it"
+        },
+        {
+          "txn_id": "pay_techbazaar_0697",
+          "amount_paise": 1508326,
           "error_code": "mismatch_in_transaction_details",
           "error_class": "hard_decline",
           "why": "hard decline -- the instrument or configuration is permanently unusable"
         },
         {
-          "txn_id": "pay_urbanthread_0679",
-          "amount_paise": 645012,
-          "error_code": "incorrect_cvv",
+          "txn_id": "pay_techbazaar_0705",
+          "amount_paise": 1295782,
+          "error_code": "incorrect_atm_pin",
           "error_class": "auth_failure",
           "why": "authentication failed -- only the customer can complete it"
         },
         {
-          "txn_id": "pay_urbanthread_0716",
-          "amount_paise": 130226,
-          "error_code": "invalid_mobile_number",
+          "txn_id": "pay_techbazaar_0706",
+          "amount_paise": 1274747,
+          "error_code": "invalid_currency",
           "error_class": "hard_decline",
           "why": "hard decline -- the instrument or configuration is permanently unusable"
         },
         {
-          "txn_id": "pay_urbanthread_0725",
-          "amount_paise": 92664,
-          "error_code": "live_mode_not_enabled",
-          "error_class": "hard_decline",
-          "why": "hard decline -- the instrument or configuration is permanently unusable"
+          "txn_id": "pay_techbazaar_0716",
+          "amount_paise": 2026351,
+          "error_code": "otp_attempts_exceeded",
+          "error_class": "auth_failure",
+          "why": "authentication failed -- only the customer can complete it"
         },
         {
-          "txn_id": "pay_urbanthread_0786",
-          "amount_paise": 407223,
+          "txn_id": "pay_techbazaar_0750",
+          "amount_paise": 2162891,
           "error_code": "beneficiary_account_does_not_exist",
           "error_class": "hard_decline",
           "why": "hard decline -- the instrument or configuration is permanently unusable"
         },
         {
-          "txn_id": "pay_urbanthread_0822",
-          "amount_paise": 319381,
-          "error_code": "authentication_failed",
+          "txn_id": "pay_techbazaar_0797",
+          "amount_paise": 2189056,
+          "error_code": "bank_not_enabled",
+          "error_class": "hard_decline",
+          "why": "hard decline -- the instrument or configuration is permanently unusable"
+        },
+        {
+          "txn_id": "pay_techbazaar_0812",
+          "amount_paise": 922437,
+          "error_code": "mcc_amount_limit_exceeded",
+          "error_class": "hard_decline",
+          "why": "hard decline -- the instrument or configuration is permanently unusable"
+        },
+        {
+          "txn_id": "pay_techbazaar_0820",
+          "amount_paise": 886057,
+          "error_code": "incorrect_card_expiry_date",
           "error_class": "auth_failure",
           "why": "authentication failed -- only the customer can complete it"
         },
         {
-          "txn_id": "pay_urbanthread_0838",
-          "amount_paise": 98956,
-          "error_code": "credit_limit_expired",
-          "error_class": "hard_decline",
-          "why": "hard decline -- the instrument or configuration is permanently unusable"
+          "txn_id": "pay_techbazaar_0821",
+          "amount_paise": 1779830,
+          "error_code": "incorrect_card_expiry_date",
+          "error_class": "auth_failure",
+          "why": "authentication failed -- only the customer can complete it"
         },
         {
-          "txn_id": "pay_urbanthread_0866",
-          "amount_paise": 467217,
-          "error_code": "payment_risk_check_failed",
-          "error_class": "hard_decline",
-          "why": "hard decline -- the instrument or configuration is permanently unusable"
+          "txn_id": "pay_techbazaar_0837",
+          "amount_paise": 618010,
+          "error_code": "incorrect_otp",
+          "error_class": "auth_failure",
+          "why": "authentication failed -- only the customer can complete it"
+        },
+        {
+          "txn_id": "pay_techbazaar_0839",
+          "amount_paise": 1505136,
+          "error_code": "incorrect_atm_pin",
+          "error_class": "auth_failure",
+          "why": "authentication failed -- only the customer can complete it"
         }
       ],
       "method_failures": [
         {
           "kind": "factor_not_identified",
-          "factor": "method",
-          "detail": "effective support 1.21 distinct values -- there is nothing to reweight toward, so this attribution is unmeasurable rather than small"
+          "factor": "amount_band",
+          "detail": "effective support 1.08 distinct values -- there is nothing to reweight toward, so this attribution is unmeasurable rather than small"
         },
         {
           "kind": "underpowered_batch",
           "factor": "all",
-          "detail": "at n=870 the 95% interval on the observed success rate is wider than half the gap being decomposed"
+          "detail": "at n=940 the 95% interval on the observed success rate is wider than half the gap being decomposed"
         }
       ]
     },
     "classifications": {
+      "amount_less_than_minimum_amount": {
+        "code": "amount_less_than_minimum_amount",
+        "category": "hard_decline",
+        "recoverable": false,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
       "authentication_failed": {
         "code": "authentication_failed",
         "category": "auth_failure",
@@ -2184,10 +2282,24 @@
         "confidence": 1.0,
         "source": "taxonomy"
       },
+      "bank_not_enabled": {
+        "code": "bank_not_enabled",
+        "category": "hard_decline",
+        "recoverable": false,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
       "beneficiary_account_does_not_exist": {
         "code": "beneficiary_account_does_not_exist",
         "category": "hard_decline",
         "recoverable": false,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "capture_failed": {
+        "code": "capture_failed",
+        "category": "technical",
+        "recoverable": true,
         "confidence": 1.0,
         "source": "taxonomy"
       },
@@ -2198,8 +2310,15 @@
         "confidence": 1.0,
         "source": "taxonomy"
       },
-      "collect_on_mcc_blocked": {
-        "code": "collect_on_mcc_blocked",
+      "card_network_not_enabled": {
+        "code": "card_network_not_enabled",
+        "category": "hard_decline",
+        "recoverable": false,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "card_type_invalid": {
+        "code": "card_type_invalid",
         "category": "hard_decline",
         "recoverable": false,
         "confidence": 1.0,
@@ -2209,6 +2328,13 @@
         "code": "collect_request_pending",
         "category": "soft_decline",
         "recoverable": true,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "compliance_violation": {
+        "code": "compliance_violation",
+        "category": "hard_decline",
+        "recoverable": false,
         "confidence": 1.0,
         "source": "taxonomy"
       },
@@ -2226,13 +2352,6 @@
         "confidence": 1.0,
         "source": "taxonomy"
       },
-      "credit_limit_not_approved": {
-        "code": "credit_limit_not_approved",
-        "category": "hard_decline",
-        "recoverable": false,
-        "confidence": 1.0,
-        "source": "taxonomy"
-      },
       "debit_declined": {
         "code": "debit_declined",
         "category": "soft_decline",
@@ -2240,29 +2359,22 @@
         "confidence": 1.0,
         "source": "taxonomy"
       },
-      "debit_instrument_inactive": {
-        "code": "debit_instrument_inactive",
+      "duplicate_refund_id": {
+        "code": "duplicate_refund_id",
         "category": "hard_decline",
         "recoverable": false,
         "confidence": 1.0,
         "source": "taxonomy"
       },
-      "deemed_transaction": {
-        "code": "deemed_transaction",
-        "category": "technical",
-        "recoverable": true,
-        "confidence": 1.0,
-        "source": "taxonomy"
-      },
-      "duplicate_rrn_found": {
-        "code": "duplicate_rrn_found",
-        "category": "technical",
-        "recoverable": true,
-        "confidence": 1.0,
-        "source": "taxonomy"
-      },
       "emi_greater_than_max_amount": {
         "code": "emi_greater_than_max_amount",
+        "category": "hard_decline",
+        "recoverable": false,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "emi_plan_unavailable": {
+        "code": "emi_plan_unavailable",
         "category": "hard_decline",
         "recoverable": false,
         "confidence": 1.0,
@@ -2317,8 +2429,22 @@
         "confidence": 1.0,
         "source": "taxonomy"
       },
+      "international_transaction_not_allowed": {
+        "code": "international_transaction_not_allowed",
+        "category": "hard_decline",
+        "recoverable": false,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
       "invalid_amount": {
         "code": "invalid_amount",
+        "category": "hard_decline",
+        "recoverable": false,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "invalid_currency": {
+        "code": "invalid_currency",
         "category": "hard_decline",
         "recoverable": false,
         "confidence": 1.0,
@@ -2373,6 +2499,20 @@
         "confidence": 1.0,
         "source": "taxonomy"
       },
+      "otp_attempts_exceeded": {
+        "code": "otp_attempts_exceeded",
+        "category": "auth_failure",
+        "recoverable": false,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
+      "payment_amount_tampered": {
+        "code": "payment_amount_tampered",
+        "category": "hard_decline",
+        "recoverable": false,
+        "confidence": 1.0,
+        "source": "taxonomy"
+      },
       "payment_cancelled": {
         "code": "payment_cancelled",
         "category": "auth_failure",
@@ -2394,20 +2534,6 @@
         "confidence": 1.0,
         "source": "taxonomy"
       },
-      "payment_declined_due_to_high_traffic": {
-        "code": "payment_declined_due_to_high_traffic",
-        "category": "technical",
-        "recoverable": true,
-        "confidence": 1.0,
-        "source": "taxonomy"
-      },
-      "payment_failed": {
-        "code": "payment_failed",
-        "category": "technical",
-        "recoverable": true,
-        "confidence": 1.0,
-        "source": "taxonomy"
-      },
       "payment_pending": {
         "code": "payment_pending",
         "category": "soft_decline",
@@ -2422,13 +2548,6 @@
         "confidence": 1.0,
         "source": "taxonomy"
       },
-      "payment_risk_check_failed": {
-        "code": "payment_risk_check_failed",
-        "category": "hard_decline",
-        "recoverable": false,
-        "confidence": 1.0,
-        "source": "taxonomy"
-      },
       "payment_session_expired": {
         "code": "payment_session_expired",
         "category": "soft_decline",
@@ -2436,16 +2555,16 @@
         "confidence": 1.0,
         "source": "taxonomy"
       },
-      "pin_not_set": {
-        "code": "pin_not_set",
-        "category": "auth_failure",
-        "recoverable": false,
+      "payment_timed_out": {
+        "code": "payment_timed_out",
+        "category": "technical",
+        "recoverable": true,
         "confidence": 1.0,
         "source": "taxonomy"
       },
-      "refund_limit_crossed": {
-        "code": "refund_limit_crossed",
-        "category": "hard_decline",
+      "pin_not_set": {
+        "code": "pin_not_set",
+        "category": "auth_failure",
         "recoverable": false,
         "confidence": 1.0,
         "source": "taxonomy"
@@ -2486,171 +2605,171 @@
       "group_id": "retry_soft_decline",
       "action_type": "retry_soft_decline",
       "title": "Retry 18 unretried soft declines",
-      "why": "Recoverable failures the merchant never retried. Worth Rs 71,041.",
+      "why": "Recoverable failures the merchant never retried. Worth Rs 256,288.",
       "count": 18,
-      "total_paise": 7104164,
+      "total_paise": 25628882,
       "auto": true,
       "actions": [
         {
           "action_type": "retry_soft_decline",
-          "txn_id": "pay_urbanthread_0717",
-          "amount_paise": 2080823,
-          "target_bank": "India Post Payments Bank Limited",
-          "scheduled_time": null,
-          "reason": "Enable automatic soft-decline retry for retriable failure codes on UrbanThread's payment flows. (payment_session_expired), unretried",
-          "requires_merchant_approval": false
-        },
-        {
-          "action_type": "retry_soft_decline",
-          "txn_id": "pay_urbanthread_0245",
-          "amount_paise": 1814752,
-          "target_bank": "Central Bank of India",
-          "scheduled_time": null,
-          "reason": "Enable automatic soft-decline retry for retriable failure codes on UrbanThread's payment flows. (duplicate_rrn_found), unretried",
-          "requires_merchant_approval": false
-        },
-        {
-          "action_type": "retry_soft_decline",
-          "txn_id": "pay_urbanthread_0531",
-          "amount_paise": 452672,
-          "target_bank": "Federal Bank Ltd.",
-          "scheduled_time": null,
-          "reason": "Enable automatic soft-decline retry for retriable failure codes on UrbanThread's payment flows. (debit_declined), unretried",
-          "requires_merchant_approval": false
-        },
-        {
-          "action_type": "retry_soft_decline",
-          "txn_id": "pay_urbanthread_0805",
-          "amount_paise": 441530,
-          "target_bank": "Punjab National Bank",
-          "scheduled_time": null,
-          "reason": "Enable automatic soft-decline retry for retriable failure codes on UrbanThread's payment flows. (payment_declined), unretried",
-          "requires_merchant_approval": false
-        },
-        {
-          "action_type": "retry_soft_decline",
-          "txn_id": "pay_urbanthread_0187",
-          "amount_paise": 397289,
-          "target_bank": "Central Bank of India",
-          "scheduled_time": null,
-          "reason": "Enable automatic soft-decline retry for retriable failure codes on UrbanThread's payment flows. (card_declined), unretried",
-          "requires_merchant_approval": false
-        },
-        {
-          "action_type": "retry_soft_decline",
-          "txn_id": "pay_urbanthread_0250",
-          "amount_paise": 378837,
-          "target_bank": "Canara Bank",
-          "scheduled_time": null,
-          "reason": "Enable automatic soft-decline retry for retriable failure codes on UrbanThread's payment flows. (transaction_daily_limit_exceeded), unretried",
-          "requires_merchant_approval": false
-        },
-        {
-          "action_type": "retry_soft_decline",
-          "txn_id": "pay_urbanthread_0813",
-          "amount_paise": 287533,
+          "txn_id": "pay_techbazaar_0538",
+          "amount_paise": 2426705,
           "target_bank": "State Bank of India",
           "scheduled_time": null,
-          "reason": "Enable automatic soft-decline retry for retriable failure codes on UrbanThread's payment flows. (transaction_daily_count_exceeded), unretried",
+          "reason": "Enable automatic soft-decline retry on the payment gateway for eligible response codes (e.g. temporary bank unavailability, do-not-honour retryable). (debit_declined), unretried",
           "requires_merchant_approval": false
         },
         {
           "action_type": "retry_soft_decline",
-          "txn_id": "pay_urbanthread_0668",
-          "amount_paise": 247367,
-          "target_bank": "India Post Payments Bank Limited",
-          "scheduled_time": null,
-          "reason": "Enable automatic soft-decline retry for retriable failure codes on UrbanThread's payment flows. (payment_pending), unretried",
-          "requires_merchant_approval": false
-        },
-        {
-          "action_type": "retry_soft_decline",
-          "txn_id": "pay_urbanthread_0807",
-          "amount_paise": 177058,
-          "target_bank": "India Post Payments Bank Limited",
-          "scheduled_time": null,
-          "reason": "Enable automatic soft-decline retry for retriable failure codes on UrbanThread's payment flows. (payment_pending_approval), unretried",
-          "requires_merchant_approval": false
-        },
-        {
-          "action_type": "retry_soft_decline",
-          "txn_id": "pay_urbanthread_0203",
-          "amount_paise": 172065,
-          "target_bank": "Bank of Baroda",
-          "scheduled_time": null,
-          "reason": "Enable automatic soft-decline retry for retriable failure codes on UrbanThread's payment flows. (card_declined), unretried",
-          "requires_merchant_approval": false
-        },
-        {
-          "action_type": "retry_soft_decline",
-          "txn_id": "pay_urbanthread_0278",
-          "amount_paise": 158767,
-          "target_bank": "Kotak Mahindra Bank",
-          "scheduled_time": null,
-          "reason": "Enable automatic soft-decline retry for retriable failure codes on UrbanThread's payment flows. (payment_pending_approval), unretried",
-          "requires_merchant_approval": false
-        },
-        {
-          "action_type": "retry_soft_decline",
-          "txn_id": "pay_urbanthread_0756",
-          "amount_paise": 113342,
+          "txn_id": "pay_techbazaar_0369",
+          "amount_paise": 2405515,
           "target_bank": "State Bank of India",
           "scheduled_time": null,
-          "reason": "Enable automatic soft-decline retry for retriable failure codes on UrbanThread's payment flows. (transaction_daily_count_exceeded), unretried",
+          "reason": "Enable automatic soft-decline retry on the payment gateway for eligible response codes (e.g. temporary bank unavailability, do-not-honour retryable). (transaction_daily_count_exceeded), unretried",
           "requires_merchant_approval": false
         },
         {
           "action_type": "retry_soft_decline",
-          "txn_id": "pay_urbanthread_0275",
-          "amount_paise": 92810,
-          "target_bank": "Punjab National Bank",
-          "scheduled_time": null,
-          "reason": "Enable automatic soft-decline retry for retriable failure codes on UrbanThread's payment flows. (transaction_limit_exceeded), unretried",
-          "requires_merchant_approval": false
-        },
-        {
-          "action_type": "retry_soft_decline",
-          "txn_id": "pay_urbanthread_0558",
-          "amount_paise": 77299,
-          "target_bank": "State Bank of India",
-          "scheduled_time": null,
-          "reason": "Enable automatic soft-decline retry for retriable failure codes on UrbanThread's payment flows. (card_declined), unretried",
-          "requires_merchant_approval": false
-        },
-        {
-          "action_type": "retry_soft_decline",
-          "txn_id": "pay_urbanthread_0437",
-          "amount_paise": 59296,
-          "target_bank": "Bank of Baroda",
-          "scheduled_time": null,
-          "reason": "Enable automatic soft-decline retry for retriable failure codes on UrbanThread's payment flows. (insufficient_funds), unretried",
-          "requires_merchant_approval": false
-        },
-        {
-          "action_type": "retry_soft_decline",
-          "txn_id": "pay_urbanthread_0810",
-          "amount_paise": 54136,
-          "target_bank": "Punjab National Bank",
-          "scheduled_time": null,
-          "reason": "Enable automatic soft-decline retry for retriable failure codes on UrbanThread's payment flows. (debit_declined), unretried",
-          "requires_merchant_approval": false
-        },
-        {
-          "action_type": "retry_soft_decline",
-          "txn_id": "pay_urbanthread_0068",
-          "amount_paise": 52417,
-          "target_bank": "India Post Payments Bank Limited",
-          "scheduled_time": null,
-          "reason": "Enable automatic soft-decline retry for retriable failure codes on UrbanThread's payment flows. (payment_declined), unretried",
-          "requires_merchant_approval": false
-        },
-        {
-          "action_type": "retry_soft_decline",
-          "txn_id": "pay_urbanthread_0175",
-          "amount_paise": 46171,
+          "txn_id": "pay_techbazaar_0334",
+          "amount_paise": 2310511,
           "target_bank": "HDFC Bank Ltd.",
           "scheduled_time": null,
-          "reason": "Enable automatic soft-decline retry for retriable failure codes on UrbanThread's payment flows. (payment_declined), unretried",
+          "reason": "Enable automatic soft-decline retry on the payment gateway for eligible response codes (e.g. temporary bank unavailability, do-not-honour retryable). (transaction_daily_count_exceeded), unretried",
+          "requires_merchant_approval": false
+        },
+        {
+          "action_type": "retry_soft_decline",
+          "txn_id": "pay_techbazaar_0465",
+          "amount_paise": 2176012,
+          "target_bank": "State Bank of India",
+          "scheduled_time": null,
+          "reason": "Enable automatic soft-decline retry on the payment gateway for eligible response codes (e.g. temporary bank unavailability, do-not-honour retryable). (card_declined), unretried",
+          "requires_merchant_approval": false
+        },
+        {
+          "action_type": "retry_soft_decline",
+          "txn_id": "pay_techbazaar_0186",
+          "amount_paise": 1820199,
+          "target_bank": "State Bank of India",
+          "scheduled_time": null,
+          "reason": "Enable automatic soft-decline retry on the payment gateway for eligible response codes (e.g. temporary bank unavailability, do-not-honour retryable). (payment_declined), unretried",
+          "requires_merchant_approval": false
+        },
+        {
+          "action_type": "retry_soft_decline",
+          "txn_id": "pay_techbazaar_0331",
+          "amount_paise": 1813704,
+          "target_bank": "Central Bank of India",
+          "scheduled_time": null,
+          "reason": "Enable automatic soft-decline retry on the payment gateway for eligible response codes (e.g. temporary bank unavailability, do-not-honour retryable). (payment_declined), unretried",
+          "requires_merchant_approval": false
+        },
+        {
+          "action_type": "retry_soft_decline",
+          "txn_id": "pay_techbazaar_0286",
+          "amount_paise": 1771979,
+          "target_bank": "State Bank of India",
+          "scheduled_time": null,
+          "reason": "Enable automatic soft-decline retry on the payment gateway for eligible response codes (e.g. temporary bank unavailability, do-not-honour retryable). (transaction_daily_limit_exceeded), unretried",
+          "requires_merchant_approval": false
+        },
+        {
+          "action_type": "retry_soft_decline",
+          "txn_id": "pay_techbazaar_0251",
+          "amount_paise": 1474527,
+          "target_bank": "Bank of Baroda",
+          "scheduled_time": null,
+          "reason": "Enable automatic soft-decline retry on the payment gateway for eligible response codes (e.g. temporary bank unavailability, do-not-honour retryable). (transaction_daily_count_exceeded), unretried",
+          "requires_merchant_approval": false
+        },
+        {
+          "action_type": "retry_soft_decline",
+          "txn_id": "pay_techbazaar_0776",
+          "amount_paise": 1442926,
+          "target_bank": "State Bank of India",
+          "scheduled_time": null,
+          "reason": "Enable automatic soft-decline retry on the payment gateway for eligible response codes (e.g. temporary bank unavailability, do-not-honour retryable). (payment_pending), unretried",
+          "requires_merchant_approval": false
+        },
+        {
+          "action_type": "retry_soft_decline",
+          "txn_id": "pay_techbazaar_0058",
+          "amount_paise": 1326635,
+          "target_bank": "Union Bank of India",
+          "scheduled_time": null,
+          "reason": "Enable automatic soft-decline retry on the payment gateway for eligible response codes (e.g. temporary bank unavailability, do-not-honour retryable). (card_declined), unretried",
+          "requires_merchant_approval": false
+        },
+        {
+          "action_type": "retry_soft_decline",
+          "txn_id": "pay_techbazaar_0157",
+          "amount_paise": 1216278,
+          "target_bank": "Kotak Mahindra Bank",
+          "scheduled_time": null,
+          "reason": "Enable automatic soft-decline retry on the payment gateway for eligible response codes (e.g. temporary bank unavailability, do-not-honour retryable). (payment_declined), unretried",
+          "requires_merchant_approval": false
+        },
+        {
+          "action_type": "retry_soft_decline",
+          "txn_id": "pay_techbazaar_0746",
+          "amount_paise": 1136865,
+          "target_bank": "India Post Payments Bank Limited",
+          "scheduled_time": null,
+          "reason": "Enable automatic soft-decline retry on the payment gateway for eligible response codes (e.g. temporary bank unavailability, do-not-honour retryable). (transaction_daily_count_exceeded), unretried",
+          "requires_merchant_approval": false
+        },
+        {
+          "action_type": "retry_soft_decline",
+          "txn_id": "pay_techbazaar_0815",
+          "amount_paise": 1055013,
+          "target_bank": "Union Bank of India",
+          "scheduled_time": null,
+          "reason": "Enable automatic soft-decline retry on the payment gateway for eligible response codes (e.g. temporary bank unavailability, do-not-honour retryable). (card_declined), unretried",
+          "requires_merchant_approval": false
+        },
+        {
+          "action_type": "retry_soft_decline",
+          "txn_id": "pay_techbazaar_0046",
+          "amount_paise": 1018683,
+          "target_bank": "Central Bank of India",
+          "scheduled_time": null,
+          "reason": "Enable automatic soft-decline retry on the payment gateway for eligible response codes (e.g. temporary bank unavailability, do-not-honour retryable). (payment_declined), unretried",
+          "requires_merchant_approval": false
+        },
+        {
+          "action_type": "retry_soft_decline",
+          "txn_id": "pay_techbazaar_0018",
+          "amount_paise": 858926,
+          "target_bank": "Indian Bank",
+          "scheduled_time": null,
+          "reason": "Enable automatic soft-decline retry on the payment gateway for eligible response codes (e.g. temporary bank unavailability, do-not-honour retryable). (debit_declined), unretried",
+          "requires_merchant_approval": false
+        },
+        {
+          "action_type": "retry_soft_decline",
+          "txn_id": "pay_techbazaar_0354",
+          "amount_paise": 767921,
+          "target_bank": "State Bank of India",
+          "scheduled_time": null,
+          "reason": "Enable automatic soft-decline retry on the payment gateway for eligible response codes (e.g. temporary bank unavailability, do-not-honour retryable). (transaction_limit_exceeded), unretried",
+          "requires_merchant_approval": false
+        },
+        {
+          "action_type": "retry_soft_decline",
+          "txn_id": "pay_techbazaar_0770",
+          "amount_paise": 553370,
+          "target_bank": "Indusind Bank Ltd.",
+          "scheduled_time": null,
+          "reason": "Enable automatic soft-decline retry on the payment gateway for eligible response codes (e.g. temporary bank unavailability, do-not-honour retryable). (transaction_daily_count_exceeded), unretried",
+          "requires_merchant_approval": false
+        },
+        {
+          "action_type": "retry_soft_decline",
+          "txn_id": "pay_techbazaar_0635",
+          "amount_paise": 53113,
+          "target_bank": "Union Bank of India",
+          "scheduled_time": null,
+          "reason": "Enable automatic soft-decline retry on the payment gateway for eligible response codes (e.g. temporary bank unavailability, do-not-honour retryable). (insufficient_funds), unretried",
           "requires_merchant_approval": false
         }
       ]
@@ -2658,47 +2777,58 @@
     {
       "group_id": "flag_for_investigation",
       "action_type": "flag_for_investigation",
-      "title": "Flag 4 findings for investigation",
+      "title": "Flag 3 findings for investigation",
       "why": "Signals too weak to act on. The agent refuses rather than guessing.",
-      "count": 4,
+      "count": 3,
       "total_paise": 0,
       "auto": false,
       "actions": [
         {
           "action_type": "flag_for_investigation",
-          "txn_id": "merchant:urbanthread",
+          "txn_id": "merchant:techbazaar",
           "amount_paise": 0,
           "target_bank": null,
           "scheduled_time": null,
-          "reason": "bank: attribution -0.14 pts is inside its own measured error of +/-0.57 pts -- the engine cannot tell this from zero",
+          "reason": "bank: attribution -0.34 pts is inside its own measured error of +/-0.57 pts -- the engine cannot tell this from zero",
           "requires_merchant_approval": false
         },
         {
           "action_type": "flag_for_investigation",
-          "txn_id": "merchant:urbanthread",
+          "txn_id": "merchant:techbazaar",
           "amount_paise": 0,
           "target_bank": null,
           "scheduled_time": null,
-          "reason": "method: factor not identified -- the merchant has effectively one value here, so there is nothing to reweight toward and the attribution is unmeasurable rather than small",
+          "reason": "hour: attribution -0.46 pts is inside its own measured error of +/-0.57 pts -- the engine cannot tell this from zero",
           "requires_merchant_approval": false
         },
         {
           "action_type": "flag_for_investigation",
-          "txn_id": "merchant:urbanthread",
+          "txn_id": "merchant:techbazaar",
           "amount_paise": 0,
           "target_bank": null,
           "scheduled_time": null,
-          "reason": "hour: attribution -0.30 pts is inside its own measured error of +/-0.57 pts -- the engine cannot tell this from zero",
+          "reason": "amount_band: factor not identified -- the merchant has effectively one value here, so there is nothing to reweight toward and the attribution is unmeasurable rather than small",
           "requires_merchant_approval": false
-        },
+        }
+      ]
+    },
+    {
+      "group_id": "update_payment_method",
+      "action_type": "update_payment_method",
+      "title": "Rebalance the payment method mix",
+      "why": "Shift the default rail toward what performs for this category.",
+      "count": 1,
+      "total_paise": 0,
+      "auto": false,
+      "actions": [
         {
-          "action_type": "flag_for_investigation",
-          "txn_id": "merchant:urbanthread",
+          "action_type": "update_payment_method",
+          "txn_id": "merchant:techbazaar",
           "amount_paise": 0,
           "target_bank": null,
           "scheduled_time": null,
-          "reason": "amount_band: attribution -0.18 pts is inside its own measured error of +/-0.58 pts -- the engine cannot tell this from zero",
-          "requires_merchant_approval": false
+          "reason": "Promote UPI as the default or first-displayed payment option at checkout to shift volume away from cards toward the higher-performing rail.",
+          "requires_merchant_approval": true
         }
       ]
     }
