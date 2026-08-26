@@ -242,8 +242,8 @@ remitter bank-months. Full write-up: [`docs/npci_finding.md`](docs/npci_finding.
 
 ## What broke
 
-**Thirteen things. Eleven found by a measurement disagreeing with me, not by a
-crash.** Full write-up: **[`docs/what_broke.md`](docs/what_broke.md)** — the
+**Fourteen things. Twelve found by a measurement disagreeing with me, not by a
+crash** — the last one by a check I wrote to prove the others were safe. Full write-up: **[`docs/what_broke.md`](docs/what_broke.md)** — the
 best 10 minutes you can spend in this repo.
 
 The short version: my best slide didn't reproduce · a test failed with the
@@ -254,9 +254,11 @@ the baseline ladder caught a bug in my own policy and the fix produced a better
 claim than winning would have · the baseline modelled the wrong leg of the
 transaction · healthy merchants were queued for calls they didn't need · and
 the demo was quietly serving placeholder output because I killed Node but not
-Python · **and the verifier I was confident about turned out to fix
-consistency rather than accuracy — an 8-merchant pilot showed +12 points and
-the full 60 showed noise.**
+Python · the verifier I was confident about turned out to fix consistency
+rather than accuracy, after an 8-merchant pilot showed +12 points and the full
+60 showed noise · **and the reproducibility check failed on its first run,
+because Python randomises string hashing and my set iteration was silently
+changing float summation order.**
 
 ---
 

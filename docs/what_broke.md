@@ -1,8 +1,9 @@
 # What broke, and how I got out
 
-Thirteen things. **Eleven were found by a measurement disagreeing with me, not
+Fourteen things. **Twelve were found by a measurement disagreeing with me, not
 by a crash** — which is the whole reason I built the validation harness before
-the demo rather than after it.
+the demo rather than after it. The last one was found by a check I wrote to
+prove the others were safe.
 
 Each entry says what I expected, what actually happened, how I found it, and
 what changed. They are ordered by how much they hurt.
@@ -393,6 +394,58 @@ project.
 built the habit of running the full sweep. And I would have believed the +5.00
 if I had not already been burned by the +12. Small samples flatter the thing
 you just built — and so does the first favourable re-run.
+
+---
+
+## 14. The reproducibility check found a reproducibility bug in its first run
+
+**Expected.** This project claims a panellist can clone it and reproduce every
+number. That is easy to claim and easy to quietly break, so I wrote
+`scripts/verify_reproducibility.py`: regenerate everything, re-run every
+deterministic eval, and ask git whether a single committed figure moved. I
+expected it to pass on the first run and to be useful later.
+
+**What happened.** It failed immediately. **43 of the 200 sweep merchants came
+back different.**
+
+**How I found what.** The diffs were tiny and strange:
+
+```
+- "bank": 1.583544372390052,
++ "bank": 1.583544372390018,
+- "method": -1.6653345369377348e-14,
++ "method": 7.401486830834376e-15,
+```
+
+Differences at the **fifteenth significant figure**, and only inside the
+`ground_truth` block. The transactions themselves were byte-identical, so the
+seeded RNG was fine. Something in the *analytic* ground-truth computation was
+varying between processes.
+
+**Why.** `correlated_joint` built its output by iterating
+`set(indep) | set(como)`. Python randomises string hashing per process, so that
+set walks its ~1,280 cells in a different order every run — which changes the
+order the floats are summed in, which moves the total at machine epsilon.
+
+Every value was still *correct*. They had simply stopped being *identical*, and
+identical is the thing this project actually promises.
+
+**How I got out.** One `sorted()`. Then I checked it properly — same merchant,
+three separate Python processes:
+
+```
+2.5769967127931235  4.4002994689435582
+2.5769967127931235  4.4002994689435582
+2.5769967127931235  4.4002994689435582
+```
+
+The check now runs in CI on every push, so this cannot silently return.
+
+**Lesson, and it is the one I would keep.** I had been claiming determinism for
+weeks on the strength of a fixed seed and `temperature=0`. Both were true and
+neither was sufficient — a hash-order dependency sitting underneath them made
+the claim false at a precision nobody would have noticed until they diffed two
+clones. **The claim was only as good as the test I had not written yet.**
 
 ---
 
