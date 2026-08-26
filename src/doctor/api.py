@@ -353,6 +353,108 @@ async def stream(merchant: str, calibration: str = "central", pace_ms: float = 0
     )
 
 
+@app.get("/api/validate/stream")
+async def validate_stream(limit: int = 200, rate: int = 25):
+    """Re-score the validation sweep, one merchant at a time, live.
+
+    Not a re-read of the committed JSON: this runs the real decomposer over
+    each sweep merchant and compares against the analytic ground truth that
+    merchant was constructed with. The MAE you watch converge is being
+    computed in front of you, and it lands on the committed figure because
+    it is the same computation that produced it.
+
+    The point is that the error bar is a measurement anyone can repeat, not a
+    number on a slide.
+    """
+    from doctor.cohort import build_cohort
+    from doctor.features import FACTORS
+    from doctor.generator import GeneratedMerchant
+    from doctor.shapley import ShapleyDecomposer
+
+    sweep = sorted((SYNTH / "validation_sweep").glob("merchant_*.json"))
+    if not sweep:
+        raise HTTPException(404, "no validation sweep generated")
+    sweep = sweep[: max(1, min(limit, len(sweep)))]
+    baseline = Baseline()
+    delay = 1.0 / max(1, min(rate, 500))
+
+    async def gen():
+        yield _sse("start", {"total": len(sweep)})
+        abs_err: dict[str, list[float]] = {f: [] for f in FACTORS}
+        primary_hits = 0
+        primary_scored = 0
+
+        for i, path in enumerate(sweep, 1):
+            m = GeneratedMerchant.model_validate_json(
+                path.read_text(encoding="utf-8")
+            )
+            cohort = build_cohort(m.profile.mcc, baseline)
+            dec = ShapleyDecomposer(baseline, cohort).decompose(m.transactions)
+            est = dec.by_factor()
+            true = m.ground_truth.true_attribution
+
+            errs = {f: est[f] - true[f] for f in FACTORS}
+            for f in FACTORS:
+                abs_err[f].append(abs(errs[f]))
+
+            true_primary = (
+                max(true, key=lambda k: true[k])
+                if any(abs(v) > 1e-9 for v in true.values())
+                else None
+            )
+            hit = None
+            if true_primary is not None:
+                primary_scored += 1
+                hit = dec.primary_cause() == true_primary
+                if hit:
+                    primary_hits += 1
+
+            yield _sse(
+                "merchant",
+                {
+                    "i": i,
+                    "merchant_id": m.profile.merchant_id,
+                    "mcc": m.profile.mcc,
+                    "n": len(m.transactions),
+                    "injected": m.ground_truth.injected_causes,
+                    "true_primary": true_primary,
+                    "found_primary": dec.primary_cause(),
+                    "correct": hit,
+                    "worst_err": round(max(abs(v) for v in errs.values()), 4),
+                    "running_mae": {
+                        f: round(sum(abs_err[f]) / len(abs_err[f]), 4)
+                        for f in FACTORS
+                    },
+                    "running_primary_pct": round(
+                        100.0 * primary_hits / primary_scored, 2
+                    )
+                    if primary_scored
+                    else None,
+                },
+            )
+            await asyncio.sleep(delay)
+
+        yield _sse(
+            "done",
+            {
+                "scored": len(sweep),
+                "mae": {
+                    f: round(sum(abs_err[f]) / len(abs_err[f]), 4) for f in FACTORS
+                },
+                "primary_cause_pct": round(100.0 * primary_hits / primary_scored, 2)
+                if primary_scored
+                else None,
+                "committed": _read_json(RESULTS / "attribution_mae_by_factor.json"),
+            },
+        )
+
+    return StreamingResponse(
+        gen(),
+        media_type="text/event-stream",
+        headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"},
+    )
+
+
 @app.get("/api/live/{merchant}/stream")
 async def live_feed(merchant: str, rate: int = 60, limit: int = 0):
     """Payments arriving one at a time, with an online detector watching.
