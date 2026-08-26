@@ -35,11 +35,15 @@ held the signing key, and its output is a validated struct from a closed enum.
 **3. A deterministic verifier that catches the model contradicting itself.**
 Not an LLM judging an LLM — every rule is a string or arithmetic check against
 the exact context the model was handed, so a violation is a fact rather than an
-opinion. It caught the model citing **10 figures that appear nowhere in its
-data**, each of which would otherwise have reached a merchant email. Measured
-honestly: it makes the output **consistent, not more accurate** — violations
-29 → 0, accuracy 60.0% → 61.7%, which is noise. Two different properties,
-reported separately.
+opinion. It caught the model citing **8 figures that appear nowhere in its
+data**, each of which would otherwise have reached a merchant email, and 20
+cases where it named a cause its own decomposition contradicted.
+
+Measured honestly across two merchant sets: **violations 29 → 0 and 28 → 1**,
+while accuracy moved +1.7 points once and +5.0 the next time. An effect that
+unstable is not one I will claim, so it is not claimed — the verifier makes the
+output **consistent**; whether it also makes it more **accurate** is not
+established. Two properties, reported separately.
 
 **4. It grades its own forecasts after the fix lands.**
 Apply a fix, let a month pass, re-run: *predicted +3.22 points, measured
@@ -106,13 +110,14 @@ violations **0** · Σφᵢ = v(N) to machine precision, asserted in tests.
 
 **The AI steps, including where they fall short.** Classification **87.9%**
 (95% CI 72.7–95.2) on 33 held-out *codes*; the brief aimed at >95%. Root cause
-**60.0%** (95% CI 47.4–71.4); the brief aimed at >85%. Both go in as measured.
+**70.0%** (95% CI 57.5–80.1); the brief aimed at >85%. Both go in as measured.
 Three of the four classification errors are boundary calls where the model's
 answer is defensible — **I did not move ground truth to match it.**
 
-More useful than the 60% is where the error lives: the attribution itself caps
-the model at 75%, and the model then follows what it was shown 63% of the time.
-Two weak links, both now visible.
+More useful than the 70% is where the error lives: the attribution itself caps
+the model at **73.3%**, and the model follows what it was shown **83.3%** of the
+time — correct on **88.6%** of the merchants where the attribution had already
+pointed at the right cause. That says clearly which half to fix first.
 
 ---
 
