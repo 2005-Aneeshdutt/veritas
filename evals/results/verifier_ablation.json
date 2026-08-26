@@ -1,49 +1,49 @@
 {
-  "note": "Same merchants, same prompts, same seed; the only difference is whether the deterministic verifier runs. HEADLINE: the verifier makes the output consistent, NOT more accurate. Violations fall from 23 merchants to 1 while accuracy moves within noise (8 merchants improve, 7 regress). The model was contradicting its own evidence even where it happened to be right, so removing the contradiction does not fix the reasoning. It is still worth shipping: 10 of the caught violations were figures the model invented, each of which would otherwise have reached a merchant-facing email.",
-  "conclusion": "consistency improved decisively; accuracy did not move. Reported as two separate properties rather than one.",
+  "note": "Same merchants, same prompts, same seed; the only difference is whether the deterministic verifier runs. HEADLINE: the verifier makes the output CONSISTENT; whether it also makes it more ACCURATE is not established. Violations collapse decisively in both runs of this experiment, but the accuracy delta moved from +1.7 to +5.0 points between two merchant sets, with heavily overlapping intervals and nearly as many merchants broken as fixed. An effect that unstable is not one to claim. Worth shipping regardless: the caught violations include figures the model invented outright, each of which would otherwise have reached a merchant-facing email.",
+  "conclusion": "consistency improved decisively; the accuracy effect is not established. Reported as two separate properties, not one.",
   "n": 60,
   "without_verifier": {
-    "accuracy": 0.6,
+    "accuracy": 0.65,
     "ci95": [
-      0.4737,
-      0.7143
+      0.5236,
+      0.7583
     ],
-    "merchants_with_violations": 23,
+    "merchants_with_violations": 22,
     "violations_by_rule": {
-      "R1_ungrounded_number": 10,
-      "R2_primary_label_mismatch": 19
+      "R2_primary_label_mismatch": 20,
+      "R1_ungrounded_number": 8
     }
   },
   "with_verifier": {
-    "accuracy": 0.6167,
+    "accuracy": 0.7,
     "ci95": [
-      0.4902,
-      0.7291
+      0.5749,
+      0.801
     ],
     "merchants_with_violations": 1,
     "violations_by_rule": {
-      "R3_acted_on_unidentified_factor": 1
+      "R2_primary_label_mismatch": 1
     },
-    "repaired": 23
+    "repaired": 22
   },
-  "delta_pts": 1.67,
+  "delta_pts": 5.0,
   "fixed_by_verifier": [
-    "sweep_004",
+    "sweep_003",
     "sweep_015",
-    "sweep_019",
-    "sweep_022",
-    "sweep_026",
     "sweep_027",
+    "sweep_031",
+    "sweep_041",
+    "sweep_044",
+    "sweep_045",
     "sweep_052",
     "sweep_058"
   ],
   "broken_by_verifier": [
+    "sweep_008",
     "sweep_009",
-    "sweep_031",
-    "sweep_036",
     "sweep_042",
-    "sweep_045",
-    "sweep_051",
+    "sweep_046",
+    "sweep_055",
     "sweep_057"
   ],
   "rules": {

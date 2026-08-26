@@ -10,24 +10,33 @@ ablation that says whether the fix worked.
 Same merchants, same prompts, same seed. The only difference is whether the
 deterministic verifier runs and re-asks once on a violation.
 
-WHAT ACTUALLY HAPPENED, on 60 merchants: violations fell from 23 merchants to
-1, and accuracy moved 60.0% -> 61.7%. That delta is NOISE -- 8 merchants got
-better, 7 got worse, and the intervals overlap almost completely.
+WHAT ACTUALLY HAPPENED, measured twice on two different merchant sets:
 
-So the honest conclusion is not "the verifier made the model smarter". It is:
+    merchant set    accuracy off -> on   fixed / broken   violations
+    original        60.0% -> 61.7%       8 / 7            29 -> 0
+    after regen     65.0% -> 70.0%       9 / 6            28 -> 1
 
-    The verifier makes the output CONSISTENT, not more ACCURATE.
+The accuracy point estimate is much larger the second time. But 9 fixed against
+6 broken is a net of three merchants out of sixty, the confidence intervals
+overlap heavily either way, and an effect that moves from +1.7 to +5.0 between
+two runs of the same experiment is not an effect I am willing to claim.
 
-Those are different properties and conflating them is the easy mistake. The
-model's rule violations were mostly not the cause of its wrong answers -- it
-was contradicting its own evidence even on merchants it got right. Eliminating
-that does not fix the reasoning.
+What is NOT ambiguous is the other column. Violations collapse in both runs.
 
-It is still worth shipping, for a reason that has nothing to do with accuracy:
-10 of those violations were numbers the model invented that appear nowhere in
-the data it was given. Every one of those would otherwise have gone into a
-merchant-facing email. Catching them is a safety property, and it is worth
-having whether or not the label at the end changes.
+So the conclusion is the same both times:
+
+    The verifier makes the output CONSISTENT. Whether it also makes it more
+    ACCURATE is not established by this data.
+
+Those are different properties, and conflating them is the easy mistake. The
+model was contradicting its own evidence even on merchants it got right, so
+removing the contradiction does not necessarily fix the reasoning.
+
+It is worth shipping regardless, for a reason unrelated to accuracy: 8 of the
+caught violations were figures the model invented that appear nowhere in the
+data it was given. Every one would otherwise have reached a merchant-facing
+email. That is a safety property, and it holds whether or not the label at the
+end changes.
 """
 
 from __future__ import annotations
@@ -142,18 +151,19 @@ def main() -> int:
         "note": (
             "Same merchants, same prompts, same seed; the only difference is "
             "whether the deterministic verifier runs. HEADLINE: the verifier "
-            "makes the output consistent, NOT more accurate. Violations fall "
-            "from 23 merchants to 1 while accuracy moves within noise (8 "
-            "merchants improve, 7 regress). The model was contradicting its "
-            "own evidence even where it happened to be right, so removing the "
-            "contradiction does not fix the reasoning. It is still worth "
-            "shipping: 10 of the caught violations were figures the model "
-            "invented, each of which would otherwise have reached a "
-            "merchant-facing email."
+            "makes the output CONSISTENT; whether it also makes it more "
+            "ACCURATE is not established. Violations collapse decisively in "
+            "both runs of this experiment, but the accuracy delta moved from "
+            "+1.7 to +5.0 points between two merchant sets, with heavily "
+            "overlapping intervals and nearly as many merchants broken as "
+            "fixed. An effect that unstable is not one to claim. Worth "
+            "shipping regardless: the caught violations include figures the "
+            "model invented outright, each of which would otherwise have "
+            "reached a merchant-facing email."
         ),
         "conclusion": (
-            "consistency improved decisively; accuracy did not move. Reported "
-            "as two separate properties rather than one."
+            "consistency improved decisively; the accuracy effect is not "
+            "established. Reported as two separate properties, not one."
         ),
         "n": n,
         "without_verifier": {
