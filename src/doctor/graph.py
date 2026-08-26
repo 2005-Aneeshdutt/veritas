@@ -289,8 +289,14 @@ def node_hypothesise(s: State) -> State:
 
 
 def node_plan(s: State) -> State:
-    """[LLM-derived, DET-gated] typed actions, gated by measured error."""
-    t = s.tracer.start("plan", kind="llm", model=MODEL_FAST)
+    """[DET] typed actions from the LLM's labels, gated by measured error.
+
+    Traced as deterministic because it is: build_plan takes no client and
+    makes no call. It consumes the labels hypothesise already produced.
+    Badging it as a model node inflates the model-call count the flow
+    page reports.
+    """
+    t = s.tracer.start("plan", kind="deterministic")
     plan = build_plan(s.diagnosis, s.decomposition, s.transactions)
     s.plan = plan
     s.tracer.finish(
