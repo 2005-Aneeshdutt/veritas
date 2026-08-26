@@ -136,7 +136,7 @@ export default function ExceptionsPage({ params }: { params: { runId: string } }
           </div>
 
           {ex.method_failures.length === 0 ? (
-            <div className="glass-raised p-4 mt-4 text-sm text-mint">
+            <div className="card-raised p-4 mt-4 text-sm text-mint">
               ✓ Nothing flagged. Every factor was identifiable, the importance
               weights stayed in bounds, and the batch was large enough to resolve
               the gap being claimed.
@@ -149,7 +149,7 @@ export default function ExceptionsPage({ params }: { params: { runId: string } }
                   what: f.detail,
                 };
                 return (
-                  <div key={i} className="glass-raised p-4">
+                  <div key={i} className="card-raised p-4">
                     <div className="flex items-center gap-2">
                       <span className="text-amber">▲</span>
                       <span className="text-sm font-medium">{m.label}</span>
@@ -215,10 +215,10 @@ export default function ExceptionsPage({ params }: { params: { runId: string } }
             {groups.map((g) => {
               const isOpen = open === g.key;
               return (
-                <div key={g.key} className="glass-raised overflow-hidden">
+                <div key={g.key} className="card-raised overflow-hidden">
                   <button
                     onClick={() => setOpen(isOpen ? null : g.key)}
-                    className="w-full p-4 text-left hover:bg-white/[0.02] transition-colors"
+                    className="w-full p-4 text-left hover:bg-raised transition-colors"
                   >
                     <div className="flex items-center gap-4 flex-wrap">
                       <span
@@ -242,7 +242,7 @@ export default function ExceptionsPage({ params }: { params: { runId: string } }
                         </div>
                         <div className="eyebrow">{g.rows.length} payments</div>
                       </div>
-                      <span className="text-gold w-3 shrink-0">
+                      <span className="text-brand w-3 shrink-0">
                         {isOpen ? "−" : "+"}
                       </span>
                     </div>
@@ -298,7 +298,7 @@ export default function ExceptionsPage({ params }: { params: { runId: string } }
               {r.needs_review.map((c: any) => (
                 <div
                   key={c.code}
-                  className="glass-raised px-3 py-2 flex items-center gap-3 text-xs num"
+                  className="card-raised px-3 py-2 flex items-center gap-3 text-xs num"
                 >
                   <span className="text-ink truncate">{c.code}</span>
                   <span className="text-muted">{c.category}</span>
@@ -321,7 +321,7 @@ export default function ExceptionsPage({ params }: { params: { runId: string } }
           </p>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-2.5">
             {STOPPING_RULES.map(([rule, detail]) => (
-              <div key={rule} className="glass-raised p-3">
+              <div key={rule} className="card-raised p-3">
                 <div className="flex items-center gap-2">
                   <span className="text-mint text-xs">✓</span>
                   <span className="text-sm font-medium">{rule}</span>
