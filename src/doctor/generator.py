@@ -150,8 +150,14 @@ def correlated_joint(
                 cell = tuple(values[f] for f in FACTORS)  # type: ignore[assignment]
                 como[cell] = como.get(cell, 0.0) + p
 
+    # SORTED, and this matters. Iterating `set(indep) | set(como)` walks the
+    # cells in an order that depends on Python's per-process string hash seed,
+    # which changes the order the floats are summed in downstream, which moves
+    # the analytic ground truth at the 15th significant figure. Every value
+    # stayed correct; the committed numbers simply stopped being byte-identical
+    # between runs. Determinism is a deliverable here, so the order is pinned.
     out: dict[Cell, float] = {}
-    for cell in set(indep) | set(como):
+    for cell in sorted(set(indep) | set(como)):
         out[cell] = (1 - rho) * indep.get(cell, 0.0) + rho * como.get(cell, 0.0)
     return out
 
