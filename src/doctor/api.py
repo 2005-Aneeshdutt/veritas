@@ -42,6 +42,14 @@ from doctor.portfolio import build_portfolio, ledger_csv, portfolio_csv
 from doctor.generator import GeneratedMerchant
 from doctor.graph import git_commit, run_diagnosis
 from doctor.live import LiveMonitor, in_arrival_order
+from doctor.prove import (
+    CATEGORIES,
+    CAUSES,
+    blind_batch,
+    load_challenge,
+    new_challenge,
+    score,
+)
 from doctor.llm import MODEL_FAST, MODEL_REASONING
 from doctor.run import load_mandate, load_merchant
 from doctor.trace import RunRecord
@@ -351,6 +359,155 @@ async def stream(merchant: str, calibration: str = "central", pace_ms: float = 0
         media_type="text/event-stream",
         headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"},
     )
+
+
+@app.get("/api/prove/options")
+def prove_options() -> dict:
+    """What a challenger may choose. Same vocabulary the validation sweep uses."""
+    return {
+        "categories": CATEGORIES,
+        "causes": CAUSES,
+        "note": (
+            "Offering causes the validation sweep never covers would be quietly "
+            "setting an easier exam, so the vocabulary here is identical to it."
+        ),
+    }
+
+
+@app.post("/api/prove/new")
+def prove_new(
+    mcc: str = "5411",
+    n_txns: int = 900,
+    causes: str = "midnight_billing_penalty",
+    magnitude_pts: float = 2.0,
+    rho: float = 0.0,
+    seed: int = 0,
+) -> dict:
+    """Step 1 of 3. Generate the merchant and publish the hash of its answer.
+
+    The response deliberately carries no ground truth -- only the seal, the
+    shape of what was asked for, and the batch facts the engine also sees.
+    """
+    import random as _random
+
+    wanted = [c.strip() for c in causes.split(",") if c.strip()]
+    unknown = [c for c in wanted if c not in CAUSES]
+    if unknown:
+        raise HTTPException(400, "unknown cause(s): %s" % ", ".join(unknown))
+    if not 40 <= n_txns <= 8000:
+        raise HTTPException(400, "n_txns must be between 40 and 8000")
+
+    challenge, _ = new_challenge(
+        mcc=mcc,
+        n_txns=n_txns,
+        causes=wanted,
+        magnitude_pts=magnitude_pts,
+        seed=seed or _random.randint(1, 10_000_000),
+        rho=rho,
+    )
+    return json.loads(challenge.model_dump_json())
+
+
+@app.get("/api/prove/{challenge_id}/diagnose")
+async def prove_diagnose(challenge_id: str, pace_ms: float = 18.0):
+    """Step 2 of 3. Run the engine on the batch alone, streaming every step.
+
+    What is handed in is `blind_batch` -- the payments and nothing else. There
+    is no ground truth on the object the engine receives, which is a stronger
+    guarantee than promising not to read one.
+    """
+    try:
+        challenge, m = load_challenge(challenge_id)
+    except FileNotFoundError:
+        raise HTTPException(404, "no such challenge: %s" % challenge_id)
+
+    from doctor.cohort import build_cohort
+    from doctor.plan import load_mae
+    from doctor.shapley import ShapleyDecomposer
+    from doctor.stats import is_underpowered
+
+    baseline = Baseline()
+    txns = blind_batch(m)
+    delay = max(0.0, min(pace_ms, 200.0)) / 1000.0
+
+    async def gen():
+        yield _sse(
+            "start",
+            {"challenge_id": challenge_id, "seal": challenge.seal,
+             "n": len(txns), "blind": True},
+        )
+
+        steps: list = []
+        cohort = build_cohort(m.profile.mcc, baseline)
+        dec = ShapleyDecomposer(baseline, cohort).decompose(
+            txns,
+            mae_by_factor=load_mae(),
+            on_coalition=lambda i, n, label, val: steps.append(
+                {"i": i, "n": n, "label": label, "value": round(val, 4)}
+            ),
+        )
+        # Emitted after the fact rather than from inside the callback because
+        # the decomposition is synchronous; the values are the real ones.
+        for st in steps:
+            yield _sse("coalition", st)
+            if delay:
+                await asyncio.sleep(delay)
+
+        succ = sum(1 for t in txns if t.succeeded)
+        yield _sse(
+            "estimate",
+            {
+                "gap_pts": round(dec.gap_pts, 4),
+                "attributions": {k: round(v, 4) for k, v in dec.by_factor().items()},
+                "residual_pts": round(dec.residual_pts, 4),
+                "primary": dec.primary_cause(),
+                "underpowered": is_underpowered(succ, len(txns), dec.gap_pts),
+                "degenerate_factors": dec.degenerate_factors,
+                "clamp_rate": round(dec.clamp_rate, 4),
+            },
+        )
+        yield _sse("done", {"challenge_id": challenge_id})
+
+    return StreamingResponse(
+        gen(),
+        media_type="text/event-stream",
+        headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"},
+    )
+
+
+@app.post("/api/prove/{challenge_id}/reveal")
+def prove_reveal(challenge_id: str) -> dict:
+    """Step 3 of 3. Break the seal and mark the paper.
+
+    Returns the truth AND the exact bytes that were hashed, so anyone can
+    recompute the digest and check it against the one published in step 1.
+    """
+    try:
+        challenge, m = load_challenge(challenge_id)
+    except FileNotFoundError:
+        raise HTTPException(404, "no such challenge: %s" % challenge_id)
+
+    from doctor.cohort import build_cohort
+    from doctor.plan import load_mae
+    from doctor.prove import canonical_bytes
+    from doctor.shapley import ShapleyDecomposer
+    from doctor.stats import is_underpowered
+
+    baseline = Baseline()
+    txns = blind_batch(m)
+    dec = ShapleyDecomposer(baseline, build_cohort(m.profile.mcc, baseline)).decompose(
+        txns, mae_by_factor=load_mae()
+    )
+    succ = sum(1 for t in txns if t.succeeded)
+    result = score(
+        m, dec, load_mae(),
+        underpowered=is_underpowered(succ, len(txns), dec.gap_pts),
+    )
+    out = json.loads(result.model_dump_json())
+    out["published_seal"] = challenge.seal
+    out["matches_published_seal"] = result.seal == challenge.seal
+    out["canonical_bytes"] = canonical_bytes(result.sealed_payload)
+    return out
 
 
 @app.get("/api/validate/stream")
