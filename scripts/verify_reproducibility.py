@@ -46,6 +46,7 @@ STEPS: list[tuple[str, list[str]]] = [
     ("NPCI finding", ["evals/run_npci_finding.py"]),
     ("NPCI backtest", ["evals/run_backtest.py"]),
     ("outcome accuracy", ["evals/run_outcome_eval.py"]),
+    ("recovery accuracy", ["evals/run_recovery_eval.py"]),
 ]
 
 

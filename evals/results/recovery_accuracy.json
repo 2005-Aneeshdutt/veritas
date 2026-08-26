@@ -1,0 +1,60 @@
+{
+  "note": "Each merchant carries, as ground truth, whether every recoverable failure would actually have converted on retry -- drawn from a model the rail cannot see, keyed on the amount and the issuer as well as the error class.",
+  "what_this_establishes": "That the published three-calibration RANGE brackets the truth, and that the rail's error is concentrated in large payments because it ignores the amount entirely. Both are properties of the rail, and both are measured.",
+  "what_this_does_NOT_establish": "That the central calibration is 1.43x too high in the real world. The ground-truth conversion model is itself a modelling choice -- a deliberately different one, so the comparison is not circular, but a choice. What is being measured is the rail against a plausible alternative, not against reality. Reality would need a live payment rail and a holdout, which is stated as out of scope rather than quietly claimed.",
+  "hours_since_failure": 36.0,
+  "headline": "The central calibration forecasts 143% of what a retry truly recovers across the sweep.",
+  "range_brackets_the_truth": true,
+  "by_calibration": {
+    "conservative": {
+      "merchants_scored": 168,
+      "true_recovered_paise": 620084952,
+      "forecast_paise": 597356364,
+      "portfolio_ratio": 0.9633,
+      "median_merchant_ratio": 0.8897,
+      "mean_merchant_ratio": 2.6183,
+      "p10_ratio": 0.0053,
+      "p90_ratio": 2.6572,
+      "direction": "under-forecasts"
+    },
+    "central": {
+      "merchants_scored": 168,
+      "true_recovered_paise": 620084952,
+      "forecast_paise": 889086509,
+      "portfolio_ratio": 1.4338,
+      "median_merchant_ratio": 1.411,
+      "mean_merchant_ratio": 5.9036,
+      "p10_ratio": 0.4586,
+      "p90_ratio": 4.6212,
+      "direction": "over-forecasts"
+    },
+    "optimistic": {
+      "merchants_scored": 168,
+      "true_recovered_paise": 620084952,
+      "forecast_paise": 1239320648,
+      "portfolio_ratio": 1.9986,
+      "median_merchant_ratio": 1.9823,
+      "mean_merchant_ratio": 7.3887,
+      "p10_ratio": 0.4443,
+      "p90_ratio": 5.5855,
+      "direction": "over-forecasts"
+    }
+  },
+  "central_error_by_amount_band_paise": {
+    "large": {
+      "n": 2604,
+      "mean_error_paise": -469314,
+      "median_error_paise": -94381
+    },
+    "medium": {
+      "n": 675,
+      "mean_error_paise": -20227,
+      "median_error_paise": -20260
+    },
+    "small": {
+      "n": 600,
+      "mean_error_paise": -4755,
+      "median_error_paise": -2983
+    }
+  }
+}
