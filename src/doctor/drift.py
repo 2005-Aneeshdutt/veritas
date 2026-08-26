@@ -26,12 +26,17 @@ from __future__ import annotations
 
 import csv
 import json
-from collections import defaultdict
+from collections import Counter, defaultdict
+from datetime import datetime, timezone
 from pathlib import Path
 
 from pydantic import BaseModel
 
+from chitragupta.policy import GateContext, evaluate
+from chitragupta.types import ActionType, ProposedAction
+
 from .baseline import NPCI_DIR, normalise_bank
+from .run import load_mandate
 from .stats import mean
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -105,6 +110,22 @@ class Exposure(BaseModel):
     #: Monthly rupees this drift is costing, at the merchant's own volume.
     exposure_paise: int
 
+    # --- the intervention, and whether the merchant authorised it ---------
+    #
+    # Detecting a bank going bad and printing it is a dashboard. What makes
+    # this the proactive half of an AGENT is that the finding becomes a typed
+    # action, gated against the same signed mandate everything else goes
+    # through. The gate runs here, at detection time, so the page can say
+    # "and your mandate permits this" rather than leaving it to be discovered
+    # on click.
+    proposed_action: dict | None = None
+    gate_decision: str | None = None
+    gate_reason: str | None = None
+    #: Why this action, in the merchant's language.
+    rationale: str | None = None
+    #: False when the drift is real but too small to be worth an intervention.
+    actionable: bool = False
+
 
 class DriftReport(BaseModel):
     period_range: list[str]
@@ -116,6 +137,10 @@ class DriftReport(BaseModel):
     exposures: list[Exposure]
     total_exposure_paise: int
     merchants_affected: int
+    #: Exposures that cleared both thresholds and were put to the mandate.
+    interventions_proposed: int = 0
+    #: How the policy kernel ruled on them.
+    intervention_decisions: dict[str, int] = {}
     #: Sum of national impact across every deteriorating bank.
     total_national_impact_paise: int = 0
 
@@ -200,6 +225,106 @@ def detect_drift(table: str = "remitter_banks") -> tuple[list[BankDrift], list[B
     return worse, better, prior_w, recent_w, examined
 
 
+#: Below this the drift is real but not worth a routing change. Moving volume
+#: has its own cost, and an agent that proposes an intervention for every
+#: fractional movement is an agent nobody reads.
+MATERIAL_EXPOSURE_PAISE = 5_000_00
+
+#: The published series is monthly and noisy. A movement smaller than this is
+#: inside the range these tables wander in normal months, so it is reported
+#: but never acted on -- the same discipline the attribution error bar
+#: enforces, applied to a different measurement.
+MATERIAL_DELTA_PTS = 1.0
+
+
+def _propose_intervention(e: Exposure) -> Exposure:
+    """Turn an exposure into a typed action, gated against the mandate.
+
+    Returns the exposure unchanged when the movement is too small to act on.
+    Saying nothing is a valid output here and is the common one.
+    """
+    if e.exposure_paise < MATERIAL_EXPOSURE_PAISE or e.delta_pts < MATERIAL_DELTA_PTS:
+        return e.model_copy(
+            update={
+                "actionable": False,
+                "rationale": (
+                    "Reported, not acted on: %s moved %.2f points and carries "
+                    "Rs %s/month here, below the %.1f point and Rs %s thresholds "
+                    "a routing change has to clear."
+                    % (
+                        e.bank, e.delta_pts,
+                        format(e.exposure_paise // 100, ",d"),
+                        MATERIAL_DELTA_PTS,
+                        format(MATERIAL_EXPOSURE_PAISE // 100, ",d"),
+                    )
+                ),
+            }
+        )
+
+    action = ProposedAction(
+        action_type=ActionType.ENABLE_MULTI_BANK_ROUTING,
+        txn_id="drift:%s:%s" % (e.merchant_id, normalise_bank(e.bank)),
+        # Zero, and deliberately.
+        #
+        # The mandate's amount ceiling governs how much money a single action
+        # MOVES -- retrying a Rs 2,000 payment risks Rs 2,000. A routing change
+        # moves no money; it changes configuration. Passing the monthly
+        # exposure here would compare a config change against a per-payment
+        # money limit and deny every intervention worth making, which is what
+        # the first version of this did. The exposure is carried on the
+        # Exposure record, where it belongs.
+        amount_paise=0,
+        target_bank=e.bank,
+        reason=(
+            "%s has degraded %.2f points against its own prior quarter in "
+            "NPCI's published series. %.1f%% of this merchant's volume routes "
+            "through it, costing about Rs %s a month."
+            % (e.bank, e.delta_pts, e.share_pct,
+               format(e.exposure_paise // 100, ",d"))
+        ),
+        requires_merchant_approval=True,
+    )
+
+    try:
+        signed = load_mandate(e.merchant_id)
+    except (SystemExit, FileNotFoundError, OSError):
+        # SystemExit is deliberate here, not sloppy: load_mandate raises it as
+        # a CLI convenience, and it inherits from BaseException, so a bare
+        # `except Exception` would let it through and take the API process
+        # down with it the first time a merchant had no mandate on file.
+        #
+        # No mandate means no authority, which is a DENY rather than an
+        # excuse to act.
+        return e.model_copy(
+            update={
+                "proposed_action": action.model_dump(mode="json"),
+                "gate_decision": "deny",
+                "gate_reason": "DENY_NO_MANDATE_ON_FILE",
+                "actionable": True,
+                "rationale": "No signed mandate on file for this merchant.",
+            }
+        )
+
+    gate = evaluate(
+        action,
+        signed,
+        GateContext(now=datetime.now(timezone.utc), attempts_by_txn={}),
+    )
+    return e.model_copy(
+        update={
+            "proposed_action": action.model_dump(mode="json"),
+            "gate_decision": gate.decision.value,
+            "gate_reason": gate.reason_code,
+            "actionable": True,
+            "rationale": (
+                "Spread volume off %s. This is a merchant action -- the agent "
+                "cannot re-route on your behalf, so it is proposed and gated, "
+                "not executed." % e.bank
+            ),
+        }
+    )
+
+
 def _merchant_exposure(worse: list[BankDrift]) -> list[Exposure]:
     """Which merchants are actually exposed, and for how much.
 
@@ -248,7 +373,61 @@ def _merchant_exposure(worse: list[BankDrift]) -> list[Exposure]:
             )
 
     out.sort(key=lambda e: -e.exposure_paise)
-    return out
+    return [_propose_intervention(e) for e in out]
+
+
+def simulate_exposure(merchant_id: str, bank: str, delta_pts: float) -> Exposure:
+    """What would the agent do if THIS bank moved by THIS much?
+
+    A hypothetical, and labelled one everywhere it surfaces. It exists because
+    the honest answer on the current data is that no merchant here is
+    materially exposed -- the issuers that degraded this quarter are small
+    regional banks and this book routes through the large nationals.
+
+    Rather than quietly re-weighting the demo merchants until the feature had
+    something to show, this asks the counterfactual directly. Everything it
+    touches is real: the merchant's actual bank mix and monthly volume, the
+    real action type, and the merchant's real signed mandate. Only the
+    movement is supposed.
+    """
+    latest, mtime = None, -1.0
+    for p in RUNS.glob("run_*.json"):
+        try:
+            rec = json.loads(p.read_text(encoding="utf-8"))
+        except (json.JSONDecodeError, OSError):
+            continue
+        if rec.get("merchant_id") != merchant_id or rec.get("used_stubs"):
+            continue
+        if p.stat().st_mtime > mtime:
+            latest, mtime = rec, p.stat().st_mtime
+    if latest is None:
+        raise FileNotFoundError("no run on file for %s" % merchant_id)
+
+    key = normalise_bank(bank)
+    row = next(
+        (
+            r
+            for r in latest["report"].get("bank_health", {}).get("banks", [])
+            if normalise_bank(r["bank"]) == key
+        ),
+        None,
+    )
+    if row is None:
+        raise ValueError("%s does not route through %s" % (merchant_id, bank))
+
+    gmv = latest["report"]["projected"].get("monthly_gmv_paise", 0)
+    share = row["share_pct"] / 100.0
+    return _propose_intervention(
+        Exposure(
+            merchant_id=merchant_id,
+            merchant_name=latest["merchant_name"],
+            run_id=latest["run_id"],
+            bank=row["bank"],
+            share_pct=row["share_pct"],
+            delta_pts=delta_pts,
+            exposure_paise=max(0, int(gmv * share * (delta_pts / 100.0))),
+        )
+    )
 
 
 def build_drift_report() -> DriftReport:
@@ -266,4 +445,8 @@ def build_drift_report() -> DriftReport:
         total_exposure_paise=sum(e.exposure_paise for e in exposures),
         merchants_affected=len({e.merchant_id for e in exposures}),
         total_national_impact_paise=sum(d.national_impact_paise for d in worse),
+        interventions_proposed=sum(1 for e in exposures if e.actionable),
+        intervention_decisions=dict(
+            Counter(e.gate_decision for e in exposures if e.gate_decision)
+        ),
     )
