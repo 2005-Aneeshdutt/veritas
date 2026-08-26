@@ -404,6 +404,14 @@ class GroundTruth(BaseModel):
     coupled_factors: list[str]
     s_true: float
     s_star: float
+    #: For every recoverable failure: would a retry actually have converted?
+    #:
+    #: This is the counterfactual the mock rail is GUESSING at. Holding it as
+    #: ground truth is what turns "recovered Rs X (projected)" into a number
+    #: with a measured error, because the agent's forecast can be scored
+    #: against it. The engine never sees this -- it lives on GroundTruth, not
+    #: on Transaction.
+    retry_conversions: dict[str, bool] = {}
 
 
 class GeneratedMerchant(BaseModel):
@@ -421,6 +429,52 @@ CAUSE_TARGETS: dict[str, tuple[str, tuple[str, ...]]] = {
     "amount_band_risk": ("amount_band", (AmountBand.LARGE.value,)),
     "method_mix_mismatch": ("method", (Method.UPI_MANDATE.value, Method.CARD.value)),
 }
+
+
+#: The TRUE probability a retry converts, by error class.
+#:
+#: Deliberately NOT the mock rail's numbers, and deliberately not its shape.
+#: The rail keys on (error class, delay, attempt) alone; the truth here also
+#: depends on the amount and on the issuer, because a customer who was short
+#: of money is more likely to still be short of a large amount than a small
+#: one. If the two models agreed, measuring one against the other would be
+#: circular and would prove nothing.
+_TRUE_RETRY_BASE = {
+    ErrorClass.SOFT_DECLINE: 0.30,
+    ErrorClass.TECHNICAL: 0.72,
+}
+
+
+def _true_retry_conversion(
+    ecls: ErrorClass | None,
+    amount_paise: int,
+    bank: str,
+    baseline: Baseline,
+    rng: random.Random,
+) -> bool | None:
+    """Would this failure actually have converted on a retry?
+
+    None for failures no retry can address -- there is no counterfactual to
+    hold for a card that does not exist.
+    """
+    base = _TRUE_RETRY_BASE.get(ecls) if ecls is not None else None
+    if base is None:
+        return None
+
+    p = base
+    if ecls is ErrorClass.SOFT_DECLINE:
+        # Bigger asks convert less. Anchored on the band edges rather than a
+        # continuous curve so it stays legible.
+        if amount_paise > 500_00:
+            p *= 0.62
+        elif amount_paise > 150_00:
+            p *= 0.84
+        # An issuer already declining more than its peers keeps declining.
+        st = baseline.bank_stats(bank)
+        if st is not None and st.bd_pct:
+            p *= max(0.55, 1.0 - (float(st.bd_pct) - 6.0) / 40.0)
+
+    return rng.random() < max(0.0, min(1.0, p))
 
 
 def _worst_banks(marginals: dict[str, dict[str, float]], baseline: Baseline, k: int = 1):
@@ -633,6 +687,12 @@ def generate_merchant(
 
     # --- realise the batch -------------------------------------------------
     skips_retry = "no_soft_decline_retry" in causes
+    # A second, independently seeded stream. Drawing the counterfactual from
+    # `rng` would shift every subsequent draw and move every committed number
+    # in the repository for a field nothing had asked for yet.
+    retry_rng = random.Random(seed ^ 0x5E7C0DE)
+    retry_conversions: dict[str, bool] = {}
+
     txns: list[Transaction] = []
     for i, cell in enumerate(_sample_cells(joint, n_txns, rng)):
         bank, method, hband, aband = cell
@@ -661,6 +721,12 @@ def generate_merchant(
                 attempts=2 if retried else 1,
             )
         )
+        if not ok:
+            would = _true_retry_conversion(
+                ecls, txns[-1].amount_paise, bank, baseline, retry_rng
+            )
+            if would is not None:
+                retry_conversions[txns[-1].txn_id] = would
 
     avg_ticket = sum(t.amount_paise for t in txns) // max(len(txns), 1)
     profile = MerchantProfile(
@@ -694,6 +760,7 @@ def generate_merchant(
         rho_realised=_realised_rho(joint, couple, baseline),
         coupled_factors=list(couple) if couple else [],
         s_true=s_true,
+        retry_conversions=retry_conversions,
         s_star=cohort.s_star,
     )
     return GeneratedMerchant(
