@@ -91,13 +91,12 @@ export const NODE_DOCS: Record<string, NodeDoc> = {
   },
   plan: {
     title: "Plan",
-    kind: "llm",
-    model: "Haiku 4.5",
+    kind: "deterministic",
     tagline: "Turn causes into typed actions — then withhold the weak ones",
     what:
       "Maps each cause to a concrete action, then applies the uncertainty gate: any attribution smaller than its own measured error is refused, not acted on.",
     why:
-      "The model proposes; a deterministic table disposes. It emits a label from a closed enum, never a URL and never an API call, so a compromised model cannot smuggle an action that does not exist.",
+      "The model proposed these labels one node earlier; this step only maps them onto actions. It reads a closed enum, never a URL and never an API call, so a compromised model cannot smuggle an action that does not exist.",
     inspect:
       "`withheld_detail` is the interesting part — every fix the agent declined to make, and the measured error that stopped it.",
   },
