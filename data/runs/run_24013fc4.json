@@ -1,30 +1,30 @@
 {
-  "run_id": "run_c3fed6ca",
+  "run_id": "run_24013fc4",
   "merchant_id": "quickmart",
   "merchant_name": "QuickMart",
   "mcc": "5411",
   "seed": 20260824,
-  "started_at": 1787681036.453286,
-  "duration_ms": 55731,
-  "commit": "b734ee9",
+  "started_at": 1787729639.8196096,
+  "duration_ms": 3984,
+  "commit": "7caadd3",
   "models": {
     "fast": "claude-haiku-4.5",
     "reasoning": "claude-sonnet-4.6",
     "temperature": 0
   },
-  "cache_hit_rate": 0.0,
+  "cache_hit_rate": 1.0,
   "llm_calls": 2,
-  "llm_cost_inr": 4.1411,
+  "llm_cost_inr": 0.0,
   "used_stubs": false,
   "traces": [
     {
-      "run_id": "run_c3fed6ca",
+      "run_id": "run_24013fc4",
       "seq": 0,
       "node": "ingest",
       "kind": "deterministic",
       "status": "ok",
-      "started_at": 1787681042.8062441,
-      "duration_ms": 49,
+      "started_at": 1787729642.4040182,
+      "duration_ms": 31,
       "input_summary": {
         "merchant": "quickmart",
         "mcc": "5411"
@@ -50,13 +50,13 @@
       }
     },
     {
-      "run_id": "run_c3fed6ca",
+      "run_id": "run_24013fc4",
       "seq": 1,
       "node": "classify",
       "kind": "llm",
       "status": "ok",
-      "started_at": 1787681042.8553855,
-      "duration_ms": 4,
+      "started_at": 1787729642.4368129,
+      "duration_ms": 1,
       "input_summary": {
         "distinct_codes": 67,
         "failures": 315
@@ -85,12 +85,12 @@
       "intermediates": {}
     },
     {
-      "run_id": "run_c3fed6ca",
+      "run_id": "run_24013fc4",
       "seq": 2,
       "node": "human_review",
       "kind": "deterministic",
       "status": "skipped",
-      "started_at": 1787681042.8599231,
+      "started_at": 1787729642.4388123,
       "duration_ms": 0,
       "input_summary": {},
       "output_summary": {
@@ -109,13 +109,13 @@
       "intermediates": {}
     },
     {
-      "run_id": "run_c3fed6ca",
+      "run_id": "run_24013fc4",
       "seq": 3,
       "node": "bank_health",
       "kind": "deterministic",
       "status": "ok",
-      "started_at": 1787681042.8614564,
-      "duration_ms": 15,
+      "started_at": 1787729642.4398096,
+      "duration_ms": 9,
       "input_summary": {},
       "output_summary": {
         "banks_examined": 10,
@@ -232,13 +232,13 @@
       }
     },
     {
-      "run_id": "run_c3fed6ca",
+      "run_id": "run_24013fc4",
       "seq": 4,
       "node": "decompose",
       "kind": "deterministic",
       "status": "ok",
-      "started_at": 1787681042.8778722,
-      "duration_ms": 1777,
+      "started_at": 1787729642.4498196,
+      "duration_ms": 1216,
       "input_summary": {},
       "output_summary": {
         "gap_pts": 2.826,
@@ -302,13 +302,13 @@
       }
     },
     {
-      "run_id": "run_c3fed6ca",
+      "run_id": "run_24013fc4",
       "seq": 5,
       "node": "hypothesise",
       "kind": "llm",
       "status": "ok",
-      "started_at": 1787681044.656868,
-      "duration_ms": 47186,
+      "started_at": 1787729643.667805,
+      "duration_ms": 4,
       "input_summary": {},
       "output_summary": {
         "primary_label": "bank_concentration",
@@ -350,7 +350,7 @@
       "raw_response": "```json\n{\n  \"hypotheses\": [\n    {\n      \"factor\": \"bank\",\n      \"attribution_pts\": 2.65,\n      \"root_cause_label\": \"bank_concentration\",\n      \"hypothesis\": \"QuickMart has 38.0% of its volume on Airtel Payments Bank, which approves only 85.83% of transactions — well below the cohort achievable rate of 91.73%. This heavy concentration on a lower-performing issuer is the single largest driver of the success-rate gap.\",\n      \"evidence\": [\n        \"Airtel Payments Bank share: 38.0%\",\n        \"Airtel Payments Bank approved rate: 85.83%\",\n        \"bank factor attribution: 2.65 pts\",\n        \"cohort achievable rate: 91.73%\",\n        \"SBI approved rate: 93.66%, HDFC approved rate: 95.37% — both materially higher than Airtel's 85.83%\"\n      ],\n      \"recommended_action\": \"Integrate a bank-aware routing or retry layer that preferentially routes Airtel Payments Bank soft declines to an alternative UPI handle or prompts the customer to pay via a higher-approval issuer.\",\n      \"action_type\": \"merchant_action\"\n    },\n    {\n      \"factor\": \"process_gap\",\n      \"attribution_pts\": 2.09,\n      \"root_cause_label\": \"no_soft_decline_retry\",\n      \"hypothesis\": \"A process gap of 2.09 points was measured directly, suggesting that recoverable (soft) declines are not being retried before the transaction is marked failed. Implementing automatic retries on soft-decline response codes could recover a meaningful share of these failures.\",\n      \"evidence\": [\n        \"process_gap attribution: 2.09 pts\",\n        \"total gap: 2.83 pts\",\n        \"observed success rate: 88.91%\",\n        \"cohort achievable: 91.73%\"\n      ],\n      \"recommended_action\": \"Enable automatic soft-decline retry logic in the payment orchestration layer so that transactions with recoverable decline codes are retried at least once before being surfaced as failures.\",\n      \"action_type\": \"auto_execute\"\n    },\n    {\n      \"factor\": \"method\",\n      \"attribution_pts\": 0.10,\n      \"root_cause_label\": \"none_of_the_above\",\n      \"hypothesis\": \"The method factor could not be reliably measured because QuickMart has effectively one dominant payment method (UPI at 87.0%) and the attribution of 0.10 pts falls inside its own error bar of 0.57 pts. No conclusion about method mix can be drawn from the available data.\",\n      \"evidence\": [\n        \"method attribution: 0.10 pts\",\n        \"method error bar: 0.57 pts\",\n        \"UPI share: 87.0%\"\n      ],\n      \"recommended_action\": \"Investigate whether enabling card-on-file or other UPI handles could diversify the method mix once the bank concentration issue is addressed.\",\n      \"action_type\": \"investigation\"\n    },\n    {\n      \"factor\": \"hour\",\n      \"attribution_pts\": 0.01,\n      \"root_cause_label\": \"none_of_the_above\",\n      \"hypothesis\": \"The hour factor attribution of 0.01 pts is far inside its own error bar of 0.57 pts and cannot be identified as a real cause. Night-window volume is only 7.4% of transactions, and no reliable hour-driven effect could be measured.\",\n      \"evidence\": [\n        \"hour attribution: 0.01 pts\",\n        \"hour error bar: 0.57 pts\",\n        \"night share: 7.4%\"\n      ],\n      \"recommended_action\": \"Monitor hour-level decline rates over a larger transaction sample before drawing any conclusions about billing-window effects.\",\n      \"action_type\": \"investigation\"\n    },\n    {\n      \"factor\": \"amount_band\",\n      \"attribution_pts\": 0.06,\n      \"root_cause_label\": \"none_of_the_above\",\n      \"hypothesis\": \"The amount_band attribution of 0.06 pts is inside its own error bar of 0.58 pts and cannot be identified as a real cause. The transaction mix is dominated by small and micro tickets, and no reliable amount-band effect was detected.\",\n      \"evidence\": [\n        \"amount_band attribution: 0.06 pts\",\n        \"amount_band error bar: 0.58 pts\",\n        \"small band share: 50.9%\",\n        \"micro band share: 34.8%\",\n        \"average ticket: Rs 920.51\"\n      ],\n      \"recommended_action\": \"No action required on amount bands at this time; revisit if the transaction mix shifts toward medium or large tickets.\",\n      \"action_type\": \"investigation\"\n    }\n  ],\n  \"primary_label\": \"bank_concentration\",\n  \"summary\": \"QuickMart's 2.83-point success-rate gap is driven primarily by heavy concentration on Airtel Payments Bank (38.0% of volume, 85.83% approval rate) and an unretried soft-decline process gap — fixing routing and enabling retries should close most of the shortfall.\"\n}\n```",
       "tokens_in": 1419,
       "tokens_out": 1258,
-      "cache_hit": false,
+      "cache_hit": true,
       "stub": false,
       "confidence": null,
       "reason_codes": [
@@ -359,13 +359,13 @@
       "intermediates": {}
     },
     {
-      "run_id": "run_c3fed6ca",
+      "run_id": "run_24013fc4",
       "seq": 6,
       "node": "plan",
-      "kind": "llm",
+      "kind": "deterministic",
       "status": "ok",
-      "started_at": 1787681091.8440158,
-      "duration_ms": 10,
+      "started_at": 1787729643.6738007,
+      "duration_ms": 3,
       "input_summary": {},
       "output_summary": {
         "actions": 202,
@@ -402,7 +402,7 @@
         ]
       },
       "branch_taken": null,
-      "model": "claude-haiku-4.5",
+      "model": null,
       "prompt": null,
       "raw_response": null,
       "tokens_in": null,
@@ -423,13 +423,13 @@
       }
     },
     {
-      "run_id": "run_c3fed6ca",
+      "run_id": "run_24013fc4",
       "seq": 7,
       "node": "gate",
       "kind": "deterministic",
       "status": "ok",
-      "started_at": 1787681091.8550696,
-      "duration_ms": 143,
+      "started_at": 1787729643.6778078,
+      "duration_ms": 78,
       "input_summary": {},
       "output_summary": {
         "decisions": {
@@ -457,13 +457,13 @@
       "intermediates": {}
     },
     {
-      "run_id": "run_c3fed6ca",
+      "run_id": "run_24013fc4",
       "seq": 8,
       "node": "execute",
       "kind": "deterministic",
       "status": "ok",
-      "started_at": 1787681092.0007815,
-      "duration_ms": 30,
+      "started_at": 1787729643.756925,
+      "duration_ms": 28,
       "input_summary": {},
       "output_summary": {
         "executed": 108,
@@ -488,13 +488,13 @@
       "intermediates": {}
     },
     {
-      "run_id": "run_c3fed6ca",
+      "run_id": "run_24013fc4",
       "seq": 9,
       "node": "report",
       "kind": "deterministic",
       "status": "ok",
-      "started_at": 1787681092.0325377,
-      "duration_ms": 152,
+      "started_at": 1787729643.7862697,
+      "duration_ms": 17,
       "input_summary": {},
       "output_summary": {
         "measured_keys": [
@@ -783,101 +783,81 @@
       "root_cause": {
         "error_decomposition": {
           "note": "The model reads the ESTIMATED decomposition, not the truth. Splitting the error says whether the bottleneck is the model or the attribution feeding it.",
-          "attribution_pointed_at_the_right_cause": 0.75,
+          "attribution_pointed_at_the_right_cause": 0.7333,
           "attribution_ci95": [
-            0.6277,
-            0.8422
+            0.6099,
+            0.8287
           ],
-          "model_faithful_to_what_it_saw": 0.6333,
+          "model_faithful_to_what_it_saw": 0.8333,
           "faithful_ci95": [
-            0.5068,
-            0.7438
+            0.7197,
+            0.9069
           ],
-          "accuracy_when_attribution_was_right": 0.6667,
-          "n_solvable": 45
+          "accuracy_when_attribution_was_right": 0.8864,
+          "n_solvable": 44
         },
         "note": "Exact match on root_cause_label against the injected cause. The model emits from the same closed enum the generator injects from, so this is forced-choice classification, not keyword matching.",
         "n": 60,
-        "accuracy": 0.6,
+        "accuracy": 0.7,
         "accuracy_ci95": [
-          0.4737,
-          0.7143
+          0.5749,
+          0.801
         ],
         "confusion_matrix": {
           "midnight_billing_penalty": {
-            "midnight_billing_penalty": 4,
-            "bank_concentration": 1,
-            "none_of_the_above": 2
+            "midnight_billing_penalty": 6,
+            "no_soft_decline_retry": 1
           },
           "bank_concentration": {
-            "bank_concentration": 16,
-            "none_of_the_above": 1,
-            "midnight_billing_penalty": 4,
-            "no_soft_decline_retry": 2,
-            "amount_band_risk": 1
+            "bank_concentration": 19,
+            "no_soft_decline_retry": 5
           },
           "no_soft_decline_retry": {
             "no_soft_decline_retry": 1
           },
           "amount_band_risk": {
-            "amount_band_risk": 7,
+            "amount_band_risk": 8,
             "no_soft_decline_retry": 4,
-            "midnight_billing_penalty": 1,
-            "bank_concentration": 1
+            "method_mix_mismatch": 1
           },
           "method_mix_mismatch": {
-            "bank_concentration": 1,
-            "none_of_the_above": 2,
-            "method_mix_mismatch": 2,
-            "no_soft_decline_retry": 2,
-            "amount_band_risk": 1
+            "method_mix_mismatch": 5,
+            "none_of_the_above": 1,
+            "no_soft_decline_retry": 1,
+            "midnight_billing_penalty": 1
           },
           "none_of_the_above": {
+            "midnight_billing_penalty": 2,
+            "none_of_the_above": 3,
             "method_mix_mismatch": 1,
-            "none_of_the_above": 6
+            "bank_concentration": 1
           }
         },
         "healthy_merchants": {
           "n": 7,
-          "correctly_said_none_of_the_above": 6,
+          "correctly_said_none_of_the_above": 3,
           "note": "Merchants with nothing injected. A model that never uses none_of_the_above here is overconfident."
         },
         "overreach": {
-          "said_none_when_a_cause_was_injected": 5,
-          "rate": 0.0943
+          "said_none_when_a_cause_was_injected": 1,
+          "rate": 0.0189
         },
-        "cache_hit_rate": 1.0,
-        "cost_inr": 0.0,
+        "cache_hit_rate": 0.0,
+        "cost_inr": 165.8511,
         "errors": [
           {
             "merchant": "sweep_001",
             "injected": [],
             "true": "none_of_the_above",
-            "pred": "method_mix_mismatch",
+            "pred": "midnight_billing_penalty",
             "correct": false,
             "n_txns": 60,
             "rho": 0.0,
-            "implied_by_estimate": "method_mix_mismatch",
+            "implied_by_estimate": "midnight_billing_penalty",
             "faithful": true,
             "attribution_was_right": false,
-            "cache_hit": true,
-            "summary": "Sweep Merchant 001's 6.42-point success-rate gap is driven primarily by a heavy reliance on UPI (75% of volume) where the cohort performs better on card rails, "
-          },
-          {
-            "merchant": "sweep_004",
-            "injected": [
-              "method_mix_mismatch"
-            ],
-            "true": "method_mix_mismatch",
-            "pred": "bank_concentration",
-            "correct": false,
-            "n_txns": 150,
-            "rho": 0.0,
-            "implied_by_estimate": "method_mix_mismatch",
-            "faithful": false,
-            "attribution_was_right": true,
-            "cache_hit": true,
-            "summary": "Sweep Merchant 004's 2.05-point success-rate shortfall is driven primarily by concentration in higher-decline issuers like Punjab National Bank (91.20%) and Ban"
+            "cache_hit": false,
+            "summary": "Sweep Merchant 001 is losing ~8 points of success rate primarily because a slice of payments hit the night window and because volume is concentrated on weaker i"
           },
           {
             "merchant": "sweep_007",
@@ -886,15 +866,15 @@
               "no_soft_decline_retry"
             ],
             "true": "bank_concentration",
-            "pred": "none_of_the_above",
+            "pred": "no_soft_decline_retry",
             "correct": false,
             "n_txns": 60,
             "rho": 0.0,
             "implied_by_estimate": "no_soft_decline_retry",
-            "faithful": false,
+            "faithful": true,
             "attribution_was_right": false,
-            "cache_hit": true,
-            "summary": "With only 60 transactions this month, every decomposed factor (bank, method, hour, amount_band) falls inside its own error bar, so no single root cause can be r"
+            "cache_hit": false,
+            "summary": "The entire 0.29-point success-rate gap is effectively explained by a process gap of +0.50 pts — most likely unretried soft declines — while all bank, method, ho"
           },
           {
             "merchant": "sweep_008",
@@ -909,8 +889,22 @@
             "implied_by_estimate": "amount_band_risk",
             "faithful": false,
             "attribution_was_right": true,
-            "cache_hit": true,
-            "summary": "The only clearly measurable and actionable cause of Sweep Merchant 008's 1.55 pt success-rate gap is an unrecovered process gap of 0.66 pts from soft declines t"
+            "cache_hit": false,
+            "summary": "The largest identified cause of Sweep Merchant 008's 3.05-point success-rate gap is a directly measured process gap of 0.84 points, most likely from soft declin"
+          },
+          {
+            "merchant": "sweep_009",
+            "injected": [],
+            "true": "none_of_the_above",
+            "pred": "midnight_billing_penalty",
+            "correct": false,
+            "n_txns": 60,
+            "rho": 0.0,
+            "implied_by_estimate": "method_mix_mismatch",
+            "faithful": false,
+            "attribution_was_right": false,
+            "cache_hit": false,
+            "summary": "Sweep Merchant 009's 0.29-point success-rate gap is too small and the transaction volume of 60 is too low for any single factor to be identified as a statistica"
           },
           {
             "merchant": "sweep_012",
@@ -919,48 +913,15 @@
               "method_mix_mismatch"
             ],
             "true": "amount_band_risk",
-            "pred": "midnight_billing_penalty",
+            "pred": "method_mix_mismatch",
             "correct": false,
             "n_txns": 400,
             "rho": 0.8,
             "implied_by_estimate": "amount_band_risk",
             "faithful": false,
             "attribution_was_right": true,
-            "cache_hit": true,
-            "summary": "Sweep Merchant 012's 0.85-point success-rate gap is primarily driven by a portion of mandate debits firing in the night window (-0.80 pts), with secondary drag "
-          },
-          {
-            "merchant": "sweep_014",
-            "injected": [
-              "bank_concentration",
-              "midnight_billing_penalty"
-            ],
-            "true": "bank_concentration",
-            "pred": "midnight_billing_penalty",
-            "correct": false,
-            "n_txns": 150,
-            "rho": 0.8,
-            "implied_by_estimate": "midnight_billing_penalty",
-            "faithful": true,
-            "attribution_was_right": false,
-            "cache_hit": true,
-            "summary": "Sweep Merchant 014 is losing ~3.1 points of success rate because 37.3% of payments fire in the high-decline night window, and another ~3.1 points because nearly"
-          },
-          {
-            "merchant": "sweep_015",
-            "injected": [
-              "method_mix_mismatch"
-            ],
-            "true": "method_mix_mismatch",
-            "pred": "none_of_the_above",
-            "correct": false,
-            "n_txns": 400,
-            "rho": 0.0,
-            "implied_by_estimate": "method_mix_mismatch",
-            "faithful": false,
-            "attribution_was_right": true,
-            "cache_hit": true,
-            "summary": "Sweep Merchant 015 is actually outperforming its cohort (92.25% vs 91.66% achievable), and every negative decomposition factor falls inside its own error bar, s"
+            "cache_hit": false,
+            "summary": "The biggest identified drag on Sweep Merchant 012's success rate is its payment-method mix — a heavy reliance on upi_mandate and card rails is responsible for 0"
           },
           {
             "merchant": "sweep_017",
@@ -972,43 +933,11 @@
             "correct": false,
             "n_txns": 150,
             "rho": 0.0,
-            "implied_by_estimate": "amount_band_risk",
-            "faithful": false,
-            "attribution_was_right": true,
-            "cache_hit": true,
-            "summary": "The only directly measurable and actionable cause of Sweep Merchant 017's 1.40-point success-rate gap is an unretried process gap of 0.40 points — all other fac"
-          },
-          {
-            "merchant": "sweep_018",
-            "injected": [
-              "midnight_billing_penalty"
-            ],
-            "true": "midnight_billing_penalty",
-            "pred": "bank_concentration",
-            "correct": false,
-            "n_txns": 150,
-            "rho": 0.0,
-            "implied_by_estimate": "midnight_billing_penalty",
-            "faithful": false,
-            "attribution_was_right": true,
-            "cache_hit": true,
-            "summary": "Sweep Merchant 018 is actually outperforming its cohort by 2.22 points, but the biggest identifiable drag comes from heavy concentration on high-decline issuers"
-          },
-          {
-            "merchant": "sweep_019",
-            "injected": [
-              "method_mix_mismatch"
-            ],
-            "true": "method_mix_mismatch",
-            "pred": "none_of_the_above",
-            "correct": false,
-            "n_txns": 150,
-            "rho": 0.0,
-            "implied_by_estimate": "method_mix_mismatch",
-            "faithful": false,
-            "attribution_was_right": true,
-            "cache_hit": true,
-            "summary": "Sweep Merchant 019's 0.40-point success-rate gap is too small and statistically noisy to pin on any single root cause — every negative factor (bank, hour, amoun"
+            "implied_by_estimate": "no_soft_decline_retry",
+            "faithful": true,
+            "attribution_was_right": false,
+            "cache_hit": false,
+            "summary": "The biggest fixable problem for Sweep Merchant 017 is a 1.00-point process gap — almost certainly unretried soft declines — which alone accounts for the majorit"
           },
           {
             "merchant": "sweep_021",
@@ -1023,25 +952,8 @@
             "implied_by_estimate": "no_soft_decline_retry",
             "faithful": true,
             "attribution_was_right": false,
-            "cache_hit": true,
-            "summary": "Sweep Merchant 021 is already outperforming its cohort (95.00% vs 91.96% achievable), but the -3.04 pt gap versus its own potential is driven most by an unexpla"
-          },
-          {
-            "merchant": "sweep_022",
-            "injected": [
-              "amount_band_risk",
-              "method_mix_mismatch"
-            ],
-            "true": "amount_band_risk",
-            "pred": "bank_concentration",
-            "correct": false,
-            "n_txns": 150,
-            "rho": 0.0,
-            "implied_by_estimate": "amount_band_risk",
-            "faithful": false,
-            "attribution_was_right": true,
-            "cache_hit": true,
-            "summary": "Sweep Merchant 022 is beating its cohort benchmark (89.33% vs 87.35% achievable) but is leaving roughly 1.21 points on the table because over half its volume si"
+            "cache_hit": false,
+            "summary": "Sweep Merchant 021's biggest recoverable opportunity is a +1.00 pt process gap from unretried soft declines, while a secondary drag comes from concentration in "
           },
           {
             "merchant": "sweep_023",
@@ -1057,41 +969,8 @@
             "implied_by_estimate": "no_soft_decline_retry",
             "faithful": true,
             "attribution_was_right": false,
-            "cache_hit": true,
-            "summary": "Sweep Merchant 023's -1.68 pt success-rate gap is dominated by a +1.60 pt process gap — the largest measurable factor — suggesting unretried soft declines are t"
-          },
-          {
-            "merchant": "sweep_026",
-            "injected": [
-              "midnight_billing_penalty"
-            ],
-            "true": "midnight_billing_penalty",
-            "pred": "none_of_the_above",
-            "correct": false,
-            "n_txns": 400,
-            "rho": 0.0,
-            "implied_by_estimate": "midnight_billing_penalty",
-            "faithful": false,
-            "attribution_was_right": true,
-            "cache_hit": true,
-            "summary": "Sweep Merchant 026's -0.04 point gap versus cohort is negligible and within noise — every decomposed factor sits inside its error bar, and the merchant is alrea"
-          },
-          {
-            "merchant": "sweep_027",
-            "injected": [
-              "bank_concentration",
-              "midnight_billing_penalty"
-            ],
-            "true": "bank_concentration",
-            "pred": "amount_band_risk",
-            "correct": false,
-            "n_txns": 60,
-            "rho": 0.0,
-            "implied_by_estimate": "bank_concentration",
-            "faithful": false,
-            "attribution_was_right": true,
-            "cache_hit": true,
-            "summary": "Sweep Merchant 027's success rate is essentially at par with its cohort (gap of only -0.01 pts), but the medium-amount-band transactions are the single largest "
+            "cache_hit": false,
+            "summary": "Sweep Merchant 023's success rate is essentially at cohort benchmark, but a +1.80 pt process gap — the largest single factor — signals that recoverable soft dec"
           },
           {
             "merchant": "sweep_030",
@@ -1103,27 +982,58 @@
             "correct": false,
             "n_txns": 60,
             "rho": 0.0,
-            "implied_by_estimate": "amount_band_risk",
-            "faithful": false,
-            "attribution_was_right": true,
-            "cache_hit": true,
-            "summary": "With 86.7% of payments in the large-amount band and a directly measured process gap of 0.50 pts, the most actionable and confirmed cause of Sweep Merchant 030's"
+            "implied_by_estimate": "no_soft_decline_retry",
+            "faithful": true,
+            "attribution_was_right": false,
+            "cache_hit": false,
+            "summary": "The single largest identified drag on your success rate is unretried soft declines (process gap of +1.00 pts), which your gateway can recover automatically — fi"
           },
           {
-            "merchant": "sweep_044",
+            "merchant": "sweep_038",
+            "injected": [
+              "bank_concentration",
+              "midnight_billing_penalty"
+            ],
+            "true": "bank_concentration",
+            "pred": "no_soft_decline_retry",
+            "correct": false,
+            "n_txns": 150,
+            "rho": 0.0,
+            "implied_by_estimate": "no_soft_decline_retry",
+            "faithful": true,
+            "attribution_was_right": false,
+            "cache_hit": false,
+            "summary": "The single biggest identified opportunity is a +0.60 pt process gap from not retrying soft declines — enabling automatic retry would be the fastest win for Swee"
+          },
+          {
+            "merchant": "sweep_040",
             "injected": [
               "method_mix_mismatch"
             ],
             "true": "method_mix_mismatch",
-            "pred": "no_soft_decline_retry",
+            "pred": "none_of_the_above",
+            "correct": false,
+            "n_txns": 60,
+            "rho": 0.0,
+            "implied_by_estimate": "no_soft_decline_retry",
+            "faithful": false,
+            "attribution_was_right": false,
+            "cache_hit": false,
+            "summary": "All decomposed factors are either inside their error bars or lack supporting evidence for a specific root cause, so no single identified cause explains the -3.3"
+          },
+          {
+            "merchant": "sweep_042",
+            "injected": [],
+            "true": "none_of_the_above",
+            "pred": "method_mix_mismatch",
             "correct": false,
             "n_txns": 1000,
             "rho": 0.0,
             "implied_by_estimate": "method_mix_mismatch",
-            "faithful": false,
-            "attribution_was_right": true,
-            "cache_hit": true,
-            "summary": "With all four Shapley factors inside their error bars or unmeasurable, the only actionable signal is the directly computed process gap of +0.45 pts, pointing to"
+            "faithful": true,
+            "attribution_was_right": false,
+            "cache_hit": false,
+            "summary": "Sweep Merchant 042's 0.07-point success-rate gap is negligible and every decomposed factor falls inside its own error bar, so no cause can be reliably identifie"
           },
           {
             "merchant": "sweep_046",
@@ -1138,58 +1048,38 @@
             "implied_by_estimate": "method_mix_mismatch",
             "faithful": false,
             "attribution_was_right": true,
-            "cache_hit": true,
-            "summary": "The only firmly measurable and actionable gap for Sweep Merchant 046 is the 0.75-point process gap from unretried soft declines — all other factors are either i"
+            "cache_hit": false,
+            "summary": "The largest confirmed drag on Sweep Merchant 046's success rate is a 0.90-point process gap consistent with soft declines not being retried; fixing this with au"
           },
           {
-            "merchant": "sweep_047",
+            "merchant": "sweep_051",
             "injected": [
-              "bank_concentration",
               "midnight_billing_penalty"
             ],
-            "true": "bank_concentration",
-            "pred": "midnight_billing_penalty",
-            "correct": false,
-            "n_txns": 150,
-            "rho": 0.2,
-            "implied_by_estimate": "midnight_billing_penalty",
-            "faithful": true,
-            "attribution_was_right": false,
-            "cache_hit": true,
-            "summary": "Sweep Merchant 047's 0.76-point success-rate gap is driven primarily by 26% of payments falling in the high-decline night window (+0.84 pts) and secondarily by "
-          },
-          {
-            "merchant": "sweep_048",
-            "injected": [
-              "bank_concentration",
-              "midnight_billing_penalty"
-            ],
-            "true": "bank_concentration",
-            "pred": "midnight_billing_penalty",
-            "correct": false,
-            "n_txns": 60,
-            "rho": 0.5,
-            "implied_by_estimate": "midnight_billing_penalty",
-            "faithful": true,
-            "attribution_was_right": false,
-            "cache_hit": true,
-            "summary": "Over half of Sweep Merchant 048's payments happen at night (56.7%) when banks decline more, and this alone costs 4.72 points of success rate — the single bigges"
-          },
-          {
-            "merchant": "sweep_052",
-            "injected": [
-              "method_mix_mismatch"
-            ],
-            "true": "method_mix_mismatch",
-            "pred": "amount_band_risk",
+            "true": "midnight_billing_penalty",
+            "pred": "no_soft_decline_retry",
             "correct": false,
             "n_txns": 60,
             "rho": 0.0,
-            "implied_by_estimate": "method_mix_mismatch",
+            "implied_by_estimate": "midnight_billing_penalty",
             "faithful": false,
             "attribution_was_right": true,
-            "cache_hit": true,
-            "summary": "The only statistically reliable drag on Sweep Merchant 052's success rate is the amount-band mix, where medium and large ticket payments (average Rs 1916.98) ar"
+            "cache_hit": false,
+            "summary": "With 95% of payments at night and a directly measured +1.50 pt process gap, Sweep Merchant 051's most actionable opportunity is enabling automatic soft-decline "
+          },
+          {
+            "merchant": "sweep_055",
+            "injected": [],
+            "true": "none_of_the_above",
+            "pred": "bank_concentration",
+            "correct": false,
+            "n_txns": 1000,
+            "rho": 0.0,
+            "implied_by_estimate": "bank_concentration",
+            "faithful": true,
+            "attribution_was_right": false,
+            "cache_hit": false,
+            "summary": "Sweep Merchant 055's 0.28-point success-rate gap is tiny and every decomposed factor—including the largest, bank mix at 0.16 points—falls inside its own error b"
           },
           {
             "merchant": "sweep_056",
@@ -1205,25 +1095,24 @@
             "implied_by_estimate": "no_soft_decline_retry",
             "faithful": true,
             "attribution_was_right": false,
-            "cache_hit": true,
-            "summary": "The biggest recoverable opportunity for Sweep Merchant 056 is enabling soft-decline retries (2.20-point process gap), followed by reducing concentration on Airt"
+            "cache_hit": false,
+            "summary": "The biggest recoverable opportunity for Sweep Merchant 056 is enabling soft-decline retries, which alone accounts for 2.00 points of the 3.31-point success-rate"
           },
           {
-            "merchant": "sweep_058",
+            "merchant": "sweep_057",
             "injected": [
-              "midnight_billing_penalty",
-              "amount_band_risk"
+              "method_mix_mismatch"
             ],
-            "true": "midnight_billing_penalty",
-            "pred": "none_of_the_above",
+            "true": "method_mix_mismatch",
+            "pred": "midnight_billing_penalty",
             "correct": false,
-            "n_txns": 400,
+            "n_txns": 150,
             "rho": 0.0,
-            "implied_by_estimate": "midnight_billing_penalty",
+            "implied_by_estimate": "method_mix_mismatch",
             "faithful": false,
             "attribution_was_right": true,
-            "cache_hit": true,
-            "summary": "Sweep Merchant 058 has a gap of only -0.04 pts versus its cohort benchmark, every decomposed factor is either inside its error bar or flagged not identified, an"
+            "cache_hit": false,
+            "summary": "The largest identified drag on Sweep Merchant 057's 6.45-point success-rate gap is 1.16 points from the night billing window, though the method factor (4.14 pts"
           },
           {
             "merchant": "sweep_059",
@@ -1232,15 +1121,15 @@
               "midnight_billing_penalty"
             ],
             "true": "bank_concentration",
-            "pred": "midnight_billing_penalty",
+            "pred": "no_soft_decline_retry",
             "correct": false,
             "n_txns": 60,
             "rho": 0.0,
-            "implied_by_estimate": "midnight_billing_penalty",
+            "implied_by_estimate": "no_soft_decline_retry",
             "faithful": true,
             "attribution_was_right": false,
-            "cache_hit": true,
-            "summary": "Sweep Merchant 059's 1.66-point success-rate gap is driven primarily by 31.7% of payments falling in the night window (the largest single factor at +0.79 pts) a"
+            "cache_hit": false,
+            "summary": "The single largest identified cause of Sweep Merchant 059's success-rate gap is a directly measured process gap of +0.50 pts indicating that soft declines are n"
           }
         ]
       },
@@ -1568,7 +1457,7 @@
     "ledger": [
       {
         "sequence": 0,
-        "timestamp": "2026-08-25T18:04:52.000781+00:00",
+        "timestamp": "2026-08-26T07:34:03.757931+00:00",
         "txn_id": "merchant:quickmart",
         "proposed_action": {
           "action_type": "enable_multi_bank_routing",
@@ -1583,11 +1472,11 @@
         "gate_reason": "OK_MERCHANT_ACTION",
         "outcome": "merchant_action",
         "prev_hash": "0000000000000000000000000000000000000000000000000000000000000000",
-        "entry_hash": "e9b4b6e5c99f5102d00c407cd5e2f1058e91fbee10448b63afc7ecff9af40638"
+        "entry_hash": "5ab354458d25d2b87f88a138a249adcd1888d6a63675d2fcb0d3c2bec23c5b0c"
       },
       {
         "sequence": 1,
-        "timestamp": "2026-08-25T18:04:52.000781+00:00",
+        "timestamp": "2026-08-26T07:34:03.757931+00:00",
         "txn_id": "pay_quickmart_0366",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1601,12 +1490,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "e9b4b6e5c99f5102d00c407cd5e2f1058e91fbee10448b63afc7ecff9af40638",
-        "entry_hash": "457acc7128563da691e7403ff5e759fbe8c525f251eaa0779d227dd99922807b"
+        "prev_hash": "5ab354458d25d2b87f88a138a249adcd1888d6a63675d2fcb0d3c2bec23c5b0c",
+        "entry_hash": "bd60c576f5fbe39194ef582074efb84861afc71f6b718b197bd813d9cab78915"
       },
       {
         "sequence": 2,
-        "timestamp": "2026-08-25T18:04:52.001780+00:00",
+        "timestamp": "2026-08-26T07:34:03.758925+00:00",
         "txn_id": "pay_quickmart_0671",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1620,12 +1509,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "457acc7128563da691e7403ff5e759fbe8c525f251eaa0779d227dd99922807b",
-        "entry_hash": "74ae21a94b6f9f4d7ac352a775280817db30a5eebbff8ef9f0c016f6bc03b29a"
+        "prev_hash": "bd60c576f5fbe39194ef582074efb84861afc71f6b718b197bd813d9cab78915",
+        "entry_hash": "1ede3faba8cb0ba40383dee49e9dfeabcd4dafad7dba70d9900575d4b7dc4b44"
       },
       {
         "sequence": 3,
-        "timestamp": "2026-08-25T18:04:52.002290+00:00",
+        "timestamp": "2026-08-26T07:34:03.758925+00:00",
         "txn_id": "pay_quickmart_2506",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1639,12 +1528,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "74ae21a94b6f9f4d7ac352a775280817db30a5eebbff8ef9f0c016f6bc03b29a",
-        "entry_hash": "072fec78f12f193251db8e54a60cd96da7b9a4bd267ef23c8b08941abd701eba"
+        "prev_hash": "1ede3faba8cb0ba40383dee49e9dfeabcd4dafad7dba70d9900575d4b7dc4b44",
+        "entry_hash": "33fe15c063c2f2d469dc552d158f9ec4f08c851fed76c57b0a7787eabf0b0191"
       },
       {
         "sequence": 4,
-        "timestamp": "2026-08-25T18:04:52.002290+00:00",
+        "timestamp": "2026-08-26T07:34:03.758925+00:00",
         "txn_id": "pay_quickmart_0501",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1658,12 +1547,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "072fec78f12f193251db8e54a60cd96da7b9a4bd267ef23c8b08941abd701eba",
-        "entry_hash": "9680cdbb26adbe3b8952a3b22b2c8f554c75459f74ec25f44ff530337780581a"
+        "prev_hash": "33fe15c063c2f2d469dc552d158f9ec4f08c851fed76c57b0a7787eabf0b0191",
+        "entry_hash": "cbbfe807f092f58c1881c48500cbe9b2891578c5b8841b330a08b3b28d5b5e8a"
       },
       {
         "sequence": 5,
-        "timestamp": "2026-08-25T18:04:52.002290+00:00",
+        "timestamp": "2026-08-26T07:34:03.758925+00:00",
         "txn_id": "pay_quickmart_2174",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1677,12 +1566,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "9680cdbb26adbe3b8952a3b22b2c8f554c75459f74ec25f44ff530337780581a",
-        "entry_hash": "12fc61e25b26876381f20d823d068dfe51badbc3415d269864f797cac3400568"
+        "prev_hash": "cbbfe807f092f58c1881c48500cbe9b2891578c5b8841b330a08b3b28d5b5e8a",
+        "entry_hash": "f0775d36d30311f6c82591cbffa8f703be79028f77b548a75982ef670cef7d13"
       },
       {
         "sequence": 6,
-        "timestamp": "2026-08-25T18:04:52.002290+00:00",
+        "timestamp": "2026-08-26T07:34:03.758925+00:00",
         "txn_id": "pay_quickmart_2708",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1696,12 +1585,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "12fc61e25b26876381f20d823d068dfe51badbc3415d269864f797cac3400568",
-        "entry_hash": "e50c6b43db370632e1ab74a5acc05da213774116a0724b2a1dc8011a088a85e8"
+        "prev_hash": "f0775d36d30311f6c82591cbffa8f703be79028f77b548a75982ef670cef7d13",
+        "entry_hash": "04a2ec8cf4f6f490d7598743c076d7ad329d247e3faac852eb325d1e5b5abc3e"
       },
       {
         "sequence": 7,
-        "timestamp": "2026-08-25T18:04:52.002290+00:00",
+        "timestamp": "2026-08-26T07:34:03.758925+00:00",
         "txn_id": "pay_quickmart_1632",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1715,12 +1604,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "e50c6b43db370632e1ab74a5acc05da213774116a0724b2a1dc8011a088a85e8",
-        "entry_hash": "a6de5660294e8661603bad07de8e5b84095ba63995fbb6133f9afbbbd33dac67"
+        "prev_hash": "04a2ec8cf4f6f490d7598743c076d7ad329d247e3faac852eb325d1e5b5abc3e",
+        "entry_hash": "4c642724e90e647d885212b2fab36d45ee2d80774b915ba8bdcbfd4670d6c8b9"
       },
       {
         "sequence": 8,
-        "timestamp": "2026-08-25T18:04:52.002290+00:00",
+        "timestamp": "2026-08-26T07:34:03.758925+00:00",
         "txn_id": "pay_quickmart_0931",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1734,12 +1623,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "a6de5660294e8661603bad07de8e5b84095ba63995fbb6133f9afbbbd33dac67",
-        "entry_hash": "f4bca4c24909f8daf02dd89d2df3c6f71d00123a63ae9c5bc351752c3e9157ef"
+        "prev_hash": "4c642724e90e647d885212b2fab36d45ee2d80774b915ba8bdcbfd4670d6c8b9",
+        "entry_hash": "c1b3a4061da2007b21b10bac9fb6ed7693334ea64cd02487ebb8b7145059e961"
       },
       {
         "sequence": 9,
-        "timestamp": "2026-08-25T18:04:52.002290+00:00",
+        "timestamp": "2026-08-26T07:34:03.758925+00:00",
         "txn_id": "pay_quickmart_0297",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1753,12 +1642,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "f4bca4c24909f8daf02dd89d2df3c6f71d00123a63ae9c5bc351752c3e9157ef",
-        "entry_hash": "9748d009ec73de7a1a6d459d94ff949745b4f5155d51474376dbaeda3e715920"
+        "prev_hash": "c1b3a4061da2007b21b10bac9fb6ed7693334ea64cd02487ebb8b7145059e961",
+        "entry_hash": "efb2763d7493e2b0f4e94f4d7a8f2fc7144abebbfd34aa7668c025ed8b591287"
       },
       {
         "sequence": 10,
-        "timestamp": "2026-08-25T18:04:52.002290+00:00",
+        "timestamp": "2026-08-26T07:34:03.758925+00:00",
         "txn_id": "pay_quickmart_1493",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1772,12 +1661,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "9748d009ec73de7a1a6d459d94ff949745b4f5155d51474376dbaeda3e715920",
-        "entry_hash": "75bf8ec8cc65ebc380663a61a4b2e81b79a3133a31465e3c43c78d2f3156d0ff"
+        "prev_hash": "efb2763d7493e2b0f4e94f4d7a8f2fc7144abebbfd34aa7668c025ed8b591287",
+        "entry_hash": "7f6e814a63872e360d91aa8857d1fffc6dad350d6d0261ba349a2c9845be2ac1"
       },
       {
         "sequence": 11,
-        "timestamp": "2026-08-25T18:04:52.002290+00:00",
+        "timestamp": "2026-08-26T07:34:03.758925+00:00",
         "txn_id": "pay_quickmart_2669",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1791,12 +1680,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "75bf8ec8cc65ebc380663a61a4b2e81b79a3133a31465e3c43c78d2f3156d0ff",
-        "entry_hash": "07fb7065beeadf8f57b90f44fcc5a4e7d3b5f9af07fd34cab56f2d75c8a2ddbc"
+        "prev_hash": "7f6e814a63872e360d91aa8857d1fffc6dad350d6d0261ba349a2c9845be2ac1",
+        "entry_hash": "8e3020ab2d7f8c9baf8097f6918eb9058103cc3fa902d2d0f63dd87269a28234"
       },
       {
         "sequence": 12,
-        "timestamp": "2026-08-25T18:04:52.002290+00:00",
+        "timestamp": "2026-08-26T07:34:03.758925+00:00",
         "txn_id": "pay_quickmart_1827",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1810,12 +1699,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "07fb7065beeadf8f57b90f44fcc5a4e7d3b5f9af07fd34cab56f2d75c8a2ddbc",
-        "entry_hash": "c102e2b83910736f7639a3ea70d44ee4ff42df44c440ba4821e5cb0b26c50b43"
+        "prev_hash": "8e3020ab2d7f8c9baf8097f6918eb9058103cc3fa902d2d0f63dd87269a28234",
+        "entry_hash": "c90dd9ea255f2c01c1c884db3ab29c2e3b1808e1a762e5ab091730f0abc12eec"
       },
       {
         "sequence": 13,
-        "timestamp": "2026-08-25T18:04:52.002290+00:00",
+        "timestamp": "2026-08-26T07:34:03.758925+00:00",
         "txn_id": "pay_quickmart_0957",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1829,12 +1718,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "c102e2b83910736f7639a3ea70d44ee4ff42df44c440ba4821e5cb0b26c50b43",
-        "entry_hash": "cbf13462aeca3305e90de9bef7bd148786724d972a9ad056b54f6a11e0e70d45"
+        "prev_hash": "c90dd9ea255f2c01c1c884db3ab29c2e3b1808e1a762e5ab091730f0abc12eec",
+        "entry_hash": "151bab0e346ebef59a3be8006e9e66635ed338a05ca4c6e9052359e92db3dd75"
       },
       {
         "sequence": 14,
-        "timestamp": "2026-08-25T18:04:52.002290+00:00",
+        "timestamp": "2026-08-26T07:34:03.758925+00:00",
         "txn_id": "pay_quickmart_0219",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1848,12 +1737,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "cbf13462aeca3305e90de9bef7bd148786724d972a9ad056b54f6a11e0e70d45",
-        "entry_hash": "a709310330f063198ba5cdfc7d581796b0e4eda2c61e948d106e5280b2aa2121"
+        "prev_hash": "151bab0e346ebef59a3be8006e9e66635ed338a05ca4c6e9052359e92db3dd75",
+        "entry_hash": "9a06c5c98bca5d2be19411352086011339cb40065bb18638f465d9695999f79e"
       },
       {
         "sequence": 15,
-        "timestamp": "2026-08-25T18:04:52.002290+00:00",
+        "timestamp": "2026-08-26T07:34:03.758925+00:00",
         "txn_id": "pay_quickmart_2295",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1867,12 +1756,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "a709310330f063198ba5cdfc7d581796b0e4eda2c61e948d106e5280b2aa2121",
-        "entry_hash": "c1da2d51ebcc904b36a92c84ae6198966107b522bec4d98e241cc0a8bca371d6"
+        "prev_hash": "9a06c5c98bca5d2be19411352086011339cb40065bb18638f465d9695999f79e",
+        "entry_hash": "3102fd39cf8b09dbedd54c0f3dda9b5aff363301b6dfc43cb3f9361bbe2e842b"
       },
       {
         "sequence": 16,
-        "timestamp": "2026-08-25T18:04:52.002290+00:00",
+        "timestamp": "2026-08-26T07:34:03.758925+00:00",
         "txn_id": "pay_quickmart_1951",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1886,12 +1775,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "c1da2d51ebcc904b36a92c84ae6198966107b522bec4d98e241cc0a8bca371d6",
-        "entry_hash": "019385dcda3be17a45c3952fbab617020427d9b90ba4b9bb7e76756a05b5127f"
+        "prev_hash": "3102fd39cf8b09dbedd54c0f3dda9b5aff363301b6dfc43cb3f9361bbe2e842b",
+        "entry_hash": "7e59d2f72490e82ddffc6d19869539e83c76a7c339243069c58b0bd11ffb7405"
       },
       {
         "sequence": 17,
-        "timestamp": "2026-08-25T18:04:52.002290+00:00",
+        "timestamp": "2026-08-26T07:34:03.758925+00:00",
         "txn_id": "pay_quickmart_2380",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1905,12 +1794,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "019385dcda3be17a45c3952fbab617020427d9b90ba4b9bb7e76756a05b5127f",
-        "entry_hash": "30462b43cfbb99fac1b539ef04b70182b62b979bf95abf595a8bbbc003de01b7"
+        "prev_hash": "7e59d2f72490e82ddffc6d19869539e83c76a7c339243069c58b0bd11ffb7405",
+        "entry_hash": "8ac3b44bb47af30db598f0d5cc41ed77d3a6b8548803e10ae9307709cbcab5f3"
       },
       {
         "sequence": 18,
-        "timestamp": "2026-08-25T18:04:52.002290+00:00",
+        "timestamp": "2026-08-26T07:34:03.758925+00:00",
         "txn_id": "pay_quickmart_1392",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1924,12 +1813,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "30462b43cfbb99fac1b539ef04b70182b62b979bf95abf595a8bbbc003de01b7",
-        "entry_hash": "3f1d6e3e824bef867c70e4c2f5ff250ac9f86af951085477cb0d2674b84e299c"
+        "prev_hash": "8ac3b44bb47af30db598f0d5cc41ed77d3a6b8548803e10ae9307709cbcab5f3",
+        "entry_hash": "aea2198c8668a079f71d470d3cd33718252c311e0606998fb4c677e4068b5d82"
       },
       {
         "sequence": 19,
-        "timestamp": "2026-08-25T18:04:52.002290+00:00",
+        "timestamp": "2026-08-26T07:34:03.758925+00:00",
         "txn_id": "pay_quickmart_2412",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1943,12 +1832,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "3f1d6e3e824bef867c70e4c2f5ff250ac9f86af951085477cb0d2674b84e299c",
-        "entry_hash": "0cb8368e5b5ce43ab01b7aec5970201d0986ad72bc69c0c5193b481e30185c67"
+        "prev_hash": "aea2198c8668a079f71d470d3cd33718252c311e0606998fb4c677e4068b5d82",
+        "entry_hash": "75bd8b570b655a9208076b9c1d23adadc1e98704101fbe1155af1f0a378f97e9"
       },
       {
         "sequence": 20,
-        "timestamp": "2026-08-25T18:04:52.002290+00:00",
+        "timestamp": "2026-08-26T07:34:03.758925+00:00",
         "txn_id": "pay_quickmart_0007",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1962,12 +1851,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "0cb8368e5b5ce43ab01b7aec5970201d0986ad72bc69c0c5193b481e30185c67",
-        "entry_hash": "aa8c3bd6d378b57018ea195090c191bcc8af1f3dafbd025f599cd237ce213e83"
+        "prev_hash": "75bd8b570b655a9208076b9c1d23adadc1e98704101fbe1155af1f0a378f97e9",
+        "entry_hash": "8761ae3008068357064d2910be419c923da6182f5a19c65c3763235480028205"
       },
       {
         "sequence": 21,
-        "timestamp": "2026-08-25T18:04:52.002290+00:00",
+        "timestamp": "2026-08-26T07:34:03.759920+00:00",
         "txn_id": "pay_quickmart_0657",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1981,12 +1870,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "aa8c3bd6d378b57018ea195090c191bcc8af1f3dafbd025f599cd237ce213e83",
-        "entry_hash": "2b60709cbe3f4c49530b76823ca39b3608c33d93720ec26b7d5fb9b82106cc76"
+        "prev_hash": "8761ae3008068357064d2910be419c923da6182f5a19c65c3763235480028205",
+        "entry_hash": "dd43449cf053b4cd0a4b28ae983263ca893b9367f6ae6caf8b78d25bbc5f3616"
       },
       {
         "sequence": 22,
-        "timestamp": "2026-08-25T18:04:52.002290+00:00",
+        "timestamp": "2026-08-26T07:34:03.759920+00:00",
         "txn_id": "pay_quickmart_0360",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -2000,12 +1889,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "2b60709cbe3f4c49530b76823ca39b3608c33d93720ec26b7d5fb9b82106cc76",
-        "entry_hash": "4ac7b746bb9b5494e64913925cdd8a728e0c23a6497975e6e0f31d95ba38af0d"
+        "prev_hash": "dd43449cf053b4cd0a4b28ae983263ca893b9367f6ae6caf8b78d25bbc5f3616",
+        "entry_hash": "6136b2c62f062f2c4e6d4794b498c4ee14cf97c53b6da73790a4b075525c1ae6"
       },
       {
         "sequence": 23,
-        "timestamp": "2026-08-25T18:04:52.002290+00:00",
+        "timestamp": "2026-08-26T07:34:03.759920+00:00",
         "txn_id": "pay_quickmart_0606",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -2019,12 +1908,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "4ac7b746bb9b5494e64913925cdd8a728e0c23a6497975e6e0f31d95ba38af0d",
-        "entry_hash": "2c9e7a42ecee8eac570961711e4768565b46547622bbdd7002dfba2af3ed90d0"
+        "prev_hash": "6136b2c62f062f2c4e6d4794b498c4ee14cf97c53b6da73790a4b075525c1ae6",
+        "entry_hash": "5e5ac9d5a26eba6f153c1b8df252d0af91d26aec624dfb7312cd8342b286b2fe"
       },
       {
         "sequence": 24,
-        "timestamp": "2026-08-25T18:04:52.002290+00:00",
+        "timestamp": "2026-08-26T07:34:03.759920+00:00",
         "txn_id": "pay_quickmart_2735",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -2038,12 +1927,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "2c9e7a42ecee8eac570961711e4768565b46547622bbdd7002dfba2af3ed90d0",
-        "entry_hash": "225a5a02bf0a9d274e4fdcf1bf8774bb56ff812aa400afea7983a396f817ae9f"
+        "prev_hash": "5e5ac9d5a26eba6f153c1b8df252d0af91d26aec624dfb7312cd8342b286b2fe",
+        "entry_hash": "271983df6f6b6a0b9609b0b93e536e8a84b54afa633952e1bc6da7fddf7645eb"
       },
       {
         "sequence": 25,
-        "timestamp": "2026-08-25T18:04:52.002290+00:00",
+        "timestamp": "2026-08-26T07:34:03.759920+00:00",
         "txn_id": "pay_quickmart_0351",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -2057,12 +1946,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "225a5a02bf0a9d274e4fdcf1bf8774bb56ff812aa400afea7983a396f817ae9f",
-        "entry_hash": "457a2134f96914ecf6edb5bbd9aee6827e809b5dc46f5a97f7ed28fade273928"
+        "prev_hash": "271983df6f6b6a0b9609b0b93e536e8a84b54afa633952e1bc6da7fddf7645eb",
+        "entry_hash": "d9742b1c882dc641203429d94832e881ed381b7510d33ebc2df13403b234c367"
       },
       {
         "sequence": 26,
-        "timestamp": "2026-08-25T18:04:52.002290+00:00",
+        "timestamp": "2026-08-26T07:34:03.759920+00:00",
         "txn_id": "pay_quickmart_0061",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -2076,12 +1965,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "457a2134f96914ecf6edb5bbd9aee6827e809b5dc46f5a97f7ed28fade273928",
-        "entry_hash": "c5e1d2a8b12dc54349c1b9a82eae8019be91d26e0cec7a63ac39dc2c37aebf0c"
+        "prev_hash": "d9742b1c882dc641203429d94832e881ed381b7510d33ebc2df13403b234c367",
+        "entry_hash": "562d921b7db6eef35679ea1f35806c92fd861d4150f3327f056c38ef4224ccf3"
       },
       {
         "sequence": 27,
-        "timestamp": "2026-08-25T18:04:52.002290+00:00",
+        "timestamp": "2026-08-26T07:34:03.759920+00:00",
         "txn_id": "pay_quickmart_1717",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -2095,12 +1984,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "c5e1d2a8b12dc54349c1b9a82eae8019be91d26e0cec7a63ac39dc2c37aebf0c",
-        "entry_hash": "8223ef18a7e4e20686e861754226eeb8e26ee56125d111f68817a06f9837aae1"
+        "prev_hash": "562d921b7db6eef35679ea1f35806c92fd861d4150f3327f056c38ef4224ccf3",
+        "entry_hash": "bbae00961fc25120f505e16167712b1b279b2e1328d45c4e83a31163b0519ff0"
       },
       {
         "sequence": 28,
-        "timestamp": "2026-08-25T18:04:52.002290+00:00",
+        "timestamp": "2026-08-26T07:34:03.759920+00:00",
         "txn_id": "pay_quickmart_0696",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -2114,12 +2003,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "8223ef18a7e4e20686e861754226eeb8e26ee56125d111f68817a06f9837aae1",
-        "entry_hash": "fcb113fc15165537a88879e9f7deaf51ff00c7c40345cdbad7f110f3f021a46e"
+        "prev_hash": "bbae00961fc25120f505e16167712b1b279b2e1328d45c4e83a31163b0519ff0",
+        "entry_hash": "24bb7f7bd8b84d4d52213d8755baaf0e31c599b4d118ba3fc477db9b089dc5ea"
       },
       {
         "sequence": 29,
-        "timestamp": "2026-08-25T18:04:52.002290+00:00",
+        "timestamp": "2026-08-26T07:34:03.759920+00:00",
         "txn_id": "pay_quickmart_1233",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -2133,12 +2022,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "fcb113fc15165537a88879e9f7deaf51ff00c7c40345cdbad7f110f3f021a46e",
-        "entry_hash": "f027157b3a081fbe4687f651fb3646000a1db8be63aacc9d8dd7e02635a2de41"
+        "prev_hash": "24bb7f7bd8b84d4d52213d8755baaf0e31c599b4d118ba3fc477db9b089dc5ea",
+        "entry_hash": "832dcae669b849b295f7d0c971e80213d1dfb17311e7ec6a1f57d5e30bae1d50"
       },
       {
         "sequence": 30,
-        "timestamp": "2026-08-25T18:04:52.002290+00:00",
+        "timestamp": "2026-08-26T07:34:03.759920+00:00",
         "txn_id": "pay_quickmart_1363",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -2152,12 +2041,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "f027157b3a081fbe4687f651fb3646000a1db8be63aacc9d8dd7e02635a2de41",
-        "entry_hash": "a3a44e80073dc3f2e90071e66f06b24885a1c8413673493d3d756818f65c55c0"
+        "prev_hash": "832dcae669b849b295f7d0c971e80213d1dfb17311e7ec6a1f57d5e30bae1d50",
+        "entry_hash": "e6e1597b3bb55abaa31615043cd5fcd8a76ea75452f6b50124e1e9c0e82cc913"
       },
       {
         "sequence": 31,
-        "timestamp": "2026-08-25T18:04:52.002290+00:00",
+        "timestamp": "2026-08-26T07:34:03.759920+00:00",
         "txn_id": "pay_quickmart_0587",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -2171,12 +2060,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "a3a44e80073dc3f2e90071e66f06b24885a1c8413673493d3d756818f65c55c0",
-        "entry_hash": "589cf5fafaef277d8729199f3998aa8241bc528f77000030813a5bbfca4a8421"
+        "prev_hash": "e6e1597b3bb55abaa31615043cd5fcd8a76ea75452f6b50124e1e9c0e82cc913",
+        "entry_hash": "e68dd3d7dfdf3d24ad08282ad28c3195d58fd5c1be3fd6a2a2fd1095c2301dc8"
       },
       {
         "sequence": 32,
-        "timestamp": "2026-08-25T18:04:52.002290+00:00",
+        "timestamp": "2026-08-26T07:34:03.759920+00:00",
         "txn_id": "pay_quickmart_1838",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -2190,12 +2079,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "589cf5fafaef277d8729199f3998aa8241bc528f77000030813a5bbfca4a8421",
-        "entry_hash": "91073ff2d03247f02e853a9ad01a654e30a238fa13415f46ba18debe9dcfd80b"
+        "prev_hash": "e68dd3d7dfdf3d24ad08282ad28c3195d58fd5c1be3fd6a2a2fd1095c2301dc8",
+        "entry_hash": "9c72e58c1048de0f5a30f555ec67ec2175898d3d6064e48f4cb4e27af59aa480"
       },
       {
         "sequence": 33,
-        "timestamp": "2026-08-25T18:04:52.004025+00:00",
+        "timestamp": "2026-08-26T07:34:03.759920+00:00",
         "txn_id": "pay_quickmart_0232",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -2209,12 +2098,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "91073ff2d03247f02e853a9ad01a654e30a238fa13415f46ba18debe9dcfd80b",
-        "entry_hash": "b8b5e55b19fa29472debb55c1946da2058cf5d25b98ffcc35ffd2fcac52ec5be"
+        "prev_hash": "9c72e58c1048de0f5a30f555ec67ec2175898d3d6064e48f4cb4e27af59aa480",
+        "entry_hash": "e64872ca1acffd09ded11da7a054ba02f2250ae81a63b8144fbb2d02322192d8"
       },
       {
         "sequence": 34,
-        "timestamp": "2026-08-25T18:04:52.004025+00:00",
+        "timestamp": "2026-08-26T07:34:03.759920+00:00",
         "txn_id": "pay_quickmart_2543",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -2228,12 +2117,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "b8b5e55b19fa29472debb55c1946da2058cf5d25b98ffcc35ffd2fcac52ec5be",
-        "entry_hash": "86fb246bbd82afb164019d60079d39a76416fadf1a0d6de2fae369490cf5fefa"
+        "prev_hash": "e64872ca1acffd09ded11da7a054ba02f2250ae81a63b8144fbb2d02322192d8",
+        "entry_hash": "3b53aa16b54ccd7f23499bc5cf420bc23d1d4394222a8ada89012f2251003e5a"
       },
       {
         "sequence": 35,
-        "timestamp": "2026-08-25T18:04:52.004025+00:00",
+        "timestamp": "2026-08-26T07:34:03.760924+00:00",
         "txn_id": "pay_quickmart_2257",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -2247,12 +2136,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "86fb246bbd82afb164019d60079d39a76416fadf1a0d6de2fae369490cf5fefa",
-        "entry_hash": "00cc50fbe025fd169ffa6c5e767b778ca279cfd1c76f5c910d74ae543f67d66f"
+        "prev_hash": "3b53aa16b54ccd7f23499bc5cf420bc23d1d4394222a8ada89012f2251003e5a",
+        "entry_hash": "7bcbe3e1be0763822b4c7b2d4312ff512d86a5fb7bfd02a9220732551d2df209"
       },
       {
         "sequence": 36,
-        "timestamp": "2026-08-25T18:04:52.004025+00:00",
+        "timestamp": "2026-08-26T07:34:03.760924+00:00",
         "txn_id": "pay_quickmart_2177",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -2266,12 +2155,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "00cc50fbe025fd169ffa6c5e767b778ca279cfd1c76f5c910d74ae543f67d66f",
-        "entry_hash": "0616076cc588511fe8ba953b97b00de32b82634188de26ab4a574763f78eb47d"
+        "prev_hash": "7bcbe3e1be0763822b4c7b2d4312ff512d86a5fb7bfd02a9220732551d2df209",
+        "entry_hash": "bff6f3bbedc1d68c442ec349fb52d21d123f0e113239fd764a52d16be75d3092"
       },
       {
         "sequence": 37,
-        "timestamp": "2026-08-25T18:04:52.004025+00:00",
+        "timestamp": "2026-08-26T07:34:03.760924+00:00",
         "txn_id": "pay_quickmart_2683",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -2285,12 +2174,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "0616076cc588511fe8ba953b97b00de32b82634188de26ab4a574763f78eb47d",
-        "entry_hash": "d6e089660041cb0b95e5778df9dd4fcf60864868eb718bb7b67858040f8f3da3"
+        "prev_hash": "bff6f3bbedc1d68c442ec349fb52d21d123f0e113239fd764a52d16be75d3092",
+        "entry_hash": "054c4b2a54191b382970cb090b9317899a835f4ac5c02fab22c6774e96dee728"
       },
       {
         "sequence": 38,
-        "timestamp": "2026-08-25T18:04:52.004025+00:00",
+        "timestamp": "2026-08-26T07:34:03.760924+00:00",
         "txn_id": "pay_quickmart_1464",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -2304,12 +2193,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "d6e089660041cb0b95e5778df9dd4fcf60864868eb718bb7b67858040f8f3da3",
-        "entry_hash": "ddd525e6fc23bd2385960c95ff076adf7a23c4795b1cbc7618843cba3db521c3"
+        "prev_hash": "054c4b2a54191b382970cb090b9317899a835f4ac5c02fab22c6774e96dee728",
+        "entry_hash": "ac75a3e1f2db3ba23797a58ab1898ff4df51920d7ae72d1f3f491cfde5365dc6"
       },
       {
         "sequence": 39,
-        "timestamp": "2026-08-25T18:04:52.004025+00:00",
+        "timestamp": "2026-08-26T07:34:03.760924+00:00",
         "txn_id": "pay_quickmart_0185",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -2323,12 +2212,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "ddd525e6fc23bd2385960c95ff076adf7a23c4795b1cbc7618843cba3db521c3",
-        "entry_hash": "a9ea68c76b037207b86b5e06520bcfc281d84ef404a22774381f088570017d09"
+        "prev_hash": "ac75a3e1f2db3ba23797a58ab1898ff4df51920d7ae72d1f3f491cfde5365dc6",
+        "entry_hash": "a47c1cc29a9d204adfa5100f490293c55d13d2051060dcbb0a301e6f69e26d67"
       },
       {
         "sequence": 40,
-        "timestamp": "2026-08-25T18:04:52.004025+00:00",
+        "timestamp": "2026-08-26T07:34:03.760924+00:00",
         "txn_id": "pay_quickmart_1780",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -2342,12 +2231,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "a9ea68c76b037207b86b5e06520bcfc281d84ef404a22774381f088570017d09",
-        "entry_hash": "34aa349bcaea3432488cc9b54553740f536686e11fc84ad5b792d1802aa2c8ab"
+        "prev_hash": "a47c1cc29a9d204adfa5100f490293c55d13d2051060dcbb0a301e6f69e26d67",
+        "entry_hash": "24ff39b8ed6bcbf38653080eebed4bc43f76e3630f1aa32ff29dff60403b8264"
       },
       {
         "sequence": 41,
-        "timestamp": "2026-08-25T18:04:52.004025+00:00",
+        "timestamp": "2026-08-26T07:34:03.760924+00:00",
         "txn_id": "pay_quickmart_2275",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -2361,12 +2250,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "34aa349bcaea3432488cc9b54553740f536686e11fc84ad5b792d1802aa2c8ab",
-        "entry_hash": "22ea645071f42a951c3fe876d4864e44e3e01784cabe16b781015009e34ed567"
+        "prev_hash": "24ff39b8ed6bcbf38653080eebed4bc43f76e3630f1aa32ff29dff60403b8264",
+        "entry_hash": "5e4493bf22cc85fe17722c071478bd46e281b13af733c32e00c98c3d19d0fd86"
       },
       {
         "sequence": 42,
-        "timestamp": "2026-08-25T18:04:52.004025+00:00",
+        "timestamp": "2026-08-26T07:34:03.760924+00:00",
         "txn_id": "pay_quickmart_1668",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -2380,12 +2269,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "22ea645071f42a951c3fe876d4864e44e3e01784cabe16b781015009e34ed567",
-        "entry_hash": "c219645a146f34f4270cd71d01967be30482591b47dbdca1587a8c3450684235"
+        "prev_hash": "5e4493bf22cc85fe17722c071478bd46e281b13af733c32e00c98c3d19d0fd86",
+        "entry_hash": "9643ed1ffe41984c889d081b0bc6f575a896247d628ac0c995269020f2e628c2"
       },
       {
         "sequence": 43,
-        "timestamp": "2026-08-25T18:04:52.004025+00:00",
+        "timestamp": "2026-08-26T07:34:03.760924+00:00",
         "txn_id": "pay_quickmart_1204",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -2399,12 +2288,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "c219645a146f34f4270cd71d01967be30482591b47dbdca1587a8c3450684235",
-        "entry_hash": "0973a8534b98ea2ee74517516fbc171e3a3585010f2f140741c7a1dd5c1fe955"
+        "prev_hash": "9643ed1ffe41984c889d081b0bc6f575a896247d628ac0c995269020f2e628c2",
+        "entry_hash": "483d5591c10026f78f0f3b15212db5f89c45693aec185cef4397da43e9e1a71e"
       },
       {
         "sequence": 44,
-        "timestamp": "2026-08-25T18:04:52.004025+00:00",
+        "timestamp": "2026-08-26T07:34:03.760924+00:00",
         "txn_id": "pay_quickmart_0539",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -2418,12 +2307,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "0973a8534b98ea2ee74517516fbc171e3a3585010f2f140741c7a1dd5c1fe955",
-        "entry_hash": "1a9f5b36e1f6958fbce67d1fb3965ff83bad0a549b4915c4016b35ad944c7b89"
+        "prev_hash": "483d5591c10026f78f0f3b15212db5f89c45693aec185cef4397da43e9e1a71e",
+        "entry_hash": "3c21befe507b5f5d56a295ed10ee74eaaf7b94c8017ff7f0846f5af6c125e1df"
       },
       {
         "sequence": 45,
-        "timestamp": "2026-08-25T18:04:52.005034+00:00",
+        "timestamp": "2026-08-26T07:34:03.760924+00:00",
         "txn_id": "pay_quickmart_2081",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -2437,12 +2326,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "1a9f5b36e1f6958fbce67d1fb3965ff83bad0a549b4915c4016b35ad944c7b89",
-        "entry_hash": "a7057c1b16165a692b4f73eee6c2317dcd396b744284a738f98da898312074a1"
+        "prev_hash": "3c21befe507b5f5d56a295ed10ee74eaaf7b94c8017ff7f0846f5af6c125e1df",
+        "entry_hash": "aca26e4bbb0bf7cefab2865d432219859a3318a4a3e261db8329cbb2f2797e25"
       },
       {
         "sequence": 46,
-        "timestamp": "2026-08-25T18:04:52.005034+00:00",
+        "timestamp": "2026-08-26T07:34:03.760924+00:00",
         "txn_id": "pay_quickmart_1702",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -2456,12 +2345,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "a7057c1b16165a692b4f73eee6c2317dcd396b744284a738f98da898312074a1",
-        "entry_hash": "6a4233dbcb3c89965cbd96f930e32e2de9c03245bde2f5cd3fae09034a6df198"
+        "prev_hash": "aca26e4bbb0bf7cefab2865d432219859a3318a4a3e261db8329cbb2f2797e25",
+        "entry_hash": "04db7c0d997986cb57ae3fa09587b56563fa4043943008984b960defe48bae5a"
       },
       {
         "sequence": 47,
-        "timestamp": "2026-08-25T18:04:52.005034+00:00",
+        "timestamp": "2026-08-26T07:34:03.760924+00:00",
         "txn_id": "pay_quickmart_1240",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -2475,12 +2364,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "6a4233dbcb3c89965cbd96f930e32e2de9c03245bde2f5cd3fae09034a6df198",
-        "entry_hash": "9acfcf11c44d4bbe05fac00009a922d8eb2cb841d6a6553501c05715c58a6556"
+        "prev_hash": "04db7c0d997986cb57ae3fa09587b56563fa4043943008984b960defe48bae5a",
+        "entry_hash": "a5790286f5c5c3a331350a2ddd1f794fa34e109240453ea885ff32af4bb878e3"
       },
       {
         "sequence": 48,
-        "timestamp": "2026-08-25T18:04:52.005034+00:00",
+        "timestamp": "2026-08-26T07:34:03.760924+00:00",
         "txn_id": "pay_quickmart_1841",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -2494,12 +2383,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "9acfcf11c44d4bbe05fac00009a922d8eb2cb841d6a6553501c05715c58a6556",
-        "entry_hash": "dc054ecfc51ac87725ec907a3e0d7503e7bdce78753e0aa4e75f4bdb946cedaa"
+        "prev_hash": "a5790286f5c5c3a331350a2ddd1f794fa34e109240453ea885ff32af4bb878e3",
+        "entry_hash": "27f3f97ec4b07df046fe90e60fcd2866d1db3b47ac635b247cd64807d9d0aa0e"
       },
       {
         "sequence": 49,
-        "timestamp": "2026-08-25T18:04:52.005034+00:00",
+        "timestamp": "2026-08-26T07:34:03.761920+00:00",
         "txn_id": "pay_quickmart_2440",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -2513,12 +2402,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "dc054ecfc51ac87725ec907a3e0d7503e7bdce78753e0aa4e75f4bdb946cedaa",
-        "entry_hash": "35f0300e47384ca2d2d52e3dec8d187a03ee629e9ceb066906492663b6624326"
+        "prev_hash": "27f3f97ec4b07df046fe90e60fcd2866d1db3b47ac635b247cd64807d9d0aa0e",
+        "entry_hash": "70f9ea04743c4796f17da627fde542a8e6b95cbbae07ddb3c3a4efe7a49377ef"
       },
       {
         "sequence": 50,
-        "timestamp": "2026-08-25T18:04:52.005034+00:00",
+        "timestamp": "2026-08-26T07:34:03.761920+00:00",
         "txn_id": "pay_quickmart_0950",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -2532,12 +2421,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "35f0300e47384ca2d2d52e3dec8d187a03ee629e9ceb066906492663b6624326",
-        "entry_hash": "083ff31b66606fab916deb34cbf00206c227e5a732450c737132390406bb0d7f"
+        "prev_hash": "70f9ea04743c4796f17da627fde542a8e6b95cbbae07ddb3c3a4efe7a49377ef",
+        "entry_hash": "28e3e3b3e5e193174c38aaf81b66816cad8d86f5f74085a7cd1f6ce70e8c16c0"
       },
       {
         "sequence": 51,
-        "timestamp": "2026-08-25T18:04:52.005034+00:00",
+        "timestamp": "2026-08-26T07:34:03.761920+00:00",
         "txn_id": "pay_quickmart_0225",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -2551,12 +2440,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "083ff31b66606fab916deb34cbf00206c227e5a732450c737132390406bb0d7f",
-        "entry_hash": "7845ef13213a8dfc93c67bdcadeb8ee5be737c4155bb441e9eb16b518e0f61bc"
+        "prev_hash": "28e3e3b3e5e193174c38aaf81b66816cad8d86f5f74085a7cd1f6ce70e8c16c0",
+        "entry_hash": "058530dda21989346da2f745512921a31bb0cab8960f7367f510bdcc1b37240c"
       },
       {
         "sequence": 52,
-        "timestamp": "2026-08-25T18:04:52.005034+00:00",
+        "timestamp": "2026-08-26T07:34:03.761920+00:00",
         "txn_id": "pay_quickmart_1093",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -2570,12 +2459,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "7845ef13213a8dfc93c67bdcadeb8ee5be737c4155bb441e9eb16b518e0f61bc",
-        "entry_hash": "b228975ded6ea97a350b52dc493b2ccec455355741220279f0e2129c1523ebcd"
+        "prev_hash": "058530dda21989346da2f745512921a31bb0cab8960f7367f510bdcc1b37240c",
+        "entry_hash": "83d24b6711d7ec2884d9689903c9febee94cf04c6a3e7892aaec1665003463d2"
       },
       {
         "sequence": 53,
-        "timestamp": "2026-08-25T18:04:52.005034+00:00",
+        "timestamp": "2026-08-26T07:34:03.761920+00:00",
         "txn_id": "pay_quickmart_2492",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -2589,12 +2478,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "b228975ded6ea97a350b52dc493b2ccec455355741220279f0e2129c1523ebcd",
-        "entry_hash": "d7b001dfb8cf5f51134082edaa6203bee82fd39fcbfd98a950c970c632b029b9"
+        "prev_hash": "83d24b6711d7ec2884d9689903c9febee94cf04c6a3e7892aaec1665003463d2",
+        "entry_hash": "5272ffcda8c18b8d53f642b6b4747f362a415916cfae6b1f2a80bc1d758b0281"
       },
       {
         "sequence": 54,
-        "timestamp": "2026-08-25T18:04:52.005034+00:00",
+        "timestamp": "2026-08-26T07:34:03.761920+00:00",
         "txn_id": "pay_quickmart_0057",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -2608,12 +2497,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "d7b001dfb8cf5f51134082edaa6203bee82fd39fcbfd98a950c970c632b029b9",
-        "entry_hash": "24f12a2c8cea65dcdaaded452fff4170f46bfa30216412a978c2efd990dc2141"
+        "prev_hash": "5272ffcda8c18b8d53f642b6b4747f362a415916cfae6b1f2a80bc1d758b0281",
+        "entry_hash": "2a6bde52473c65d1008cedb9cc0d2987eea8ad3265d79417dab10be9e62e5527"
       },
       {
         "sequence": 55,
-        "timestamp": "2026-08-25T18:04:52.005034+00:00",
+        "timestamp": "2026-08-26T07:34:03.761920+00:00",
         "txn_id": "pay_quickmart_0545",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -2627,12 +2516,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "24f12a2c8cea65dcdaaded452fff4170f46bfa30216412a978c2efd990dc2141",
-        "entry_hash": "eb4d73b0c4979284a3f90a88037da02a6d15084c0375384c6c9aeb0ac4c14b09"
+        "prev_hash": "2a6bde52473c65d1008cedb9cc0d2987eea8ad3265d79417dab10be9e62e5527",
+        "entry_hash": "cde07637234ba1e1770e0576d53fcff30de6707f838cd2f7270d657e01f43fff"
       },
       {
         "sequence": 56,
-        "timestamp": "2026-08-25T18:04:52.005034+00:00",
+        "timestamp": "2026-08-26T07:34:03.761920+00:00",
         "txn_id": "pay_quickmart_0267",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -2646,12 +2535,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "eb4d73b0c4979284a3f90a88037da02a6d15084c0375384c6c9aeb0ac4c14b09",
-        "entry_hash": "d445fcc04937548314385cf7eb677822afa1c6b5a304eae2b2c7fde6c8be7736"
+        "prev_hash": "cde07637234ba1e1770e0576d53fcff30de6707f838cd2f7270d657e01f43fff",
+        "entry_hash": "b1e58ce002a3863f47e736ddd94b3c42e4ba7c8b41713edd62be32037c856641"
       },
       {
         "sequence": 57,
-        "timestamp": "2026-08-25T18:04:52.005034+00:00",
+        "timestamp": "2026-08-26T07:34:03.761920+00:00",
         "txn_id": "pay_quickmart_2026",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -2665,12 +2554,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "d445fcc04937548314385cf7eb677822afa1c6b5a304eae2b2c7fde6c8be7736",
-        "entry_hash": "679360017b35391f0ca3180e1f41cdbed06dfe8ef902bd29ea39361c9b19c21a"
+        "prev_hash": "b1e58ce002a3863f47e736ddd94b3c42e4ba7c8b41713edd62be32037c856641",
+        "entry_hash": "4fc6f4ab50b12119077aa7c092c2a78b10e46dae7d8138effa97689bb3b71a00"
       },
       {
         "sequence": 58,
-        "timestamp": "2026-08-25T18:04:52.005034+00:00",
+        "timestamp": "2026-08-26T07:34:03.761920+00:00",
         "txn_id": "pay_quickmart_0247",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -2684,12 +2573,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "679360017b35391f0ca3180e1f41cdbed06dfe8ef902bd29ea39361c9b19c21a",
-        "entry_hash": "05c6aceda2eac2bab9800e42f0dd95553d3cc4b4755a039999d232b505908627"
+        "prev_hash": "4fc6f4ab50b12119077aa7c092c2a78b10e46dae7d8138effa97689bb3b71a00",
+        "entry_hash": "1ba8c9044830a025040c630a87b9c65876236f197584aa1be99a0e50ea203827"
       },
       {
         "sequence": 59,
-        "timestamp": "2026-08-25T18:04:52.005034+00:00",
+        "timestamp": "2026-08-26T07:34:03.761920+00:00",
         "txn_id": "pay_quickmart_0735",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -2703,12 +2592,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "05c6aceda2eac2bab9800e42f0dd95553d3cc4b4755a039999d232b505908627",
-        "entry_hash": "e0d3b2051fe79ff6d69dac1e08924619ce3eec575c1d84a496239c2d35dc177c"
+        "prev_hash": "1ba8c9044830a025040c630a87b9c65876236f197584aa1be99a0e50ea203827",
+        "entry_hash": "061c8c8b7a6438e648e789471622987439e82ff1de86c9a0fda1d5962a5defb3"
       },
       {
         "sequence": 60,
-        "timestamp": "2026-08-25T18:04:52.005034+00:00",
+        "timestamp": "2026-08-26T07:34:03.761920+00:00",
         "txn_id": "pay_quickmart_0837",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -2722,12 +2611,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "e0d3b2051fe79ff6d69dac1e08924619ce3eec575c1d84a496239c2d35dc177c",
-        "entry_hash": "4c9edefc0e719041ec0b5262504425d5afda65978597f9e0805a29968f541121"
+        "prev_hash": "061c8c8b7a6438e648e789471622987439e82ff1de86c9a0fda1d5962a5defb3",
+        "entry_hash": "5141ac5eb0fb62e3773c4ced1b320ef30a6f1c8d9b084598ac7f9d3cf4614dd5"
       },
       {
         "sequence": 61,
-        "timestamp": "2026-08-25T18:04:52.005034+00:00",
+        "timestamp": "2026-08-26T07:34:03.762919+00:00",
         "txn_id": "pay_quickmart_1007",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -2741,12 +2630,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "4c9edefc0e719041ec0b5262504425d5afda65978597f9e0805a29968f541121",
-        "entry_hash": "c416803ab744f64e427d1902c3273c13d09c97e8db7a503b670edf1f578d431e"
+        "prev_hash": "5141ac5eb0fb62e3773c4ced1b320ef30a6f1c8d9b084598ac7f9d3cf4614dd5",
+        "entry_hash": "cce4d5ae1ff78978a53136f0848759011eec162aa068212b0876e83eeae8eeb6"
       },
       {
         "sequence": 62,
-        "timestamp": "2026-08-25T18:04:52.006036+00:00",
+        "timestamp": "2026-08-26T07:34:03.762919+00:00",
         "txn_id": "pay_quickmart_1430",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -2760,12 +2649,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "c416803ab744f64e427d1902c3273c13d09c97e8db7a503b670edf1f578d431e",
-        "entry_hash": "7561215961c11c2231a7a63b1e5ea992526a85ed2ceefb3751c9e75e1ca072ff"
+        "prev_hash": "cce4d5ae1ff78978a53136f0848759011eec162aa068212b0876e83eeae8eeb6",
+        "entry_hash": "45a334425f9ce68ad0e1c820d4e62ec0db0ecc0547ef7cec232009a96ab461f9"
       },
       {
         "sequence": 63,
-        "timestamp": "2026-08-25T18:04:52.006036+00:00",
+        "timestamp": "2026-08-26T07:34:03.762919+00:00",
         "txn_id": "pay_quickmart_1499",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -2779,12 +2668,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "7561215961c11c2231a7a63b1e5ea992526a85ed2ceefb3751c9e75e1ca072ff",
-        "entry_hash": "114e7ab67963b19c95443323c9204850266e759313bfd4bb9b630263a4ffb17c"
+        "prev_hash": "45a334425f9ce68ad0e1c820d4e62ec0db0ecc0547ef7cec232009a96ab461f9",
+        "entry_hash": "52b57fddc33f6f087cfead55493fc2a7a6442ba408958df9d0751500a38c8c71"
       },
       {
         "sequence": 64,
-        "timestamp": "2026-08-25T18:04:52.006036+00:00",
+        "timestamp": "2026-08-26T07:34:03.762919+00:00",
         "txn_id": "pay_quickmart_0121",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -2798,12 +2687,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "114e7ab67963b19c95443323c9204850266e759313bfd4bb9b630263a4ffb17c",
-        "entry_hash": "49d137df4b3bf62fff7ff3dee641ee6ae93dc3d8b8a5a2f1db12851809bab3e8"
+        "prev_hash": "52b57fddc33f6f087cfead55493fc2a7a6442ba408958df9d0751500a38c8c71",
+        "entry_hash": "600db9624a6bc0e4ddc2a84bc59f0b7e2b7dac210124187b0e60e4d69b9b1205"
       },
       {
         "sequence": 65,
-        "timestamp": "2026-08-25T18:04:52.006036+00:00",
+        "timestamp": "2026-08-26T07:34:03.762919+00:00",
         "txn_id": "pay_quickmart_0821",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -2817,12 +2706,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "49d137df4b3bf62fff7ff3dee641ee6ae93dc3d8b8a5a2f1db12851809bab3e8",
-        "entry_hash": "cc6806f785766b75f0d1417e6110f0acc435ce14eb2f848f0d1947e4f1d65f58"
+        "prev_hash": "600db9624a6bc0e4ddc2a84bc59f0b7e2b7dac210124187b0e60e4d69b9b1205",
+        "entry_hash": "61d7daff05c60416811ed8cb658370401ca12008c730f05cfe0894c4d55173ba"
       },
       {
         "sequence": 66,
-        "timestamp": "2026-08-25T18:04:52.006036+00:00",
+        "timestamp": "2026-08-26T07:34:03.762919+00:00",
         "txn_id": "pay_quickmart_2509",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -2836,12 +2725,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "cc6806f785766b75f0d1417e6110f0acc435ce14eb2f848f0d1947e4f1d65f58",
-        "entry_hash": "79271803ad1fb3d8f6ccd491ecb93febae20754b23a396b4311eb6e349df69b1"
+        "prev_hash": "61d7daff05c60416811ed8cb658370401ca12008c730f05cfe0894c4d55173ba",
+        "entry_hash": "00f424b818511d026659233576176a06326b8e6568d202fd478cae742c7d6407"
       },
       {
         "sequence": 67,
-        "timestamp": "2026-08-25T18:04:52.006036+00:00",
+        "timestamp": "2026-08-26T07:34:03.762919+00:00",
         "txn_id": "pay_quickmart_1857",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -2855,12 +2744,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "79271803ad1fb3d8f6ccd491ecb93febae20754b23a396b4311eb6e349df69b1",
-        "entry_hash": "f978473c19d7510b7aee1d822813cae19f59d3ddd9221d5403bb054c7c7657b9"
+        "prev_hash": "00f424b818511d026659233576176a06326b8e6568d202fd478cae742c7d6407",
+        "entry_hash": "04e99d1f2c00086e47b77da29bc70de81d88d985b03baed1baec365ed046aec4"
       },
       {
         "sequence": 68,
-        "timestamp": "2026-08-25T18:04:52.006036+00:00",
+        "timestamp": "2026-08-26T07:34:03.762919+00:00",
         "txn_id": "pay_quickmart_2304",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -2874,12 +2763,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "f978473c19d7510b7aee1d822813cae19f59d3ddd9221d5403bb054c7c7657b9",
-        "entry_hash": "ea78d9237ba1b1f4d58aa1d0710b56013eb7706d26853fa7097c70c4e5724881"
+        "prev_hash": "04e99d1f2c00086e47b77da29bc70de81d88d985b03baed1baec365ed046aec4",
+        "entry_hash": "23478c5fe5ba7b7902bdcaa5395a36f6d437104e9a43e679007e9afdaa21e94d"
       },
       {
         "sequence": 69,
-        "timestamp": "2026-08-25T18:04:52.006036+00:00",
+        "timestamp": "2026-08-26T07:34:03.762919+00:00",
         "txn_id": "pay_quickmart_1063",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -2893,12 +2782,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "ea78d9237ba1b1f4d58aa1d0710b56013eb7706d26853fa7097c70c4e5724881",
-        "entry_hash": "43821f1f1240a76a821f1f4ae249b6406398acb0ac2c8b17f2e91d3c7b7ad489"
+        "prev_hash": "23478c5fe5ba7b7902bdcaa5395a36f6d437104e9a43e679007e9afdaa21e94d",
+        "entry_hash": "c700f6ad63fe0f6196fed892a18d80f756920a90c6cd2de47dda38c7a3c2e65e"
       },
       {
         "sequence": 70,
-        "timestamp": "2026-08-25T18:04:52.006036+00:00",
+        "timestamp": "2026-08-26T07:34:03.762919+00:00",
         "txn_id": "pay_quickmart_0875",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -2912,12 +2801,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "43821f1f1240a76a821f1f4ae249b6406398acb0ac2c8b17f2e91d3c7b7ad489",
-        "entry_hash": "a9852b8dea481a23a2b7c3e0150008a1176b64716f38722a9b49f71ce9fbae16"
+        "prev_hash": "c700f6ad63fe0f6196fed892a18d80f756920a90c6cd2de47dda38c7a3c2e65e",
+        "entry_hash": "4c1fa64cd03b667ce3f7a43dd4fcfd5fa170d82501b414f1762cde7002db1ca6"
       },
       {
         "sequence": 71,
-        "timestamp": "2026-08-25T18:04:52.006036+00:00",
+        "timestamp": "2026-08-26T07:34:03.762919+00:00",
         "txn_id": "pay_quickmart_0120",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -2931,12 +2820,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "a9852b8dea481a23a2b7c3e0150008a1176b64716f38722a9b49f71ce9fbae16",
-        "entry_hash": "0b72f2144162d87aaa05ab314af722d3ee8b0669596660f3278336fa9aa41220"
+        "prev_hash": "4c1fa64cd03b667ce3f7a43dd4fcfd5fa170d82501b414f1762cde7002db1ca6",
+        "entry_hash": "6b2b0780e03e7af888767773fd1236481dd4ab81992291dfc208911cda2baeb5"
       },
       {
         "sequence": 72,
-        "timestamp": "2026-08-25T18:04:52.006036+00:00",
+        "timestamp": "2026-08-26T07:34:03.762919+00:00",
         "txn_id": "pay_quickmart_0760",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -2950,12 +2839,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "0b72f2144162d87aaa05ab314af722d3ee8b0669596660f3278336fa9aa41220",
-        "entry_hash": "48c6c40fe892d6dbd9652a108a882c6c3794db432626bc73300110535f7a6711"
+        "prev_hash": "6b2b0780e03e7af888767773fd1236481dd4ab81992291dfc208911cda2baeb5",
+        "entry_hash": "e9b04b133b95a97a3aef92603b65841a0da97bc1c0f139c210474712c5f6b671"
       },
       {
         "sequence": 73,
-        "timestamp": "2026-08-25T18:04:52.006036+00:00",
+        "timestamp": "2026-08-26T07:34:03.763916+00:00",
         "txn_id": "pay_quickmart_0296",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -2969,12 +2858,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "48c6c40fe892d6dbd9652a108a882c6c3794db432626bc73300110535f7a6711",
-        "entry_hash": "b14de4be1057feaadff1f352b5e4e4ba1a446bb42586f5a675832a106d4940f7"
+        "prev_hash": "e9b04b133b95a97a3aef92603b65841a0da97bc1c0f139c210474712c5f6b671",
+        "entry_hash": "2b5343aafe4b9c6964fe144e9040e97d102b6f0295888b0d6fc17ca1a92dbe99"
       },
       {
         "sequence": 74,
-        "timestamp": "2026-08-25T18:04:52.006036+00:00",
+        "timestamp": "2026-08-26T07:34:03.763916+00:00",
         "txn_id": "pay_quickmart_0428",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -2988,12 +2877,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "b14de4be1057feaadff1f352b5e4e4ba1a446bb42586f5a675832a106d4940f7",
-        "entry_hash": "a026d3e5960f7eb68741f1ca96c184a77217ed35bd4febfbd52c1ba583cacf0c"
+        "prev_hash": "2b5343aafe4b9c6964fe144e9040e97d102b6f0295888b0d6fc17ca1a92dbe99",
+        "entry_hash": "a492b2c502345c9a07736d75ed796e70729af76582b8849b9653d1f60f1befba"
       },
       {
         "sequence": 75,
-        "timestamp": "2026-08-25T18:04:52.006036+00:00",
+        "timestamp": "2026-08-26T07:34:03.763916+00:00",
         "txn_id": "pay_quickmart_1478",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -3007,12 +2896,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "a026d3e5960f7eb68741f1ca96c184a77217ed35bd4febfbd52c1ba583cacf0c",
-        "entry_hash": "a764390a98b059ec9dfe2a714327fc30e1b5f0526e7009c79e90314bbf1508da"
+        "prev_hash": "a492b2c502345c9a07736d75ed796e70729af76582b8849b9653d1f60f1befba",
+        "entry_hash": "f5b1b37bb4b0041dd56a056d21831b4ab7d861bef258e9dd5fc54d610e9c081c"
       },
       {
         "sequence": 76,
-        "timestamp": "2026-08-25T18:04:52.006036+00:00",
+        "timestamp": "2026-08-26T07:34:03.763916+00:00",
         "txn_id": "pay_quickmart_0425",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -3026,12 +2915,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "a764390a98b059ec9dfe2a714327fc30e1b5f0526e7009c79e90314bbf1508da",
-        "entry_hash": "ae77f09c32cf1bc5b07b0bc3d3a7b2c86b578e8a956803f054229dde4fe9bfb1"
+        "prev_hash": "f5b1b37bb4b0041dd56a056d21831b4ab7d861bef258e9dd5fc54d610e9c081c",
+        "entry_hash": "d64156610430ba1f1fa2d70ac6d62240c1fc760257807763eb2bc85e7ea9b3e3"
       },
       {
         "sequence": 77,
-        "timestamp": "2026-08-25T18:04:52.006036+00:00",
+        "timestamp": "2026-08-26T07:34:03.763916+00:00",
         "txn_id": "pay_quickmart_1792",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -3045,12 +2934,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "ae77f09c32cf1bc5b07b0bc3d3a7b2c86b578e8a956803f054229dde4fe9bfb1",
-        "entry_hash": "1f8685d5b98cc8257f43ad5bca73174c30ed9016d50d6b875b4c6c707aa01cfc"
+        "prev_hash": "d64156610430ba1f1fa2d70ac6d62240c1fc760257807763eb2bc85e7ea9b3e3",
+        "entry_hash": "2f4e5f59294dc501d18fe1d10ef1a846cc0dc57acf853625f6aa7f0d62be12b3"
       },
       {
         "sequence": 78,
-        "timestamp": "2026-08-25T18:04:52.006036+00:00",
+        "timestamp": "2026-08-26T07:34:03.763916+00:00",
         "txn_id": "pay_quickmart_1333",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -3064,12 +2953,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "1f8685d5b98cc8257f43ad5bca73174c30ed9016d50d6b875b4c6c707aa01cfc",
-        "entry_hash": "a8ec9a3fb0d443a5b47e691fb48a8ef741a9954ee4c253c377026c32d417002f"
+        "prev_hash": "2f4e5f59294dc501d18fe1d10ef1a846cc0dc57acf853625f6aa7f0d62be12b3",
+        "entry_hash": "def78ee7e582d90fcd8c07b992050723760581ab191658818a5e413dfef6b073"
       },
       {
         "sequence": 79,
-        "timestamp": "2026-08-25T18:04:52.006036+00:00",
+        "timestamp": "2026-08-26T07:34:03.763916+00:00",
         "txn_id": "pay_quickmart_1584",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -3083,12 +2972,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "a8ec9a3fb0d443a5b47e691fb48a8ef741a9954ee4c253c377026c32d417002f",
-        "entry_hash": "f2d8a04190a04968086ad91dae242414c423de1508a1ccaa116b6284a978e7b3"
+        "prev_hash": "def78ee7e582d90fcd8c07b992050723760581ab191658818a5e413dfef6b073",
+        "entry_hash": "6c02131c40f1f0efbaaf689e78ba89bdf06f4216e53b12c78d13a2c23c864a11"
       },
       {
         "sequence": 80,
-        "timestamp": "2026-08-25T18:04:52.006036+00:00",
+        "timestamp": "2026-08-26T07:34:03.763916+00:00",
         "txn_id": "pay_quickmart_1032",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -3102,12 +2991,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "f2d8a04190a04968086ad91dae242414c423de1508a1ccaa116b6284a978e7b3",
-        "entry_hash": "f0531f56177e9e5fab1f27e2f01445b37f07827b22c673a7ed64fe3846b622b3"
+        "prev_hash": "6c02131c40f1f0efbaaf689e78ba89bdf06f4216e53b12c78d13a2c23c864a11",
+        "entry_hash": "319669cb622ceefaf1d3618d6e83666c0fbdf2bfb925f8f8569fa89be738b2f8"
       },
       {
         "sequence": 81,
-        "timestamp": "2026-08-25T18:04:52.006036+00:00",
+        "timestamp": "2026-08-26T07:34:03.763916+00:00",
         "txn_id": "pay_quickmart_2493",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -3121,12 +3010,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "f0531f56177e9e5fab1f27e2f01445b37f07827b22c673a7ed64fe3846b622b3",
-        "entry_hash": "c518b34ff6206c2d0c5f760f2fc0904638f418a83f3c9b9b3ccaff0c891ae94b"
+        "prev_hash": "319669cb622ceefaf1d3618d6e83666c0fbdf2bfb925f8f8569fa89be738b2f8",
+        "entry_hash": "754f2e10cdb62e0a6427d7aac8535c439573c6e547287686f6c31e440ea009da"
       },
       {
         "sequence": 82,
-        "timestamp": "2026-08-25T18:04:52.006036+00:00",
+        "timestamp": "2026-08-26T07:34:03.763916+00:00",
         "txn_id": "pay_quickmart_0523",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -3140,12 +3029,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "c518b34ff6206c2d0c5f760f2fc0904638f418a83f3c9b9b3ccaff0c891ae94b",
-        "entry_hash": "d7d86692a067751a714ff8e58bc80709c277df4ad6764a141bcb5ae9e566dc07"
+        "prev_hash": "754f2e10cdb62e0a6427d7aac8535c439573c6e547287686f6c31e440ea009da",
+        "entry_hash": "ec4d898720d39aa332232503f88c78d5dcae6ce07a3f202dc8bbde77ff153890"
       },
       {
         "sequence": 83,
-        "timestamp": "2026-08-25T18:04:52.006036+00:00",
+        "timestamp": "2026-08-26T07:34:03.763916+00:00",
         "txn_id": "pay_quickmart_1021",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -3159,12 +3048,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "d7d86692a067751a714ff8e58bc80709c277df4ad6764a141bcb5ae9e566dc07",
-        "entry_hash": "e877aef6e6097dbe12b4582e2e4bf442a0b19adfaffbba1dfb2dd8ade169a7c0"
+        "prev_hash": "ec4d898720d39aa332232503f88c78d5dcae6ce07a3f202dc8bbde77ff153890",
+        "entry_hash": "cf6f0b14388637c44898dccdd161bdf52ac6c906d6af67a1c529c5f481b9edc7"
       },
       {
         "sequence": 84,
-        "timestamp": "2026-08-25T18:04:52.006036+00:00",
+        "timestamp": "2026-08-26T07:34:03.763916+00:00",
         "txn_id": "pay_quickmart_2458",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -3178,12 +3067,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "e877aef6e6097dbe12b4582e2e4bf442a0b19adfaffbba1dfb2dd8ade169a7c0",
-        "entry_hash": "5dce3dc4148e9277d28a5bd31a61ba045dfc52957f4b6b5c0f4512bc4e25ca8c"
+        "prev_hash": "cf6f0b14388637c44898dccdd161bdf52ac6c906d6af67a1c529c5f481b9edc7",
+        "entry_hash": "801bc0e17ebc17e2bd66f7fe1f3533dea5f2925c2be569f87bf8489ee5196c8c"
       },
       {
         "sequence": 85,
-        "timestamp": "2026-08-25T18:04:52.006036+00:00",
+        "timestamp": "2026-08-26T07:34:03.763916+00:00",
         "txn_id": "pay_quickmart_0076",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -3197,12 +3086,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "5dce3dc4148e9277d28a5bd31a61ba045dfc52957f4b6b5c0f4512bc4e25ca8c",
-        "entry_hash": "e925fdc7abc77fdd5445d19f0f9c153041921ca05643a1512e39efd3a17c3d29"
+        "prev_hash": "801bc0e17ebc17e2bd66f7fe1f3533dea5f2925c2be569f87bf8489ee5196c8c",
+        "entry_hash": "c6c994fd2d180bec2e4d57660ee0faabfe49c9a2123b4f53b87cec018dc173a4"
       },
       {
         "sequence": 86,
-        "timestamp": "2026-08-25T18:04:52.006036+00:00",
+        "timestamp": "2026-08-26T07:34:03.763916+00:00",
         "txn_id": "pay_quickmart_2560",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -3216,12 +3105,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "e925fdc7abc77fdd5445d19f0f9c153041921ca05643a1512e39efd3a17c3d29",
-        "entry_hash": "af716828b286dc23733b075bfaf2a6f999b6153ffdb5a93e34b5564a75afb66b"
+        "prev_hash": "c6c994fd2d180bec2e4d57660ee0faabfe49c9a2123b4f53b87cec018dc173a4",
+        "entry_hash": "8e1034ec9acc13b8ae869eea6e32a10a3b842d97da2f6c7d965fd56025802ae4"
       },
       {
         "sequence": 87,
-        "timestamp": "2026-08-25T18:04:52.007035+00:00",
+        "timestamp": "2026-08-26T07:34:03.763916+00:00",
         "txn_id": "pay_quickmart_2232",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -3235,12 +3124,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "af716828b286dc23733b075bfaf2a6f999b6153ffdb5a93e34b5564a75afb66b",
-        "entry_hash": "1615b423e4e9e4664fb41e279f4b6d905a05e3451dd845e98ee0ccb7170a2d54"
+        "prev_hash": "8e1034ec9acc13b8ae869eea6e32a10a3b842d97da2f6c7d965fd56025802ae4",
+        "entry_hash": "24664aac23f0a22c7a39611d769f6d224264f3d945f40068b21204d71ed7287f"
       },
       {
         "sequence": 88,
-        "timestamp": "2026-08-25T18:04:52.007035+00:00",
+        "timestamp": "2026-08-26T07:34:03.763916+00:00",
         "txn_id": "pay_quickmart_1527",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -3254,12 +3143,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "1615b423e4e9e4664fb41e279f4b6d905a05e3451dd845e98ee0ccb7170a2d54",
-        "entry_hash": "c1c2700234308ba1cfaefec3a22f47fad8b94b0a36ace21eec42f52f0ceec0b6"
+        "prev_hash": "24664aac23f0a22c7a39611d769f6d224264f3d945f40068b21204d71ed7287f",
+        "entry_hash": "cbb1641fdd600c1ab91ff74b1d1e187911f1b154d5a7b25ea159aede129b4f45"
       },
       {
         "sequence": 89,
-        "timestamp": "2026-08-25T18:04:52.007035+00:00",
+        "timestamp": "2026-08-26T07:34:03.763916+00:00",
         "txn_id": "pay_quickmart_0869",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -3273,12 +3162,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "c1c2700234308ba1cfaefec3a22f47fad8b94b0a36ace21eec42f52f0ceec0b6",
-        "entry_hash": "3e422f135c8ad415591185919244d69188cd263482aa7ff04533948d4a69b4fe"
+        "prev_hash": "cbb1641fdd600c1ab91ff74b1d1e187911f1b154d5a7b25ea159aede129b4f45",
+        "entry_hash": "f5d82233baf85842a2ff068394e991d67ab69169a7ad2fdebe88df4aabd88ad0"
       },
       {
         "sequence": 90,
-        "timestamp": "2026-08-25T18:04:52.007035+00:00",
+        "timestamp": "2026-08-26T07:34:03.763916+00:00",
         "txn_id": "pay_quickmart_2799",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -3292,12 +3181,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "3e422f135c8ad415591185919244d69188cd263482aa7ff04533948d4a69b4fe",
-        "entry_hash": "d0a8c3ad343ee2c873edd11fbb4f4e8b8d61710b5044f76869d71f5c347e0bc2"
+        "prev_hash": "f5d82233baf85842a2ff068394e991d67ab69169a7ad2fdebe88df4aabd88ad0",
+        "entry_hash": "27fa7d3f2ad8b9f037f1dd9b49ab85e8bf0125f54349eda791ecf6b0d9df46f8"
       },
       {
         "sequence": 91,
-        "timestamp": "2026-08-25T18:04:52.007035+00:00",
+        "timestamp": "2026-08-26T07:34:03.765461+00:00",
         "txn_id": "pay_quickmart_2040",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -3311,12 +3200,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "d0a8c3ad343ee2c873edd11fbb4f4e8b8d61710b5044f76869d71f5c347e0bc2",
-        "entry_hash": "5a9c1da3037d065abaf4ccc5fab7f072ffdac5da58dcd4c59c89e9515a0980d4"
+        "prev_hash": "27fa7d3f2ad8b9f037f1dd9b49ab85e8bf0125f54349eda791ecf6b0d9df46f8",
+        "entry_hash": "f41351b5edf632c8e1fe61fd86421a3c8666969f748f2e5cee465f5083ae1106"
       },
       {
         "sequence": 92,
-        "timestamp": "2026-08-25T18:04:52.007035+00:00",
+        "timestamp": "2026-08-26T07:34:03.765461+00:00",
         "txn_id": "pay_quickmart_1808",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -3330,12 +3219,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "5a9c1da3037d065abaf4ccc5fab7f072ffdac5da58dcd4c59c89e9515a0980d4",
-        "entry_hash": "c6cfd2f7ec37b50f134f2fb45d036045eae5ffbcb531e75b984ae2e421ad0808"
+        "prev_hash": "f41351b5edf632c8e1fe61fd86421a3c8666969f748f2e5cee465f5083ae1106",
+        "entry_hash": "859cb3efaf14b42ef767fa878d85c2426c7490079daa7b314378d9cb5dfb2499"
       },
       {
         "sequence": 93,
-        "timestamp": "2026-08-25T18:04:52.007035+00:00",
+        "timestamp": "2026-08-26T07:34:03.765461+00:00",
         "txn_id": "pay_quickmart_2148",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -3349,12 +3238,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "c6cfd2f7ec37b50f134f2fb45d036045eae5ffbcb531e75b984ae2e421ad0808",
-        "entry_hash": "e5f5d17ef4e449a800f94bc824c6d4938b8b6ae2ced182299119d978ad4bd88c"
+        "prev_hash": "859cb3efaf14b42ef767fa878d85c2426c7490079daa7b314378d9cb5dfb2499",
+        "entry_hash": "2a46bf492229413867fabba11a26146d71c11d579684bdb08f517881c9859b98"
       },
       {
         "sequence": 94,
-        "timestamp": "2026-08-25T18:04:52.007542+00:00",
+        "timestamp": "2026-08-26T07:34:03.765461+00:00",
         "txn_id": "pay_quickmart_2775",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -3368,12 +3257,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "e5f5d17ef4e449a800f94bc824c6d4938b8b6ae2ced182299119d978ad4bd88c",
-        "entry_hash": "29ebeb115f0d84809d38b6f414b4961ef8971110ffcf9e3f690b66a0cfec4d01"
+        "prev_hash": "2a46bf492229413867fabba11a26146d71c11d579684bdb08f517881c9859b98",
+        "entry_hash": "96ac305b96c2bbfac1f459dd6c04563e266cc1749792c7ba65882c0549b59211"
       },
       {
         "sequence": 95,
-        "timestamp": "2026-08-25T18:04:52.007542+00:00",
+        "timestamp": "2026-08-26T07:34:03.765461+00:00",
         "txn_id": "pay_quickmart_0542",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -3387,12 +3276,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "29ebeb115f0d84809d38b6f414b4961ef8971110ffcf9e3f690b66a0cfec4d01",
-        "entry_hash": "f94ae101aaab269eb5d9f7b3f3981439ca60ad677cace3875b43c9eb716526bf"
+        "prev_hash": "96ac305b96c2bbfac1f459dd6c04563e266cc1749792c7ba65882c0549b59211",
+        "entry_hash": "177d637d2ff7233a87c92e1b797c4fa0f542b1fada6a2d92db25c72803982700"
       },
       {
         "sequence": 96,
-        "timestamp": "2026-08-25T18:04:52.007542+00:00",
+        "timestamp": "2026-08-26T07:34:03.765461+00:00",
         "txn_id": "pay_quickmart_0046",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -3406,12 +3295,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "f94ae101aaab269eb5d9f7b3f3981439ca60ad677cace3875b43c9eb716526bf",
-        "entry_hash": "d273b0d32e3cb2a08f816804848682afbd5126865c83c1689fe3ed6dee53198a"
+        "prev_hash": "177d637d2ff7233a87c92e1b797c4fa0f542b1fada6a2d92db25c72803982700",
+        "entry_hash": "db51b969808894e959b988dc6d31121ebf0d66a202be82a5c7f70f5c4ddfa0da"
       },
       {
         "sequence": 97,
-        "timestamp": "2026-08-25T18:04:52.007542+00:00",
+        "timestamp": "2026-08-26T07:34:03.765461+00:00",
         "txn_id": "pay_quickmart_1294",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -3425,12 +3314,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "d273b0d32e3cb2a08f816804848682afbd5126865c83c1689fe3ed6dee53198a",
-        "entry_hash": "cb22e165fc97a20f3b3137383dfacf9c0f6e2bfaeb4d7d70ecb76667d8b572ba"
+        "prev_hash": "db51b969808894e959b988dc6d31121ebf0d66a202be82a5c7f70f5c4ddfa0da",
+        "entry_hash": "14da9cc5653f865d50e3979066afeb1f9e163ebd00314ca75efbd2c1a5d1315d"
       },
       {
         "sequence": 98,
-        "timestamp": "2026-08-25T18:04:52.007542+00:00",
+        "timestamp": "2026-08-26T07:34:03.765461+00:00",
         "txn_id": "pay_quickmart_1634",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -3444,12 +3333,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "cb22e165fc97a20f3b3137383dfacf9c0f6e2bfaeb4d7d70ecb76667d8b572ba",
-        "entry_hash": "3807fe53dfd96c16663d1855960d52dc0f491dc17bc06c68b954d34285b2c52c"
+        "prev_hash": "14da9cc5653f865d50e3979066afeb1f9e163ebd00314ca75efbd2c1a5d1315d",
+        "entry_hash": "80b771a874ca72f69ab57bb7d08de358a21602cc359e5867d35bc3db614578a6"
       },
       {
         "sequence": 99,
-        "timestamp": "2026-08-25T18:04:52.007542+00:00",
+        "timestamp": "2026-08-26T07:34:03.765461+00:00",
         "txn_id": "pay_quickmart_1823",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -3463,12 +3352,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "3807fe53dfd96c16663d1855960d52dc0f491dc17bc06c68b954d34285b2c52c",
-        "entry_hash": "bc0eb5315630b617c9dcd54e823bced32b9fe1377b62ea3dd877c9a6ab7bc259"
+        "prev_hash": "80b771a874ca72f69ab57bb7d08de358a21602cc359e5867d35bc3db614578a6",
+        "entry_hash": "6a89fbdb956196b8b9f897ad54685ffb0277c464847d07392d708a08e6590038"
       },
       {
         "sequence": 100,
-        "timestamp": "2026-08-25T18:04:52.007542+00:00",
+        "timestamp": "2026-08-26T07:34:03.765461+00:00",
         "txn_id": "pay_quickmart_2092",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -3482,12 +3371,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "bc0eb5315630b617c9dcd54e823bced32b9fe1377b62ea3dd877c9a6ab7bc259",
-        "entry_hash": "8f06b934f33823b381e680f7d7e769991ad7c5e2985e6707425bf8b0a41c4227"
+        "prev_hash": "6a89fbdb956196b8b9f897ad54685ffb0277c464847d07392d708a08e6590038",
+        "entry_hash": "de328b661041f6ab69f19ccd2b717e86597dd5bdc4a0d264b187cc177e46b605"
       },
       {
         "sequence": 101,
-        "timestamp": "2026-08-25T18:04:52.007542+00:00",
+        "timestamp": "2026-08-26T07:34:03.766483+00:00",
         "txn_id": "pay_quickmart_2770",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -3501,12 +3390,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "8f06b934f33823b381e680f7d7e769991ad7c5e2985e6707425bf8b0a41c4227",
-        "entry_hash": "81b7bc46be69f5460f5c1b782d2fdeab29cb8a1a460ba4a8feb5151e733512f5"
+        "prev_hash": "de328b661041f6ab69f19ccd2b717e86597dd5bdc4a0d264b187cc177e46b605",
+        "entry_hash": "16810230caec23e4c554ee172ce2be6f259a6efbcdfb8e646b4e2359c8d0331d"
       },
       {
         "sequence": 102,
-        "timestamp": "2026-08-25T18:04:52.007542+00:00",
+        "timestamp": "2026-08-26T07:34:03.766483+00:00",
         "txn_id": "pay_quickmart_2138",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -3520,12 +3409,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "81b7bc46be69f5460f5c1b782d2fdeab29cb8a1a460ba4a8feb5151e733512f5",
-        "entry_hash": "ee0b5af34c0ce41aa22445970e12a5038df9bd2f3659b83ba4b1dd45cca669b7"
+        "prev_hash": "16810230caec23e4c554ee172ce2be6f259a6efbcdfb8e646b4e2359c8d0331d",
+        "entry_hash": "bd077d9c59c8f70318a14580678783c25f4aaff41a4f043c12e2aa743b5ea5be"
       },
       {
         "sequence": 103,
-        "timestamp": "2026-08-25T18:04:52.007542+00:00",
+        "timestamp": "2026-08-26T07:34:03.766483+00:00",
         "txn_id": "pay_quickmart_0658",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -3539,12 +3428,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "ee0b5af34c0ce41aa22445970e12a5038df9bd2f3659b83ba4b1dd45cca669b7",
-        "entry_hash": "341b494cc633cf2358364b580eba2e0a1c6973f1cf86aa943804f59a3c15639d"
+        "prev_hash": "bd077d9c59c8f70318a14580678783c25f4aaff41a4f043c12e2aa743b5ea5be",
+        "entry_hash": "a059d6ae473de1df82bfcb3a73256410285829332cf5256a7fef919cb2286c67"
       },
       {
         "sequence": 104,
-        "timestamp": "2026-08-25T18:04:52.007542+00:00",
+        "timestamp": "2026-08-26T07:34:03.766483+00:00",
         "txn_id": "pay_quickmart_0745",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -3558,12 +3447,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "341b494cc633cf2358364b580eba2e0a1c6973f1cf86aa943804f59a3c15639d",
-        "entry_hash": "26226b46f4c7697a3b7abbadf0e7fa21e0c82047be7c63da8b4bf5d81e18180d"
+        "prev_hash": "a059d6ae473de1df82bfcb3a73256410285829332cf5256a7fef919cb2286c67",
+        "entry_hash": "4e013cf79d5ee0aa263dcc2bd5d5cdf4a5b53404101e6e6d86d0a2d3931183aa"
       },
       {
         "sequence": 105,
-        "timestamp": "2026-08-25T18:04:52.007542+00:00",
+        "timestamp": "2026-08-26T07:34:03.766483+00:00",
         "txn_id": "pay_quickmart_1232",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -3577,12 +3466,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "26226b46f4c7697a3b7abbadf0e7fa21e0c82047be7c63da8b4bf5d81e18180d",
-        "entry_hash": "301d66816800423999b3ac84258687ea466636a7076e96144bb13bf05c511741"
+        "prev_hash": "4e013cf79d5ee0aa263dcc2bd5d5cdf4a5b53404101e6e6d86d0a2d3931183aa",
+        "entry_hash": "ddf5b43a781dc867e6dd0d5f8b264e4cbea93eb4057f3399017d424e1aa16f04"
       },
       {
         "sequence": 106,
-        "timestamp": "2026-08-25T18:04:52.008553+00:00",
+        "timestamp": "2026-08-26T07:34:03.766483+00:00",
         "txn_id": "pay_quickmart_0026",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -3596,12 +3485,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "301d66816800423999b3ac84258687ea466636a7076e96144bb13bf05c511741",
-        "entry_hash": "26067cc615f66d4bcec3dc248b975a9157b9f1ebe8fece6d0a1e3f311aa94b4f"
+        "prev_hash": "ddf5b43a781dc867e6dd0d5f8b264e4cbea93eb4057f3399017d424e1aa16f04",
+        "entry_hash": "84d0a722f46e555a40e266168e2c6da7f91c0e373262ef3e04e830ba656532cd"
       },
       {
         "sequence": 107,
-        "timestamp": "2026-08-25T18:04:52.008553+00:00",
+        "timestamp": "2026-08-26T07:34:03.766483+00:00",
         "txn_id": "pay_quickmart_0672",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -3615,12 +3504,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "26067cc615f66d4bcec3dc248b975a9157b9f1ebe8fece6d0a1e3f311aa94b4f",
-        "entry_hash": "78cec307ebd66117b5894f6fcb582e7dbcfc4658002b161e36abb54de3d025b7"
+        "prev_hash": "84d0a722f46e555a40e266168e2c6da7f91c0e373262ef3e04e830ba656532cd",
+        "entry_hash": "4a3944541bda634c180e4f58f5bece4d012dd435a51aed9d10bed478b470bb74"
       },
       {
         "sequence": 108,
-        "timestamp": "2026-08-25T18:04:52.008553+00:00",
+        "timestamp": "2026-08-26T07:34:03.766483+00:00",
         "txn_id": "pay_quickmart_2606",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -3634,12 +3523,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "78cec307ebd66117b5894f6fcb582e7dbcfc4658002b161e36abb54de3d025b7",
-        "entry_hash": "7eadd28914b152f927a313ebc3861ccf7b7bfbe6e6bd803518b41db7cf8545c4"
+        "prev_hash": "4a3944541bda634c180e4f58f5bece4d012dd435a51aed9d10bed478b470bb74",
+        "entry_hash": "7abb685a07d7ba51cc549d790b3dc25011f2eaf933d3dbee580f1f675ca13cda"
       },
       {
         "sequence": 109,
-        "timestamp": "2026-08-25T18:04:52.010561+00:00",
+        "timestamp": "2026-08-26T07:34:03.766483+00:00",
         "txn_id": "pay_quickmart_2188",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -3653,12 +3542,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "7eadd28914b152f927a313ebc3861ccf7b7bfbe6e6bd803518b41db7cf8545c4",
-        "entry_hash": "b57ff14e8acd326a48af837ebcfc09431d1464cbbeb96a7be08c10d3ea557f9b"
+        "prev_hash": "7abb685a07d7ba51cc549d790b3dc25011f2eaf933d3dbee580f1f675ca13cda",
+        "entry_hash": "c184d97bf7f3a4372cfe87f5dfd77ca8bb61f8a3bf9bfd699daa387e3ff1d02b"
       },
       {
         "sequence": 110,
-        "timestamp": "2026-08-25T18:04:52.012561+00:00",
+        "timestamp": "2026-08-26T07:34:03.767482+00:00",
         "txn_id": "pay_quickmart_2768",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -3672,12 +3561,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "b57ff14e8acd326a48af837ebcfc09431d1464cbbeb96a7be08c10d3ea557f9b",
-        "entry_hash": "1c03e20a328d2d8be2fca03b37850a3f132b2d01e49c6aef3bdc959101f9b26f"
+        "prev_hash": "c184d97bf7f3a4372cfe87f5dfd77ca8bb61f8a3bf9bfd699daa387e3ff1d02b",
+        "entry_hash": "58890d2cc5938e3fb4f2ef47a9359a17843bdbebd455b482689ab2abf4c19027"
       },
       {
         "sequence": 111,
-        "timestamp": "2026-08-25T18:04:52.012561+00:00",
+        "timestamp": "2026-08-26T07:34:03.767482+00:00",
         "txn_id": "pay_quickmart_0025",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -3691,12 +3580,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "1c03e20a328d2d8be2fca03b37850a3f132b2d01e49c6aef3bdc959101f9b26f",
-        "entry_hash": "6a4deae4c48ebd2ecb1d2f96fe4adb6d984f979c428406ecfff1049cad35652e"
+        "prev_hash": "58890d2cc5938e3fb4f2ef47a9359a17843bdbebd455b482689ab2abf4c19027",
+        "entry_hash": "d8546db70a7fa585e3bd0a3f652d71629dcb527d2d0948aa1b4f1ef6420b3e67"
       },
       {
         "sequence": 112,
-        "timestamp": "2026-08-25T18:04:52.012561+00:00",
+        "timestamp": "2026-08-26T07:34:03.767482+00:00",
         "txn_id": "pay_quickmart_1687",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -3710,12 +3599,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "6a4deae4c48ebd2ecb1d2f96fe4adb6d984f979c428406ecfff1049cad35652e",
-        "entry_hash": "e2bcaaf819a801cf3df439d3129793e5f681d366fc751e391cb3f0d58e8a74f8"
+        "prev_hash": "d8546db70a7fa585e3bd0a3f652d71629dcb527d2d0948aa1b4f1ef6420b3e67",
+        "entry_hash": "e142caa7c092ce754fba7a876ded73445188fd530ed42bdc7b5dbf484f1fb108"
       },
       {
         "sequence": 113,
-        "timestamp": "2026-08-25T18:04:52.012561+00:00",
+        "timestamp": "2026-08-26T07:34:03.767482+00:00",
         "txn_id": "pay_quickmart_2705",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -3729,12 +3618,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "e2bcaaf819a801cf3df439d3129793e5f681d366fc751e391cb3f0d58e8a74f8",
-        "entry_hash": "144d867c8ac209d173b0134139dbd827dd8ab7e176a08c4a28282b84aa449bf1"
+        "prev_hash": "e142caa7c092ce754fba7a876ded73445188fd530ed42bdc7b5dbf484f1fb108",
+        "entry_hash": "f9eb39594ebf9d0ede5d2d0859c9c8d6bbf4101e821e73a10e486c46afd534f7"
       },
       {
         "sequence": 114,
-        "timestamp": "2026-08-25T18:04:52.012561+00:00",
+        "timestamp": "2026-08-26T07:34:03.767482+00:00",
         "txn_id": "pay_quickmart_1466",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -3748,12 +3637,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "144d867c8ac209d173b0134139dbd827dd8ab7e176a08c4a28282b84aa449bf1",
-        "entry_hash": "42434355cf86975001ff6c2317496571766ae55b18e6f28abffc7f362947ccca"
+        "prev_hash": "f9eb39594ebf9d0ede5d2d0859c9c8d6bbf4101e821e73a10e486c46afd534f7",
+        "entry_hash": "54fbb3981855a5b2562cf464f25abc222f8eedeea3b3a2c38d62b6f7cf39e4f9"
       },
       {
         "sequence": 115,
-        "timestamp": "2026-08-25T18:04:52.012561+00:00",
+        "timestamp": "2026-08-26T07:34:03.767482+00:00",
         "txn_id": "pay_quickmart_0987",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -3767,12 +3656,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "42434355cf86975001ff6c2317496571766ae55b18e6f28abffc7f362947ccca",
-        "entry_hash": "7233f70a198df954b4e57510ed68720b5a141c96006fe29a892fc60105b7f1ec"
+        "prev_hash": "54fbb3981855a5b2562cf464f25abc222f8eedeea3b3a2c38d62b6f7cf39e4f9",
+        "entry_hash": "07b28855c4835f786892f5873896502baab6546242791c6a395622950aed8805"
       },
       {
         "sequence": 116,
-        "timestamp": "2026-08-25T18:04:52.012561+00:00",
+        "timestamp": "2026-08-26T07:34:03.767482+00:00",
         "txn_id": "pay_quickmart_0211",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -3786,12 +3675,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "7233f70a198df954b4e57510ed68720b5a141c96006fe29a892fc60105b7f1ec",
-        "entry_hash": "708ed427a0b842d1706af4a205156ca401d425919bc3c80828fb8514feed6839"
+        "prev_hash": "07b28855c4835f786892f5873896502baab6546242791c6a395622950aed8805",
+        "entry_hash": "1d34f78e8c17fe43cc650e3d9fa77838d2fb57c63ecddd75c27cd88e2877a624"
       },
       {
         "sequence": 117,
-        "timestamp": "2026-08-25T18:04:52.012561+00:00",
+        "timestamp": "2026-08-26T07:34:03.767482+00:00",
         "txn_id": "pay_quickmart_1643",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -3805,12 +3694,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "708ed427a0b842d1706af4a205156ca401d425919bc3c80828fb8514feed6839",
-        "entry_hash": "38c7fe1623b8f22ee5c2651832782350e9a67ca6763573d3b8c2c02233e4965f"
+        "prev_hash": "1d34f78e8c17fe43cc650e3d9fa77838d2fb57c63ecddd75c27cd88e2877a624",
+        "entry_hash": "b4cc16ba8e351772fcdead03ce69d2408479d22e3275b3409e6329a85a920061"
       },
       {
         "sequence": 118,
-        "timestamp": "2026-08-25T18:04:52.012561+00:00",
+        "timestamp": "2026-08-26T07:34:03.767482+00:00",
         "txn_id": "pay_quickmart_1045",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -3824,12 +3713,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "38c7fe1623b8f22ee5c2651832782350e9a67ca6763573d3b8c2c02233e4965f",
-        "entry_hash": "e9e5a7382426d2ec2b1cb3363df7c7bfca61b28e8e5d93cfd6e0d098f65ee13a"
+        "prev_hash": "b4cc16ba8e351772fcdead03ce69d2408479d22e3275b3409e6329a85a920061",
+        "entry_hash": "1d2b07b5c84c9acc24bb19fb1dd4cf97768def343a75ce18910a3e75cc0ac231"
       },
       {
         "sequence": 119,
-        "timestamp": "2026-08-25T18:04:52.012561+00:00",
+        "timestamp": "2026-08-26T07:34:03.768485+00:00",
         "txn_id": "pay_quickmart_1367",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -3843,12 +3732,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "e9e5a7382426d2ec2b1cb3363df7c7bfca61b28e8e5d93cfd6e0d098f65ee13a",
-        "entry_hash": "bf216720a00b2a83cca73e4c294c11583ece264ca3b2ed89119ff239fbe2323a"
+        "prev_hash": "1d2b07b5c84c9acc24bb19fb1dd4cf97768def343a75ce18910a3e75cc0ac231",
+        "entry_hash": "b69c5504164e015ace29216d51c18c2e75f4ac4ae0f025431a24e82a7e73728a"
       },
       {
         "sequence": 120,
-        "timestamp": "2026-08-25T18:04:52.012561+00:00",
+        "timestamp": "2026-08-26T07:34:03.768485+00:00",
         "txn_id": "pay_quickmart_0972",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -3862,12 +3751,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "bf216720a00b2a83cca73e4c294c11583ece264ca3b2ed89119ff239fbe2323a",
-        "entry_hash": "a03da4cdc6d1ba7b7e2a4d80b18c8693a1cbbdf627af6a61c002d4da10193ffa"
+        "prev_hash": "b69c5504164e015ace29216d51c18c2e75f4ac4ae0f025431a24e82a7e73728a",
+        "entry_hash": "59e9a6a01743f7871ff543980f9a507ee6b1557c574a877e9626d87cbcc192ee"
       },
       {
         "sequence": 121,
-        "timestamp": "2026-08-25T18:04:52.012561+00:00",
+        "timestamp": "2026-08-26T07:34:03.768485+00:00",
         "txn_id": "pay_quickmart_2036",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -3881,12 +3770,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "a03da4cdc6d1ba7b7e2a4d80b18c8693a1cbbdf627af6a61c002d4da10193ffa",
-        "entry_hash": "093d17ff9d46c63aa0f1e871681e605225416dea59d933666eeeb4a96c9ee639"
+        "prev_hash": "59e9a6a01743f7871ff543980f9a507ee6b1557c574a877e9626d87cbcc192ee",
+        "entry_hash": "ee3589c0a433c2c153926836b84acefea5e16d53203f6e88f6825a58c47c8236"
       },
       {
         "sequence": 122,
-        "timestamp": "2026-08-25T18:04:52.012561+00:00",
+        "timestamp": "2026-08-26T07:34:03.768485+00:00",
         "txn_id": "pay_quickmart_2356",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -3900,12 +3789,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "093d17ff9d46c63aa0f1e871681e605225416dea59d933666eeeb4a96c9ee639",
-        "entry_hash": "18f325185f5062660077c8b4470b40ae13b75303b83e90a784200544c0b85e50"
+        "prev_hash": "ee3589c0a433c2c153926836b84acefea5e16d53203f6e88f6825a58c47c8236",
+        "entry_hash": "b183faa378e13776d97f523484c1e085be9198aab2ff317525e238ba2c70a029"
       },
       {
         "sequence": 123,
-        "timestamp": "2026-08-25T18:04:52.013570+00:00",
+        "timestamp": "2026-08-26T07:34:03.768485+00:00",
         "txn_id": "pay_quickmart_1664",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -3919,12 +3808,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "18f325185f5062660077c8b4470b40ae13b75303b83e90a784200544c0b85e50",
-        "entry_hash": "95e8aa9a76f10a9c4cbc8b09e573f458078159c8f65cae3b541cfca4e68d3984"
+        "prev_hash": "b183faa378e13776d97f523484c1e085be9198aab2ff317525e238ba2c70a029",
+        "entry_hash": "2d706a1c65a05873ad3f458c4878f29826ddf9a02695654186538c100f2d1b85"
       },
       {
         "sequence": 124,
-        "timestamp": "2026-08-25T18:04:52.013570+00:00",
+        "timestamp": "2026-08-26T07:34:03.768485+00:00",
         "txn_id": "pay_quickmart_1214",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -3938,12 +3827,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "95e8aa9a76f10a9c4cbc8b09e573f458078159c8f65cae3b541cfca4e68d3984",
-        "entry_hash": "a07e9562cdd37141c03b8ab05e94eabc381546469a5dcf8fa4ffe3d415af9867"
+        "prev_hash": "2d706a1c65a05873ad3f458c4878f29826ddf9a02695654186538c100f2d1b85",
+        "entry_hash": "c7e8cfb957ac3f65d01df6525b1987c1a431cc2d86d1c87d6153ad357357f2ee"
       },
       {
         "sequence": 125,
-        "timestamp": "2026-08-25T18:04:52.013570+00:00",
+        "timestamp": "2026-08-26T07:34:03.768485+00:00",
         "txn_id": "pay_quickmart_0714",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -3957,12 +3846,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "a07e9562cdd37141c03b8ab05e94eabc381546469a5dcf8fa4ffe3d415af9867",
-        "entry_hash": "3b43f24546319d9bbf49a611edb8d173d3b079cfd870d9850ccdff43389990bc"
+        "prev_hash": "c7e8cfb957ac3f65d01df6525b1987c1a431cc2d86d1c87d6153ad357357f2ee",
+        "entry_hash": "4977343908524e4b46704f0dd5f1d2d6c3194014e0b0576cb46a19b9e3322367"
       },
       {
         "sequence": 126,
-        "timestamp": "2026-08-25T18:04:52.013570+00:00",
+        "timestamp": "2026-08-26T07:34:03.768485+00:00",
         "txn_id": "pay_quickmart_2348",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -3976,12 +3865,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "3b43f24546319d9bbf49a611edb8d173d3b079cfd870d9850ccdff43389990bc",
-        "entry_hash": "2ab072cbedfb316a15fc8c0ff1bdf3d626e714ceac433d3ab4008be28fe81fea"
+        "prev_hash": "4977343908524e4b46704f0dd5f1d2d6c3194014e0b0576cb46a19b9e3322367",
+        "entry_hash": "ae2b3ad9d644d781b7c31d5697a7a4665bffaea0388cab01dc0583e8a6f01b31"
       },
       {
         "sequence": 127,
-        "timestamp": "2026-08-25T18:04:52.013570+00:00",
+        "timestamp": "2026-08-26T07:34:03.768485+00:00",
         "txn_id": "pay_quickmart_1964",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -3995,12 +3884,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "2ab072cbedfb316a15fc8c0ff1bdf3d626e714ceac433d3ab4008be28fe81fea",
-        "entry_hash": "433b1adc430a828bb09443eca14fb3398781ff567c9aca1ad944c2e050fcd963"
+        "prev_hash": "ae2b3ad9d644d781b7c31d5697a7a4665bffaea0388cab01dc0583e8a6f01b31",
+        "entry_hash": "6178ea8e499e6410cccf3f5c9c73755ae9a9e2e1d9aea3fe3a37831c9552cc86"
       },
       {
         "sequence": 128,
-        "timestamp": "2026-08-25T18:04:52.013570+00:00",
+        "timestamp": "2026-08-26T07:34:03.768485+00:00",
         "txn_id": "pay_quickmart_2479",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -4014,12 +3903,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "433b1adc430a828bb09443eca14fb3398781ff567c9aca1ad944c2e050fcd963",
-        "entry_hash": "7a5d563163e10189a3efd1262810f0510474f94b0d76e1c5f98f7d22079beab8"
+        "prev_hash": "6178ea8e499e6410cccf3f5c9c73755ae9a9e2e1d9aea3fe3a37831c9552cc86",
+        "entry_hash": "01d1bc3aac210261a86961f8c5dc11254b8462a9a61c17f0ca87f1ef04b3de1e"
       },
       {
         "sequence": 129,
-        "timestamp": "2026-08-25T18:04:52.013570+00:00",
+        "timestamp": "2026-08-26T07:34:03.768485+00:00",
         "txn_id": "pay_quickmart_1896",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -4033,12 +3922,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "7a5d563163e10189a3efd1262810f0510474f94b0d76e1c5f98f7d22079beab8",
-        "entry_hash": "f099dfbbffe6b94904f7eda92f94f36fb7803e575354ae17a993fa9276de8599"
+        "prev_hash": "01d1bc3aac210261a86961f8c5dc11254b8462a9a61c17f0ca87f1ef04b3de1e",
+        "entry_hash": "6f276f4aa65e9b887acfc1309d0dcb4464eab6f3b6dbbe91c516c7a48929176d"
       },
       {
         "sequence": 130,
-        "timestamp": "2026-08-25T18:04:52.013570+00:00",
+        "timestamp": "2026-08-26T07:34:03.768485+00:00",
         "txn_id": "pay_quickmart_1377",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -4052,12 +3941,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "f099dfbbffe6b94904f7eda92f94f36fb7803e575354ae17a993fa9276de8599",
-        "entry_hash": "a7443f7f8bce184ca2c9c5bf1026888921b4a2c8858dee716ce267024a925411"
+        "prev_hash": "6f276f4aa65e9b887acfc1309d0dcb4464eab6f3b6dbbe91c516c7a48929176d",
+        "entry_hash": "5ddfba64f941cc23e6d9eccdc946ea58e4714c955eaf6d2a29da9a2c70cb3130"
       },
       {
         "sequence": 131,
-        "timestamp": "2026-08-25T18:04:52.013570+00:00",
+        "timestamp": "2026-08-26T07:34:03.769478+00:00",
         "txn_id": "pay_quickmart_0736",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -4071,12 +3960,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "a7443f7f8bce184ca2c9c5bf1026888921b4a2c8858dee716ce267024a925411",
-        "entry_hash": "80a6e010229cb95d26f363e04c663cd8c5b180c5494d7172a1500ab2a4e087ef"
+        "prev_hash": "5ddfba64f941cc23e6d9eccdc946ea58e4714c955eaf6d2a29da9a2c70cb3130",
+        "entry_hash": "7bf73831082071aa24c003ea1170790f3aa6dd309bd2ddf2a5b933755143bef6"
       },
       {
         "sequence": 132,
-        "timestamp": "2026-08-25T18:04:52.013570+00:00",
+        "timestamp": "2026-08-26T07:34:03.769478+00:00",
         "txn_id": "pay_quickmart_1518",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -4090,12 +3979,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "80a6e010229cb95d26f363e04c663cd8c5b180c5494d7172a1500ab2a4e087ef",
-        "entry_hash": "1786a1ce998833fff499c30291bd57cc21186e567e37507a49005dcad9dd380c"
+        "prev_hash": "7bf73831082071aa24c003ea1170790f3aa6dd309bd2ddf2a5b933755143bef6",
+        "entry_hash": "be5913dad4fc5760cdb83d936521c1750f982c774fe31cfd974e5fcde709ea32"
       },
       {
         "sequence": 133,
-        "timestamp": "2026-08-25T18:04:52.014562+00:00",
+        "timestamp": "2026-08-26T07:34:03.769478+00:00",
         "txn_id": "pay_quickmart_0478",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -4109,12 +3998,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "1786a1ce998833fff499c30291bd57cc21186e567e37507a49005dcad9dd380c",
-        "entry_hash": "047cd80be819ee150de3cd502d271031c99c65bc3c59391e141ca14ca0232bc0"
+        "prev_hash": "be5913dad4fc5760cdb83d936521c1750f982c774fe31cfd974e5fcde709ea32",
+        "entry_hash": "d5465ce18fb724a3e90b5b0bc9e096f26cbf8418435eb608de00e647b85c5289"
       },
       {
         "sequence": 134,
-        "timestamp": "2026-08-25T18:04:52.014562+00:00",
+        "timestamp": "2026-08-26T07:34:03.769478+00:00",
         "txn_id": "pay_quickmart_2525",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -4128,12 +4017,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "047cd80be819ee150de3cd502d271031c99c65bc3c59391e141ca14ca0232bc0",
-        "entry_hash": "9d4ffa8af1a04dcc9c47f9cf6b88c07ca9ec4add7b097ce29cba24a44c8e483a"
+        "prev_hash": "d5465ce18fb724a3e90b5b0bc9e096f26cbf8418435eb608de00e647b85c5289",
+        "entry_hash": "66c450be9a3270cda370f00661a2948e5ffa2763eba59968bc767cacbb316c59"
       },
       {
         "sequence": 135,
-        "timestamp": "2026-08-25T18:04:52.014562+00:00",
+        "timestamp": "2026-08-26T07:34:03.769478+00:00",
         "txn_id": "pay_quickmart_2601",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -4147,12 +4036,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "9d4ffa8af1a04dcc9c47f9cf6b88c07ca9ec4add7b097ce29cba24a44c8e483a",
-        "entry_hash": "f9d6c2be3472d5a29f484278a2306be81376e5b775e9f62cb9a4d47a6ca11995"
+        "prev_hash": "66c450be9a3270cda370f00661a2948e5ffa2763eba59968bc767cacbb316c59",
+        "entry_hash": "fb53b47bf3c1d297a70f6fd978c0ad5ecd571df640de909e62e8d88a2451892f"
       },
       {
         "sequence": 136,
-        "timestamp": "2026-08-25T18:04:52.014562+00:00",
+        "timestamp": "2026-08-26T07:34:03.769478+00:00",
         "txn_id": "pay_quickmart_1431",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -4166,12 +4055,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "f9d6c2be3472d5a29f484278a2306be81376e5b775e9f62cb9a4d47a6ca11995",
-        "entry_hash": "a2a1b3422043d01178cfc0ab1b038c581dd34405644e3babce375b35ad85bc5e"
+        "prev_hash": "fb53b47bf3c1d297a70f6fd978c0ad5ecd571df640de909e62e8d88a2451892f",
+        "entry_hash": "f0ce2d76ef03280d407d324ed99053ec38f5639e91e03839e8b82c0f78344823"
       },
       {
         "sequence": 137,
-        "timestamp": "2026-08-25T18:04:52.014562+00:00",
+        "timestamp": "2026-08-26T07:34:03.769478+00:00",
         "txn_id": "pay_quickmart_1169",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -4185,12 +4074,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "a2a1b3422043d01178cfc0ab1b038c581dd34405644e3babce375b35ad85bc5e",
-        "entry_hash": "0ea03246f3bf368d26557980af18935eada02deddcd10501968a1b18515547ba"
+        "prev_hash": "f0ce2d76ef03280d407d324ed99053ec38f5639e91e03839e8b82c0f78344823",
+        "entry_hash": "889ac3c90d3522f166083eb0d730d4887337a1d2113f8384ef50fd53eb28459f"
       },
       {
         "sequence": 138,
-        "timestamp": "2026-08-25T18:04:52.014562+00:00",
+        "timestamp": "2026-08-26T07:34:03.769478+00:00",
         "txn_id": "pay_quickmart_0266",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -4204,12 +4093,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "0ea03246f3bf368d26557980af18935eada02deddcd10501968a1b18515547ba",
-        "entry_hash": "8ed668a42962b2794ca2cf01b6ff9eb92e8588d4380b2c9d4b9c5ab5cb0d9749"
+        "prev_hash": "889ac3c90d3522f166083eb0d730d4887337a1d2113f8384ef50fd53eb28459f",
+        "entry_hash": "47ce0c561b2ce0e797de13be44e9b6f8337a28d65ea809c133689de640fcb1bc"
       },
       {
         "sequence": 139,
-        "timestamp": "2026-08-25T18:04:52.014562+00:00",
+        "timestamp": "2026-08-26T07:34:03.769478+00:00",
         "txn_id": "pay_quickmart_1580",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -4223,12 +4112,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "8ed668a42962b2794ca2cf01b6ff9eb92e8588d4380b2c9d4b9c5ab5cb0d9749",
-        "entry_hash": "04120c0ec07b9089bebdb7fe50b6b8276f9cc6d3fc40d4a0326c6e9bba724852"
+        "prev_hash": "47ce0c561b2ce0e797de13be44e9b6f8337a28d65ea809c133689de640fcb1bc",
+        "entry_hash": "ca7f2624b85ee9d8e2ca3f436bcebe13db11fcc917eb5a000ecf19c6a9e6627f"
       },
       {
         "sequence": 140,
-        "timestamp": "2026-08-25T18:04:52.014562+00:00",
+        "timestamp": "2026-08-26T07:34:03.769478+00:00",
         "txn_id": "pay_quickmart_0645",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -4242,12 +4131,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "04120c0ec07b9089bebdb7fe50b6b8276f9cc6d3fc40d4a0326c6e9bba724852",
-        "entry_hash": "8713c8807f26d7551e1eb851aa25fd216617993da14039d429614b8f6c9fa136"
+        "prev_hash": "ca7f2624b85ee9d8e2ca3f436bcebe13db11fcc917eb5a000ecf19c6a9e6627f",
+        "entry_hash": "399e97a50b8f3a3fe52b6388808593aa4b4d8e8dbc1440b6b6a13dd1da129217"
       },
       {
         "sequence": 141,
-        "timestamp": "2026-08-25T18:04:52.014562+00:00",
+        "timestamp": "2026-08-26T07:34:03.769478+00:00",
         "txn_id": "pay_quickmart_0738",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -4261,12 +4150,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "8713c8807f26d7551e1eb851aa25fd216617993da14039d429614b8f6c9fa136",
-        "entry_hash": "39e01af2fd4d2ed9f876fb9f0b291998598e816edbb42ab2e4a6b3d6999ff440"
+        "prev_hash": "399e97a50b8f3a3fe52b6388808593aa4b4d8e8dbc1440b6b6a13dd1da129217",
+        "entry_hash": "d6181045fe4ff7e161dad14c6529d855d17ba94ce70afee11f97d5bfe71f6144"
       },
       {
         "sequence": 142,
-        "timestamp": "2026-08-25T18:04:52.014562+00:00",
+        "timestamp": "2026-08-26T07:34:03.770487+00:00",
         "txn_id": "pay_quickmart_2651",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -4280,12 +4169,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "39e01af2fd4d2ed9f876fb9f0b291998598e816edbb42ab2e4a6b3d6999ff440",
-        "entry_hash": "c949d244cbac23c68f90cd36d1c78c129521b01129e2fc0d7050bdd2569111e7"
+        "prev_hash": "d6181045fe4ff7e161dad14c6529d855d17ba94ce70afee11f97d5bfe71f6144",
+        "entry_hash": "22cf96d12cec9ef62b8a7c6d2d8c1128f834d65907962cd708c0169fb273b9a7"
       },
       {
         "sequence": 143,
-        "timestamp": "2026-08-25T18:04:52.014562+00:00",
+        "timestamp": "2026-08-26T07:34:03.770487+00:00",
         "txn_id": "pay_quickmart_2824",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -4299,12 +4188,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "c949d244cbac23c68f90cd36d1c78c129521b01129e2fc0d7050bdd2569111e7",
-        "entry_hash": "32e77c2fa1709dea551a7b79bdd0ae74c509fec334e5bbf9435e9611d2c6f51c"
+        "prev_hash": "22cf96d12cec9ef62b8a7c6d2d8c1128f834d65907962cd708c0169fb273b9a7",
+        "entry_hash": "d7db740d0136194c655a6e916ae72bfa5ccc3da39f6f54bd332a26c6fbf41578"
       },
       {
         "sequence": 144,
-        "timestamp": "2026-08-25T18:04:52.015600+00:00",
+        "timestamp": "2026-08-26T07:34:03.770487+00:00",
         "txn_id": "pay_quickmart_1671",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -4318,12 +4207,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "32e77c2fa1709dea551a7b79bdd0ae74c509fec334e5bbf9435e9611d2c6f51c",
-        "entry_hash": "e4b42179db5b74a6c558758eb9e0232e79b3899d4f3c3228c6d31c5c7dddbdcb"
+        "prev_hash": "d7db740d0136194c655a6e916ae72bfa5ccc3da39f6f54bd332a26c6fbf41578",
+        "entry_hash": "294e4b77eb2ad3904f73f9b47c9b97923f892788c044da06299e9e1fe88b0ee4"
       },
       {
         "sequence": 145,
-        "timestamp": "2026-08-25T18:04:52.015600+00:00",
+        "timestamp": "2026-08-26T07:34:03.770487+00:00",
         "txn_id": "pay_quickmart_2120",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -4337,12 +4226,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "e4b42179db5b74a6c558758eb9e0232e79b3899d4f3c3228c6d31c5c7dddbdcb",
-        "entry_hash": "bc86eaebbd636454f6f70057c614bf181c65072315600620fceaab6fcfb5c5f7"
+        "prev_hash": "294e4b77eb2ad3904f73f9b47c9b97923f892788c044da06299e9e1fe88b0ee4",
+        "entry_hash": "e3d1142f9549e05bea974136e7e9ecc75de49b839e79175d2b5f5b3429049111"
       },
       {
         "sequence": 146,
-        "timestamp": "2026-08-25T18:04:52.015600+00:00",
+        "timestamp": "2026-08-26T07:34:03.770487+00:00",
         "txn_id": "pay_quickmart_2482",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -4356,12 +4245,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "bc86eaebbd636454f6f70057c614bf181c65072315600620fceaab6fcfb5c5f7",
-        "entry_hash": "fcca4052d5534fad91fd1253ceb90bf3ce7409af99d859b551b13f94edd32239"
+        "prev_hash": "e3d1142f9549e05bea974136e7e9ecc75de49b839e79175d2b5f5b3429049111",
+        "entry_hash": "1652f58d65706c3be3b63d6c2049760d67baafa22327b9d81b02ac7cc832cc65"
       },
       {
         "sequence": 147,
-        "timestamp": "2026-08-25T18:04:52.015600+00:00",
+        "timestamp": "2026-08-26T07:34:03.770487+00:00",
         "txn_id": "pay_quickmart_1935",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -4375,12 +4264,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "fcca4052d5534fad91fd1253ceb90bf3ce7409af99d859b551b13f94edd32239",
-        "entry_hash": "ed4b49461c6b3a9c63b51a34374899650ddc3ab665859f471f2935c010961603"
+        "prev_hash": "1652f58d65706c3be3b63d6c2049760d67baafa22327b9d81b02ac7cc832cc65",
+        "entry_hash": "bed6aa6edabe5a48a52e65fb4c10c886854ab8640738722942b7b5d355dfffa6"
       },
       {
         "sequence": 148,
-        "timestamp": "2026-08-25T18:04:52.015600+00:00",
+        "timestamp": "2026-08-26T07:34:03.771549+00:00",
         "txn_id": "pay_quickmart_1705",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -4394,12 +4283,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "ed4b49461c6b3a9c63b51a34374899650ddc3ab665859f471f2935c010961603",
-        "entry_hash": "faabf4f65b00e619c2d49d511bf17e1c14351dedea6764be625a7ea0bb6b769f"
+        "prev_hash": "bed6aa6edabe5a48a52e65fb4c10c886854ab8640738722942b7b5d355dfffa6",
+        "entry_hash": "5d627e500c74f9693a70390509a4e1a3c161949f2e3c6b015b7c73b9c3bcd263"
       },
       {
         "sequence": 149,
-        "timestamp": "2026-08-25T18:04:52.015600+00:00",
+        "timestamp": "2026-08-26T07:34:03.771549+00:00",
         "txn_id": "pay_quickmart_1921",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -4413,12 +4302,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "faabf4f65b00e619c2d49d511bf17e1c14351dedea6764be625a7ea0bb6b769f",
-        "entry_hash": "790b821ab1825847652e6891764b7d982bc6cade42462649145f4079fe54d5b4"
+        "prev_hash": "5d627e500c74f9693a70390509a4e1a3c161949f2e3c6b015b7c73b9c3bcd263",
+        "entry_hash": "034a16b7435fe9cd83232009ec217776a8b0106ed4a4fc17e2f1b316c263ee30"
       },
       {
         "sequence": 150,
-        "timestamp": "2026-08-25T18:04:52.015600+00:00",
+        "timestamp": "2026-08-26T07:34:03.771549+00:00",
         "txn_id": "pay_quickmart_0145",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -4432,12 +4321,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "790b821ab1825847652e6891764b7d982bc6cade42462649145f4079fe54d5b4",
-        "entry_hash": "fe07d87a8f1e52b60c0603bae44c9a9b091fac939e401bb00144a7580fbb1533"
+        "prev_hash": "034a16b7435fe9cd83232009ec217776a8b0106ed4a4fc17e2f1b316c263ee30",
+        "entry_hash": "1d9eb4dfb1efbe2ba37ccd21076effd93b993bc781bc100e71fcfa06a8d0b0f3"
       },
       {
         "sequence": 151,
-        "timestamp": "2026-08-25T18:04:52.015600+00:00",
+        "timestamp": "2026-08-26T07:34:03.771549+00:00",
         "txn_id": "pay_quickmart_0623",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -4451,12 +4340,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "fe07d87a8f1e52b60c0603bae44c9a9b091fac939e401bb00144a7580fbb1533",
-        "entry_hash": "88046cd22dea88e452bc6c06bc6e691ad1b9484c3ce241977d0bea6a75722bdf"
+        "prev_hash": "1d9eb4dfb1efbe2ba37ccd21076effd93b993bc781bc100e71fcfa06a8d0b0f3",
+        "entry_hash": "dc9639734046ccf21ea70cc9e0ad340d4ee95445c857ece3c7f0d628039687cb"
       },
       {
         "sequence": 152,
-        "timestamp": "2026-08-25T18:04:52.015600+00:00",
+        "timestamp": "2026-08-26T07:34:03.771549+00:00",
         "txn_id": "pay_quickmart_2239",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -4470,12 +4359,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "88046cd22dea88e452bc6c06bc6e691ad1b9484c3ce241977d0bea6a75722bdf",
-        "entry_hash": "c29a3374f6f35f6fc81d5d5fcbb8ae28fcb5cb1c18c81e0818d044ef73272f80"
+        "prev_hash": "dc9639734046ccf21ea70cc9e0ad340d4ee95445c857ece3c7f0d628039687cb",
+        "entry_hash": "e353a5dbc5ee3deb789b93dfa3f7e8f4eb0d601d29e4c32bef0b4104e27e7dde"
       },
       {
         "sequence": 153,
-        "timestamp": "2026-08-25T18:04:52.015600+00:00",
+        "timestamp": "2026-08-26T07:34:03.771549+00:00",
         "txn_id": "pay_quickmart_0174",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -4489,12 +4378,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "c29a3374f6f35f6fc81d5d5fcbb8ae28fcb5cb1c18c81e0818d044ef73272f80",
-        "entry_hash": "fad45b69ba4bb7381020c5f7bad41cbb918ffe8db1aad19ad40f68866a67e39d"
+        "prev_hash": "e353a5dbc5ee3deb789b93dfa3f7e8f4eb0d601d29e4c32bef0b4104e27e7dde",
+        "entry_hash": "01bd755bc040fd865303f8fb208657d928b8885b0827e89da606be882e02d467"
       },
       {
         "sequence": 154,
-        "timestamp": "2026-08-25T18:04:52.015600+00:00",
+        "timestamp": "2026-08-26T07:34:03.771549+00:00",
         "txn_id": "pay_quickmart_0347",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -4508,12 +4397,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "fad45b69ba4bb7381020c5f7bad41cbb918ffe8db1aad19ad40f68866a67e39d",
-        "entry_hash": "5cd1324b733902f45ab99e31cdd99fa9d1178ee1ef8a77e6b56ee5f52b692c2b"
+        "prev_hash": "01bd755bc040fd865303f8fb208657d928b8885b0827e89da606be882e02d467",
+        "entry_hash": "5546ea7f7bb830d3497ffe915f389b6601c80370af100dedb155b53b81df737c"
       },
       {
         "sequence": 155,
-        "timestamp": "2026-08-25T18:04:52.017108+00:00",
+        "timestamp": "2026-08-26T07:34:03.771549+00:00",
         "txn_id": "pay_quickmart_1844",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -4527,12 +4416,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "5cd1324b733902f45ab99e31cdd99fa9d1178ee1ef8a77e6b56ee5f52b692c2b",
-        "entry_hash": "569a31f940bdcfcdea0c773d22617ce098f148c11b7fe633afb97099fee9bbed"
+        "prev_hash": "5546ea7f7bb830d3497ffe915f389b6601c80370af100dedb155b53b81df737c",
+        "entry_hash": "7e176ceb53d1fd1545ec7b1af174ea51da2ac5941361c98704b93d2b26ecaece"
       },
       {
         "sequence": 156,
-        "timestamp": "2026-08-25T18:04:52.017108+00:00",
+        "timestamp": "2026-08-26T07:34:03.771549+00:00",
         "txn_id": "pay_quickmart_2059",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -4546,12 +4435,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "569a31f940bdcfcdea0c773d22617ce098f148c11b7fe633afb97099fee9bbed",
-        "entry_hash": "3aa1ce38273058f4c2d2d6269167340719dc40126879701e38140159f976e5f8"
+        "prev_hash": "7e176ceb53d1fd1545ec7b1af174ea51da2ac5941361c98704b93d2b26ecaece",
+        "entry_hash": "fb1b8ef8b8e6e822a3a81ce24836e0082a14876a1beb2a616ae53fe3e0b12b7e"
       },
       {
         "sequence": 157,
-        "timestamp": "2026-08-25T18:04:52.017108+00:00",
+        "timestamp": "2026-08-26T07:34:03.771549+00:00",
         "txn_id": "pay_quickmart_0367",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -4565,12 +4454,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "3aa1ce38273058f4c2d2d6269167340719dc40126879701e38140159f976e5f8",
-        "entry_hash": "95bcb976d0ab0fc98190768aff2d2b717afcd5a56165e865677f83cbe98bf822"
+        "prev_hash": "fb1b8ef8b8e6e822a3a81ce24836e0082a14876a1beb2a616ae53fe3e0b12b7e",
+        "entry_hash": "e50284b488d0183042d28a9d9a63cd8a97e11cc284357e372caacc2228ff39db"
       },
       {
         "sequence": 158,
-        "timestamp": "2026-08-25T18:04:52.017108+00:00",
+        "timestamp": "2026-08-26T07:34:03.771549+00:00",
         "txn_id": "pay_quickmart_2671",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -4584,12 +4473,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "95bcb976d0ab0fc98190768aff2d2b717afcd5a56165e865677f83cbe98bf822",
-        "entry_hash": "6be2e51751442f078f55ece68ea8e69a945f9b440b8072dff895014ba554a6d9"
+        "prev_hash": "e50284b488d0183042d28a9d9a63cd8a97e11cc284357e372caacc2228ff39db",
+        "entry_hash": "60cec70a218d42804b009a3ab3c276dbba20cce9102eaef04bfce30fa288742d"
       },
       {
         "sequence": 159,
-        "timestamp": "2026-08-25T18:04:52.017108+00:00",
+        "timestamp": "2026-08-26T07:34:03.771549+00:00",
         "txn_id": "pay_quickmart_2578",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -4603,12 +4492,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "6be2e51751442f078f55ece68ea8e69a945f9b440b8072dff895014ba554a6d9",
-        "entry_hash": "62e1fd9f9285dc557ee2cd1569cfca27c5e38d8ad462c1760482570a86fd06a9"
+        "prev_hash": "60cec70a218d42804b009a3ab3c276dbba20cce9102eaef04bfce30fa288742d",
+        "entry_hash": "80c1aa2347855608f6542715bee08682297ed99788891ae4a3106a37f70c4124"
       },
       {
         "sequence": 160,
-        "timestamp": "2026-08-25T18:04:52.018120+00:00",
+        "timestamp": "2026-08-26T07:34:03.771549+00:00",
         "txn_id": "pay_quickmart_1394",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -4622,12 +4511,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "62e1fd9f9285dc557ee2cd1569cfca27c5e38d8ad462c1760482570a86fd06a9",
-        "entry_hash": "5daff581c5ddf9282ef05d756408f35c1e06d94ca2d0d7e3c28dc5c272c3add3"
+        "prev_hash": "80c1aa2347855608f6542715bee08682297ed99788891ae4a3106a37f70c4124",
+        "entry_hash": "d1a8535d87ac406a9bd3abfb66b10b165f0facdd80944cfb7eb4a3e90c7aa009"
       },
       {
         "sequence": 161,
-        "timestamp": "2026-08-25T18:04:52.018120+00:00",
+        "timestamp": "2026-08-26T07:34:03.772565+00:00",
         "txn_id": "pay_quickmart_2212",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -4641,12 +4530,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "5daff581c5ddf9282ef05d756408f35c1e06d94ca2d0d7e3c28dc5c272c3add3",
-        "entry_hash": "c54c226e642e4e7a352b64a24b89df80ee579ed64ed528c783786a9bd1ba2d04"
+        "prev_hash": "d1a8535d87ac406a9bd3abfb66b10b165f0facdd80944cfb7eb4a3e90c7aa009",
+        "entry_hash": "17c3cf55eb4ee0da3061cc95c4709b54607e05902be2f1187ea8915cb3026ad1"
       },
       {
         "sequence": 162,
-        "timestamp": "2026-08-25T18:04:52.018120+00:00",
+        "timestamp": "2026-08-26T07:34:03.772565+00:00",
         "txn_id": "pay_quickmart_0665",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -4660,12 +4549,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "c54c226e642e4e7a352b64a24b89df80ee579ed64ed528c783786a9bd1ba2d04",
-        "entry_hash": "b0a08745ab4c6ae64374749a0b926ca841bd1e80f41d49dcfed1fff5f62ee0bc"
+        "prev_hash": "17c3cf55eb4ee0da3061cc95c4709b54607e05902be2f1187ea8915cb3026ad1",
+        "entry_hash": "c3fe23729f3944a429dbe56ad9472d2b7598957de66a31f7bfd8f435a9739737"
       },
       {
         "sequence": 163,
-        "timestamp": "2026-08-25T18:04:52.018120+00:00",
+        "timestamp": "2026-08-26T07:34:03.772565+00:00",
         "txn_id": "pay_quickmart_2160",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -4679,12 +4568,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "b0a08745ab4c6ae64374749a0b926ca841bd1e80f41d49dcfed1fff5f62ee0bc",
-        "entry_hash": "a75cefe59c10205585b4007b28e454f75564c750773360a8124f4ebf8d54ba9b"
+        "prev_hash": "c3fe23729f3944a429dbe56ad9472d2b7598957de66a31f7bfd8f435a9739737",
+        "entry_hash": "036313666648b3321a8c0b3cf3875f7b0430eec1a9e66f36b4c9c2449d071cde"
       },
       {
         "sequence": 164,
-        "timestamp": "2026-08-25T18:04:52.018120+00:00",
+        "timestamp": "2026-08-26T07:34:03.772565+00:00",
         "txn_id": "pay_quickmart_2521",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -4698,12 +4587,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "a75cefe59c10205585b4007b28e454f75564c750773360a8124f4ebf8d54ba9b",
-        "entry_hash": "dcb7986f51cad004d254173af60bda0c7ab5670413717ba6d0129d1381d6fd0a"
+        "prev_hash": "036313666648b3321a8c0b3cf3875f7b0430eec1a9e66f36b4c9c2449d071cde",
+        "entry_hash": "15fb2268f423a2884f450caa418b314fe11db0a5ab90b1228ebfe72839e4d0f3"
       },
       {
         "sequence": 165,
-        "timestamp": "2026-08-25T18:04:52.018120+00:00",
+        "timestamp": "2026-08-26T07:34:03.772565+00:00",
         "txn_id": "pay_quickmart_0485",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -4717,12 +4606,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "dcb7986f51cad004d254173af60bda0c7ab5670413717ba6d0129d1381d6fd0a",
-        "entry_hash": "5179a2d767eaf8a718222133d6ad5ffca908c922fa588567563bfa6c739a8674"
+        "prev_hash": "15fb2268f423a2884f450caa418b314fe11db0a5ab90b1228ebfe72839e4d0f3",
+        "entry_hash": "6283d3f654bd02838bf59274f5ab53ab5f29755b52d76a75799a5bd9cec888ad"
       },
       {
         "sequence": 166,
-        "timestamp": "2026-08-25T18:04:52.018120+00:00",
+        "timestamp": "2026-08-26T07:34:03.772565+00:00",
         "txn_id": "pay_quickmart_2122",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -4736,12 +4625,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "5179a2d767eaf8a718222133d6ad5ffca908c922fa588567563bfa6c739a8674",
-        "entry_hash": "fb33d16837dd3033afae378a0dff3ff52b4b70d07a209ab39df270f9266a0009"
+        "prev_hash": "6283d3f654bd02838bf59274f5ab53ab5f29755b52d76a75799a5bd9cec888ad",
+        "entry_hash": "39708d2490cc994a524752ce21ce85b5685461b9a8b4153b3cc040579d5fe8e4"
       },
       {
         "sequence": 167,
-        "timestamp": "2026-08-25T18:04:52.018120+00:00",
+        "timestamp": "2026-08-26T07:34:03.772565+00:00",
         "txn_id": "pay_quickmart_2817",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -4755,12 +4644,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "fb33d16837dd3033afae378a0dff3ff52b4b70d07a209ab39df270f9266a0009",
-        "entry_hash": "61f33e8595594499a19d9d4231b97ee4aa70c03c559b23df57a72c919540d66e"
+        "prev_hash": "39708d2490cc994a524752ce21ce85b5685461b9a8b4153b3cc040579d5fe8e4",
+        "entry_hash": "ba182ec8aa8c222df0d2a25396a9a35dd7d1f693bbcb6545f9f0a4d9be02a3c4"
       },
       {
         "sequence": 168,
-        "timestamp": "2026-08-25T18:04:52.019121+00:00",
+        "timestamp": "2026-08-26T07:34:03.772565+00:00",
         "txn_id": "pay_quickmart_1267",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -4774,12 +4663,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "61f33e8595594499a19d9d4231b97ee4aa70c03c559b23df57a72c919540d66e",
-        "entry_hash": "273b3b6da6c0c92fe09c0f3f237b703c608571893306fea265757f6bcebc5e0a"
+        "prev_hash": "ba182ec8aa8c222df0d2a25396a9a35dd7d1f693bbcb6545f9f0a4d9be02a3c4",
+        "entry_hash": "afe282951fe38ec8f8e713207eef24d531b9e9dc2056fc5e064d41943f877387"
       },
       {
         "sequence": 169,
-        "timestamp": "2026-08-25T18:04:52.019121+00:00",
+        "timestamp": "2026-08-26T07:34:03.772565+00:00",
         "txn_id": "pay_quickmart_0191",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -4793,12 +4682,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "273b3b6da6c0c92fe09c0f3f237b703c608571893306fea265757f6bcebc5e0a",
-        "entry_hash": "57f569965a59d5df4d8825b0e8600298f4deb5d14c5a5702ee7cc4191e0671fe"
+        "prev_hash": "afe282951fe38ec8f8e713207eef24d531b9e9dc2056fc5e064d41943f877387",
+        "entry_hash": "34b27e6f8b5cf2f5736d1bd90e17516a880acbba6c25fbbcc5f359f94c125664"
       },
       {
         "sequence": 170,
-        "timestamp": "2026-08-25T18:04:52.020118+00:00",
+        "timestamp": "2026-08-26T07:34:03.773574+00:00",
         "txn_id": "pay_quickmart_0720",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -4812,12 +4701,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "57f569965a59d5df4d8825b0e8600298f4deb5d14c5a5702ee7cc4191e0671fe",
-        "entry_hash": "a1215bda0c8e536549cc52bf46eea15aea6967943086cacbf7fd70dd4c1a4753"
+        "prev_hash": "34b27e6f8b5cf2f5736d1bd90e17516a880acbba6c25fbbcc5f359f94c125664",
+        "entry_hash": "9ae19835d536f53d7fc46851c03612b2c2af66a5ccf65072e54d7d93824e60c0"
       },
       {
         "sequence": 171,
-        "timestamp": "2026-08-25T18:04:52.020118+00:00",
+        "timestamp": "2026-08-26T07:34:03.773574+00:00",
         "txn_id": "pay_quickmart_1692",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -4831,12 +4720,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "a1215bda0c8e536549cc52bf46eea15aea6967943086cacbf7fd70dd4c1a4753",
-        "entry_hash": "8f10bd006dadb4eddbbc4c4315df54b3406836bc2be75d9f213fb6c73a973d28"
+        "prev_hash": "9ae19835d536f53d7fc46851c03612b2c2af66a5ccf65072e54d7d93824e60c0",
+        "entry_hash": "8cd9911486a91b8685b2ce138297ee41d8f68d4df11694256e5ea92db7888f80"
       },
       {
         "sequence": 172,
-        "timestamp": "2026-08-25T18:04:52.020118+00:00",
+        "timestamp": "2026-08-26T07:34:03.773574+00:00",
         "txn_id": "pay_quickmart_0031",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -4850,12 +4739,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "8f10bd006dadb4eddbbc4c4315df54b3406836bc2be75d9f213fb6c73a973d28",
-        "entry_hash": "50b9d9559c03d82f91e74bb2dd8ca77a475254d0663e3a3469f02a9f1001e2ba"
+        "prev_hash": "8cd9911486a91b8685b2ce138297ee41d8f68d4df11694256e5ea92db7888f80",
+        "entry_hash": "86c34676691665c51710816ccbf396ae8f5c7ede5b886dbcd206447d873cd146"
       },
       {
         "sequence": 173,
-        "timestamp": "2026-08-25T18:04:52.020118+00:00",
+        "timestamp": "2026-08-26T07:34:03.773574+00:00",
         "txn_id": "pay_quickmart_0604",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -4869,12 +4758,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "50b9d9559c03d82f91e74bb2dd8ca77a475254d0663e3a3469f02a9f1001e2ba",
-        "entry_hash": "9324355e2ccdc518f1a8868d8604bb2e879f2d0ba592ebb75db7352974b5c29c"
+        "prev_hash": "86c34676691665c51710816ccbf396ae8f5c7ede5b886dbcd206447d873cd146",
+        "entry_hash": "bc44e3f5f1f73d535c4e1e94c54bfe15147ec4cf43ba97246188cc668d518d66"
       },
       {
         "sequence": 174,
-        "timestamp": "2026-08-25T18:04:52.020118+00:00",
+        "timestamp": "2026-08-26T07:34:03.773574+00:00",
         "txn_id": "pay_quickmart_1728",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -4888,12 +4777,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "9324355e2ccdc518f1a8868d8604bb2e879f2d0ba592ebb75db7352974b5c29c",
-        "entry_hash": "81ea957d417517c61eff8ab3f5e686e822db2191b46016e5634c88fea36ca9a8"
+        "prev_hash": "bc44e3f5f1f73d535c4e1e94c54bfe15147ec4cf43ba97246188cc668d518d66",
+        "entry_hash": "898c16fb21549846197d11387570fc81938949e47033d07eaeef6a3c3f7df72a"
       },
       {
         "sequence": 175,
-        "timestamp": "2026-08-25T18:04:52.020118+00:00",
+        "timestamp": "2026-08-26T07:34:03.773574+00:00",
         "txn_id": "pay_quickmart_0081",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -4907,12 +4796,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "81ea957d417517c61eff8ab3f5e686e822db2191b46016e5634c88fea36ca9a8",
-        "entry_hash": "0ce038fdf3cb3b84cd7edf1d5e9c911d411dcf25be7e3f65dc19a6bf8cf9e6a8"
+        "prev_hash": "898c16fb21549846197d11387570fc81938949e47033d07eaeef6a3c3f7df72a",
+        "entry_hash": "9779534a0b20c92c05e311d7f065eeccb09bbd7e84f4548a52372efe2b646a9d"
       },
       {
         "sequence": 176,
-        "timestamp": "2026-08-25T18:04:52.020118+00:00",
+        "timestamp": "2026-08-26T07:34:03.773574+00:00",
         "txn_id": "pay_quickmart_2261",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -4926,12 +4815,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "0ce038fdf3cb3b84cd7edf1d5e9c911d411dcf25be7e3f65dc19a6bf8cf9e6a8",
-        "entry_hash": "9a0f1f1f22bb19c96f27f2d7d8014a9ba14847d3607a8c36423bf1607ca6fb93"
+        "prev_hash": "9779534a0b20c92c05e311d7f065eeccb09bbd7e84f4548a52372efe2b646a9d",
+        "entry_hash": "05c3f942376f0cef9971d511c633102a0b00bbda886dc51c7e45c8a0cff1f0fa"
       },
       {
         "sequence": 177,
-        "timestamp": "2026-08-25T18:04:52.020118+00:00",
+        "timestamp": "2026-08-26T07:34:03.773574+00:00",
         "txn_id": "pay_quickmart_1241",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -4945,12 +4834,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "9a0f1f1f22bb19c96f27f2d7d8014a9ba14847d3607a8c36423bf1607ca6fb93",
-        "entry_hash": "fc37ca6b7ccdd2927aed8a97ec4a835018dffeb0a96957ef819132bcba6f8a30"
+        "prev_hash": "05c3f942376f0cef9971d511c633102a0b00bbda886dc51c7e45c8a0cff1f0fa",
+        "entry_hash": "264985cd4ae2b40099b178d1fc493a339c826c14f02ecf7271a7af77c9a57f6c"
       },
       {
         "sequence": 178,
-        "timestamp": "2026-08-25T18:04:52.021631+00:00",
+        "timestamp": "2026-08-26T07:34:03.773574+00:00",
         "txn_id": "pay_quickmart_0581",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -4964,12 +4853,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "fc37ca6b7ccdd2927aed8a97ec4a835018dffeb0a96957ef819132bcba6f8a30",
-        "entry_hash": "0e4675259c6cbd0efd4e6ffbf3c1b82b7dbc32e1e8c62d3ddf5edb66ac791710"
+        "prev_hash": "264985cd4ae2b40099b178d1fc493a339c826c14f02ecf7271a7af77c9a57f6c",
+        "entry_hash": "29a4c909618c2e5a21847ab5ff3b95a50316ba0802e42a0d931b4787f10581fb"
       },
       {
         "sequence": 179,
-        "timestamp": "2026-08-25T18:04:52.021631+00:00",
+        "timestamp": "2026-08-26T07:34:03.773574+00:00",
         "txn_id": "pay_quickmart_1003",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -4983,12 +4872,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "0e4675259c6cbd0efd4e6ffbf3c1b82b7dbc32e1e8c62d3ddf5edb66ac791710",
-        "entry_hash": "1ca45896b968c2d158368ff0c825ba53e0afc0541b6a37cfc2b34b4309363a75"
+        "prev_hash": "29a4c909618c2e5a21847ab5ff3b95a50316ba0802e42a0d931b4787f10581fb",
+        "entry_hash": "2d729097a38297235d064135b093f3562e0906bad3f1abff7b5b4d9f5ff46756"
       },
       {
         "sequence": 180,
-        "timestamp": "2026-08-25T18:04:52.021631+00:00",
+        "timestamp": "2026-08-26T07:34:03.773574+00:00",
         "txn_id": "pay_quickmart_0402",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -5002,12 +4891,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "1ca45896b968c2d158368ff0c825ba53e0afc0541b6a37cfc2b34b4309363a75",
-        "entry_hash": "9bdcafde928484a2496cf43483e8464551792d046dede9c8da41eb659a7bc0fd"
+        "prev_hash": "2d729097a38297235d064135b093f3562e0906bad3f1abff7b5b4d9f5ff46756",
+        "entry_hash": "950f545a726e64b8c740c74beb087c424176333fce890678fad6ab5ecf83d56d"
       },
       {
         "sequence": 181,
-        "timestamp": "2026-08-25T18:04:52.021986+00:00",
+        "timestamp": "2026-08-26T07:34:03.773574+00:00",
         "txn_id": "pay_quickmart_1042",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -5021,12 +4910,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "9bdcafde928484a2496cf43483e8464551792d046dede9c8da41eb659a7bc0fd",
-        "entry_hash": "32635b425ee98b196c216f8d2f4d277f25ebf9cad2c411d2079be113f72b2dda"
+        "prev_hash": "950f545a726e64b8c740c74beb087c424176333fce890678fad6ab5ecf83d56d",
+        "entry_hash": "46b60a045a88a34b4f9f077fe06552250ee21b3835ad41b09049e3b909a42999"
       },
       {
         "sequence": 182,
-        "timestamp": "2026-08-25T18:04:52.021986+00:00",
+        "timestamp": "2026-08-26T07:34:03.773574+00:00",
         "txn_id": "pay_quickmart_0291",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -5040,12 +4929,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "32635b425ee98b196c216f8d2f4d277f25ebf9cad2c411d2079be113f72b2dda",
-        "entry_hash": "b3765582cfa552d8d2054477ada1af88c45ceb038255f27fab48e578984b9e56"
+        "prev_hash": "46b60a045a88a34b4f9f077fe06552250ee21b3835ad41b09049e3b909a42999",
+        "entry_hash": "4531a0e944e34547f170120f2d47671184265224411e70d5a6127a67361768ba"
       },
       {
         "sequence": 183,
-        "timestamp": "2026-08-25T18:04:52.021986+00:00",
+        "timestamp": "2026-08-26T07:34:03.773574+00:00",
         "txn_id": "pay_quickmart_1300",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -5059,12 +4948,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "b3765582cfa552d8d2054477ada1af88c45ceb038255f27fab48e578984b9e56",
-        "entry_hash": "36b4a3bfa9948babe567b62f2ecfee89235444170b3091a033c6789941c62e15"
+        "prev_hash": "4531a0e944e34547f170120f2d47671184265224411e70d5a6127a67361768ba",
+        "entry_hash": "d8a068967c2adbbabd9a6e7dbcd6c23edb92334f38e20ca2a8396dcb4b7136a0"
       },
       {
         "sequence": 184,
-        "timestamp": "2026-08-25T18:04:52.021986+00:00",
+        "timestamp": "2026-08-26T07:34:03.774566+00:00",
         "txn_id": "pay_quickmart_1247",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -5078,12 +4967,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "36b4a3bfa9948babe567b62f2ecfee89235444170b3091a033c6789941c62e15",
-        "entry_hash": "e534f6915894a2cd6c4beb54633dc1e3f2d3294fb063f9eaf79552dbde8978b7"
+        "prev_hash": "d8a068967c2adbbabd9a6e7dbcd6c23edb92334f38e20ca2a8396dcb4b7136a0",
+        "entry_hash": "05229ec18c7d4c664983425a60692772677197e81451e6756454cb5a022cd8bb"
       },
       {
         "sequence": 185,
-        "timestamp": "2026-08-25T18:04:52.021986+00:00",
+        "timestamp": "2026-08-26T07:34:03.774566+00:00",
         "txn_id": "pay_quickmart_2797",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -5097,12 +4986,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "e534f6915894a2cd6c4beb54633dc1e3f2d3294fb063f9eaf79552dbde8978b7",
-        "entry_hash": "05965592ffd5c786eb51b5f78b5dc722e7b54a5fe05380715493a11f6979b6b8"
+        "prev_hash": "05229ec18c7d4c664983425a60692772677197e81451e6756454cb5a022cd8bb",
+        "entry_hash": "97db64051016a2c7ca80aeb6bca7dc0894cea7a8915c4bc41be29ee42e50ba30"
       },
       {
         "sequence": 186,
-        "timestamp": "2026-08-25T18:04:52.021986+00:00",
+        "timestamp": "2026-08-26T07:34:03.774566+00:00",
         "txn_id": "pay_quickmart_2746",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -5116,12 +5005,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "05965592ffd5c786eb51b5f78b5dc722e7b54a5fe05380715493a11f6979b6b8",
-        "entry_hash": "4776491d95275b18a718fb25596b441f70e20719612760480ef3ed1c50a939ab"
+        "prev_hash": "97db64051016a2c7ca80aeb6bca7dc0894cea7a8915c4bc41be29ee42e50ba30",
+        "entry_hash": "1c1ce6d091c2bc987a9aa642107b0a534426ff5c3a24abf3fbcb169d16f33986"
       },
       {
         "sequence": 187,
-        "timestamp": "2026-08-25T18:04:52.021986+00:00",
+        "timestamp": "2026-08-26T07:34:03.774566+00:00",
         "txn_id": "pay_quickmart_1147",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -5135,12 +5024,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "4776491d95275b18a718fb25596b441f70e20719612760480ef3ed1c50a939ab",
-        "entry_hash": "23461cb8b4b779a9302a2b15c30beafbc4c51ef000f73715e50d97134a5d8680"
+        "prev_hash": "1c1ce6d091c2bc987a9aa642107b0a534426ff5c3a24abf3fbcb169d16f33986",
+        "entry_hash": "49369905a98fb185eb9080e75d2b65a133b8b03c6d51ae04e7d2ccc7a2782972"
       },
       {
         "sequence": 188,
-        "timestamp": "2026-08-25T18:04:52.021986+00:00",
+        "timestamp": "2026-08-26T07:34:03.774566+00:00",
         "txn_id": "pay_quickmart_1550",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -5154,12 +5043,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "23461cb8b4b779a9302a2b15c30beafbc4c51ef000f73715e50d97134a5d8680",
-        "entry_hash": "ba99d5f8e25f857b68d2d8cd8f43cc2f71c37ea528cf18a3acfb34440f0da55e"
+        "prev_hash": "49369905a98fb185eb9080e75d2b65a133b8b03c6d51ae04e7d2ccc7a2782972",
+        "entry_hash": "3b2074224c1abb6b5a194033dcd1004e05c85315b013b67f2ab2cf3db0dd51a9"
       },
       {
         "sequence": 189,
-        "timestamp": "2026-08-25T18:04:52.021986+00:00",
+        "timestamp": "2026-08-26T07:34:03.774566+00:00",
         "txn_id": "pay_quickmart_1811",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -5173,12 +5062,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "ba99d5f8e25f857b68d2d8cd8f43cc2f71c37ea528cf18a3acfb34440f0da55e",
-        "entry_hash": "c737655240c5a11c3e62b676bec3fe2c36721a427b01a112988493ccf4c068a2"
+        "prev_hash": "3b2074224c1abb6b5a194033dcd1004e05c85315b013b67f2ab2cf3db0dd51a9",
+        "entry_hash": "5623650cd7d00fdf25a00ef9a1bf23578a8e4ca4ba21e1f9c98b7bc9698cbe02"
       },
       {
         "sequence": 190,
-        "timestamp": "2026-08-25T18:04:52.021986+00:00",
+        "timestamp": "2026-08-26T07:34:03.774566+00:00",
         "txn_id": "pay_quickmart_2518",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -5192,12 +5081,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "c737655240c5a11c3e62b676bec3fe2c36721a427b01a112988493ccf4c068a2",
-        "entry_hash": "dd5dd02cc7c0b532f5d1e5e24bfe686a17c9689d2625ecee68159e5137dc08af"
+        "prev_hash": "5623650cd7d00fdf25a00ef9a1bf23578a8e4ca4ba21e1f9c98b7bc9698cbe02",
+        "entry_hash": "ba344a2b64a524c1b12b87852ff716f7cbbc31c9a8c4e1949645e3d96ba226db"
       },
       {
         "sequence": 191,
-        "timestamp": "2026-08-25T18:04:52.021986+00:00",
+        "timestamp": "2026-08-26T07:34:03.774566+00:00",
         "txn_id": "pay_quickmart_1773",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -5211,12 +5100,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "dd5dd02cc7c0b532f5d1e5e24bfe686a17c9689d2625ecee68159e5137dc08af",
-        "entry_hash": "b294b285743a521a163ce4b44e065efdad29e4ba17e450618b937f7ba7264a64"
+        "prev_hash": "ba344a2b64a524c1b12b87852ff716f7cbbc31c9a8c4e1949645e3d96ba226db",
+        "entry_hash": "d3027438c8d1fb0aec1814771abaa92cf2ad53963724a18345b94090c964d0cd"
       },
       {
         "sequence": 192,
-        "timestamp": "2026-08-25T18:04:52.021986+00:00",
+        "timestamp": "2026-08-26T07:34:03.774566+00:00",
         "txn_id": "pay_quickmart_0312",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -5230,12 +5119,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "b294b285743a521a163ce4b44e065efdad29e4ba17e450618b937f7ba7264a64",
-        "entry_hash": "34a4dc9e74749d82ee962a4c1a53de338fc9bb39596da2a245693c1cba32bfb3"
+        "prev_hash": "d3027438c8d1fb0aec1814771abaa92cf2ad53963724a18345b94090c964d0cd",
+        "entry_hash": "ee6480b2cc920a77a3fb78ad49008eccc267caa070b018b1502160f882a9e095"
       },
       {
         "sequence": 193,
-        "timestamp": "2026-08-25T18:04:52.021986+00:00",
+        "timestamp": "2026-08-26T07:34:03.774566+00:00",
         "txn_id": "pay_quickmart_1815",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -5249,12 +5138,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "34a4dc9e74749d82ee962a4c1a53de338fc9bb39596da2a245693c1cba32bfb3",
-        "entry_hash": "2c684ccb626ecaa614899da863a2c14fd1a0fb9ac2aac1ac1c63f8b85d9bb541"
+        "prev_hash": "ee6480b2cc920a77a3fb78ad49008eccc267caa070b018b1502160f882a9e095",
+        "entry_hash": "1a9d89d08dddd64902d4c61a8d49828b08c6217579261047bfe5a572e8254308"
       },
       {
         "sequence": 194,
-        "timestamp": "2026-08-25T18:04:52.021986+00:00",
+        "timestamp": "2026-08-26T07:34:03.775567+00:00",
         "txn_id": "pay_quickmart_2615",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -5268,12 +5157,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "2c684ccb626ecaa614899da863a2c14fd1a0fb9ac2aac1ac1c63f8b85d9bb541",
-        "entry_hash": "3c641b35693edfe59d87290676c939565d579036f281f3cb111dee160030c058"
+        "prev_hash": "1a9d89d08dddd64902d4c61a8d49828b08c6217579261047bfe5a572e8254308",
+        "entry_hash": "f3f52f7d6c05339e13eb4c62f163668fce97645b11693bfb3162f5d6a94cab97"
       },
       {
         "sequence": 195,
-        "timestamp": "2026-08-25T18:04:52.021986+00:00",
+        "timestamp": "2026-08-26T07:34:03.775567+00:00",
         "txn_id": "pay_quickmart_2390",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -5287,12 +5176,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "3c641b35693edfe59d87290676c939565d579036f281f3cb111dee160030c058",
-        "entry_hash": "83c82ff0146b411a4acc2b142107c160160b4eac39884fc8a5c6e6cc2fc4127b"
+        "prev_hash": "f3f52f7d6c05339e13eb4c62f163668fce97645b11693bfb3162f5d6a94cab97",
+        "entry_hash": "c5d21820b7a2589cea2b5fecb75ea730cca8ffb80f7d0ee67ac0cbaedfe091e0"
       },
       {
         "sequence": 196,
-        "timestamp": "2026-08-25T18:04:52.021986+00:00",
+        "timestamp": "2026-08-26T07:34:03.775567+00:00",
         "txn_id": "pay_quickmart_0456",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -5306,12 +5195,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "83c82ff0146b411a4acc2b142107c160160b4eac39884fc8a5c6e6cc2fc4127b",
-        "entry_hash": "5a6e48001f00345f8ca30d084af1d4d99b2e5f5eb06dd9136f96ad5af1b35aef"
+        "prev_hash": "c5d21820b7a2589cea2b5fecb75ea730cca8ffb80f7d0ee67ac0cbaedfe091e0",
+        "entry_hash": "d1c4c28ee03f7b65a1a2f2de7814a23df77b289c17c404181c56e0c5bf2b6e5c"
       },
       {
         "sequence": 197,
-        "timestamp": "2026-08-25T18:04:52.021986+00:00",
+        "timestamp": "2026-08-26T07:34:03.775567+00:00",
         "txn_id": "pay_quickmart_2344",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -5325,12 +5214,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "5a6e48001f00345f8ca30d084af1d4d99b2e5f5eb06dd9136f96ad5af1b35aef",
-        "entry_hash": "7973535b70cf953741dfa81aff66bf408885506e7dd2f6fe9ce9d64b3474afc5"
+        "prev_hash": "d1c4c28ee03f7b65a1a2f2de7814a23df77b289c17c404181c56e0c5bf2b6e5c",
+        "entry_hash": "bd44f0f3b61ececda4838be20509c85d18c08577a125af5da7c33913d4615e8f"
       },
       {
         "sequence": 198,
-        "timestamp": "2026-08-25T18:04:52.022994+00:00",
+        "timestamp": "2026-08-26T07:34:03.775567+00:00",
         "txn_id": "pay_quickmart_0574",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -5344,12 +5233,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "7973535b70cf953741dfa81aff66bf408885506e7dd2f6fe9ce9d64b3474afc5",
-        "entry_hash": "6755b23da492016ea3e6ed6291a0515053f5de1edf9c24e3807de45c4f360349"
+        "prev_hash": "bd44f0f3b61ececda4838be20509c85d18c08577a125af5da7c33913d4615e8f",
+        "entry_hash": "125493b44a0ddfcf0c094aca79f5f2263bad08a6a08773410a981823a52b05ab"
       },
       {
         "sequence": 199,
-        "timestamp": "2026-08-25T18:04:52.022994+00:00",
+        "timestamp": "2026-08-26T07:34:03.775567+00:00",
         "txn_id": "merchant:quickmart",
         "proposed_action": {
           "action_type": "flag_for_investigation",
@@ -5363,12 +5252,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_ESCALATION",
         "outcome": "escalated",
-        "prev_hash": "6755b23da492016ea3e6ed6291a0515053f5de1edf9c24e3807de45c4f360349",
-        "entry_hash": "3f072433f04a57c06a09c982ce537cd46533b29a1d8d84800a08a5e36c896a2b"
+        "prev_hash": "125493b44a0ddfcf0c094aca79f5f2263bad08a6a08773410a981823a52b05ab",
+        "entry_hash": "21aa776a229f3e9ee67639c290e67df34befa1f8b6fc00b15c946048daa3cdc8"
       },
       {
         "sequence": 200,
-        "timestamp": "2026-08-25T18:04:52.022994+00:00",
+        "timestamp": "2026-08-26T07:34:03.775567+00:00",
         "txn_id": "merchant:quickmart",
         "proposed_action": {
           "action_type": "flag_for_investigation",
@@ -5382,12 +5271,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_ESCALATION",
         "outcome": "escalated",
-        "prev_hash": "3f072433f04a57c06a09c982ce537cd46533b29a1d8d84800a08a5e36c896a2b",
-        "entry_hash": "778cc89113f5c8a65dace3d97a9197efd671fdc5427a712519cd44b5e1cbbd6e"
+        "prev_hash": "21aa776a229f3e9ee67639c290e67df34befa1f8b6fc00b15c946048daa3cdc8",
+        "entry_hash": "6a0b66934a9149fa71115736f67f3801eb320e05308f5dd028c04f98cfd74d71"
       },
       {
         "sequence": 201,
-        "timestamp": "2026-08-25T18:04:52.022994+00:00",
+        "timestamp": "2026-08-26T07:34:03.775567+00:00",
         "txn_id": "merchant:quickmart",
         "proposed_action": {
           "action_type": "flag_for_investigation",
@@ -5401,11 +5290,24 @@
         "gate_decision": "allow",
         "gate_reason": "OK_ESCALATION",
         "outcome": "escalated",
-        "prev_hash": "778cc89113f5c8a65dace3d97a9197efd671fdc5427a712519cd44b5e1cbbd6e",
-        "entry_hash": "8150b8a47a03be9f26cc56fa030f85ab984ec48eef71cba739d41e132400d3ec"
+        "prev_hash": "6a0b66934a9149fa71115736f67f3801eb320e05308f5dd028c04f98cfd74d71",
+        "entry_hash": "27c185d9329538c0832c50dfa7e6f44823d3ac64542833dbc5145ab859988b0f"
       }
     ],
     "exceptions": {
+      "unrecoverable_by_class": [
+        {
+          "error_class": "auth_failure",
+          "count": 57,
+          "total_paise": 5136463
+        },
+        {
+          "error_class": "hard_decline",
+          "count": 60,
+          "total_paise": 3674892
+        }
+      ],
+      "unrecoverable_sample_size": 50,
       "unrecoverable_transactions": [
         {
           "txn_id": "pay_quickmart_0033",

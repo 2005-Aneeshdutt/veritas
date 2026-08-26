@@ -1,30 +1,30 @@
 {
-  "run_id": "run_13eeafa7",
+  "run_id": "run_c5bc4f2d",
   "merchant_id": "urbanthread",
   "merchant_name": "UrbanThread",
   "mcc": "5691",
   "seed": 20260824,
-  "started_at": 1787681266.4290028,
-  "duration_ms": 25793,
-  "commit": "b734ee9",
+  "started_at": 1787729668.04212,
+  "duration_ms": 2622,
+  "commit": "7caadd3",
   "models": {
     "fast": "claude-haiku-4.5",
     "reasoning": "claude-sonnet-4.6",
     "temperature": 0
   },
-  "cache_hit_rate": 0.0,
+  "cache_hit_rate": 1.0,
   "llm_calls": 1,
-  "llm_cost_inr": 1.9145,
+  "llm_cost_inr": 0.0,
   "used_stubs": false,
   "traces": [
     {
-      "run_id": "run_13eeafa7",
+      "run_id": "run_c5bc4f2d",
       "seq": 0,
       "node": "ingest",
       "kind": "deterministic",
       "status": "ok",
-      "started_at": 1787681269.3480942,
-      "duration_ms": 45,
+      "started_at": 1787729670.2930315,
+      "duration_ms": 26,
       "input_summary": {
         "merchant": "urbanthread",
         "mcc": "5691"
@@ -50,12 +50,12 @@
       }
     },
     {
-      "run_id": "run_13eeafa7",
+      "run_id": "run_c5bc4f2d",
       "seq": 1,
       "node": "classify",
       "kind": "llm",
       "status": "ok",
-      "started_at": 1787681269.3946126,
+      "started_at": 1787729670.3196044,
       "duration_ms": 1,
       "input_summary": {
         "distinct_codes": 44,
@@ -85,12 +85,12 @@
       "intermediates": {}
     },
     {
-      "run_id": "run_13eeafa7",
+      "run_id": "run_c5bc4f2d",
       "seq": 2,
       "node": "human_review",
       "kind": "deterministic",
       "status": "skipped",
-      "started_at": 1787681269.3971329,
+      "started_at": 1787729670.3215919,
       "duration_ms": 0,
       "input_summary": {},
       "output_summary": {
@@ -109,13 +109,13 @@
       "intermediates": {}
     },
     {
-      "run_id": "run_13eeafa7",
+      "run_id": "run_c5bc4f2d",
       "seq": 3,
       "node": "bank_health",
       "kind": "deterministic",
       "status": "ok",
-      "started_at": 1787681269.3981361,
-      "duration_ms": 5,
+      "started_at": 1787729670.322972,
+      "duration_ms": 4,
       "input_summary": {},
       "output_summary": {
         "banks_examined": 10,
@@ -234,13 +234,13 @@
       }
     },
     {
-      "run_id": "run_13eeafa7",
+      "run_id": "run_c5bc4f2d",
       "seq": 4,
       "node": "decompose",
       "kind": "deterministic",
       "status": "ok",
-      "started_at": 1787681269.403657,
-      "duration_ms": 558,
+      "started_at": 1787729670.327986,
+      "duration_ms": 307,
       "input_summary": {},
       "output_summary": {
         "gap_pts": 1.621,
@@ -305,13 +305,13 @@
       }
     },
     {
-      "run_id": "run_13eeafa7",
+      "run_id": "run_c5bc4f2d",
       "seq": 5,
       "node": "hypothesise",
       "kind": "llm",
       "status": "ok",
-      "started_at": 1787681269.9629118,
-      "duration_ms": 22216,
+      "started_at": 1787729670.6350124,
+      "duration_ms": 2,
       "input_summary": {},
       "output_summary": {
         "primary_label": "no_soft_decline_retry",
@@ -353,7 +353,7 @@
       "raw_response": "```json\n{\n  \"hypotheses\": [\n    {\n      \"factor\": \"bank\",\n      \"attribution_pts\": -0.14,\n      \"root_cause_label\": \"none_of_the_above\",\n      \"hypothesis\": \"The bank mix factor contributes only -0.14 points to the gap, which is smaller than its own measured error bar of +/- 0.57 points. No reliable conclusion can be drawn about whether UrbanThread's issuer concentration is causing failures.\",\n      \"evidence\": [\n        \"bank attribution -0.14 pts is inside its own error bar of +/- 0.57\",\n        \"largest issuer share is State Bank of India at 27.8% with approved rate 93.66%\"\n      ],\n      \"recommended_action\": \"Gather more transaction volume to reduce the error bar before acting on bank mix changes.\",\n      \"action_type\": \"investigation\"\n    },\n    {\n      \"factor\": \"method\",\n      \"attribution_pts\": 2.22,\n      \"root_cause_label\": \"none_of_the_above\",\n      \"hypothesis\": \"The method factor shows +2.22 points attribution but is flagged NOT IDENTIFIED because UrbanThread has effectively one payment method value, meaning the decomposition could not be measured reliably. It is unclear whether the card-heavy mix (90.5% of payments) is helping or hurting relative to the cohort.\",\n      \"evidence\": [\n        \"method attribution +2.22 pts flagged NOT IDENTIFIED\",\n        \"card share is 90.5% of payments\",\n        \"upi share is 8.6% of payments\"\n      ],\n      \"recommended_action\": \"Investigate cohort method benchmarks to determine whether expanding UPI or other rails would improve success rates.\",\n      \"action_type\": \"investigation\"\n    },\n    {\n      \"factor\": \"hour\",\n      \"attribution_pts\": -0.30,\n      \"root_cause_label\": \"none_of_the_above\",\n      \"hypothesis\": \"The hour factor contributes only -0.30 points, which falls inside its own error bar of +/- 0.57 points, so no statistically reliable conclusion about timing can be drawn. The night window (23:00-05:59) accounts for only 6.6% of payments, limiting any midnight billing penalty effect.\",\n      \"evidence\": [\n        \"hour attribution -0.30 pts is inside its own error bar of +/- 0.57\",\n        \"night share is only 6.6% of payments\"\n      ],\n      \"recommended_action\": \"Monitor night-window failure rates separately once volume grows to reduce the error bar.\",\n      \"action_type\": \"investigation\"\n    },\n    {\n      \"factor\": \"amount_band\",\n      \"attribution_pts\": -0.18,\n      \"root_cause_label\": \"none_of_the_above\",\n      \"hypothesis\": \"The amount_band factor contributes only -0.18 points, which is inside its own error bar of +/- 0.58 points, so no reliable signal about ticket-size risk exists. The average ticket of Rs 2894.37 and large-band share of 9.0% do not produce a measurable drag at current volumes.\",\n      \"evidence\": [\n        \"amount_band attribution -0.18 pts is inside its own error bar of +/- 0.58\",\n        \"average ticket is Rs 2894.37\",\n        \"large amount band share is 9.0%\"\n      ],\n      \"recommended_action\": \"Accumulate more transactions in the large amount band before drawing conclusions about high-ticket decline rates.\",\n      \"action_type\": \"investigation\"\n    },\n    {\n      \"factor\": \"process_gap\",\n      \"attribution_pts\": 0.62,\n      \"root_cause_label\": \"no_soft_decline_retry\",\n      \"hypothesis\": \"The process gap of +0.62 points is the only factor with a clear, directly computed signal in this decomposition, suggesting that recoverable failures are not being retried and that 0.62 points of the gap could be closed through operational improvements. Implementing soft-decline retry logic would allow the platform to automatically re-attempt transactions that fail with retriable error codes.\",\n      \"evidence\": [\n        \"process_gap is +0.62 pts computed directly\",\n        \"overall gap between observed 88.16% and cohort achievable 89.78% is 1.62 points\",\n        \"870 transactions this month means even small recovery rates translate to meaningful order counts\"\n      ],\n      \"recommended_action\": \"Enable automatic soft-decline retry for retriable failure codes on UrbanThread's payment flows.\",\n      \"action_type\": \"auto_execute\"\n    }\n  ],\n  \"primary_label\": \"no_soft_decline_retry\",\n  \"summary\": \"All four Shapley factors are statistically noise at UrbanThread's current volume, but the directly measured process gap of 0.62 points points to missed retries on soft declines as the one actionable lever to close the 1.62-point success-rate gap.\"\n}\n```",
       "tokens_in": 1232,
       "tokens_out": 1204,
-      "cache_hit": false,
+      "cache_hit": true,
       "stub": false,
       "confidence": null,
       "reason_codes": [
@@ -362,12 +362,12 @@
       "intermediates": {}
     },
     {
-      "run_id": "run_13eeafa7",
+      "run_id": "run_c5bc4f2d",
       "seq": 6,
       "node": "plan",
-      "kind": "llm",
+      "kind": "deterministic",
       "status": "ok",
-      "started_at": 1787681292.1801386,
+      "started_at": 1787729670.6380079,
       "duration_ms": 1,
       "input_summary": {},
       "output_summary": {
@@ -414,7 +414,7 @@
         ]
       },
       "branch_taken": null,
-      "model": "claude-haiku-4.5",
+      "model": null,
       "prompt": null,
       "raw_response": null,
       "tokens_in": null,
@@ -435,13 +435,13 @@
       }
     },
     {
-      "run_id": "run_13eeafa7",
+      "run_id": "run_c5bc4f2d",
       "seq": 7,
       "node": "gate",
       "kind": "deterministic",
       "status": "ok",
-      "started_at": 1787681292.1831431,
-      "duration_ms": 26,
+      "started_at": 1787729670.6404612,
+      "duration_ms": 16,
       "input_summary": {},
       "output_summary": {
         "decisions": {
@@ -469,13 +469,13 @@
       "intermediates": {}
     },
     {
-      "run_id": "run_13eeafa7",
+      "run_id": "run_c5bc4f2d",
       "seq": 8,
       "node": "execute",
       "kind": "deterministic",
       "status": "ok",
-      "started_at": 1787681292.211242,
-      "duration_ms": 3,
+      "started_at": 1787729670.658072,
+      "duration_ms": 2,
       "input_summary": {},
       "output_summary": {
         "executed": 11,
@@ -500,13 +500,13 @@
       "intermediates": {}
     },
     {
-      "run_id": "run_13eeafa7",
+      "run_id": "run_c5bc4f2d",
       "seq": 9,
       "node": "report",
       "kind": "deterministic",
       "status": "ok",
-      "started_at": 1787681292.2162342,
-      "duration_ms": 5,
+      "started_at": 1787729670.6610694,
+      "duration_ms": 3,
       "input_summary": {},
       "output_summary": {
         "measured_keys": [
@@ -795,101 +795,81 @@
       "root_cause": {
         "error_decomposition": {
           "note": "The model reads the ESTIMATED decomposition, not the truth. Splitting the error says whether the bottleneck is the model or the attribution feeding it.",
-          "attribution_pointed_at_the_right_cause": 0.75,
+          "attribution_pointed_at_the_right_cause": 0.7333,
           "attribution_ci95": [
-            0.6277,
-            0.8422
+            0.6099,
+            0.8287
           ],
-          "model_faithful_to_what_it_saw": 0.6333,
+          "model_faithful_to_what_it_saw": 0.8333,
           "faithful_ci95": [
-            0.5068,
-            0.7438
+            0.7197,
+            0.9069
           ],
-          "accuracy_when_attribution_was_right": 0.6667,
-          "n_solvable": 45
+          "accuracy_when_attribution_was_right": 0.8864,
+          "n_solvable": 44
         },
         "note": "Exact match on root_cause_label against the injected cause. The model emits from the same closed enum the generator injects from, so this is forced-choice classification, not keyword matching.",
         "n": 60,
-        "accuracy": 0.6,
+        "accuracy": 0.7,
         "accuracy_ci95": [
-          0.4737,
-          0.7143
+          0.5749,
+          0.801
         ],
         "confusion_matrix": {
           "midnight_billing_penalty": {
-            "midnight_billing_penalty": 4,
-            "bank_concentration": 1,
-            "none_of_the_above": 2
+            "midnight_billing_penalty": 6,
+            "no_soft_decline_retry": 1
           },
           "bank_concentration": {
-            "bank_concentration": 16,
-            "none_of_the_above": 1,
-            "midnight_billing_penalty": 4,
-            "no_soft_decline_retry": 2,
-            "amount_band_risk": 1
+            "bank_concentration": 19,
+            "no_soft_decline_retry": 5
           },
           "no_soft_decline_retry": {
             "no_soft_decline_retry": 1
           },
           "amount_band_risk": {
-            "amount_band_risk": 7,
+            "amount_band_risk": 8,
             "no_soft_decline_retry": 4,
-            "midnight_billing_penalty": 1,
-            "bank_concentration": 1
+            "method_mix_mismatch": 1
           },
           "method_mix_mismatch": {
-            "bank_concentration": 1,
-            "none_of_the_above": 2,
-            "method_mix_mismatch": 2,
-            "no_soft_decline_retry": 2,
-            "amount_band_risk": 1
+            "method_mix_mismatch": 5,
+            "none_of_the_above": 1,
+            "no_soft_decline_retry": 1,
+            "midnight_billing_penalty": 1
           },
           "none_of_the_above": {
+            "midnight_billing_penalty": 2,
+            "none_of_the_above": 3,
             "method_mix_mismatch": 1,
-            "none_of_the_above": 6
+            "bank_concentration": 1
           }
         },
         "healthy_merchants": {
           "n": 7,
-          "correctly_said_none_of_the_above": 6,
+          "correctly_said_none_of_the_above": 3,
           "note": "Merchants with nothing injected. A model that never uses none_of_the_above here is overconfident."
         },
         "overreach": {
-          "said_none_when_a_cause_was_injected": 5,
-          "rate": 0.0943
+          "said_none_when_a_cause_was_injected": 1,
+          "rate": 0.0189
         },
-        "cache_hit_rate": 1.0,
-        "cost_inr": 0.0,
+        "cache_hit_rate": 0.0,
+        "cost_inr": 165.8511,
         "errors": [
           {
             "merchant": "sweep_001",
             "injected": [],
             "true": "none_of_the_above",
-            "pred": "method_mix_mismatch",
+            "pred": "midnight_billing_penalty",
             "correct": false,
             "n_txns": 60,
             "rho": 0.0,
-            "implied_by_estimate": "method_mix_mismatch",
+            "implied_by_estimate": "midnight_billing_penalty",
             "faithful": true,
             "attribution_was_right": false,
-            "cache_hit": true,
-            "summary": "Sweep Merchant 001's 6.42-point success-rate gap is driven primarily by a heavy reliance on UPI (75% of volume) where the cohort performs better on card rails, "
-          },
-          {
-            "merchant": "sweep_004",
-            "injected": [
-              "method_mix_mismatch"
-            ],
-            "true": "method_mix_mismatch",
-            "pred": "bank_concentration",
-            "correct": false,
-            "n_txns": 150,
-            "rho": 0.0,
-            "implied_by_estimate": "method_mix_mismatch",
-            "faithful": false,
-            "attribution_was_right": true,
-            "cache_hit": true,
-            "summary": "Sweep Merchant 004's 2.05-point success-rate shortfall is driven primarily by concentration in higher-decline issuers like Punjab National Bank (91.20%) and Ban"
+            "cache_hit": false,
+            "summary": "Sweep Merchant 001 is losing ~8 points of success rate primarily because a slice of payments hit the night window and because volume is concentrated on weaker i"
           },
           {
             "merchant": "sweep_007",
@@ -898,15 +878,15 @@
               "no_soft_decline_retry"
             ],
             "true": "bank_concentration",
-            "pred": "none_of_the_above",
+            "pred": "no_soft_decline_retry",
             "correct": false,
             "n_txns": 60,
             "rho": 0.0,
             "implied_by_estimate": "no_soft_decline_retry",
-            "faithful": false,
+            "faithful": true,
             "attribution_was_right": false,
-            "cache_hit": true,
-            "summary": "With only 60 transactions this month, every decomposed factor (bank, method, hour, amount_band) falls inside its own error bar, so no single root cause can be r"
+            "cache_hit": false,
+            "summary": "The entire 0.29-point success-rate gap is effectively explained by a process gap of +0.50 pts — most likely unretried soft declines — while all bank, method, ho"
           },
           {
             "merchant": "sweep_008",
@@ -921,8 +901,22 @@
             "implied_by_estimate": "amount_band_risk",
             "faithful": false,
             "attribution_was_right": true,
-            "cache_hit": true,
-            "summary": "The only clearly measurable and actionable cause of Sweep Merchant 008's 1.55 pt success-rate gap is an unrecovered process gap of 0.66 pts from soft declines t"
+            "cache_hit": false,
+            "summary": "The largest identified cause of Sweep Merchant 008's 3.05-point success-rate gap is a directly measured process gap of 0.84 points, most likely from soft declin"
+          },
+          {
+            "merchant": "sweep_009",
+            "injected": [],
+            "true": "none_of_the_above",
+            "pred": "midnight_billing_penalty",
+            "correct": false,
+            "n_txns": 60,
+            "rho": 0.0,
+            "implied_by_estimate": "method_mix_mismatch",
+            "faithful": false,
+            "attribution_was_right": false,
+            "cache_hit": false,
+            "summary": "Sweep Merchant 009's 0.29-point success-rate gap is too small and the transaction volume of 60 is too low for any single factor to be identified as a statistica"
           },
           {
             "merchant": "sweep_012",
@@ -931,48 +925,15 @@
               "method_mix_mismatch"
             ],
             "true": "amount_band_risk",
-            "pred": "midnight_billing_penalty",
+            "pred": "method_mix_mismatch",
             "correct": false,
             "n_txns": 400,
             "rho": 0.8,
             "implied_by_estimate": "amount_band_risk",
             "faithful": false,
             "attribution_was_right": true,
-            "cache_hit": true,
-            "summary": "Sweep Merchant 012's 0.85-point success-rate gap is primarily driven by a portion of mandate debits firing in the night window (-0.80 pts), with secondary drag "
-          },
-          {
-            "merchant": "sweep_014",
-            "injected": [
-              "bank_concentration",
-              "midnight_billing_penalty"
-            ],
-            "true": "bank_concentration",
-            "pred": "midnight_billing_penalty",
-            "correct": false,
-            "n_txns": 150,
-            "rho": 0.8,
-            "implied_by_estimate": "midnight_billing_penalty",
-            "faithful": true,
-            "attribution_was_right": false,
-            "cache_hit": true,
-            "summary": "Sweep Merchant 014 is losing ~3.1 points of success rate because 37.3% of payments fire in the high-decline night window, and another ~3.1 points because nearly"
-          },
-          {
-            "merchant": "sweep_015",
-            "injected": [
-              "method_mix_mismatch"
-            ],
-            "true": "method_mix_mismatch",
-            "pred": "none_of_the_above",
-            "correct": false,
-            "n_txns": 400,
-            "rho": 0.0,
-            "implied_by_estimate": "method_mix_mismatch",
-            "faithful": false,
-            "attribution_was_right": true,
-            "cache_hit": true,
-            "summary": "Sweep Merchant 015 is actually outperforming its cohort (92.25% vs 91.66% achievable), and every negative decomposition factor falls inside its own error bar, s"
+            "cache_hit": false,
+            "summary": "The biggest identified drag on Sweep Merchant 012's success rate is its payment-method mix — a heavy reliance on upi_mandate and card rails is responsible for 0"
           },
           {
             "merchant": "sweep_017",
@@ -984,43 +945,11 @@
             "correct": false,
             "n_txns": 150,
             "rho": 0.0,
-            "implied_by_estimate": "amount_band_risk",
-            "faithful": false,
-            "attribution_was_right": true,
-            "cache_hit": true,
-            "summary": "The only directly measurable and actionable cause of Sweep Merchant 017's 1.40-point success-rate gap is an unretried process gap of 0.40 points — all other fac"
-          },
-          {
-            "merchant": "sweep_018",
-            "injected": [
-              "midnight_billing_penalty"
-            ],
-            "true": "midnight_billing_penalty",
-            "pred": "bank_concentration",
-            "correct": false,
-            "n_txns": 150,
-            "rho": 0.0,
-            "implied_by_estimate": "midnight_billing_penalty",
-            "faithful": false,
-            "attribution_was_right": true,
-            "cache_hit": true,
-            "summary": "Sweep Merchant 018 is actually outperforming its cohort by 2.22 points, but the biggest identifiable drag comes from heavy concentration on high-decline issuers"
-          },
-          {
-            "merchant": "sweep_019",
-            "injected": [
-              "method_mix_mismatch"
-            ],
-            "true": "method_mix_mismatch",
-            "pred": "none_of_the_above",
-            "correct": false,
-            "n_txns": 150,
-            "rho": 0.0,
-            "implied_by_estimate": "method_mix_mismatch",
-            "faithful": false,
-            "attribution_was_right": true,
-            "cache_hit": true,
-            "summary": "Sweep Merchant 019's 0.40-point success-rate gap is too small and statistically noisy to pin on any single root cause — every negative factor (bank, hour, amoun"
+            "implied_by_estimate": "no_soft_decline_retry",
+            "faithful": true,
+            "attribution_was_right": false,
+            "cache_hit": false,
+            "summary": "The biggest fixable problem for Sweep Merchant 017 is a 1.00-point process gap — almost certainly unretried soft declines — which alone accounts for the majorit"
           },
           {
             "merchant": "sweep_021",
@@ -1035,25 +964,8 @@
             "implied_by_estimate": "no_soft_decline_retry",
             "faithful": true,
             "attribution_was_right": false,
-            "cache_hit": true,
-            "summary": "Sweep Merchant 021 is already outperforming its cohort (95.00% vs 91.96% achievable), but the -3.04 pt gap versus its own potential is driven most by an unexpla"
-          },
-          {
-            "merchant": "sweep_022",
-            "injected": [
-              "amount_band_risk",
-              "method_mix_mismatch"
-            ],
-            "true": "amount_band_risk",
-            "pred": "bank_concentration",
-            "correct": false,
-            "n_txns": 150,
-            "rho": 0.0,
-            "implied_by_estimate": "amount_band_risk",
-            "faithful": false,
-            "attribution_was_right": true,
-            "cache_hit": true,
-            "summary": "Sweep Merchant 022 is beating its cohort benchmark (89.33% vs 87.35% achievable) but is leaving roughly 1.21 points on the table because over half its volume si"
+            "cache_hit": false,
+            "summary": "Sweep Merchant 021's biggest recoverable opportunity is a +1.00 pt process gap from unretried soft declines, while a secondary drag comes from concentration in "
           },
           {
             "merchant": "sweep_023",
@@ -1069,41 +981,8 @@
             "implied_by_estimate": "no_soft_decline_retry",
             "faithful": true,
             "attribution_was_right": false,
-            "cache_hit": true,
-            "summary": "Sweep Merchant 023's -1.68 pt success-rate gap is dominated by a +1.60 pt process gap — the largest measurable factor — suggesting unretried soft declines are t"
-          },
-          {
-            "merchant": "sweep_026",
-            "injected": [
-              "midnight_billing_penalty"
-            ],
-            "true": "midnight_billing_penalty",
-            "pred": "none_of_the_above",
-            "correct": false,
-            "n_txns": 400,
-            "rho": 0.0,
-            "implied_by_estimate": "midnight_billing_penalty",
-            "faithful": false,
-            "attribution_was_right": true,
-            "cache_hit": true,
-            "summary": "Sweep Merchant 026's -0.04 point gap versus cohort is negligible and within noise — every decomposed factor sits inside its error bar, and the merchant is alrea"
-          },
-          {
-            "merchant": "sweep_027",
-            "injected": [
-              "bank_concentration",
-              "midnight_billing_penalty"
-            ],
-            "true": "bank_concentration",
-            "pred": "amount_band_risk",
-            "correct": false,
-            "n_txns": 60,
-            "rho": 0.0,
-            "implied_by_estimate": "bank_concentration",
-            "faithful": false,
-            "attribution_was_right": true,
-            "cache_hit": true,
-            "summary": "Sweep Merchant 027's success rate is essentially at par with its cohort (gap of only -0.01 pts), but the medium-amount-band transactions are the single largest "
+            "cache_hit": false,
+            "summary": "Sweep Merchant 023's success rate is essentially at cohort benchmark, but a +1.80 pt process gap — the largest single factor — signals that recoverable soft dec"
           },
           {
             "merchant": "sweep_030",
@@ -1115,27 +994,58 @@
             "correct": false,
             "n_txns": 60,
             "rho": 0.0,
-            "implied_by_estimate": "amount_band_risk",
-            "faithful": false,
-            "attribution_was_right": true,
-            "cache_hit": true,
-            "summary": "With 86.7% of payments in the large-amount band and a directly measured process gap of 0.50 pts, the most actionable and confirmed cause of Sweep Merchant 030's"
+            "implied_by_estimate": "no_soft_decline_retry",
+            "faithful": true,
+            "attribution_was_right": false,
+            "cache_hit": false,
+            "summary": "The single largest identified drag on your success rate is unretried soft declines (process gap of +1.00 pts), which your gateway can recover automatically — fi"
           },
           {
-            "merchant": "sweep_044",
+            "merchant": "sweep_038",
+            "injected": [
+              "bank_concentration",
+              "midnight_billing_penalty"
+            ],
+            "true": "bank_concentration",
+            "pred": "no_soft_decline_retry",
+            "correct": false,
+            "n_txns": 150,
+            "rho": 0.0,
+            "implied_by_estimate": "no_soft_decline_retry",
+            "faithful": true,
+            "attribution_was_right": false,
+            "cache_hit": false,
+            "summary": "The single biggest identified opportunity is a +0.60 pt process gap from not retrying soft declines — enabling automatic retry would be the fastest win for Swee"
+          },
+          {
+            "merchant": "sweep_040",
             "injected": [
               "method_mix_mismatch"
             ],
             "true": "method_mix_mismatch",
-            "pred": "no_soft_decline_retry",
+            "pred": "none_of_the_above",
+            "correct": false,
+            "n_txns": 60,
+            "rho": 0.0,
+            "implied_by_estimate": "no_soft_decline_retry",
+            "faithful": false,
+            "attribution_was_right": false,
+            "cache_hit": false,
+            "summary": "All decomposed factors are either inside their error bars or lack supporting evidence for a specific root cause, so no single identified cause explains the -3.3"
+          },
+          {
+            "merchant": "sweep_042",
+            "injected": [],
+            "true": "none_of_the_above",
+            "pred": "method_mix_mismatch",
             "correct": false,
             "n_txns": 1000,
             "rho": 0.0,
             "implied_by_estimate": "method_mix_mismatch",
-            "faithful": false,
-            "attribution_was_right": true,
-            "cache_hit": true,
-            "summary": "With all four Shapley factors inside their error bars or unmeasurable, the only actionable signal is the directly computed process gap of +0.45 pts, pointing to"
+            "faithful": true,
+            "attribution_was_right": false,
+            "cache_hit": false,
+            "summary": "Sweep Merchant 042's 0.07-point success-rate gap is negligible and every decomposed factor falls inside its own error bar, so no cause can be reliably identifie"
           },
           {
             "merchant": "sweep_046",
@@ -1150,58 +1060,38 @@
             "implied_by_estimate": "method_mix_mismatch",
             "faithful": false,
             "attribution_was_right": true,
-            "cache_hit": true,
-            "summary": "The only firmly measurable and actionable gap for Sweep Merchant 046 is the 0.75-point process gap from unretried soft declines — all other factors are either i"
+            "cache_hit": false,
+            "summary": "The largest confirmed drag on Sweep Merchant 046's success rate is a 0.90-point process gap consistent with soft declines not being retried; fixing this with au"
           },
           {
-            "merchant": "sweep_047",
+            "merchant": "sweep_051",
             "injected": [
-              "bank_concentration",
               "midnight_billing_penalty"
             ],
-            "true": "bank_concentration",
-            "pred": "midnight_billing_penalty",
-            "correct": false,
-            "n_txns": 150,
-            "rho": 0.2,
-            "implied_by_estimate": "midnight_billing_penalty",
-            "faithful": true,
-            "attribution_was_right": false,
-            "cache_hit": true,
-            "summary": "Sweep Merchant 047's 0.76-point success-rate gap is driven primarily by 26% of payments falling in the high-decline night window (+0.84 pts) and secondarily by "
-          },
-          {
-            "merchant": "sweep_048",
-            "injected": [
-              "bank_concentration",
-              "midnight_billing_penalty"
-            ],
-            "true": "bank_concentration",
-            "pred": "midnight_billing_penalty",
-            "correct": false,
-            "n_txns": 60,
-            "rho": 0.5,
-            "implied_by_estimate": "midnight_billing_penalty",
-            "faithful": true,
-            "attribution_was_right": false,
-            "cache_hit": true,
-            "summary": "Over half of Sweep Merchant 048's payments happen at night (56.7%) when banks decline more, and this alone costs 4.72 points of success rate — the single bigges"
-          },
-          {
-            "merchant": "sweep_052",
-            "injected": [
-              "method_mix_mismatch"
-            ],
-            "true": "method_mix_mismatch",
-            "pred": "amount_band_risk",
+            "true": "midnight_billing_penalty",
+            "pred": "no_soft_decline_retry",
             "correct": false,
             "n_txns": 60,
             "rho": 0.0,
-            "implied_by_estimate": "method_mix_mismatch",
+            "implied_by_estimate": "midnight_billing_penalty",
             "faithful": false,
             "attribution_was_right": true,
-            "cache_hit": true,
-            "summary": "The only statistically reliable drag on Sweep Merchant 052's success rate is the amount-band mix, where medium and large ticket payments (average Rs 1916.98) ar"
+            "cache_hit": false,
+            "summary": "With 95% of payments at night and a directly measured +1.50 pt process gap, Sweep Merchant 051's most actionable opportunity is enabling automatic soft-decline "
+          },
+          {
+            "merchant": "sweep_055",
+            "injected": [],
+            "true": "none_of_the_above",
+            "pred": "bank_concentration",
+            "correct": false,
+            "n_txns": 1000,
+            "rho": 0.0,
+            "implied_by_estimate": "bank_concentration",
+            "faithful": true,
+            "attribution_was_right": false,
+            "cache_hit": false,
+            "summary": "Sweep Merchant 055's 0.28-point success-rate gap is tiny and every decomposed factor—including the largest, bank mix at 0.16 points—falls inside its own error b"
           },
           {
             "merchant": "sweep_056",
@@ -1217,25 +1107,24 @@
             "implied_by_estimate": "no_soft_decline_retry",
             "faithful": true,
             "attribution_was_right": false,
-            "cache_hit": true,
-            "summary": "The biggest recoverable opportunity for Sweep Merchant 056 is enabling soft-decline retries (2.20-point process gap), followed by reducing concentration on Airt"
+            "cache_hit": false,
+            "summary": "The biggest recoverable opportunity for Sweep Merchant 056 is enabling soft-decline retries, which alone accounts for 2.00 points of the 3.31-point success-rate"
           },
           {
-            "merchant": "sweep_058",
+            "merchant": "sweep_057",
             "injected": [
-              "midnight_billing_penalty",
-              "amount_band_risk"
+              "method_mix_mismatch"
             ],
-            "true": "midnight_billing_penalty",
-            "pred": "none_of_the_above",
+            "true": "method_mix_mismatch",
+            "pred": "midnight_billing_penalty",
             "correct": false,
-            "n_txns": 400,
+            "n_txns": 150,
             "rho": 0.0,
-            "implied_by_estimate": "midnight_billing_penalty",
+            "implied_by_estimate": "method_mix_mismatch",
             "faithful": false,
             "attribution_was_right": true,
-            "cache_hit": true,
-            "summary": "Sweep Merchant 058 has a gap of only -0.04 pts versus its cohort benchmark, every decomposed factor is either inside its error bar or flagged not identified, an"
+            "cache_hit": false,
+            "summary": "The largest identified drag on Sweep Merchant 057's 6.45-point success-rate gap is 1.16 points from the night billing window, though the method factor (4.14 pts"
           },
           {
             "merchant": "sweep_059",
@@ -1244,15 +1133,15 @@
               "midnight_billing_penalty"
             ],
             "true": "bank_concentration",
-            "pred": "midnight_billing_penalty",
+            "pred": "no_soft_decline_retry",
             "correct": false,
             "n_txns": 60,
             "rho": 0.0,
-            "implied_by_estimate": "midnight_billing_penalty",
+            "implied_by_estimate": "no_soft_decline_retry",
             "faithful": true,
             "attribution_was_right": false,
-            "cache_hit": true,
-            "summary": "Sweep Merchant 059's 1.66-point success-rate gap is driven primarily by 31.7% of payments falling in the night window (the largest single factor at +0.79 pts) a"
+            "cache_hit": false,
+            "summary": "The single largest identified cause of Sweep Merchant 059's success-rate gap is a directly measured process gap of +0.50 pts indicating that soft declines are n"
           }
         ]
       },
@@ -1319,8 +1208,8 @@
         "method+hour": 1.5818098897475097,
         "method+amount_band": 1.7245826336892756,
         "hour+amount_band": -0.8707238149045615,
-        "bank+method+hour": 1.5676329037651482,
-        "bank+method+amount_band": 1.7194376601988637,
+        "bank+method+hour": 1.567632903765137,
+        "bank+method+amount_band": 1.7194376601988526,
         "bank+hour+amount_band": -0.7809424150257094,
         "method+hour+amount_band": 1.61135863919587,
         "bank+method+hour+amount_band": 1.5989865220050081
@@ -1582,7 +1471,7 @@
     "ledger": [
       {
         "sequence": 0,
-        "timestamp": "2026-08-25T18:08:12.211242+00:00",
+        "timestamp": "2026-08-26T07:34:30.658072+00:00",
         "txn_id": "merchant:urbanthread",
         "proposed_action": {
           "action_type": "flag_for_investigation",
@@ -1597,11 +1486,11 @@
         "gate_reason": "OK_ESCALATION",
         "outcome": "escalated",
         "prev_hash": "0000000000000000000000000000000000000000000000000000000000000000",
-        "entry_hash": "8275b9125163ee914ee93060d1e2e7c791fa38b3b9cc28002fc0aa840ef3fd58"
+        "entry_hash": "a91a79b5896ba960196c423d52f8019e571ad48e1a3e99892314ffd7d6e8c16f"
       },
       {
         "sequence": 1,
-        "timestamp": "2026-08-25T18:08:12.211242+00:00",
+        "timestamp": "2026-08-26T07:34:30.659131+00:00",
         "txn_id": "merchant:urbanthread",
         "proposed_action": {
           "action_type": "flag_for_investigation",
@@ -1615,12 +1504,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_ESCALATION",
         "outcome": "escalated",
-        "prev_hash": "8275b9125163ee914ee93060d1e2e7c791fa38b3b9cc28002fc0aa840ef3fd58",
-        "entry_hash": "390435298824be5d69736d2f51157c655c803f91af122078196e09a40f6e56c6"
+        "prev_hash": "a91a79b5896ba960196c423d52f8019e571ad48e1a3e99892314ffd7d6e8c16f",
+        "entry_hash": "9434c785bf8e73a8a06779fd2391c985c6dd4638436d88d0fedfa0b4514b3038"
       },
       {
         "sequence": 2,
-        "timestamp": "2026-08-25T18:08:12.211242+00:00",
+        "timestamp": "2026-08-26T07:34:30.659131+00:00",
         "txn_id": "merchant:urbanthread",
         "proposed_action": {
           "action_type": "flag_for_investigation",
@@ -1634,12 +1523,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_ESCALATION",
         "outcome": "escalated",
-        "prev_hash": "390435298824be5d69736d2f51157c655c803f91af122078196e09a40f6e56c6",
-        "entry_hash": "00ac452ce2b94bad1725c1c40068499e63f6329d3197c8bc84801b0ba7abb857"
+        "prev_hash": "9434c785bf8e73a8a06779fd2391c985c6dd4638436d88d0fedfa0b4514b3038",
+        "entry_hash": "1aa749db5bfa4bcfade70e5016ec0e74c5247160957048cb28f3cde17396f888"
       },
       {
         "sequence": 3,
-        "timestamp": "2026-08-25T18:08:12.211242+00:00",
+        "timestamp": "2026-08-26T07:34:30.659131+00:00",
         "txn_id": "merchant:urbanthread",
         "proposed_action": {
           "action_type": "flag_for_investigation",
@@ -1653,12 +1542,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_ESCALATION",
         "outcome": "escalated",
-        "prev_hash": "00ac452ce2b94bad1725c1c40068499e63f6329d3197c8bc84801b0ba7abb857",
-        "entry_hash": "e7da64131dd5b294fd8ae265902ebf0b71082b42986ee25ea2c718aa38aa6640"
+        "prev_hash": "1aa749db5bfa4bcfade70e5016ec0e74c5247160957048cb28f3cde17396f888",
+        "entry_hash": "d1d0edcc0474b98f86bab546842a41325385fac60f1df6c95cdd044925d6d648"
       },
       {
         "sequence": 4,
-        "timestamp": "2026-08-25T18:08:12.211242+00:00",
+        "timestamp": "2026-08-26T07:34:30.659131+00:00",
         "txn_id": "pay_urbanthread_0717",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1672,12 +1561,12 @@
         "gate_decision": "deny",
         "gate_reason": "DENY_AMOUNT_ABOVE_CEILING",
         "outcome": "denied",
-        "prev_hash": "e7da64131dd5b294fd8ae265902ebf0b71082b42986ee25ea2c718aa38aa6640",
-        "entry_hash": "a186da6ad096ed2eca776feeb51d20fda88422831903988a17c658c1fa4efef8"
+        "prev_hash": "d1d0edcc0474b98f86bab546842a41325385fac60f1df6c95cdd044925d6d648",
+        "entry_hash": "39b01b1510a164793c87264f0c2502b2bdb5058acfaf633c4d00ac5ede78a6f0"
       },
       {
         "sequence": 5,
-        "timestamp": "2026-08-25T18:08:12.211242+00:00",
+        "timestamp": "2026-08-26T07:34:30.659131+00:00",
         "txn_id": "pay_urbanthread_0245",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1691,12 +1580,12 @@
         "gate_decision": "deny",
         "gate_reason": "DENY_AMOUNT_ABOVE_CEILING",
         "outcome": "denied",
-        "prev_hash": "a186da6ad096ed2eca776feeb51d20fda88422831903988a17c658c1fa4efef8",
-        "entry_hash": "a3181e19949161fb7d7db158155c3317cabf55df317828079a584bcbe510b71f"
+        "prev_hash": "39b01b1510a164793c87264f0c2502b2bdb5058acfaf633c4d00ac5ede78a6f0",
+        "entry_hash": "bb9f78a490c306cee5a6c26da13c3d2c0c1a10144b1e601977a3e375643e6b06"
       },
       {
         "sequence": 6,
-        "timestamp": "2026-08-25T18:08:12.211242+00:00",
+        "timestamp": "2026-08-26T07:34:30.659131+00:00",
         "txn_id": "pay_urbanthread_0531",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1710,12 +1599,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "a3181e19949161fb7d7db158155c3317cabf55df317828079a584bcbe510b71f",
-        "entry_hash": "9656400811632782bbd7f31c95e9603b44382d094d7115c10d3d62077cf97dd9"
+        "prev_hash": "bb9f78a490c306cee5a6c26da13c3d2c0c1a10144b1e601977a3e375643e6b06",
+        "entry_hash": "f5f2eb424778d7863fcbb7f5b568f33c6c3901bf7d7c0798dee91ce2a6631485"
       },
       {
         "sequence": 7,
-        "timestamp": "2026-08-25T18:08:12.212230+00:00",
+        "timestamp": "2026-08-26T07:34:30.659131+00:00",
         "txn_id": "pay_urbanthread_0805",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1729,12 +1618,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "9656400811632782bbd7f31c95e9603b44382d094d7115c10d3d62077cf97dd9",
-        "entry_hash": "2e1c344d5ca8c4b637ca92ca7a8f140de898038a4ac3a45f6dac78ed7077a7d3"
+        "prev_hash": "f5f2eb424778d7863fcbb7f5b568f33c6c3901bf7d7c0798dee91ce2a6631485",
+        "entry_hash": "e6a74f64792e23fad3818cf207d6bc709eefd466ddc634e25db591985e60be93"
       },
       {
         "sequence": 8,
-        "timestamp": "2026-08-25T18:08:12.212230+00:00",
+        "timestamp": "2026-08-26T07:34:30.659131+00:00",
         "txn_id": "pay_urbanthread_0187",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1748,12 +1637,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "2e1c344d5ca8c4b637ca92ca7a8f140de898038a4ac3a45f6dac78ed7077a7d3",
-        "entry_hash": "90461be86fc9c2ad6f645de25ca20978494b65219550a65e3658f187f80a3030"
+        "prev_hash": "e6a74f64792e23fad3818cf207d6bc709eefd466ddc634e25db591985e60be93",
+        "entry_hash": "531b96820770721b12131f766f281a1ac066b8b4b1e5c49a6194d81eb1820652"
       },
       {
         "sequence": 9,
-        "timestamp": "2026-08-25T18:08:12.212230+00:00",
+        "timestamp": "2026-08-26T07:34:30.659131+00:00",
         "txn_id": "pay_urbanthread_0250",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1767,12 +1656,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "90461be86fc9c2ad6f645de25ca20978494b65219550a65e3658f187f80a3030",
-        "entry_hash": "bf5083840947301f64a53279cdb181880a62db56aa061aa788786a982d91a3dd"
+        "prev_hash": "531b96820770721b12131f766f281a1ac066b8b4b1e5c49a6194d81eb1820652",
+        "entry_hash": "7bedaf5818567a30250eb7371aa17836437da1d690ecde26beeef49347ba1e42"
       },
       {
         "sequence": 10,
-        "timestamp": "2026-08-25T18:08:12.212230+00:00",
+        "timestamp": "2026-08-26T07:34:30.659131+00:00",
         "txn_id": "pay_urbanthread_0813",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1786,12 +1675,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "bf5083840947301f64a53279cdb181880a62db56aa061aa788786a982d91a3dd",
-        "entry_hash": "0a8472197cef64146bef14f821250144785ac54ae42afd558e15831f11374c3b"
+        "prev_hash": "7bedaf5818567a30250eb7371aa17836437da1d690ecde26beeef49347ba1e42",
+        "entry_hash": "a6bd2a3cbca4c60baa06dcd01806091fe21a55eeed5ce96623e04537e971d735"
       },
       {
         "sequence": 11,
-        "timestamp": "2026-08-25T18:08:12.212230+00:00",
+        "timestamp": "2026-08-26T07:34:30.659131+00:00",
         "txn_id": "pay_urbanthread_0668",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1805,12 +1694,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "0a8472197cef64146bef14f821250144785ac54ae42afd558e15831f11374c3b",
-        "entry_hash": "4b050b9bc1d51cf4b387627d6e96a5d6a17762be0e9eed8138dd319d1a43a767"
+        "prev_hash": "a6bd2a3cbca4c60baa06dcd01806091fe21a55eeed5ce96623e04537e971d735",
+        "entry_hash": "b302cb04cd06d72dcc065405802a214f832fb92a1216339f3cbdda4274c2f33b"
       },
       {
         "sequence": 12,
-        "timestamp": "2026-08-25T18:08:12.212230+00:00",
+        "timestamp": "2026-08-26T07:34:30.659131+00:00",
         "txn_id": "pay_urbanthread_0807",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1824,12 +1713,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "4b050b9bc1d51cf4b387627d6e96a5d6a17762be0e9eed8138dd319d1a43a767",
-        "entry_hash": "1d8738ad1b79c95be378234fee7bc2e16c99bb43fd6c8a9cf81771d06a245ce4"
+        "prev_hash": "b302cb04cd06d72dcc065405802a214f832fb92a1216339f3cbdda4274c2f33b",
+        "entry_hash": "fae197055ae5cb53dcb675a765b6f534e5e3219171f36376aae42e1cae75e639"
       },
       {
         "sequence": 13,
-        "timestamp": "2026-08-25T18:08:12.212230+00:00",
+        "timestamp": "2026-08-26T07:34:30.659131+00:00",
         "txn_id": "pay_urbanthread_0203",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1843,12 +1732,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "1d8738ad1b79c95be378234fee7bc2e16c99bb43fd6c8a9cf81771d06a245ce4",
-        "entry_hash": "b2b16e311bcb55f670a4f73ad091b8451e6bfde3c509f8184efa3428deb15615"
+        "prev_hash": "fae197055ae5cb53dcb675a765b6f534e5e3219171f36376aae42e1cae75e639",
+        "entry_hash": "87832c64129b616e2c9d8ed053b68aaade090c9e62e2ced718e248e8d8f52c86"
       },
       {
         "sequence": 14,
-        "timestamp": "2026-08-25T18:08:12.212230+00:00",
+        "timestamp": "2026-08-26T07:34:30.659131+00:00",
         "txn_id": "pay_urbanthread_0278",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1862,12 +1751,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "b2b16e311bcb55f670a4f73ad091b8451e6bfde3c509f8184efa3428deb15615",
-        "entry_hash": "3242023252581c2e6eecdb024369717983014f80dc70b8a2b1287243460f5465"
+        "prev_hash": "87832c64129b616e2c9d8ed053b68aaade090c9e62e2ced718e248e8d8f52c86",
+        "entry_hash": "32dbaae980614961f49cef321455bf658e8a7f0332e2c88e509269925f6d27a9"
       },
       {
         "sequence": 15,
-        "timestamp": "2026-08-25T18:08:12.212230+00:00",
+        "timestamp": "2026-08-26T07:34:30.659131+00:00",
         "txn_id": "pay_urbanthread_0756",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1881,12 +1770,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "3242023252581c2e6eecdb024369717983014f80dc70b8a2b1287243460f5465",
-        "entry_hash": "92b36d3e64f7b8dd5b6c82ff8daf771d0984d1b6f782700ce44cef9dc4f0b11d"
+        "prev_hash": "32dbaae980614961f49cef321455bf658e8a7f0332e2c88e509269925f6d27a9",
+        "entry_hash": "13191d8d40ae75cfed8f8804e9690ec94fc79189c9161bff04b802dcfcbc45c2"
       },
       {
         "sequence": 16,
-        "timestamp": "2026-08-25T18:08:12.212230+00:00",
+        "timestamp": "2026-08-26T07:34:30.659131+00:00",
         "txn_id": "pay_urbanthread_0275",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1900,12 +1789,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "92b36d3e64f7b8dd5b6c82ff8daf771d0984d1b6f782700ce44cef9dc4f0b11d",
-        "entry_hash": "3c12a4b2bda60cef7da075ecdaba54d0aa88c81c0425fd526fbb6c32bde444ea"
+        "prev_hash": "13191d8d40ae75cfed8f8804e9690ec94fc79189c9161bff04b802dcfcbc45c2",
+        "entry_hash": "021852de557fe585913cba252ea545d4e81d889bac2eff026f1b3832c0a277aa"
       },
       {
         "sequence": 17,
-        "timestamp": "2026-08-25T18:08:12.213229+00:00",
+        "timestamp": "2026-08-26T07:34:30.659131+00:00",
         "txn_id": "pay_urbanthread_0558",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1919,12 +1808,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "3c12a4b2bda60cef7da075ecdaba54d0aa88c81c0425fd526fbb6c32bde444ea",
-        "entry_hash": "bfc50ca3e6090fdcb1f94a64b890a0fe70ce30b13c574971b3de75e6c5a70ec5"
+        "prev_hash": "021852de557fe585913cba252ea545d4e81d889bac2eff026f1b3832c0a277aa",
+        "entry_hash": "cb9a5240817a8db08ee4ddcb8b9789f276f76d098f248be11025008612643f76"
       },
       {
         "sequence": 18,
-        "timestamp": "2026-08-25T18:08:12.213229+00:00",
+        "timestamp": "2026-08-26T07:34:30.659131+00:00",
         "txn_id": "pay_urbanthread_0437",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1938,12 +1827,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "bfc50ca3e6090fdcb1f94a64b890a0fe70ce30b13c574971b3de75e6c5a70ec5",
-        "entry_hash": "799dfd76251a8af7408db4dc69d7e1e18f8f1dc6c396dd734b7dc56728bbaa91"
+        "prev_hash": "cb9a5240817a8db08ee4ddcb8b9789f276f76d098f248be11025008612643f76",
+        "entry_hash": "48474dbddd4988478bd471696ebb8b5cc17fae7ac8e7342d733bf07e5120df30"
       },
       {
         "sequence": 19,
-        "timestamp": "2026-08-25T18:08:12.213229+00:00",
+        "timestamp": "2026-08-26T07:34:30.659131+00:00",
         "txn_id": "pay_urbanthread_0810",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1957,12 +1846,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "799dfd76251a8af7408db4dc69d7e1e18f8f1dc6c396dd734b7dc56728bbaa91",
-        "entry_hash": "edd9b215184bf31d6447336483996ec745f93b35490305407fe7b0d349440ee0"
+        "prev_hash": "48474dbddd4988478bd471696ebb8b5cc17fae7ac8e7342d733bf07e5120df30",
+        "entry_hash": "48b278763ef89401cf331b994f59365795d52fe2c8c985686718438ea365a54e"
       },
       {
         "sequence": 20,
-        "timestamp": "2026-08-25T18:08:12.213229+00:00",
+        "timestamp": "2026-08-26T07:34:30.660097+00:00",
         "txn_id": "pay_urbanthread_0068",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1976,12 +1865,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "edd9b215184bf31d6447336483996ec745f93b35490305407fe7b0d349440ee0",
-        "entry_hash": "558987d419adb9d854d8d503e8c61abaf2974ddd748fd913625991496fb27d12"
+        "prev_hash": "48b278763ef89401cf331b994f59365795d52fe2c8c985686718438ea365a54e",
+        "entry_hash": "f40d6bcc621b026a8c056e7439abd0a3f5de657cdd0716cd1b0c214482e5f1cf"
       },
       {
         "sequence": 21,
-        "timestamp": "2026-08-25T18:08:12.213229+00:00",
+        "timestamp": "2026-08-26T07:34:30.660097+00:00",
         "txn_id": "pay_urbanthread_0175",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1995,11 +1884,24 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "558987d419adb9d854d8d503e8c61abaf2974ddd748fd913625991496fb27d12",
-        "entry_hash": "1714dd5cb05ed43e8709673ff0bfb453829984b1ab5436635f06d324e4632d9e"
+        "prev_hash": "f40d6bcc621b026a8c056e7439abd0a3f5de657cdd0716cd1b0c214482e5f1cf",
+        "entry_hash": "841aaf8674a24dd2f6e4619183673902d2c9da03e9555a8b57703ad6014b07d2"
       }
     ],
     "exceptions": {
+      "unrecoverable_by_class": [
+        {
+          "error_class": "auth_failure",
+          "count": 14,
+          "total_paise": 9111195
+        },
+        {
+          "error_class": "hard_decline",
+          "count": 22,
+          "total_paise": 5898597
+        }
+      ],
+      "unrecoverable_sample_size": 36,
       "unrecoverable_transactions": [
         {
           "txn_id": "pay_urbanthread_0011",
