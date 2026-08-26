@@ -250,6 +250,27 @@ def true_value(
     return (num / den - s_true) if den > 0 else 0.0
 
 
+#: Decimal places the analytic ground truth is pinned to.
+#:
+#: A Shapley value is a weighted alternating sum over 16 coalition values, so
+#: a factor that truly contributes nothing arrives as cancellation noise near
+#: 1e-14 rather than as 0. The last bit of that noise follows the platform's
+#: libm, which made the committed sweep differ between Windows and Linux while
+#: every figure derived from it stayed byte-identical. Nine decimal places is
+#: nine orders below the +/-0.57 points this method actually resolves, so this
+#: removes the noise and cannot touch a signal.
+ANALYTIC_DP = 9
+
+
+def quantise(x: float) -> float:
+    """Round to the analytic grid, and never emit a negative zero.
+
+    The `+ 0.0` matters: round(-1e-14, 9) is -0.0, which serialises as "-0.0"
+    and would reintroduce exactly the instability this is here to remove.
+    """
+    return round(x, ANALYTIC_DP) + 0.0
+
+
 def analytic_shapley(
     joint: dict[Cell, float],
     cohort: Cohort,
@@ -273,12 +294,12 @@ def analytic_shapley(
                 S = frozenset(combo)
                 w = factorial(r) * factorial(n - r - 1) / factorial(n)
                 total += w * (v[S | {i}] - v[S])
-        phi[i] = total * 100.0
+        phi[i] = quantise(total * 100.0)
     coalitions = {
-        ("+".join(f for f in FACTORS if f in S) or "{}"): val * 100.0
+        ("+".join(f for f in FACTORS if f in S) or "{}"): quantise(val * 100.0)
         for S, val in v.items()
     }
-    return phi, v[frozenset(FACTORS)] * 100.0, coalitions
+    return phi, quantise(v[frozenset(FACTORS)] * 100.0), coalitions
 
 
 # --------------------------------------------------------------------------
@@ -436,7 +457,7 @@ def _realised_rho(joint: dict[Cell, float], couple: tuple[str, str] | None,
     va, vb = exx - ex * ex, eyy - ey * ey
     if va <= 0 or vb <= 0:
         return 0.0
-    return cov / (va ** 0.5 * vb ** 0.5)
+    return quantise(cov / (va ** 0.5 * vb ** 0.5))
 
 
 # --------------------------------------------------------------------------
