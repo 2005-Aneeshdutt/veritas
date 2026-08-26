@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { ReactNode } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import { ReactNode, useEffect, useState } from "react";
 import { ThemeToggle } from "@/components/Theme";
 
 export function Logo({ size = "sm" }: { size?: "sm" | "lg" }) {
@@ -57,9 +57,70 @@ export function TopBar({ right }: { right?: ReactNode }) {
         <div className="ml-auto flex items-center gap-2">
           {right}
           <ThemeToggle />
+          <Account />
         </div>
       </div>
     </header>
+  );
+}
+
+/** Who is signed in, and the way out. */
+function Account() {
+  const router = useRouter();
+  const [who, setWho] = useState<string | null>(null);
+  const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    try {
+      setWho(localStorage.getItem("rd-user"));
+    } catch {
+      /* private mode: just show the generic avatar */
+    }
+  }, []);
+
+  function signOut() {
+    try {
+      localStorage.removeItem("rd-user");
+    } catch {
+      /* nothing to clear */
+    }
+    router.push("/");
+  }
+
+  const initial = (who || "?").trim().charAt(0).toUpperCase();
+
+  return (
+    <div className="relative">
+      <button
+        onClick={() => setOpen(!open)}
+        aria-label="Account"
+        className="w-8 h-8 rounded-full border border-line bg-raised text-xs font-semibold
+                   text-muted hover:text-ink hover:border-edge transition-colors"
+      >
+        {initial}
+      </button>
+
+      {open && (
+        <>
+          <div className="fixed inset-0 z-40" onClick={() => setOpen(false)} />
+          <div
+            className="absolute right-0 top-10 z-50 w-56 card p-1 shadow-lift animate-rise"
+          >
+            <div className="px-3 py-2 border-b border-line">
+              <div className="text-xs text-muted">Signed in as</div>
+              <div className="text-sm truncate">{who || "a guest"}</div>
+            </div>
+            <button
+              onClick={signOut}
+              className="w-full text-left px-3 py-2 text-sm rounded-md
+                         hover:bg-raised transition-colors"
+            >
+              Sign out
+            </button>
+          </div>
+        </>
+      )}
+    </div>
   );
 }
 
