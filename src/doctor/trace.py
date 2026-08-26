@@ -85,6 +85,9 @@ class Tracer:
         self.traces: list[NodeTrace] = []
         self._seq = 0
         self.listeners: list = []
+        #: Sub-step listeners. Kept separate from `listeners` because steps are
+        #: live telemetry only -- see `step`.
+        self.step_listeners: list = []
 
     def start(self, node: str, kind: NodeKind = "deterministic", **kw) -> NodeTrace:
         t = NodeTrace(
@@ -116,6 +119,31 @@ class Tracer:
         """
         t = self.start(node)
         return self.finish(t, status="skipped", output_summary={"reason": why})
+
+    def step(self, node: str, message: str, i: int = 0, n: int = 0, **detail) -> None:
+        """Report progress from inside a node, while it is still running.
+
+        Deliberately NOT stored on the record. These describe work in flight --
+        coalition 7 of 16, action 41 of 187 -- and persisting them would bloat
+        every run and put a moving target inside the reproducibility check for
+        no gain. A replay reconstructs them from the finished trace instead.
+
+        This exists so the live view shows the work actually happening. The
+        alternative -- pacing the UI with timers -- would be theatre, and the
+        first person to ask "is that real?" would be right to.
+        """
+        if not self.step_listeners:
+            return
+        payload = {
+            "run_id": self.run_id,
+            "node": node,
+            "message": message,
+            "i": i,
+            "n": n,
+            "detail": detail,
+        }
+        for fn in self.step_listeners:
+            fn(payload)
 
     def _emit(self, t: NodeTrace) -> None:
         for fn in self.listeners:
