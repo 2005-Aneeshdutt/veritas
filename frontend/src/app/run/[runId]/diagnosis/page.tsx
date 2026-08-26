@@ -6,10 +6,10 @@ import { FACTOR_DOCS, GLOSSARY } from "@/lib/explain";
 import { RunRecord, inr, pts } from "@/lib/types";
 
 const FACTOR_COLOR: Record<string, string> = {
-  bank: "#60A5FA",
-  method: "#A78BFA",
-  hour: "#E5B94E",
-  amount_band: "#34D399",
+  bank: "rgb(var(--sky))",
+  method: "rgb(var(--iris))",
+  hour: "rgb(var(--brand))",
+  amount_band: "rgb(var(--mint))",
 };
 
 export default function DiagnosisPage({ params }: { params: { runId: string } }) {
@@ -78,7 +78,7 @@ export default function DiagnosisPage({ params }: { params: { runId: string } })
               const doc = FACTOR_DOCS[f.factor];
               const w = (Math.abs(f.points) / maxAbs) * 100;
               return (
-                <div key={f.factor} className="glass-raised p-4">
+                <div key={f.factor} className="card-raised p-4">
                   <div className="flex items-start gap-4">
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 flex-wrap">
@@ -92,11 +92,11 @@ export default function DiagnosisPage({ params }: { params: { runId: string } })
                             not identified <Info text={GLOSSARY.not_identified} />
                           </span>
                         ) : f.inside_error_bar ? (
-                          <span className="chip bg-amber/10 text-amber border-amber/30">
+                          <span className="chip bg-amber-soft text-amber border-amber/30">
                             inside error bar <Info text={GLOSSARY.inside_error_bar} />
                           </span>
                         ) : (
-                          <span className="chip bg-mint/10 text-mint border-mint/30">
+                          <span className="chip bg-mint-soft text-mint border-mint/30">
                             resolved
                           </span>
                         )}
@@ -121,7 +121,7 @@ export default function DiagnosisPage({ params }: { params: { runId: string } })
                     </div>
                   </div>
 
-                  <div className="mt-3 h-1.5 rounded-full bg-white/[0.05] overflow-hidden">
+                  <div className="mt-3 h-1.5 rounded-full bg-raised overflow-hidden">
                     <div
                       className="h-full rounded-full transition-[width] duration-700"
                       style={{
@@ -136,7 +136,7 @@ export default function DiagnosisPage({ params }: { params: { runId: string } })
             })}
 
             {/* residual — visually distinct on purpose */}
-            <div className="glass-raised p-4 hatched">
+            <div className="card-raised p-4 hatched">
               <div className="flex items-center justify-between">
                 <div>
                   <div className="text-sm font-semibold text-muted flex items-center">
@@ -153,7 +153,7 @@ export default function DiagnosisPage({ params }: { params: { runId: string } })
             </div>
 
             {/* process gap — alongside, never inside */}
-            <div className="glass-raised p-4 border-l-2 border-l-mint/50">
+            <div className="card-raised p-4 border-l-2 border-l-mint/50">
               <div className="flex items-center justify-between">
                 <div>
                   <div className="text-sm font-semibold flex items-center">
@@ -201,16 +201,16 @@ export default function DiagnosisPage({ params }: { params: { runId: string } })
             />
             <div className="grid md:grid-cols-2 gap-3">
               {diag.hypotheses.map((h: any, i: number) => (
-                <div key={i} className="glass-raised p-4 space-y-2.5">
+                <div key={i} className="card-raised p-4 space-y-2.5">
                   <div className="flex items-center gap-2 flex-wrap">
-                    <span className="num text-xs text-gold">{h.root_cause_label}</span>
+                    <span className="num text-xs text-brand">{h.root_cause_label}</span>
                     <span
                       className={`chip ml-auto ${
                         h.action_type === "auto_execute"
-                          ? "bg-mint/10 text-mint border-mint/30"
+                          ? "bg-mint-soft text-mint border-mint/30"
                           : h.action_type === "merchant_action"
-                          ? "bg-amber/10 text-amber border-amber/30"
-                          : "bg-white/[0.04] text-muted border-line"
+                          ? "bg-amber-soft text-amber border-amber/30"
+                          : "bg-raised text-muted border-line"
                       }`}
                     >
                       {h.action_type.replace("_", " ")}
@@ -224,7 +224,7 @@ export default function DiagnosisPage({ params }: { params: { runId: string } })
                           key={j}
                           className="text-[11px] text-muted font-mono flex gap-1.5"
                         >
-                          <span className="text-gold shrink-0">·</span>
+                          <span className="text-brand shrink-0">·</span>
                           <span>{e}</span>
                         </li>
                       ))}
@@ -308,7 +308,7 @@ export default function DiagnosisPage({ params }: { params: { runId: string } })
             right={
               <button
                 onClick={() => setOpenCoalitions(!openCoalitions)}
-                className="glass-raised px-3 py-1.5 text-xs hover:border-gold/40 transition-colors"
+                className="card-raised px-3 py-1.5 text-xs hover:border-brand/40 transition-colors"
               >
                 {openCoalitions ? "hide" : "show"} the numbers
               </button>
@@ -321,7 +321,7 @@ export default function DiagnosisPage({ params }: { params: { runId: string } })
                 .map(([k, v]: any) => (
                   <div
                     key={k}
-                    className="glass-raised px-3 py-2 flex justify-between gap-2 text-xs"
+                    className="card-raised px-3 py-2 flex justify-between gap-2 text-xs"
                   >
                     <span className="text-muted truncate font-mono">
                       v({k === "{}" ? "∅" : k})
