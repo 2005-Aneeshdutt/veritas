@@ -123,21 +123,21 @@ export default function AuditPage({ params }: { params: { runId: string } }) {
             <button
               onClick={() => verify()}
               disabled={busy}
-              className="px-4 py-2 rounded-lg bg-mint/15 text-mint border border-mint/40
+              className="px-4 py-2 rounded-lg bg-mint-soft text-mint border border-mint/40
                          text-sm font-semibold hover:bg-mint/25 transition-colors disabled:opacity-50"
             >
               {busy ? "verifying…" : "✓ Verify chain"}
             </button>
             <button
               onClick={tamper}
-              className="px-4 py-2 rounded-lg bg-rose/15 text-rose border border-rose/40
+              className="px-4 py-2 rounded-lg bg-rose-soft text-rose border border-rose/40
                          text-sm font-semibold hover:bg-rose/25 transition-colors"
             >
               ⚡ Tamper with entry 4
             </button>
             <button
               onClick={reset}
-              className="px-4 py-2 rounded-lg glass-raised text-sm text-muted
+              className="px-4 py-2 rounded-lg card-raised text-sm text-muted
                          hover:text-ink transition-colors"
             >
               reset
@@ -148,8 +148,8 @@ export default function AuditPage({ params }: { params: { runId: string } }) {
                 className={`ml-auto px-4 py-2 rounded-lg border text-sm font-mono
                   animate-rise ${
                     result.ok
-                      ? "border-mint/40 bg-mint/10 text-mint"
-                      : "border-rose/40 bg-rose/10 text-rose"
+                      ? "border-mint/40 bg-mint-soft text-mint"
+                      : "border-rose/40 bg-rose-soft text-rose"
                   }`}
               >
                 {result.ok ? "✓" : "✗"} {result.msg}
@@ -202,7 +202,7 @@ export default function AuditPage({ params }: { params: { runId: string } }) {
           </div>
           <div className="grid sm:grid-cols-3 gap-3 mt-4">
             {Object.entries(r.gate.decisions).map(([k, v]: any) => (
-              <div key={k} className="glass-raised p-3">
+              <div key={k} className="card-raised p-3">
                 <div className="eyebrow flex items-center">
                   {k.replace("_", " ")}
                   {k === "step_up" && <Info text={GLOSSARY.step_up} />}
@@ -231,8 +231,8 @@ export default function AuditPage({ params }: { params: { runId: string } }) {
             <span className="eyebrow">hash-chained ledger</span>
             <a
               href={`/api/run/${params.runId}/ledger.csv`}
-              className="ml-auto glass-raised px-2.5 py-1 text-[11px]
-                         hover:border-gold/40 transition-colors"
+              className="ml-auto card-raised px-2.5 py-1 text-[11px]
+                         hover:border-brand/40 transition-colors"
             >
               CSV
             </a>
@@ -243,7 +243,7 @@ export default function AuditPage({ params }: { params: { runId: string } }) {
                   onClick={() => setFilter(f)}
                   className={`px-2.5 py-1 rounded text-[11px] font-mono transition-colors ${
                     filter === f
-                      ? "bg-gold/15 text-gold border border-gold/30"
+                      ? "bg-brand-soft text-brand border border-brand/30"
                       : "text-muted hover:text-ink border border-transparent"
                   }`}
                 >
@@ -264,10 +264,10 @@ export default function AuditPage({ params }: { params: { runId: string } }) {
                     className={`w-full text-left px-5 py-2.5 font-mono text-[11px]
                       transition-colors ${
                         broken
-                          ? "bg-rose/[0.07]"
+                          ? "bg-rose-soft"
                           : isOpen
-                          ? "bg-gold/[0.06]"
-                          : "hover:bg-white/[0.03]"
+                          ? "bg-brand-soft"
+                          : "hover:bg-raised"
                       }`}
                   >
                     <div className="flex items-center gap-2.5 flex-wrap">
@@ -293,12 +293,12 @@ export default function AuditPage({ params }: { params: { runId: string } }) {
                       <span className="text-faint">{e.gate_reason}</span>
                       <span className="ml-auto text-muted">{e.outcome}</span>
                       {broken && <span className="chip-warn">invalid</span>}
-                      <span className="text-gold w-3">{isOpen ? "-" : "+"}</span>
+                      <span className="text-brand w-3">{isOpen ? "-" : "+"}</span>
                     </div>
                   </button>
 
                   {isOpen && (
-                    <div className="px-5 pb-4 pt-1 bg-void/40 animate-rise space-y-3">
+                    <div className="px-5 pb-4 pt-1 bg-subtle animate-rise space-y-3">
                       <div className="grid sm:grid-cols-2 gap-3">
                         <LedgerField k="payment" v={e.txn_id} />
                         <LedgerField
@@ -328,12 +328,12 @@ export default function AuditPage({ params }: { params: { runId: string } }) {
                         </div>
                       </div>
 
-                      <div className="glass-raised p-3 space-y-1">
+                      <div className="card-raised p-3 space-y-1">
                         <div className="eyebrow">hash chain</div>
                         <div className="text-[10px] text-faint break-all">
                           prev &nbsp;{e.prev_hash}
                         </div>
-                        <div className="text-[10px] text-gold break-all">
+                        <div className="text-[10px] text-brand break-all">
                           this &nbsp;{e.entry_hash}
                         </div>
                       </div>
@@ -363,7 +363,7 @@ export default function AuditPage({ params }: { params: { runId: string } }) {
             title="What this chain does and does not prove"
           />
           <div className="grid sm:grid-cols-2 gap-3 text-sm">
-            <div className="glass-raised p-3">
+            <div className="card-raised p-3">
               <div className="text-mint text-xs font-semibold mb-1">✓ proves integrity</div>
               <p className="text-xs text-muted leading-relaxed">
                 The log has not been edited after the fact. Any change to any historical
@@ -371,7 +371,7 @@ export default function AuditPage({ params }: { params: { runId: string } }) {
                 yourself.
               </p>
             </div>
-            <div className="glass-raised p-3">
+            <div className="card-raised p-3">
               <div className="text-amber text-xs font-semibold mb-1">✗ does not prove authenticity</div>
               <p className="text-xs text-muted leading-relaxed">
                 Signing the chain head with the merchant key would add that. It is
@@ -434,7 +434,7 @@ function Sum({
   info?: string;
 }) {
   return (
-    <div className="glass p-4">
+    <div className="card p-4">
       <div className="eyebrow flex items-center">
         {label}
         {info && <Info text={info} />}
