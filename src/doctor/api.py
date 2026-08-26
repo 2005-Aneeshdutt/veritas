@@ -278,8 +278,15 @@ def _sse(event: str, data) -> str:
 
 
 @app.get("/api/run/{merchant}/stream")
-async def stream(merchant: str, calibration: str = "central"):
-    """Live SSE of NodeTrace objects as the graph executes."""
+async def stream(merchant: str, calibration: str = "central", pace_ms: float = 0.0):
+    """Live SSE of NodeTrace objects and sub-steps as the graph executes.
+
+    `pace_ms` throttles the DRAIN, never the work. The graph runs at full speed
+    on its own thread and the queue holds everything it emits; pacing only
+    decides how fast the browser is fed. Nothing is invented, delayed or
+    reordered -- a 130-step run genuinely produced 130 steps, and at pace_ms=0
+    they all arrive at once, as they did before.
+    """
     if merchant not in MERCHANTS:
         raise HTTPException(400, "unknown merchant: %s" % merchant)
 
@@ -295,6 +302,9 @@ async def stream(merchant: str, calibration: str = "central"):
             def listen(t):
                 q.put(("trace", json.loads(t.model_dump_json())))
 
+            def listen_step(p):
+                q.put(("step", p))
+
             from doctor.trace import Tracer
 
             orig_init = Tracer.__init__
@@ -302,6 +312,7 @@ async def stream(merchant: str, calibration: str = "central"):
             def patched(self, run_id):
                 orig_init(self, run_id)
                 self.listeners.append(listen)
+                self.step_listeners.append(listen_step)
 
             Tracer.__init__ = patched  # type: ignore[method-assign]
             try:
@@ -318,6 +329,8 @@ async def stream(merchant: str, calibration: str = "central"):
 
     threading.Thread(target=worker, daemon=True).start()
 
+    delay = max(0.0, min(pace_ms, 200.0)) / 1000.0
+
     async def gen():
         yield _sse("start", {"merchant": merchant, "commit": git_commit()})
         while True:
@@ -329,6 +342,8 @@ async def stream(merchant: str, calibration: str = "central"):
             if kind is None:
                 break
             yield _sse(kind, payload)
+            if delay and kind == "step":
+                await asyncio.sleep(delay)
 
     return StreamingResponse(
         gen(),
