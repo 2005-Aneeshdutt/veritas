@@ -67,6 +67,12 @@ export function ApplyFix({
   const [shown, setShown] = useState(0);
   const [result, setResult] = useState<Result | null>(null);
   const [done, setDone] = useState<Record<string, Result>>({});
+  const [batch, setBatch] = useState<{
+    at: number;
+    total: number;
+    label: string;
+    results: Result[];
+  } | null>(null);
   const timers = useRef<any[]>([]);
 
   useEffect(() => () => timers.current.forEach(clearTimeout), []);
@@ -100,10 +106,116 @@ export function ApplyFix({
     );
   }
 
+  /**
+   * Approve every proposed fix, one after another.
+   *
+   * Sequential rather than parallel, and each group is still gated
+   * individually against the signed mandate -- "apply everything" approves
+   * the queue, it does not widen the agent's authority. Anything the kernel
+   * denies stays denied, and the run-off shows exactly that.
+   */
+  async function applyAll() {
+    timers.current.forEach(clearTimeout);
+    timers.current = [];
+    setActive(null);
+    setResult(null);
+
+    const results: Result[] = [];
+    for (let i = 0; i < groups.length; i++) {
+      setBatch({ at: i, total: groups.length, label: groups[i].title, results });
+      const r = await fetch(
+        `/api/run/${runId}/apply?group_index=${i}&confirmed=false`,
+        { method: "POST" }
+      );
+      const res: Result = await r.json();
+      results.push(res);
+      setDone((d) => ({ ...d, [res.title]: res }));
+
+      // Anything the kernel held for the merchant is confirmed in a second
+      // pass, because that is what approving the whole queue means.
+      if (res.stepped_up > 0 && !res.already_applied) {
+        const c = await fetch(
+          `/api/run/${runId}/apply?group_index=${i}&confirmed=true`,
+          { method: "POST" }
+        );
+        const confirmed: Result = await c.json();
+        results.push(confirmed);
+        setDone((d) => ({ ...d, [confirmed.title]: confirmed }));
+      }
+    }
+    setBatch({ at: groups.length, total: groups.length, label: "", results });
+    onApplied?.();
+  }
+
   if (!groups?.length) return null;
+
+  const running = batch !== null && batch.at < batch.total;
+  const totals = (batch?.results ?? []).reduce(
+    (a, r) => ({
+      recovered: a.recovered + (r.recovered_paise || 0),
+      executed: a.executed + (r.executed || 0),
+      denied: a.denied + (r.denied || 0),
+      entries: a.entries + (r.ledger_added || 0),
+      chain: a.chain && (r.chain_verified || r.already_applied),
+    }),
+    { recovered: 0, executed: 0, denied: 0, entries: 0, chain: true }
+  );
 
   return (
     <div className="space-y-3">
+      {/* run the whole queue */}
+      <div className="card p-4 flex items-center gap-4 flex-wrap">
+        <div className="min-w-0 flex-1">
+          <div className="text-sm font-semibold">
+            {groups.length} fixes proposed
+          </div>
+          <div className="text-xs text-muted mt-0.5">
+            {running
+              ? `Gating ${batch!.label} — ${batch!.at + 1} of ${batch!.total}`
+              : batch
+              ? "Queue complete. Every action was gated individually."
+              : "Approve the queue. Each action is still checked against your mandate one by one."}
+          </div>
+        </div>
+
+        {batch && !running && (
+          <div className="flex items-center gap-5 text-right shrink-0">
+            <div>
+              <div className="num text-sm text-mint">
+                {inr(totals.recovered, { compact: true })}
+              </div>
+              <div className="eyebrow">recovered</div>
+            </div>
+            <div>
+              <div className="num text-sm text-rose">{totals.denied}</div>
+              <div className="eyebrow">denied</div>
+            </div>
+            <div>
+              <div className="num text-sm">{totals.entries}</div>
+              <div className="eyebrow">ledger rows</div>
+            </div>
+            <div>
+              <div className={`text-sm ${totals.chain ? "text-mint" : "text-rose"}`}>
+                {totals.chain ? "verified" : "BROKEN"}
+              </div>
+              <div className="eyebrow">chain</div>
+            </div>
+          </div>
+        )}
+
+        <button
+          onClick={applyAll}
+          disabled={running}
+          className="btn-primary shrink-0"
+        >
+          {running
+            ? `Applying ${batch!.at + 1}/${batch!.total}…`
+            : batch
+            ? "Re-run the queue"
+            : "Apply everything"}
+        </button>
+      </div>
+
       {groups.map((g, i) => {
         const finished = done[g.title];
         const running = active === i && !result;
