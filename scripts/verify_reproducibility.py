@@ -33,6 +33,9 @@ ROOT = Path(__file__).resolve().parents[1]
 #: Results whose content legitimately varies between machines.
 TIMING_DEPENDENT = {"scale_benchmark.json"}
 
+#: Enough to diagnose a break without burying the log.
+MAX_DIFF_FILES = 4
+
 STEPS: list[tuple[str, list[str]]] = [
     ("regenerate demo merchants", ["scripts/generate_batch.py", "--demo"]),
     ("regenerate validation sweep", ["scripts/generate_batch.py", "--sweep", "200"]),
@@ -92,9 +95,16 @@ def main() -> int:
         print("")
         print("Either the code changed without the results being re-committed,")
         print("or something non-deterministic crept into the pipeline.")
+        print("")
+        # Show what moved, not just where. Telling someone that
+        # merchant_074.json changed without showing the value is the
+        # difference between a check they can act on and one they cannot.
         subprocess.run(
-            ["git", "--no-pager", "diff", "--stat", "--", "evals/results"], cwd=ROOT
+            ["git", "--no-pager", "diff", "--unified=1", "--"] + diffs[:MAX_DIFF_FILES],
+            cwd=ROOT,
         )
+        if len(diffs) > MAX_DIFF_FILES:
+            print("... and %d more file(s)" % (len(diffs) - MAX_DIFF_FILES))
         return 1
 
     print("REPRODUCIBLE -- every committed figure regenerated identically.")
