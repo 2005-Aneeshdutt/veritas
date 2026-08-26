@@ -2,13 +2,14 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { TopBar } from "@/components/Chrome";
 import { Card, Eyebrow, Loading, Stagger, Ticker } from "@/components/ui";
 import { inr } from "@/lib/types";
 
 const SEV: Record<string, string> = {
-  critical: "text-rose border-rose/30 bg-rose/[0.07]",
-  high: "text-amber border-amber/30 bg-amber/[0.07]",
-  moderate: "text-muted border-line bg-white/[0.03]",
+  critical: "text-rose border-rose/30 bg-rose-soft",
+  high: "text-amber border-amber/30 bg-amber-soft",
+  moderate: "text-muted border-line bg-raised",
 };
 
 export default function DriftPage() {
@@ -48,11 +49,11 @@ export default function DriftPage() {
         {/* headline */}
         <Stagger i={1}>
           <Card className="!p-0 overflow-hidden">
-            <div className="bg-gold-sheen px-6 py-6 flex flex-wrap items-end gap-x-10 gap-y-4">
+            <div className="bg-brand-soft px-6 py-6 flex flex-wrap items-end gap-x-10 gap-y-4">
               <div>
                 <Eyebrow>Cost of this quarter&apos;s degradation, nationally</Eyebrow>
                 <div className="flex items-baseline gap-3 mt-2">
-                  <span className="text-5xl font-display font-bold text-gold leading-none">
+                  <span className="text-5xl font-display font-bold text-brand leading-none">
                     ₹
                     <Ticker
                       value={d.total_national_impact_paise / 100 / 1e7}
@@ -137,7 +138,7 @@ export default function DriftPage() {
                   <Link
                     key={i}
                     href={`/run/${e.run_id}`}
-                    className="glass-raised p-3 flex items-center gap-4 hover:border-gold/40
+                    className="card-raised p-3 flex items-center gap-4 hover:border-brand/40
                                transition-colors group"
                   >
                     <span className="w-40 shrink-0 text-sm font-medium truncate">
@@ -152,14 +153,14 @@ export default function DriftPage() {
                     <span className="num text-sm text-amber w-24 text-right shrink-0">
                       {inr(e.exposure_paise)}/mo
                     </span>
-                    <span className="text-gold group-hover:translate-x-1 transition-transform">
+                    <span className="text-brand group-hover:translate-x-1 transition-transform">
                       →
                     </span>
                   </Link>
                 ))}
               </div>
             ) : (
-              <div className="glass-raised p-4 mt-4 text-sm text-mint">
+              <div className="card-raised p-4 mt-4 text-sm text-mint">
                 ✓ None of the 8 merchants routes materially through a degrading
                 issuer this quarter. Reported as a clean result rather than padded
                 with a warning nobody needs to act on.
@@ -216,7 +217,7 @@ function BankRow({
 }) {
   const w = (Math.abs(b.delta_pts) / maxDelta) * 100;
   return (
-    <div className="glass-raised p-3">
+    <div className="card-raised p-3">
       <div className="flex items-center gap-4 flex-wrap">
         <span className="w-56 shrink-0 text-sm font-medium truncate">{b.bank}</span>
 
@@ -233,7 +234,7 @@ function BankRow({
           {b.delta_pts.toFixed(2)} pts
         </span>
 
-        <div className="flex-1 min-w-[80px] h-1.5 rounded-full bg-white/[0.05] overflow-hidden">
+        <div className="flex-1 min-w-[80px] h-1.5 rounded-full bg-raised overflow-hidden">
           <div
             className={`h-full rounded-full ${worse ? "bg-rose/70" : "bg-mint/70"}`}
             style={{ width: `${w}%` }}
@@ -273,32 +274,9 @@ function BankRow({
 
 function Shell({ children }: { children: React.ReactNode }) {
   return (
-    <div className="min-h-screen">
-      <div
-        className="pointer-events-none fixed inset-0 bg-grid opacity-40"
-        style={{
-          backgroundSize: "56px 56px",
-          maskImage: "radial-gradient(900px 500px at 50% 0%, #000, transparent 70%)",
-        }}
-      />
-      <nav className="sticky top-0 z-40 border-b border-line bg-void/85 backdrop-blur-xl">
-        <div className="max-w-[1400px] mx-auto px-6 h-14 flex items-center gap-4">
-          <Link href="/" className="flex items-center gap-2 group">
-            <span className="w-6 h-6 rounded-md bg-gradient-to-br from-gold to-gold-dim
-                             grid place-items-center text-void text-xs font-bold">
-              R
-            </span>
-            <span className="font-display font-bold text-sm group-hover:text-gold transition-colors">
-              Revenue Doctor
-            </span>
-          </Link>
-          <Link href="/portfolio" className="text-xs link-quiet">
-            book view
-          </Link>
-          <span className="chip-neutral">ecosystem drift</span>
-        </div>
-      </nav>
-      <div className="relative max-w-[1400px] mx-auto px-6 py-7">{children}</div>
+    <div className="min-h-screen bg-canvas">
+      <TopBar />
+      <main className="max-w-[1400px] mx-auto px-6 py-8">{children}</main>
     </div>
   );
 }
