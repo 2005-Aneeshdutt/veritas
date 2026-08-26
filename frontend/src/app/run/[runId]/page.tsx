@@ -19,10 +19,10 @@ import { FACTOR_DOCS, GLOSSARY } from "@/lib/explain";
 import { RunRecord, inr, pts } from "@/lib/types";
 
 const FACTOR_COLOR: Record<string, string> = {
-  bank: "#60A5FA",
-  method: "#A78BFA",
-  hour: "#E5B94E",
-  amount_band: "#34D399",
+  bank: "rgb(var(--sky))",
+  method: "rgb(var(--iris))",
+  hour: "rgb(var(--brand))",
+  amount_band: "rgb(var(--mint))",
 };
 
 export default function Overview({ params }: { params: { runId: string } }) {
@@ -78,9 +78,9 @@ export default function Overview({ params }: { params: { runId: string } }) {
     <div className="space-y-7">
       {/* ───────────────────────────────────────────── provenance */}
       <Stagger>
-        <div className="glass px-4 py-2.5 flex flex-wrap items-center gap-x-3 gap-y-1
+        <div className="card px-4 py-2.5 flex flex-wrap items-center gap-x-3 gap-y-1
                         font-mono text-[11px] text-muted">
-          <span className="text-gold">{rec.run_id}</span>
+          <span className="text-brand">{rec.run_id}</span>
           <Dot /> <span>{rec.merchant_name}</span>
           <Dot /> <span>MCC {rec.mcc}</span>
           <Dot /> <span>seed {rec.seed}</span>
@@ -96,7 +96,7 @@ export default function Overview({ params }: { params: { runId: string } }) {
           {rec.used_stubs && <span className="chip-warn ml-1">stubs — no key</span>}
           <button
             onClick={copyCmd}
-            className="ml-auto text-gold hover:text-gold-glow transition-colors"
+            className="ml-auto text-brand hover:text-brand transition-colors"
           >
             {copied ? "✓ copied" : "copy reproduce command"}
           </button>
@@ -106,12 +106,12 @@ export default function Overview({ params }: { params: { runId: string } }) {
       {/* ───────────────────────────────────────────── recovery hero */}
       <Stagger i={1}>
         <Card className="!p-0 overflow-hidden">
-          <div className="bg-gold-sheen px-6 py-5 border-b border-line">
+          <div className="bg-brand-soft px-6 py-5 border-b border-line">
             <div className="flex flex-wrap items-end justify-between gap-6">
               <div>
                 <Eyebrow>Money recovered across this batch</Eyebrow>
                 <div className="flex items-baseline gap-3 mt-2">
-                  <span className="text-5xl font-display font-bold text-gold leading-none">
+                  <span className="text-5xl font-display font-bold text-brand leading-none">
                     <Ticker
                       value={p.recovered_this_run_paise / 100}
                       prefix="₹"
@@ -174,7 +174,7 @@ export default function Overview({ params }: { params: { runId: string } }) {
             <Ladder n={gate.deny} label="denied by mandate" tone="rose" />
             <Link
               href={`/run/${params.runId}/audit`}
-              className="ml-auto text-gold hover:text-gold-glow"
+              className="ml-auto text-brand hover:text-brand"
             >
               inspect the ledger →
             </Link>
@@ -197,7 +197,7 @@ export default function Overview({ params }: { params: { runId: string } }) {
                     onClick={() => setMode(k)}
                     className={`px-3 py-1.5 transition-colors ${
                       mode === k
-                        ? "bg-gold text-void font-semibold"
+                        ? "bg-brand text-brand-ink font-semibold"
                         : "text-muted hover:text-ink"
                     }`}
                   >
@@ -265,7 +265,7 @@ export default function Overview({ params }: { params: { runId: string } }) {
                   <div className="eyebrow mt-0.5">you</div>
                 </div>
 
-                <div className="flex-1 h-9 rounded-lg bg-white/[0.04] relative overflow-hidden border border-line">
+                <div className="flex-1 h-9 rounded-lg bg-raised relative overflow-hidden border border-line">
                   <div
                     className="absolute inset-y-0 left-0 bg-gradient-to-r from-mint-dim/70 to-mint/70"
                     style={{ width: `${m.observed_success_pct}%` }}
@@ -313,20 +313,20 @@ export default function Overview({ params }: { params: { runId: string } }) {
                       className="relative group transition-all hover:brightness-125"
                       style={{
                         width: `${(f.points / stackTotal) * 100}%`,
-                        background: FACTOR_COLOR[f.factor] ?? "#5C6880",
+                        background: FACTOR_COLOR[f.factor] ?? "rgb(var(--faint))",
                         opacity: f.identified ? 1 : 0.3,
                       }}
                       title={`${FACTOR_DOCS[f.factor]?.label}: ${pts(f.points)} pts`}
                     >
                       <span className="absolute inset-0 flex items-center justify-center
-                                       text-xs num font-semibold text-void">
+                                       text-xs num font-semibold text-canvas">
                         {f.points >= 0.45 ? f.points.toFixed(1) : ""}
                       </span>
                     </Link>
                   ))}
                   {d.residual_pts > 0 && (
                     <div
-                      className="hatched bg-white/[0.06] border-l border-line"
+                      className="hatched bg-raised border-l border-line"
                       style={{ width: `${(d.residual_pts / stackTotal) * 100}%` }}
                       title={`Unexplained residual: ${pts(d.residual_pts)} pts`}
                     />
@@ -381,16 +381,16 @@ export default function Overview({ params }: { params: { runId: string } }) {
 
       {/* ───────────────────────────────────────────── withholding */}
       <Stagger i={4}>
-        <Card className="border-l-2 border-l-gold">
+        <Card className="border-l-2 border-l-brand">
           <div className="flex items-baseline justify-between gap-4 flex-wrap">
             <div className="text-lg font-display font-semibold">
               {r.plan.headline}
             </div>
             <div className="flex gap-1.5 text-[10px] font-mono">
-              <span className="chip bg-mint/10 text-mint border-mint/30">
+              <span className="chip bg-mint-soft text-mint border-mint/30">
                 &gt;2× error · act
               </span>
-              <span className="chip bg-amber/10 text-amber border-amber/30">
+              <span className="chip bg-amber-soft text-amber border-amber/30">
                 1–2× · ask
               </span>
               <span className="chip-warn">&lt;1× · refuse</span>
@@ -508,11 +508,11 @@ export default function Overview({ params }: { params: { runId: string } }) {
               step={0.5}
               value={shift}
               onChange={(e) => setShift(parseFloat(e.target.value))}
-              className="w-full accent-gold"
+              className="w-full accent-brand"
             />
             <div className="flex justify-between eyebrow mt-1">
               <span>−2 pts</span>
-              <span className="text-gold">
+              <span className="text-brand">
                 {shift > 0 ? "+" : ""}
                 {shift.toFixed(1)} pts
               </span>
@@ -521,7 +521,7 @@ export default function Overview({ params }: { params: { runId: string } }) {
 
             {atShift && (
               <div className="grid md:grid-cols-3 gap-5 mt-5">
-                <div className="glass-raised p-4">
+                <div className="card-raised p-4">
                   <div className="eyebrow">gap moves</div>
                   <div className="text-2xl font-display font-bold mt-1">
                     {atShift.gap_pts} <span className="text-sm text-muted">pts</span>
@@ -530,7 +530,7 @@ export default function Overview({ params }: { params: { runId: string } }) {
                     {inr(atShift.gap_value_paise, { compact: true })}/month
                   </div>
                 </div>
-                <div className="md:col-span-2 glass-raised p-4">
+                <div className="md:col-span-2 card-raised p-4">
                   <div className="eyebrow mb-2">attributions do not move</div>
                   <div className="grid grid-cols-2 gap-x-6 gap-y-1 text-xs num">
                     {Object.entries(atShift.attributions).map(([k, v]: any) => (
@@ -608,7 +608,7 @@ function TodayTile({
   big?: boolean;
 }) {
   return (
-    <div className="glass-raised p-4">
+    <div className="card-raised p-4">
       <div className="eyebrow">{label}</div>
       <div
         className={`font-display font-bold mt-1 ${big ? "text-3xl" : "text-xl"}`}
@@ -657,10 +657,10 @@ function Tile({
 function Ladder({ n, label, tone }: { n: number; label: string; tone: string }) {
   const cls =
     tone === "mint"
-      ? "text-mint border-mint/30 bg-mint/10"
+      ? "text-mint border-mint/30 bg-mint-soft"
       : tone === "amber"
-      ? "text-amber border-amber/30 bg-amber/10"
-      : "text-rose border-rose/30 bg-rose/10";
+      ? "text-amber border-amber/30 bg-amber-soft"
+      : "text-rose border-rose/30 bg-rose-soft";
   return (
     <span className={`chip ${cls}`}>
       {n} {label}
@@ -673,7 +673,7 @@ function ChainBadge({ ok, violations }: { ok: boolean; violations: number }) {
   return (
     <div
       className={`px-4 py-3 rounded-lg border ${
-        good ? "border-mint/30 bg-mint/[0.06]" : "border-rose/30 bg-rose/[0.06]"
+        good ? "border-mint/30 bg-mint-soft" : "border-rose/30 bg-rose-soft"
       }`}
     >
       <div className="flex items-center gap-2">
@@ -696,12 +696,12 @@ function FactorChip({ f, runId }: { f: any; runId: string }) {
   return (
     <Link
       href={`/run/${runId}/diagnosis`}
-      className="glass-raised p-3 hover:border-gold/40 transition-colors block"
+      className="card-raised p-3 hover:border-brand/40 transition-colors block"
     >
       <div className="flex items-center gap-2">
         <i
           className="w-2 h-2 rounded-full shrink-0"
-          style={{ background: FACTOR_COLOR[f.factor] ?? "#5C6880" }}
+          style={{ background: FACTOR_COLOR[f.factor] ?? "rgb(var(--faint))" }}
         />
         <span className="text-xs font-medium truncate">{doc?.label ?? f.factor}</span>
         <span className="num text-xs ml-auto">{pts(f.points)}</span>
@@ -714,12 +714,12 @@ function FactorChip({ f, runId }: { f: any; runId: string }) {
             <Info text={GLOSSARY.not_identified} />
           </span>
         ) : weak ? (
-          <span className="chip bg-amber/12 text-amber border-amber/30">
+          <span className="chip bg-amber-soft text-amber border-amber/30">
             inside error bar
             <Info text={GLOSSARY.inside_error_bar} />
           </span>
         ) : (
-          <span className="chip bg-mint/12 text-mint border-mint/30">
+          <span className="chip bg-mint-soft text-mint border-mint/30">
             resolved ± {f.mae?.toFixed(2)}
           </span>
         )}
@@ -740,11 +740,11 @@ function Evidence({
   hint: string;
 }) {
   return (
-    <Link href={href} className="glass p-4 hover:shadow-glow hover:-translate-y-0.5
+    <Link href={href} className="card p-4 hover:shadow-card hover:-translate-y-0.5
                                  transition-all duration-300 group block">
       <div className="flex items-center justify-between">
         <span className="text-sm font-semibold">{title}</span>
-        <span className="text-gold group-hover:translate-x-1 transition-transform">→</span>
+        <span className="text-brand group-hover:translate-x-1 transition-transform">→</span>
       </div>
       <div className="num text-[11px] text-muted mt-1.5">{detail}</div>
       <div className="text-[11px] text-faint mt-2 leading-snug">{hint}</div>
