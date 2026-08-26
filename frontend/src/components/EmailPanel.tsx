@@ -36,7 +36,7 @@ export function EmailPanel({ runId }: { runId: string }) {
         right={
           <button
             onClick={() => setOpen(!open)}
-            className="glass-raised px-3 py-1.5 text-xs hover:border-gold/40 transition-colors"
+            className="card-raised px-3 py-1.5 text-xs hover:border-brand/40 transition-colors"
           >
             {open ? "hide" : "compose email"}
           </button>
@@ -49,7 +49,7 @@ export function EmailPanel({ runId }: { runId: string }) {
             <div className="shimmer h-40" />
           ) : (
             <>
-              <div className="glass-raised overflow-hidden">
+              <div className="card-raised overflow-hidden">
                 <div className="px-4 py-2.5 border-b border-line flex items-center gap-2">
                   <span className="eyebrow">subject</span>
                   <span className="text-sm truncate">{email.subject}</span>
@@ -69,8 +69,8 @@ export function EmailPanel({ runId }: { runId: string }) {
                     setCopied(true);
                     setTimeout(() => setCopied(false), 1600);
                   }}
-                  className="px-3 py-1.5 rounded-lg bg-gold text-void text-xs font-semibold
-                             hover:bg-gold-glow transition-colors"
+                  className="px-3 py-1.5 rounded-lg bg-brand text-brand-ink text-xs font-semibold
+                             hover:brightness-110 transition-colors"
                 >
                   {copied ? "✓ copied" : "Copy"}
                 </button>
@@ -80,22 +80,22 @@ export function EmailPanel({ runId }: { runId: string }) {
                   )}&body=${encodeURIComponent(email.body)}`}
                   target="_blank"
                   rel="noreferrer"
-                  className="px-3 py-1.5 rounded-lg glass-raised text-xs
-                             hover:border-gold/40 transition-colors"
+                  className="px-3 py-1.5 rounded-lg card-raised text-xs
+                             hover:border-brand/40 transition-colors"
                 >
                   Open in Gmail ↗
                 </a>
                 <a
                   href={`/api/run/${runId}/email.eml`}
-                  className="px-3 py-1.5 rounded-lg glass-raised text-xs
-                             hover:border-gold/40 transition-colors"
+                  className="px-3 py-1.5 rounded-lg card-raised text-xs
+                             hover:border-brand/40 transition-colors"
                 >
                   ↓ .eml
                 </a>
                 <a
                   href={`/api/run/${runId}/ledger.csv`}
-                  className="px-3 py-1.5 rounded-lg glass-raised text-xs
-                             hover:border-gold/40 transition-colors"
+                  className="px-3 py-1.5 rounded-lg card-raised text-xs
+                             hover:border-brand/40 transition-colors"
                 >
                   ↓ audit trail as CSV
                 </a>
@@ -108,7 +108,7 @@ export function EmailPanel({ runId }: { runId: string }) {
                   value={to}
                   onChange={(e) => setTo(e.target.value)}
                   placeholder="merchant@example.com"
-                  className="glass-raised px-3 py-1.5 text-xs flex-1 min-w-[200px]
+                  className="card-raised px-3 py-1.5 text-xs flex-1 min-w-[200px]
                              placeholder:text-faint"
                 />
                 <button
@@ -122,8 +122,8 @@ export function EmailPanel({ runId }: { runId: string }) {
                     setSending(false);
                   }}
                   disabled={sending || !to}
-                  className="px-3 py-1.5 rounded-lg glass-raised text-xs
-                             hover:border-gold/40 transition-colors disabled:opacity-50"
+                  className="px-3 py-1.5 rounded-lg card-raised text-xs
+                             hover:border-brand/40 transition-colors disabled:opacity-50"
                 >
                   {sending ? "sending…" : "Send via SMTP"}
                 </button>
