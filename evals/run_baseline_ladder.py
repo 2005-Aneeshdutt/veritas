@@ -46,6 +46,7 @@ sys.path.insert(0, str(ROOT / "src"))
 from chitragupta.rails.mock_rail import Calibration, p_retry_success  # noqa: E402
 
 from doctor.baseline import Baseline  # noqa: E402
+from doctor.sequence import ladder_for  # noqa: E402
 from doctor.cohort import build_cohort  # noqa: E402
 from doctor.features import RECOVERABLE, Transaction  # noqa: E402
 from doctor.generator import GeneratedMerchant  # noqa: E402
@@ -185,12 +186,12 @@ def policy_t(txns, cal, dec, _baseline=None):
             continue
         st = baseline.bank_stats(t.bank)
         tech_share = st.technical_share if st else 0.25
-        if t.error_class.value == "technical":
-            delays = [2.0, 8.0, 24.0]
-        elif tech_share > 0.35:
-            delays = [6.0, 24.0, 48.0]
-        else:
-            delays = [36.0, 60.0, 84.0]
+        # Imported rather than repeated. These used to be written out here as
+        # well as in the product, and the two drifted: the shipped pipeline
+        # passed a flat 36h for everything while this function scored a
+        # per-payment ladder, so T was being credited with sequencing the
+        # product did not do.
+        delays = list(ladder_for(t.error_class.value, tech_share))
         r, a, _ = _run_attempts(t, delays, cal, respect_history=True)
         rec += r
         att += a
