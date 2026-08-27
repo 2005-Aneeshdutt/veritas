@@ -1,12 +1,12 @@
 {
-  "run_id": "run_107354cc",
+  "run_id": "run_1049a21e",
   "merchant_id": "fuelstop",
   "merchant_name": "FuelStop Network",
   "mcc": "5541",
   "seed": 20260824,
-  "started_at": 1787735973.975464,
-  "duration_ms": 4229,
-  "commit": "263a1ec",
+  "started_at": 1787823871.4501312,
+  "duration_ms": 4064,
+  "commit": "620fad9",
   "models": {
     "fast": "claude-haiku-4.5",
     "reasoning": "claude-sonnet-4.6",
@@ -18,13 +18,13 @@
   "used_stubs": false,
   "traces": [
     {
-      "run_id": "run_107354cc",
+      "run_id": "run_1049a21e",
       "seq": 0,
       "node": "ingest",
       "kind": "deterministic",
       "status": "ok",
-      "started_at": 1787735976.454321,
-      "duration_ms": 45,
+      "started_at": 1787823873.8073626,
+      "duration_ms": 37,
       "input_summary": {
         "merchant": "fuelstop",
         "mcc": "5541"
@@ -50,13 +50,13 @@
       }
     },
     {
-      "run_id": "run_107354cc",
+      "run_id": "run_1049a21e",
       "seq": 1,
       "node": "classify",
       "kind": "llm",
       "status": "ok",
-      "started_at": 1787735976.500967,
-      "duration_ms": 2,
+      "started_at": 1787823873.845874,
+      "duration_ms": 3,
       "input_summary": {
         "distinct_codes": 70,
         "failures": 312
@@ -85,12 +85,12 @@
       "intermediates": {}
     },
     {
-      "run_id": "run_107354cc",
+      "run_id": "run_1049a21e",
       "seq": 2,
       "node": "human_review",
       "kind": "deterministic",
       "status": "skipped",
-      "started_at": 1787735976.5044622,
+      "started_at": 1787823873.8488762,
       "duration_ms": 0,
       "input_summary": {},
       "output_summary": {
@@ -109,13 +109,13 @@
       "intermediates": {}
     },
     {
-      "run_id": "run_107354cc",
+      "run_id": "run_1049a21e",
       "seq": 3,
       "node": "bank_health",
       "kind": "deterministic",
       "status": "ok",
-      "started_at": 1787735976.5064595,
-      "duration_ms": 14,
+      "started_at": 1787823873.8498774,
+      "duration_ms": 13,
       "input_summary": {},
       "output_summary": {
         "banks_examined": 10,
@@ -233,13 +233,13 @@
       }
     },
     {
-      "run_id": "run_107354cc",
+      "run_id": "run_1049a21e",
       "seq": 4,
       "node": "decompose",
       "kind": "deterministic",
       "status": "ok",
-      "started_at": 1787735976.5223439,
-      "duration_ms": 1611,
+      "started_at": 1787823873.864882,
+      "duration_ms": 1610,
       "input_summary": {},
       "output_summary": {
         "gap_pts": 0.572,
@@ -304,13 +304,13 @@
       }
     },
     {
-      "run_id": "run_107354cc",
+      "run_id": "run_1049a21e",
       "seq": 5,
       "node": "hypothesise",
       "kind": "llm",
       "status": "ok",
-      "started_at": 1787735978.1339753,
-      "duration_ms": 36,
+      "started_at": 1787823875.4763563,
+      "duration_ms": 3,
       "input_summary": {},
       "output_summary": {
         "primary_label": "midnight_billing_penalty",
@@ -361,12 +361,12 @@
       "intermediates": {}
     },
     {
-      "run_id": "run_107354cc",
+      "run_id": "run_1049a21e",
       "seq": 6,
       "node": "plan",
       "kind": "deterministic",
       "status": "ok",
-      "started_at": 1787735978.1709,
+      "started_at": 1787823875.480357,
       "duration_ms": 1,
       "input_summary": {},
       "output_summary": {
@@ -434,13 +434,13 @@
       }
     },
     {
-      "run_id": "run_107354cc",
+      "run_id": "run_1049a21e",
       "seq": 7,
       "node": "gate",
       "kind": "deterministic",
       "status": "ok",
-      "started_at": 1787735978.1719217,
-      "duration_ms": 21,
+      "started_at": 1787823875.482361,
+      "duration_ms": 18,
       "input_summary": {},
       "output_summary": {
         "decisions": {
@@ -465,12 +465,12 @@
       "intermediates": {}
     },
     {
-      "run_id": "run_107354cc",
+      "run_id": "run_1049a21e",
       "seq": 8,
       "node": "execute",
       "kind": "deterministic",
       "status": "ok",
-      "started_at": 1787735978.1956053,
+      "started_at": 1787823875.5033572,
       "duration_ms": 2,
       "input_summary": {},
       "output_summary": {
@@ -496,13 +496,13 @@
       "intermediates": {}
     },
     {
-      "run_id": "run_107354cc",
+      "run_id": "run_1049a21e",
       "seq": 9,
       "node": "report",
       "kind": "deterministic",
       "status": "ok",
-      "started_at": 1787735978.1976054,
-      "duration_ms": 6,
+      "started_at": 1787823875.506358,
+      "duration_ms": 7,
       "input_summary": {},
       "output_summary": {
         "measured_keys": [
@@ -1178,7 +1178,7 @@
       "s_obs": 0.908235294117647,
       "s_star": 0.913957785763037,
       "gap_pts": 0.572249164538996,
-      "residual_pts": 0.009400780751178672,
+      "residual_pts": 0.00940078075116757,
       "process_gap_pts": 0.0,
       "clamp_rate": 0.0,
       "reliable": true,
@@ -1204,11 +1204,11 @@
         "method+hour": 0.5793539944772719,
         "method+amount_band": 0.5467823881619371,
         "hour+amount_band": 0.5618647746589045,
-        "bank+method+hour": 0.5755876559098372,
+        "bank+method+hour": 0.5755876559098483,
         "bank+method+amount_band": 0.5427478460585777,
         "bank+hour+amount_band": 0.5580572097882763,
         "method+hour+amount_band": 0.566658192919911,
-        "bank+method+hour+amount_band": 0.5628483837878173
+        "bank+method+hour+amount_band": 0.5628483837878284
       },
       "factors": [
         {
@@ -1463,7 +1463,7 @@
     "ledger": [
       {
         "sequence": 0,
-        "timestamp": "2026-08-26T09:19:38.195605+00:00",
+        "timestamp": "2026-08-27T09:44:35.504360+00:00",
         "txn_id": "merchant:fuelstop",
         "proposed_action": {
           "action_type": "flag_for_investigation",
@@ -1478,11 +1478,11 @@
         "gate_reason": "OK_ESCALATION",
         "outcome": "escalated",
         "prev_hash": "0000000000000000000000000000000000000000000000000000000000000000",
-        "entry_hash": "fa0cfe86b64cc5f07d8c23f87c5d8f6bf783843f352c929fece31929e27e5fee"
+        "entry_hash": "0f5ddb4d576733f36cdbfc46b55d5fc2f568881d130ed560006b255402f57420"
       },
       {
         "sequence": 1,
-        "timestamp": "2026-08-26T09:19:38.196608+00:00",
+        "timestamp": "2026-08-27T09:44:35.504360+00:00",
         "txn_id": "merchant:fuelstop",
         "proposed_action": {
           "action_type": "flag_for_investigation",
@@ -1496,12 +1496,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_ESCALATION",
         "outcome": "escalated",
-        "prev_hash": "fa0cfe86b64cc5f07d8c23f87c5d8f6bf783843f352c929fece31929e27e5fee",
-        "entry_hash": "493e48ddb1c71255f1a60bc9efe86d3d4a3c1fe79d87b5e349ea9977af425e62"
+        "prev_hash": "0f5ddb4d576733f36cdbfc46b55d5fc2f568881d130ed560006b255402f57420",
+        "entry_hash": "26d55b47bfa305e31d20a745747fff2d070d6c4f73959631b9d9202b16d34090"
       },
       {
         "sequence": 2,
-        "timestamp": "2026-08-26T09:19:38.196608+00:00",
+        "timestamp": "2026-08-27T09:44:35.504360+00:00",
         "txn_id": "merchant:fuelstop",
         "proposed_action": {
           "action_type": "flag_for_investigation",
@@ -1515,12 +1515,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_ESCALATION",
         "outcome": "escalated",
-        "prev_hash": "493e48ddb1c71255f1a60bc9efe86d3d4a3c1fe79d87b5e349ea9977af425e62",
-        "entry_hash": "961beebae7a2428e6241cce0624c6a358de7ce265e87338e223e669adb73f41d"
+        "prev_hash": "26d55b47bfa305e31d20a745747fff2d070d6c4f73959631b9d9202b16d34090",
+        "entry_hash": "86ba7a74066f388b863d5467490ac05c3b6b92579392692565d0b6fcdfcc5171"
       },
       {
         "sequence": 3,
-        "timestamp": "2026-08-26T09:19:38.196608+00:00",
+        "timestamp": "2026-08-27T09:44:35.504360+00:00",
         "txn_id": "merchant:fuelstop",
         "proposed_action": {
           "action_type": "flag_for_investigation",
@@ -1534,12 +1534,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_ESCALATION",
         "outcome": "escalated",
-        "prev_hash": "961beebae7a2428e6241cce0624c6a358de7ce265e87338e223e669adb73f41d",
-        "entry_hash": "250ab0f82f1487f220063a2867d01819c97b7504dca9a3b9b685b6905a27320b"
+        "prev_hash": "86ba7a74066f388b863d5467490ac05c3b6b92579392692565d0b6fcdfcc5171",
+        "entry_hash": "6393cb45c2c46f55ce2ac97b678393f51cc37749da8f2254a44396e699d204d4"
       },
       {
         "sequence": 4,
-        "timestamp": "2026-08-26T09:19:38.196608+00:00",
+        "timestamp": "2026-08-27T09:44:35.504360+00:00",
         "txn_id": "merchant:fuelstop",
         "proposed_action": {
           "action_type": "flag_for_investigation",
@@ -1553,8 +1553,8 @@
         "gate_decision": "allow",
         "gate_reason": "OK_ESCALATION",
         "outcome": "escalated",
-        "prev_hash": "250ab0f82f1487f220063a2867d01819c97b7504dca9a3b9b685b6905a27320b",
-        "entry_hash": "b7e1b63f3bd822be7dce42d18c2cebfa9e215821cec608826260d4574507a1d4"
+        "prev_hash": "6393cb45c2c46f55ce2ac97b678393f51cc37749da8f2254a44396e699d204d4",
+        "entry_hash": "ab2688f7159c7342150310a35aa0d53157b402b4a77700bb5a72587dc746eeb1"
       }
     ],
     "exceptions": {
