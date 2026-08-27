@@ -36,6 +36,7 @@ from fastapi.responses import PlainTextResponse
 
 from doctor.apply import apply_group
 from doctor.assistant import ask as assistant_ask
+from doctor.claims import read_note
 from doctor.baseline import Baseline
 from doctor.drift import build_drift_report, simulate_exposure
 from doctor.outreach import as_eml, compose, send, smtp_configured
@@ -220,6 +221,29 @@ def run_ask(run_id: str, q: str) -> dict:
         raise HTTPException(400, "question too long")
     rec = json.loads(p.read_text(encoding="utf-8"))
     return json.loads(assistant_ask(rec, q).model_dump_json())
+
+
+@app.post("/api/run/{run_id}/note")
+def run_note(run_id: str, note: str) -> dict:
+    """Read the merchant's own account of the problem, and rule on it.
+
+    The model extracts typed claims and quotes the span each came from; the
+    decomposition decides whether each one holds. Stored on the run, so the
+    assistant answers follow-ups from the verdict rather than from its memory
+    of the conversation.
+    """
+    p = RUNS / (run_id + ".json")
+    if not p.exists():
+        raise HTTPException(404, "no such run: %s" % run_id)
+    if len(note or "") > 2000:
+        raise HTTPException(400, "note too long")
+
+    rec = json.loads(p.read_text(encoding="utf-8"))
+    adj = read_note(note, rec)
+    if adj.ok:
+        rec["merchant_note"] = json.loads(adj.model_dump_json())
+        p.write_text(json.dumps(rec, indent=2), encoding="utf-8", newline=chr(10))
+    return json.loads(adj.model_dump_json())
 
 
 @app.get("/api/drift/simulate")
