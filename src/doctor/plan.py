@@ -32,7 +32,7 @@ from pydantic import BaseModel
 from chitragupta.types import ActionType, ProposedAction
 
 from .baseline import Baseline
-from .features import RECOVERABLE, Transaction
+from .features import RECOVERABLE, ErrorClass, Transaction
 from .hypothesise import Diagnosis, Hypothesis, RootCauseLabel
 from chitragupta.policy import RECOVERY_WINDOW
 
@@ -169,6 +169,57 @@ def _tier_for(
             ),
         )
     return proposed, None
+
+
+def _reissue_for_auth_failures(txns: Sequence[Transaction]) -> list[ProposedAction]:
+    """Offer a fresh payment link to customers who fumbled authentication.
+
+    These were being written off. An auth failure is a wrong OTP, a wrong PIN,
+    or someone who walked away at the 3DS screen -- the exceptions page even
+    said "recoverable by the customer", and then the system did nothing and
+    filed the money under unrecoverable. Across the eight demo merchants that
+    was 347 payments and Rs 11.3 lakh, roughly a quarter of all failed value.
+
+    Retrying the SAME payment would be pointless, which is why these are not
+    in RECOVERABLE and why the rail scores them at zero. Sending a NEW link is
+    a different mechanism: the customer gets another go at authenticating.
+
+    Deliberately NOT given a conversion estimate. Nobody here knows how often
+    a reissued link converts, the rail does not model it, and inventing a rate
+    to make the recovery figure larger is exactly what this project refuses to
+    do elsewhere. So it reports the value AT STAKE and leaves the projection
+    alone -- the merchant is told what is on the table, not what they will get.
+
+    Always requires approval. Messaging a merchant's customer is theirs to
+    authorise, not something an agent should do unattended.
+    """
+    candidates = [
+        t
+        for t in txns
+        if not t.succeeded and t.error_class is ErrorClass.AUTH_FAILURE
+    ]
+    if not candidates:
+        return []
+
+    # Largest first: if a merchant only actions some of these, the biggest
+    # ones should be at the top of the list.
+    candidates.sort(key=lambda t: -t.amount_paise)
+    return [
+        ProposedAction(
+            action_type=ActionType.REISSUE_PAYMENT_LINK,
+            txn_id=t.txn_id,
+            amount_paise=t.amount_paise,
+            target_bank=t.bank,
+            reason=(
+                "Authentication was not completed (%s). A fresh link gives the "
+                "customer another attempt. No conversion rate is claimed -- "
+                "this is value at stake, not projected recovery."
+                % (t.error_code or "auth_failure")
+            ),
+            requires_merchant_approval=True,
+        )
+        for t in candidates
+    ]
 
 
 def _failed_at(t) -> datetime:
@@ -317,4 +368,5 @@ def build_plan(
     else:
         headline = "%d fixes proposed, all clear of their measured error bars." % n_proposed
 
+    actions += _reissue_for_auth_failures(txns)
     return Plan(actions=actions, withheld=withheld, headline=headline)
