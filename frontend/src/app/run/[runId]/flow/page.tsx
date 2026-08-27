@@ -144,7 +144,10 @@ export default function FlowPage({ params }: { params: { runId: string } }) {
     setStep(null);
     setPlaying(true);
     setMode("live");
-    const pace = Math.round(24 / speed);
+    // Slow enough to narrate over. 24ms was chosen when only sub-steps were
+    // paced and node transitions were instant, which made a ten-node graph
+    // finish in under a second.
+    const pace = Math.round(70 / speed);
     const es = new EventSource(
       `/api/run/${rec.merchant_id}/stream?pace_ms=${pace}`
     );

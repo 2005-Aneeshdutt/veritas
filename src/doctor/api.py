@@ -412,7 +412,11 @@ async def stream(merchant: str, calibration: str = "central", pace_ms: float = 0
 
     threading.Thread(target=worker, daemon=True).start()
 
-    delay = max(0.0, min(pace_ms, 200.0)) / 1000.0
+    step_delay = max(0.0, min(pace_ms, 400.0)) / 1000.0
+    # A node needs to be visibly its own beat, or ten of them arrive in one
+    # frame and the graph looks like it never ran. Pacing only the sub-steps
+    # -- which is what this did -- left every node transition instantaneous.
+    node_delay = step_delay * 8
 
     async def gen():
         yield _sse("start", {"merchant": merchant, "commit": git_commit()})
@@ -425,8 +429,15 @@ async def stream(merchant: str, calibration: str = "central", pace_ms: float = 0
             if kind is None:
                 break
             yield _sse(kind, payload)
-            if delay and kind == "step":
-                await asyncio.sleep(delay)
+            if not step_delay:
+                continue
+            if kind == "step":
+                await asyncio.sleep(step_delay)
+            elif kind == "trace" and payload.get("status") != "running":
+                # After a node finishes, not when it starts -- so the pause
+                # reads as the node having done work rather than stalling
+                # before it.
+                await asyncio.sleep(node_delay)
 
     return StreamingResponse(
         gen(),
