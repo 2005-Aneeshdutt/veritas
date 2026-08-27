@@ -531,6 +531,39 @@ export default function FlowPage({ params }: { params: { runId: string } }) {
                     </div>
                   )}
 
+                  {(sel.output_summary?.tool_calls ?? []).length > 0 && (
+                    <div className="card-raised p-3">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="chip-llm">investigation</span>
+                        <span className="text-[11px] text-faint">
+                          it chose these lookups before answering — closed
+                          toolset, read-only, {sel.output_summary.tool_calls.length}{" "}
+                          of 6 used
+                        </span>
+                      </div>
+                      <div className="mt-2 space-y-1 font-mono text-[11px]">
+                        {sel.output_summary.tool_calls.map((c: any, i: number) => (
+                          <div key={i} className="flex items-baseline gap-2">
+                            <span className="text-faint w-4 shrink-0">{i + 1}</span>
+                            <span className={c.ok ? "text-iris" : "text-faint"}>
+                              {c.tool}
+                            </span>
+                            <span className="text-muted truncate">
+                              {Object.entries(c.args ?? {})
+                                .map(([k, v]) => `${k}=${v}`)
+                                .join(" ")}
+                            </span>
+                            {!c.ok && (
+                              <span className="text-amber ml-auto shrink-0 truncate max-w-[16rem]">
+                                {c.error}
+                              </span>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
                   {sel.kind === "llm" && (
                     <>
                       <div className="flex flex-wrap gap-1.5">
