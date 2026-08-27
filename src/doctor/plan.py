@@ -23,6 +23,7 @@ exceed the mandate.
 from __future__ import annotations
 
 import json
+import os
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Literal, Sequence
@@ -222,6 +223,32 @@ def _reissue_for_auth_failures(txns: Sequence[Transaction]) -> list[ProposedActi
     ]
 
 
+def _batch_reference() -> datetime:
+    """The instant the batch is treated as being worked.
+
+    Deterministic, and it has to be. An earlier version anchored this to
+    datetime.now(), which put wall-clock into the planning path: the same
+    merchant diagnosed twice seconds apart produced different scheduled retry
+    times, those times are stored on the action, the action is stored in the
+    ledger -- and two runs of the same batch stopped being byte-identical.
+    Determinism is a deliverable here, so the anchor is fixed.
+
+    DOCTOR_SEED is a yyyymmdd date by convention (20260824), which makes it
+    the natural anchor: change the seed and you move the batch's whole
+    timeline coherently, rather than having it drift with the clock.
+    """
+    raw = str(os.environ.get("DOCTOR_SEED", "20260824"))
+    try:
+        return datetime(
+            int(raw[0:4]), int(raw[4:6]), int(raw[6:8]), tzinfo=timezone.utc
+        )
+    except (ValueError, IndexError):
+        return datetime(2026, 8, 24, tzinfo=timezone.utc)
+
+
+BATCH_REFERENCE = _batch_reference()
+
+
 def _failed_at(t) -> datetime:
     """When this payment failed, as a timestamp the scheduler can work from.
 
@@ -235,11 +262,8 @@ def _failed_at(t) -> datetime:
     # kernel denies anything older than 7 days -- reconstructing a failure as
     # three weeks old would schedule retries the kernel is bound to refuse.
     span = RECOVERY_WINDOW - timedelta(days=1)
-    base = datetime.now(timezone.utc).replace(
-        hour=0, minute=0, second=0, microsecond=0
-    )
     days_back = (t.day - 1) % max(1, span.days)
-    return base - timedelta(days=days_back) + timedelta(hours=t.hour)
+    return BATCH_REFERENCE - timedelta(days=days_back) + timedelta(hours=t.hour)
 
 
 def build_plan(
@@ -302,6 +326,10 @@ def build_plan(
                 st = baseline.bank_stats(t.bank) if baseline else None
                 sched = plan_retries(
                     t.txn_id, ecls, _failed_at(t),
+                    # Deterministic too -- plan_retries defaults `now` to the
+                    # wall clock, which would reintroduce exactly the drift
+                    # the fixed anchor above removes.
+                    now=BATCH_REFERENCE,
                     technical_share=st.technical_share if st else None,
                 )
                 first = sched.attempts[0] if sched.attempts else None

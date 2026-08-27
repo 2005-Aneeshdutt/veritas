@@ -37,14 +37,20 @@ def _entry(txn_id, outcome="executed", amount=10_000, action="retry_soft_decline
 
 @pytest.fixture(scope="module")
 def real_run():
-    """A real merchant, so the ground-truth lookup is exercised for real."""
+    """A real merchant that actually executed retries.
+
+    Selecting on ledger size instead let the fixture pick a run that gated
+    plenty and executed none, so three of these silently skipped and the
+    scoring path went uncovered -- which is worse than failing, because the
+    suite still looked green.
+    """
     import glob
 
     for f in sorted(glob.glob("data/runs/*.json")):
         rec = json.load(open(f, encoding="utf-8"))
-        if rec["report"]["measured"].get("ledger_entries", 0) > 20:
+        if rec["report"]["measured"].get("recovery_vs_truth", {}).get("scored"):
             return rec
-    pytest.skip("no run with a substantial ledger")
+    pytest.skip("no run executed a retry -- regenerate data/runs")
 
 
 def test_a_merchant_with_no_ground_truth_is_not_scored():
