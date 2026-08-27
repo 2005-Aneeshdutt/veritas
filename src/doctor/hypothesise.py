@@ -29,6 +29,9 @@ from pydantic import BaseModel, Field
 
 from .baseline import Baseline
 from .features import MerchantProfile
+import json
+
+from .tools import MAX_CALLS, ToolContext, call, describe_tools
 from .llm import MODEL_REASONING, LLMClient
 from .shapley import Decomposition
 from .verify import VerificationResult, repair_prompt, verify
@@ -65,6 +68,21 @@ class Diagnosis(BaseModel):
     def by_label(self) -> dict[str, Hypothesis]:
         return {h.root_cause_label.value: h for h in self.hypotheses}
 
+
+INVESTIGATOR_SYSTEM = """You are diagnosing why one merchant's payment
+success rate is below what their category achieves. Before answering, you
+may look things up.
+
+Ask for ONE lookup at a time. You will be shown the result, then may ask
+again. The budget is small, so ask for what would actually change your
+mind rather than for what confirms what you already believe.
+
+Stop as soon as you have enough. Stopping early is a good outcome.
+
+Reply with JSON and nothing else, one of:
+  {"tool": "name", "args": {...}, "why": "what this would tell you"}
+  {"done": true, "why": "what you now believe and what convinced you"}
+"""
 
 SYSTEM = """You are a payments diagnostician for an Indian payments platform.
 
@@ -203,18 +221,117 @@ class Hypothesiser:
         self.verify_output = verify_output
         #: Populated per run so the trace and the eval can report it.
         self.last_verification: VerificationResult | None = None
+        #: The lookups the last diagnosis was built on.
+        self.last_calls: list = []
+
+    def investigate(
+        self,
+        dec: Decomposition,
+        marginals: dict,
+        transactions: list,
+        context: str,
+        on_call=None,
+    ) -> list:
+        """Let the model gather its own evidence before it answers.
+
+        A bounded loop: it asks for one lookup, sees the result, and either
+        asks again or says it has enough. The toolset is closed and
+        read-only, so the worst an unhelpful turn can do is spend one of
+        its MAX_CALLS budget.
+
+        Returns the calls it made, which go into the trace -- so the flow
+        page shows which questions it actually asked rather than asserting
+        that it reasoned.
+        """
+        ctx = ToolContext(
+            marginals=marginals,
+            decomposition=dec,
+            baseline=self.baseline,
+            transactions=list(transactions),
+        )
+        made: list = []
+        transcript: list[str] = []
+
+        for _ in range(MAX_CALLS):
+            asked = chr(10).join(transcript) or '  (nothing yet)'
+            try:
+                res = self.client.complete(
+                    system=INVESTIGATOR_SYSTEM,
+                    prompt=(
+                        'CONTEXT%s%s%sTOOLS%s%s%sASKED SO FAR%s%s'
+                        % (
+                            chr(10), context, chr(10) * 2,
+                            chr(10), describe_tools(), chr(10) * 2,
+                            chr(10), asked,
+                        )
+                    ),
+                    model=MODEL_REASONING,
+                    schema_name="investigate_step",
+                    max_tokens=500,
+                )
+            except Exception:
+                # A turn that will not parse ends the investigation; it does
+                # not end the diagnosis. This loop is enrichment -- the
+                # decomposition is already computed and the answer can be
+                # given without it, so a chatty model must not be able to
+                # take the run down.
+                break
+            if res.stub:
+                break
+
+            step = res.parsed if isinstance(res.parsed, dict) else {}
+            if step.get("done") or not step.get("tool"):
+                break
+
+            got = call(ctx, str(step["tool"]), step.get("args") or {}, made)
+            made.append(got)
+            if on_call is not None:
+                on_call(got)
+
+            transcript.append(
+                '  %s(%s) -> %s'
+                % (
+                    got.name,
+                    json.dumps(got.args, separators=(",", ":")),
+                    got.error
+                    or json.dumps(got.result, separators=(",", ":"))[:400],
+                )
+            )
+        return made
 
     def run(
         self,
         profile: MerchantProfile,
         dec: Decomposition,
         marginals: dict[str, dict[str, float]],
+        transactions: list | None = None,
+        on_call=None,
     ) -> tuple[Diagnosis, object]:
         top_banks = sorted(marginals["bank"].items(), key=lambda kv: -kv[1])
         context = build_context(profile, dec, self.baseline, top_banks)
+
+        # Let it look things up for itself first. What it chose to ask is
+        # appended below, so the answer has to rest on evidence it went and
+        # got rather than on a briefing it was handed.
+        self.last_calls = (
+            self.investigate(dec, marginals, transactions, context, on_call)
+            if transactions
+            else []
+        )
+
         prompt = _prompt(
             context, marginals["hour"], marginals["method"], marginals["amount_band"]
         )
+        if self.last_calls:
+            prompt += chr(10) * 2 + 'WHAT YOU LOOKED UP' + chr(10) + chr(10).join(
+                '  %s(%s) -> %s'
+                % (
+                    c.name,
+                    json.dumps(c.args, separators=(",", ":")),
+                    c.error or json.dumps(c.result, separators=(",", ":"))[:400],
+                )
+                for c in self.last_calls
+            )
         result = self.client.complete(
             system=SYSTEM,
             prompt=prompt,

@@ -266,12 +266,35 @@ def node_hypothesise(s: State) -> State:
     """[LLM] why, not just which."""
     t = s.tracer.start("hypothesise", kind="llm", model=MODEL_REASONING)
     hyp = Hypothesiser(s.client, s.baseline)
-    diag, res = hyp.run(s.profile, s.decomposition, s.marginals)
+    diag, res = hyp.run(
+        s.profile,
+        s.decomposition,
+        s.marginals,
+        transactions=s.transactions,
+        # Each lookup streams as it happens, so the flow page shows the
+        # questions the model chose to ask rather than asserting it reasoned.
+        on_call=lambda c: s.tracer.step(
+            "hypothesise",
+            "%s(%s) %s"
+            % (
+                c.name,
+                ", ".join("%s=%s" % kv for kv in c.args.items()),
+                c.error or "ok",
+            ),
+            0, 0,
+            tool=c.name,
+            ok=c.ok,
+        ),
+    )
     s.diagnosis = diag
     v = hyp.last_verification
     s.tracer.finish(
         t,
         output_summary={
+            "tool_calls": [
+                {"tool": c.name, "args": c.args, "ok": c.ok, "error": c.error}
+                for c in hyp.last_calls
+            ],
             "primary_label": diag.primary_label.value,
             "hypotheses": [
                 {"factor": h.factor, "label": h.root_cause_label.value,
