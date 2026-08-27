@@ -1,0 +1,50 @@
+# Deployment for a panellist who would rather click a link than clone a repo.
+#
+# Two services. The frontend rewrites /api/* to the backend, so the browser
+# only ever talks to one origin and no API URL is baked into the client bundle.
+#
+# NO API KEY IS SET HERE, on purpose. Every LLM response the demo needs is
+# committed under llm_cache/, and the CI job "Runs with no API key" exists to
+# prove that. A deployment that quietly needed a key would make that claim
+# false. The consequence is that a question nobody has asked before returns
+# "no cached answer and no API key configured" rather than an invented one --
+# which is the honest failure and is what the code already does.
+#
+# On the free tier the disk is ephemeral: new runs, sealed challenges and any
+# fresh cache entries live until the instance restarts, then the committed
+# state comes back. That suits a demo, and it means the deployed copy always
+# resets to a clean book.
+
+services:
+  - type: web
+    name: revenue-doctor-api
+    runtime: python
+    plan: free
+    region: singapore
+    buildCommand: pip install -e ".[dev]"
+    startCommand: uvicorn doctor.api:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /api/health
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.12"
+      - key: PYTHONPATH
+        value: src
+      - key: DOCTOR_SEED
+        value: "20260824"
+
+  - type: web
+    name: revenue-doctor-web
+    runtime: node
+    plan: free
+    region: singapore
+    rootDir: frontend
+    buildCommand: npm ci && npm run build
+    startCommand: npm run start -- --port $PORT
+    envVars:
+      - key: NODE_VERSION
+        value: "20"
+      - key: DOCTOR_API_URL
+        fromService:
+          type: web
+          name: revenue-doctor-api
+          property: hostport

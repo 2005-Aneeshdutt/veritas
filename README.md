@@ -23,6 +23,31 @@ diagnosis, then refuses to act on anything inside it.**
 
 ---
 
+## Running it
+
+```bash
+make setup     # install python and frontend dependencies
+make demo      # backend on :8000, frontend on :3000
+```
+
+No API key is needed. Every LLM response the demo uses is cached and committed,
+and the CI job **"Runs with no API key"** exists to prove that rather than
+assert it.
+
+**Deploying.** `render.yaml` defines both services. The frontend rewrites
+`/api/*` to the backend, so the browser only ever talks to one origin and no
+API URL is baked into the client bundle; set `DOCTOR_API_URL` to the backend's
+origin and the scheme is filled in if the host omits it.
+
+No key is set there either, deliberately — a deployment that quietly needed one
+would make the offline claim false. The cost is that a question nobody has
+asked before answers *"no cached answer and no API key configured"* instead of
+inventing one, which is the honest failure and is what the code already does.
+
+The free tier's disk is ephemeral, so new runs and sealed challenges last until
+the instance restarts and then the committed state returns. For a demo that is
+a feature: the deployed copy always resets to a clean book.
+
 ## Read these three first
 
 If you only have five minutes, these are the files that answer the questions
