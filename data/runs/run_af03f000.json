@@ -1,30 +1,30 @@
 {
-  "run_id": "run_7d78355e",
+  "run_id": "run_af03f000",
   "merchant_id": "techbazaar",
   "merchant_name": "TechBazaar",
   "mcc": "5732",
   "seed": 20260824,
-  "started_at": 1787842944.2699692,
-  "duration_ms": 2918,
-  "commit": "965b964",
+  "started_at": 1787847101.2420924,
+  "duration_ms": 2919,
+  "commit": "6f844bf",
   "models": {
     "fast": "claude-haiku-4.5",
     "reasoning": "claude-sonnet-4.6",
     "temperature": 0
   },
   "cache_hit_rate": 1.0,
-  "llm_calls": 1,
+  "llm_calls": 7,
   "llm_cost_inr": 0.0,
   "used_stubs": false,
   "traces": [
     {
-      "run_id": "run_7d78355e",
+      "run_id": "run_af03f000",
       "seq": 0,
       "node": "ingest",
       "kind": "deterministic",
       "status": "ok",
-      "started_at": 1787842946.7107935,
-      "duration_ms": 26,
+      "started_at": 1787847103.5043998,
+      "duration_ms": 24,
       "input_summary": {
         "merchant": "techbazaar",
         "mcc": "5732"
@@ -50,12 +50,12 @@
       }
     },
     {
-      "run_id": "run_7d78355e",
+      "run_id": "run_af03f000",
       "seq": 1,
       "node": "classify",
       "kind": "llm",
       "status": "ok",
-      "started_at": 1787842946.7383153,
+      "started_at": 1787847103.5299084,
       "duration_ms": 1,
       "input_summary": {
         "distinct_codes": 48,
@@ -85,12 +85,12 @@
       "intermediates": {}
     },
     {
-      "run_id": "run_7d78355e",
+      "run_id": "run_af03f000",
       "seq": 2,
       "node": "human_review",
       "kind": "deterministic",
       "status": "skipped",
-      "started_at": 1787842946.7403173,
+      "started_at": 1787847103.5319095,
       "duration_ms": 0,
       "input_summary": {},
       "output_summary": {
@@ -109,13 +109,13 @@
       "intermediates": {}
     },
     {
-      "run_id": "run_7d78355e",
+      "run_id": "run_af03f000",
       "seq": 3,
       "node": "bank_health",
       "kind": "deterministic",
       "status": "ok",
-      "started_at": 1787842946.7403173,
-      "duration_ms": 2,
+      "started_at": 1787847103.5319095,
+      "duration_ms": 3,
       "input_summary": {},
       "output_summary": {
         "banks_examined": 10,
@@ -238,12 +238,12 @@
       }
     },
     {
-      "run_id": "run_7d78355e",
+      "run_id": "run_af03f000",
       "seq": 4,
       "node": "decompose",
       "kind": "deterministic",
       "status": "ok",
-      "started_at": 1787842946.744318,
+      "started_at": 1787847103.53491,
       "duration_ms": 348,
       "input_summary": {},
       "output_summary": {
@@ -309,15 +309,67 @@
       }
     },
     {
-      "run_id": "run_7d78355e",
+      "run_id": "run_af03f000",
       "seq": 5,
       "node": "hypothesise",
       "kind": "llm",
       "status": "ok",
-      "started_at": 1787842947.0942838,
-      "duration_ms": 49,
+      "started_at": 1787847103.8836577,
+      "duration_ms": 239,
       "input_summary": {},
       "output_summary": {
+        "tool_calls": [
+          {
+            "tool": "factor_breakdown",
+            "args": {
+              "factor": "method"
+            },
+            "ok": true,
+            "error": null
+          },
+          {
+            "tool": "factor_breakdown",
+            "args": {
+              "factor": "amount_band"
+            },
+            "ok": true,
+            "error": null
+          },
+          {
+            "tool": "failure_examples",
+            "args": {
+              "factor": "method",
+              "value": "card"
+            },
+            "ok": true,
+            "error": null
+          },
+          {
+            "tool": "factor_breakdown",
+            "args": {
+              "factor": "bank"
+            },
+            "ok": true,
+            "error": null
+          },
+          {
+            "tool": "failure_examples",
+            "args": {
+              "factor": "method",
+              "value": "upi"
+            },
+            "ok": true,
+            "error": null
+          },
+          {
+            "tool": "bank_vs_npci",
+            "args": {
+              "bank": "State Bank of India"
+            },
+            "ok": true,
+            "error": null
+          }
+        ],
         "primary_label": "method_mix_mismatch",
         "hypotheses": [
           {
@@ -337,7 +389,7 @@
           },
           {
             "factor": "amount_band",
-            "label": "amount_band_risk",
+            "label": "none_of_the_above",
             "action_type": "investigation"
           },
           {
@@ -346,17 +398,17 @@
             "action_type": "auto_execute"
           }
         ],
-        "summary": "TechBazaar's 2.01 pt success-rate gap is most reliably explained by a heavy reliance on cards (77.2% of volume) at an average ticket of Rs 14580.39 — shifting more volume to UPI and activating soft-decline retries are the two actions with the clearest evidence behind them.",
+        "summary": "TechBazaar's biggest measurable drag is that 77% of payments go through cards, which fail at 15%, while UPI and netbanking fail at 11% and 7% respectively — nudging customers toward UPI/netbanking and enabling soft-decline retries are the two actions most likely to close the 2.01-point gap.",
         "verified": true,
         "verification_attempts": 1,
         "violations": []
       },
       "branch_taken": null,
       "model": "claude-sonnet-4.6",
-      "prompt": "MERCHANT\n  name: TechBazaar\n  mcc: 5732 (electronics)\n  transactions this month: 940\n  average ticket: Rs 14580.39\n\nSUCCESS RATE\n  observed:            86.06%\n  cohort achievable:   88.07%\n  gap:                 2.01 points\n\nDECOMPOSITION (Shapley, points of the gap)\n  bank          -0.34 pts +/- 0.57 measured error   [INSIDE ITS OWN ERROR BAR]\n  method        +0.83 pts +/- 0.57 measured error\n  hour          -0.46 pts +/- 0.57 measured error   [INSIDE ITS OWN ERROR BAR]\n  amount_band   +1.53 pts +/- 0.58 measured error   [NOT IDENTIFIED - merchant has effectively one value here]\n  residual      +0.45 pts   [unexplained residual]\n  process_gap   +0.57 pts   [process gap, computed directly, NOT decomposed]\n\nMERCHANT BANK MIX vs NPCI NATIONAL DATA (period 2025-08)\n  bank                              share   NPCI BD%%  NPCI TD%%  approved%%\n  State Bank of India               28.2%     5.92     0.42     93.66\n  HDFC Bank Ltd.                     8.3%     4.63     0.01     95.37\n  Bank of Baroda                     7.0%     8.50     0.05     91.44\n  Punjab National Bank               6.6%     8.61     0.19     91.20\n  Union Bank of India                5.9%     7.02     0.75     92.23\n  Canara Bank                        5.5%     6.92     0.36     92.73\n\nHOUR DISTRIBUTION (share of payments)\n  afternoon       36.8%\n  evening         29.5%\n  morning         26.1%\n  night            7.7%\n\nMETHOD DISTRIBUTION (share of payments)\n  card            77.2%\n  upi             16.9%\n  netbanking       5.9%\n\nAMOUNT BAND DISTRIBUTION (share of payments)\n  large           96.4%\n  medium           2.3%\n  small            1.2%\n  micro            0.1%\n\nProduce the JSON object now.",
-      "raw_response": "```json\n{\n  \"hypotheses\": [\n    {\n      \"factor\": \"bank\",\n      \"attribution_pts\": -0.34,\n      \"root_cause_label\": \"none_of_the_above\",\n      \"hypothesis\": \"The bank mix factor contributes -0.34 pts to the gap, but this is smaller than its own measured error bar of ±0.57 pts, so no reliable conclusion can be drawn. The apparent drag from issuers such as Bank of Baroda (91.44% approval) and Punjab National Bank (91.20% approval) cannot be distinguished from noise at this sample size.\",\n      \"evidence\": [\n        \"bank attribution -0.34 pts is inside its own error bar of ±0.57\",\n        \"Bank of Baroda approved%% 91.44\",\n        \"Punjab National Bank approved%% 91.20\",\n        \"State Bank of India holds the largest share at 28.2%\"\n      ],\n      \"recommended_action\": \"Collect more transaction volume to reduce the error bar below 0.34 pts before acting on bank mix; no routing change is warranted yet.\",\n      \"action_type\": \"investigation\"\n    },\n    {\n      \"factor\": \"method\",\n      \"attribution_pts\": 0.83,\n      \"root_cause_label\": \"method_mix_mismatch\",\n      \"hypothesis\": \"Cards account for 77.2% of TechBazaar's payment volume, and for high-ticket electronics purchases cards tend to attract more issuer-side friction than UPI, which represents only 16.9% of volume. Shifting more transactions toward UPI could recover a portion of the 0.83 pts that the method mix is currently costing relative to the achievable cohort benchmark.\",\n      \"evidence\": [\n        \"card share 77.2%\",\n        \"upi share 16.9%\",\n        \"method attribution +0.83 pts\",\n        \"average ticket Rs 14580.39\",\n        \"method error bar ±0.57 pts — attribution exceeds error bar\"\n      ],\n      \"recommended_action\": \"Promote UPI as the default or first-displayed payment option at checkout to shift volume away from cards toward the higher-performing rail.\",\n      \"action_type\": \"merchant_action\"\n    },\n    {\n      \"factor\": \"hour\",\n      \"attribution_pts\": -0.46,\n      \"root_cause_label\": \"none_of_the_above\",\n      \"hypothesis\": \"The hour factor shows -0.46 pts attribution, but this falls inside its own error bar of ±0.57 pts, so the timing pattern cannot be confirmed as a real cause. Night-window traffic is only 7.7%, which is low enough that midnight billing penalty cannot be established from the available data.\",\n      \"evidence\": [\n        \"hour attribution -0.46 pts is inside its own error bar of ±0.57\",\n        \"night share 7.7%\",\n        \"afternoon share 36.8%\"\n      ],\n      \"recommended_action\": \"Tag transactions by precise hour and monitor night-window (23:00–05:59) decline rates separately over the next month before drawing conclusions.\",\n      \"action_type\": \"investigation\"\n    },\n    {\n      \"factor\": \"amount_band\",\n      \"attribution_pts\": 1.53,\n      \"root_cause_label\": \"amount_band_risk\",\n      \"hypothesis\": \"This factor is flagged NOT IDENTIFIED because 96.4% of TechBazaar's transactions fall in the large band, leaving no meaningful comparison group to measure the effect — the decomposition could not isolate it. However, with an average ticket of Rs 14580.39 and 96.4% of volume in the large band, issuer risk controls on high-value transactions are a plausible but unconfirmed contributor to the gap.\",\n      \"evidence\": [\n        \"amount_band flagged NOT IDENTIFIED\",\n        \"large band share 96.4%\",\n        \"average ticket Rs 14580.39\",\n        \"amount_band attribution +1.53 pts ±0.58\"\n      ],\n      \"recommended_action\": \"Investigate issuer decline reason codes specifically for large-band transactions to determine whether high-ticket risk rules are triggering declines.\",\n      \"action_type\": \"investigation\"\n    },\n    {\n      \"factor\": \"process_gap\",\n      \"attribution_pts\": 0.57,\n      \"root_cause_label\": \"no_soft_decline_retry\",\n      \"hypothesis\": \"The process gap of 0.57 pts is computed directly and represents recoverable failures that are not being retried — soft declines such as insufficient funds or temporary bank unavailability that a retry would resolve. Implementing automatic retry logic for soft-decline response codes could recover up to 0.57 pts of the 2.01 pt gap without any change to the payment mix or routing.\",\n      \"evidence\": [\n        \"process_gap +0.57 pts computed directly\",\n        \"overall gap 2.01 pts\",\n        \"observed success rate 86.06%\",\n        \"cohort achievable 88.07%\"\n      ],\n      \"recommended_action\": \"Enable automatic soft-decline retry on the payment gateway for eligible response codes (e.g. temporary bank unavailability, do-not-honour retryable).\",\n      \"action_type\": \"auto_execute\"\n    }\n  ],\n  \"primary_label\": \"method_mix_mismatch\",\n  \"summary\": \"TechBazaar's 2.01 pt success-rate gap is most reliably explained by a heavy reliance on cards (77.2% of volume) at an average ticket of Rs 14580.39 — shifting more volume to UPI and activating soft-decline retries are the two actions with the clearest evidence behind them.\"\n}\n```",
-      "tokens_in": 1219,
-      "tokens_out": 1373,
+      "prompt": "MERCHANT\n  name: TechBazaar\n  mcc: 5732 (electronics)\n  transactions this month: 940\n  average ticket: Rs 14580.39\n\nSUCCESS RATE\n  observed:            86.06%\n  cohort achievable:   88.07%\n  gap:                 2.01 points\n\nDECOMPOSITION (Shapley, points of the gap)\n  bank          -0.34 pts +/- 0.57 measured error   [INSIDE ITS OWN ERROR BAR]\n  method        +0.83 pts +/- 0.57 measured error\n  hour          -0.46 pts +/- 0.57 measured error   [INSIDE ITS OWN ERROR BAR]\n  amount_band   +1.53 pts +/- 0.58 measured error   [NOT IDENTIFIED - merchant has effectively one value here]\n  residual      +0.45 pts   [unexplained residual]\n  process_gap   +0.57 pts   [process gap, computed directly, NOT decomposed]\n\nMERCHANT BANK MIX vs NPCI NATIONAL DATA (period 2025-08)\n  bank                              share   NPCI BD%%  NPCI TD%%  approved%%\n  State Bank of India               28.2%     5.92     0.42     93.66\n  HDFC Bank Ltd.                     8.3%     4.63     0.01     95.37\n  Bank of Baroda                     7.0%     8.50     0.05     91.44\n  Punjab National Bank               6.6%     8.61     0.19     91.20\n  Union Bank of India                5.9%     7.02     0.75     92.23\n  Canara Bank                        5.5%     6.92     0.36     92.73\n\nHOUR DISTRIBUTION (share of payments)\n  afternoon       36.8%\n  evening         29.5%\n  morning         26.1%\n  night            7.7%\n\nMETHOD DISTRIBUTION (share of payments)\n  card            77.2%\n  upi             16.9%\n  netbanking       5.9%\n\nAMOUNT BAND DISTRIBUTION (share of payments)\n  large           96.4%\n  medium           2.3%\n  small            1.2%\n  micro            0.1%\n\nProduce the JSON object now.\n\nWHAT YOU LOOKED UP\n  factor_breakdown({\"factor\":\"method\"}) -> {\"factor\":\"method\",\"breakdown\":[{\"value\":\"card\",\"share_pct\":77.23,\"payments\":726,\"failure_pct\":15.01},{\"value\":\"upi\",\"share_pct\":16.91,\"payments\":159,\"failure_pct\":11.32},{\"value\":\"netbanking\",\"share_pct\":5.85,\"payments\":55,\"failure_pct\":7.27}]}\n  factor_breakdown({\"factor\":\"amount_band\"}) -> {\"factor\":\"amount_band\",\"breakdown\":[{\"value\":\"large\",\"share_pct\":96.38,\"payments\":906,\"failure_pct\":14.24},{\"value\":\"medium\",\"share_pct\":2.34,\"payments\":22,\"failure_pct\":4.55},{\"value\":\"small\",\"share_pct\":1.17,\"payments\":11,\"failure_pct\":9.09},{\"value\":\"micro\",\"share_pct\":0.11,\"payments\":1,\"failure_pct\":0.0}]}\n  failure_examples({\"factor\":\"method\",\"value\":\"card\"}) -> {\"factor\":\"method\",\"value\":\"card\",\"failed_payments\":109,\"error_codes\":{\"transaction_daily_count_exceeded\":10,\"payment_declined\":7,\"card_declined\":5,\"credit_limit_exceeded\":5,\"payment_pending_approval\":5,\"insufficient_funds\":5,\"transaction_daily_limit_exceeded\":5,\"transaction_limit_exceeded\":5},\"example_amounts_paise\":[2103053,2311866,858926,1716380,2333409]}\n  factor_breakdown({\"factor\":\"bank\"}) -> {\"factor\":\"bank\",\"breakdown\":[{\"value\":\"State Bank of India\",\"share_pct\":28.19,\"payments\":265,\"failure_pct\":11.32},{\"value\":\"HDFC Bank Ltd.\",\"share_pct\":8.3,\"payments\":78,\"failure_pct\":12.82},{\"value\":\"Bank of Baroda\",\"share_pct\":7.02,\"payments\":66,\"failure_pct\":10.61},{\"value\":\"Punjab National Bank\",\"share_pct\":6.6,\"payments\":62,\"failure_pct\":9.68},{\"value\":\"Union Bank of India\",\"share_pct\":5.85,\n  failure_examples({\"factor\":\"method\",\"value\":\"upi\"}) -> {\"factor\":\"method\",\"value\":\"upi\",\"failed_payments\":18,\"error_codes\":{\"transaction_frequency_limit_exceeded\":2,\"payment_declined\":2,\"pin_not_set\":1,\"authentication_failed\":1,\"debit_declined\":1,\"collect_request_pending\":1,\"transaction_limit_exceeded\":1,\"payment_pending\":1},\"example_amounts_paise\":[2233122,1666130,2435588,1189808,2455230]}\n  bank_vs_npci({\"bank\":\"State Bank of India\"}) -> {\"bank\":\"State Bank of India\",\"payments\":265,\"share_pct\":28.19,\"merchant_failure_pct\":11.32,\"npci_business_decline_pct\":5.92,\"npci_technical_decline_pct\":0.42,\"npci_technical_share_of_failures\":0.06624605678233439,\"in_npci_top50\":true}",
+      "raw_response": "```json\n{\n  \"hypotheses\": [\n    {\n      \"factor\": \"bank\",\n      \"attribution_pts\": -0.34,\n      \"root_cause_label\": \"none_of_the_above\",\n      \"hypothesis\": \"The bank mix factor contributes only -0.34 pts, which is smaller than its own measured error bar of 0.57 pts, so no reliable conclusion can be drawn about whether TechBazaar's issuer concentration is hurting success rates. Further data collection is needed before acting on this factor.\",\n      \"evidence\": [\n        \"bank attribution -0.34 pts is inside its own error bar of +/- 0.57 pts\",\n        \"State Bank of India merchant_failure_pct 11.32% vs NPCI BD 5.92%\",\n        \"State Bank of India share 28.19% of 265 payments\"\n      ],\n      \"recommended_action\": \"Collect more transactions to reduce the error bar below 0.57 pts before drawing conclusions about bank concentration.\",\n      \"action_type\": \"investigation\"\n    },\n    {\n      \"factor\": \"method\",\n      \"attribution_pts\": 0.83,\n      \"root_cause_label\": \"method_mix_mismatch\",\n      \"hypothesis\": \"Cards account for 77.2% of TechBazaar's volume but carry the highest failure rate at 15.01%, while UPI (16.9% share) fails at only 11.32% and netbanking (5.9% share) at just 7.27%. Shifting even a modest portion of card volume toward UPI or netbanking could close a meaningful part of the 2.01-point gap.\",\n      \"evidence\": [\n        \"card share_pct 77.23%, failure_pct 15.01%\",\n        \"upi share_pct 16.91%, failure_pct 11.32%\",\n        \"netbanking share_pct 5.85%, failure_pct 7.27%\",\n        \"method attribution +0.83 pts, error bar +/- 0.57 pts\",\n        \"card failed_payments 109 out of 726\"\n      ],\n      \"recommended_action\": \"Configure the payment page to surface UPI and netbanking options more prominently (e.g., set UPI as the default tab) to reduce reliance on cards for high-ticket electronics purchases.\",\n      \"action_type\": \"merchant_action\"\n    },\n    {\n      \"factor\": \"hour\",\n      \"attribution_pts\": -0.46,\n      \"root_cause_label\": \"none_of_the_above\",\n      \"hypothesis\": \"The hour factor contributes -0.46 pts, which is inside its own error bar of 0.57 pts, so the timing distribution cannot be confirmed as a reliable driver of the gap. Night-window traffic is only 7.7%, making a midnight billing penalty unlikely to be material here.\",\n      \"evidence\": [\n        \"hour attribution -0.46 pts is inside its own error bar of +/- 0.57 pts\",\n        \"night share 7.7% of payments\",\n        \"afternoon share 36.8%, evening share 29.5%\"\n      ],\n      \"recommended_action\": \"Monitor hour-level failure rates over the next billing cycle to determine whether the night window disproportionately drives failures before taking any action.\",\n      \"action_type\": \"investigation\"\n    },\n    {\n      \"factor\": \"amount_band\",\n      \"attribution_pts\": 1.53,\n      \"root_cause_label\": \"none_of_the_above\",\n      \"hypothesis\": \"The amount_band factor is flagged NOT IDENTIFIED because TechBazaar has effectively one value — 96.4% of payments fall in the large band — so there is no within-merchant variation to measure, and the 1.53-pt attribution could not be reliably decomposed. It is not possible to confirm amount_band_risk as a cause without a comparison group.\",\n      \"evidence\": [\n        \"amount_band flagged NOT IDENTIFIED in decomposition\",\n        \"large band share_pct 96.38%, 906 payments, failure_pct 14.24%\",\n        \"medium band share_pct 2.34%, 22 payments\",\n        \"amount_band attribution +1.53 pts +/- 0.58 pts\"\n      ],\n      \"recommended_action\": \"Investigate whether peer electronics merchants with similar average tickets (Rs 14580.39) show the same large-band failure rate, to determine if amount-level risk controls are being triggered.\",\n      \"action_type\": \"investigation\"\n    },\n    {\n      \"factor\": \"process_gap\",\n      \"attribution_pts\": 0.57,\n      \"root_cause_label\": \"no_soft_decline_retry\",\n      \"hypothesis\": \"The directly computed process gap of 0.57 pts indicates recoverable failures are not being retried — card error codes such as 'transaction_daily_count_exceeded', 'payment_pending_approval', and 'transaction_limit_exceeded' are soft declines that can succeed on a retry or via an alternate payment link. Implementing automatic retry logic for these codes would recover a portion of the 0.57-pt gap without any customer action.\",\n      \"evidence\": [\n        \"process_gap +0.57 pts computed directly\",\n        \"card error code transaction_daily_count_exceeded: 10 occurrences\",\n        \"card error code payment_pending_approval: 5 occurrences\",\n        \"card error code transaction_limit_exceeded: 5 occurrences\",\n        \"card error code transaction_daily_limit_exceeded: 5 occurrences\",\n        \"card failed_payments 109 out of 726\"\n      ],\n      \"recommended_action\": \"Enable automatic soft-decline retry and reissue payment links for transactions flagged with 'payment_pending_approval' and 'transaction_daily_count_exceeded' error codes.\",\n      \"action_type\": \"auto_execute\"\n    }\n  ],\n  \"primary_label\": \"method_mix_mismatch\",\n  \"summary\": \"TechBazaar's biggest measurable drag is that 77% of payments go through cards, which fail at 15%, while UPI and netbanking fail at 11% and 7% respectively — nudging customers toward UPI/netbanking and enabling soft-decline retries are the two actions most likely to close the 2.01-point gap.\"\n}\n```",
+      "tokens_in": 1989,
+      "tokens_out": 1533,
       "cache_hit": true,
       "stub": false,
       "confidence": null,
@@ -366,12 +418,12 @@
       "intermediates": {}
     },
     {
-      "run_id": "run_7d78355e",
+      "run_id": "run_af03f000",
       "seq": 6,
       "node": "plan",
       "kind": "deterministic",
       "status": "ok",
-      "started_at": 1787842947.1448555,
+      "started_at": 1787847104.1231155,
       "duration_ms": 3,
       "input_summary": {},
       "output_summary": {
@@ -399,7 +451,7 @@
           },
           {
             "factor": "amount_band",
-            "label": "amount_band_risk",
+            "label": "none_of_the_above",
             "attribution_pts": 1.53,
             "mae": 0.5776,
             "downgraded_from": "investigation",
@@ -430,13 +482,13 @@
       }
     },
     {
-      "run_id": "run_7d78355e",
+      "run_id": "run_af03f000",
       "seq": 7,
       "node": "gate",
       "kind": "deterministic",
       "status": "ok",
-      "started_at": 1787842947.1478603,
-      "duration_ms": 22,
+      "started_at": 1787847104.1261158,
+      "duration_ms": 20,
       "input_summary": {},
       "output_summary": {
         "decisions": {
@@ -465,13 +517,13 @@
       "intermediates": {}
     },
     {
-      "run_id": "run_7d78355e",
+      "run_id": "run_af03f000",
       "seq": 8,
       "node": "execute",
       "kind": "deterministic",
       "status": "ok",
-      "started_at": 1787842947.1718867,
-      "duration_ms": 3,
+      "started_at": 1787847104.147126,
+      "duration_ms": 7,
       "input_summary": {},
       "output_summary": {
         "executed": 3,
@@ -496,13 +548,13 @@
       "intermediates": {}
     },
     {
-      "run_id": "run_7d78355e",
+      "run_id": "run_af03f000",
       "seq": 9,
       "node": "report",
       "kind": "deterministic",
       "status": "ok",
-      "started_at": 1787842947.1768427,
-      "duration_ms": 11,
+      "started_at": 1787847104.1551232,
+      "duration_ms": 6,
       "input_summary": {},
       "output_summary": {
         "measured_keys": [
@@ -1214,10 +1266,10 @@
         "method+hour": -0.09163991822381812,
         "method+amount_band": 1.5136282684580449,
         "hour+amount_band": 0.6463064218894754,
-        "bank+method+hour": -0.0048370536658959296,
-        "bank+method+amount_band": 1.5771320325661087,
-        "bank+hour+amount_band": 0.6895123508495304,
-        "method+hour+amount_band": 1.491850702010089,
+        "bank+method+hour": -0.004837053665907032,
+        "bank+method+amount_band": 1.5771320325661309,
+        "bank+hour+amount_band": 0.6895123508495193,
+        "method+hour+amount_band": 1.4918507020101002,
         "bank+method+hour+amount_band": 1.5560763419748436
       },
       "factors": [
@@ -1356,75 +1408,76 @@
           "factor": "bank",
           "attribution_pts": -0.34,
           "root_cause_label": "none_of_the_above",
-          "hypothesis": "The bank mix factor contributes -0.34 pts to the gap, but this is smaller than its own measured error bar of ±0.57 pts, so no reliable conclusion can be drawn. The apparent drag from issuers such as Bank of Baroda (91.44% approval) and Punjab National Bank (91.20% approval) cannot be distinguished from noise at this sample size.",
+          "hypothesis": "The bank mix factor contributes only -0.34 pts, which is smaller than its own measured error bar of 0.57 pts, so no reliable conclusion can be drawn about whether TechBazaar's issuer concentration is hurting success rates. Further data collection is needed before acting on this factor.",
           "evidence": [
-            "bank attribution -0.34 pts is inside its own error bar of ±0.57",
-            "Bank of Baroda approved%% 91.44",
-            "Punjab National Bank approved%% 91.20",
-            "State Bank of India holds the largest share at 28.2%"
+            "bank attribution -0.34 pts is inside its own error bar of +/- 0.57 pts",
+            "State Bank of India merchant_failure_pct 11.32% vs NPCI BD 5.92%",
+            "State Bank of India share 28.19% of 265 payments"
           ],
-          "recommended_action": "Collect more transaction volume to reduce the error bar below 0.34 pts before acting on bank mix; no routing change is warranted yet.",
+          "recommended_action": "Collect more transactions to reduce the error bar below 0.57 pts before drawing conclusions about bank concentration.",
           "action_type": "investigation"
         },
         {
           "factor": "method",
           "attribution_pts": 0.83,
           "root_cause_label": "method_mix_mismatch",
-          "hypothesis": "Cards account for 77.2% of TechBazaar's payment volume, and for high-ticket electronics purchases cards tend to attract more issuer-side friction than UPI, which represents only 16.9% of volume. Shifting more transactions toward UPI could recover a portion of the 0.83 pts that the method mix is currently costing relative to the achievable cohort benchmark.",
+          "hypothesis": "Cards account for 77.2% of TechBazaar's volume but carry the highest failure rate at 15.01%, while UPI (16.9% share) fails at only 11.32% and netbanking (5.9% share) at just 7.27%. Shifting even a modest portion of card volume toward UPI or netbanking could close a meaningful part of the 2.01-point gap.",
           "evidence": [
-            "card share 77.2%",
-            "upi share 16.9%",
-            "method attribution +0.83 pts",
-            "average ticket Rs 14580.39",
-            "method error bar ±0.57 pts — attribution exceeds error bar"
+            "card share_pct 77.23%, failure_pct 15.01%",
+            "upi share_pct 16.91%, failure_pct 11.32%",
+            "netbanking share_pct 5.85%, failure_pct 7.27%",
+            "method attribution +0.83 pts, error bar +/- 0.57 pts",
+            "card failed_payments 109 out of 726"
           ],
-          "recommended_action": "Promote UPI as the default or first-displayed payment option at checkout to shift volume away from cards toward the higher-performing rail.",
+          "recommended_action": "Configure the payment page to surface UPI and netbanking options more prominently (e.g., set UPI as the default tab) to reduce reliance on cards for high-ticket electronics purchases.",
           "action_type": "merchant_action"
         },
         {
           "factor": "hour",
           "attribution_pts": -0.46,
           "root_cause_label": "none_of_the_above",
-          "hypothesis": "The hour factor shows -0.46 pts attribution, but this falls inside its own error bar of ±0.57 pts, so the timing pattern cannot be confirmed as a real cause. Night-window traffic is only 7.7%, which is low enough that midnight billing penalty cannot be established from the available data.",
+          "hypothesis": "The hour factor contributes -0.46 pts, which is inside its own error bar of 0.57 pts, so the timing distribution cannot be confirmed as a reliable driver of the gap. Night-window traffic is only 7.7%, making a midnight billing penalty unlikely to be material here.",
           "evidence": [
-            "hour attribution -0.46 pts is inside its own error bar of ±0.57",
-            "night share 7.7%",
-            "afternoon share 36.8%"
+            "hour attribution -0.46 pts is inside its own error bar of +/- 0.57 pts",
+            "night share 7.7% of payments",
+            "afternoon share 36.8%, evening share 29.5%"
           ],
-          "recommended_action": "Tag transactions by precise hour and monitor night-window (23:00–05:59) decline rates separately over the next month before drawing conclusions.",
+          "recommended_action": "Monitor hour-level failure rates over the next billing cycle to determine whether the night window disproportionately drives failures before taking any action.",
           "action_type": "investigation"
         },
         {
           "factor": "amount_band",
           "attribution_pts": 1.53,
-          "root_cause_label": "amount_band_risk",
-          "hypothesis": "This factor is flagged NOT IDENTIFIED because 96.4% of TechBazaar's transactions fall in the large band, leaving no meaningful comparison group to measure the effect — the decomposition could not isolate it. However, with an average ticket of Rs 14580.39 and 96.4% of volume in the large band, issuer risk controls on high-value transactions are a plausible but unconfirmed contributor to the gap.",
+          "root_cause_label": "none_of_the_above",
+          "hypothesis": "The amount_band factor is flagged NOT IDENTIFIED because TechBazaar has effectively one value — 96.4% of payments fall in the large band — so there is no within-merchant variation to measure, and the 1.53-pt attribution could not be reliably decomposed. It is not possible to confirm amount_band_risk as a cause without a comparison group.",
           "evidence": [
-            "amount_band flagged NOT IDENTIFIED",
-            "large band share 96.4%",
-            "average ticket Rs 14580.39",
-            "amount_band attribution +1.53 pts ±0.58"
+            "amount_band flagged NOT IDENTIFIED in decomposition",
+            "large band share_pct 96.38%, 906 payments, failure_pct 14.24%",
+            "medium band share_pct 2.34%, 22 payments",
+            "amount_band attribution +1.53 pts +/- 0.58 pts"
           ],
-          "recommended_action": "Investigate issuer decline reason codes specifically for large-band transactions to determine whether high-ticket risk rules are triggering declines.",
+          "recommended_action": "Investigate whether peer electronics merchants with similar average tickets (Rs 14580.39) show the same large-band failure rate, to determine if amount-level risk controls are being triggered.",
           "action_type": "investigation"
         },
         {
           "factor": "process_gap",
           "attribution_pts": 0.57,
           "root_cause_label": "no_soft_decline_retry",
-          "hypothesis": "The process gap of 0.57 pts is computed directly and represents recoverable failures that are not being retried — soft declines such as insufficient funds or temporary bank unavailability that a retry would resolve. Implementing automatic retry logic for soft-decline response codes could recover up to 0.57 pts of the 2.01 pt gap without any change to the payment mix or routing.",
+          "hypothesis": "The directly computed process gap of 0.57 pts indicates recoverable failures are not being retried — card error codes such as 'transaction_daily_count_exceeded', 'payment_pending_approval', and 'transaction_limit_exceeded' are soft declines that can succeed on a retry or via an alternate payment link. Implementing automatic retry logic for these codes would recover a portion of the 0.57-pt gap without any customer action.",
           "evidence": [
             "process_gap +0.57 pts computed directly",
-            "overall gap 2.01 pts",
-            "observed success rate 86.06%",
-            "cohort achievable 88.07%"
+            "card error code transaction_daily_count_exceeded: 10 occurrences",
+            "card error code payment_pending_approval: 5 occurrences",
+            "card error code transaction_limit_exceeded: 5 occurrences",
+            "card error code transaction_daily_limit_exceeded: 5 occurrences",
+            "card failed_payments 109 out of 726"
           ],
-          "recommended_action": "Enable automatic soft-decline retry on the payment gateway for eligible response codes (e.g. temporary bank unavailability, do-not-honour retryable).",
+          "recommended_action": "Enable automatic soft-decline retry and reissue payment links for transactions flagged with 'payment_pending_approval' and 'transaction_daily_count_exceeded' error codes.",
           "action_type": "auto_execute"
         }
       ],
       "primary_label": "method_mix_mismatch",
-      "summary": "TechBazaar's 2.01 pt success-rate gap is most reliably explained by a heavy reliance on cards (77.2% of volume) at an average ticket of Rs 14580.39 — shifting more volume to UPI and activating soft-decline retries are the two actions with the clearest evidence behind them."
+      "summary": "TechBazaar's biggest measurable drag is that 77% of payments go through cards, which fail at 15%, while UPI and netbanking fail at 11% and 7% respectively — nudging customers toward UPI/netbanking and enabling soft-decline retries are the two actions most likely to close the 2.01-point gap."
     },
     "plan": {
       "headline": "5 fixes proposed, 3 withheld because the attribution is inside its own error bar.",
@@ -1449,7 +1502,7 @@
         },
         {
           "factor": "amount_band",
-          "label": "amount_band_risk",
+          "label": "none_of_the_above",
           "attribution_pts": 1.53,
           "mae": 0.5776,
           "downgraded_from": "investigation",
@@ -1476,7 +1529,7 @@
     "ledger": [
       {
         "sequence": 0,
-        "timestamp": "2026-08-27T15:02:27.171886+00:00",
+        "timestamp": "2026-08-27T16:11:44.147126+00:00",
         "txn_id": "merchant:techbazaar",
         "proposed_action": {
           "action_type": "flag_for_investigation",
@@ -1491,11 +1544,11 @@
         "gate_reason": "OK_ESCALATION",
         "outcome": "escalated",
         "prev_hash": "0000000000000000000000000000000000000000000000000000000000000000",
-        "entry_hash": "949f14beebe5aa9314b73f15e9b6fb2d60a21fb4f3cc25ea7e1cc3917a1690b1"
+        "entry_hash": "df8080785660c8a2f9cd3ec04b70a80a3325fa7f339ec91a36da261ac158de2c"
       },
       {
         "sequence": 1,
-        "timestamp": "2026-08-27T15:02:27.172879+00:00",
+        "timestamp": "2026-08-27T16:11:44.147126+00:00",
         "txn_id": "merchant:techbazaar",
         "proposed_action": {
           "action_type": "update_payment_method",
@@ -1503,18 +1556,18 @@
           "amount_paise": 0,
           "target_bank": null,
           "scheduled_time": null,
-          "reason": "Promote UPI as the default or first-displayed payment option at checkout to shift volume away from cards toward the higher-performing rail.",
+          "reason": "Configure the payment page to surface UPI and netbanking options more prominently (e.g., set UPI as the default tab) to reduce reliance on cards for high-ticket electronics purchases.",
           "requires_merchant_approval": true
         },
         "gate_decision": "step_up",
         "gate_reason": "OK_MERCHANT_ACTION",
         "outcome": "merchant_action",
-        "prev_hash": "949f14beebe5aa9314b73f15e9b6fb2d60a21fb4f3cc25ea7e1cc3917a1690b1",
-        "entry_hash": "61516b5d4a9576aa856d2267a956138aa6afc363a95adcdecdb6d7931599c133"
+        "prev_hash": "df8080785660c8a2f9cd3ec04b70a80a3325fa7f339ec91a36da261ac158de2c",
+        "entry_hash": "3b5a337bad8322f8d62e712f178dc7728412228b093e100e85ff34403783b2a1"
       },
       {
         "sequence": 2,
-        "timestamp": "2026-08-27T15:02:27.172879+00:00",
+        "timestamp": "2026-08-27T16:11:44.147126+00:00",
         "txn_id": "merchant:techbazaar",
         "proposed_action": {
           "action_type": "flag_for_investigation",
@@ -1528,12 +1581,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_ESCALATION",
         "outcome": "escalated",
-        "prev_hash": "61516b5d4a9576aa856d2267a956138aa6afc363a95adcdecdb6d7931599c133",
-        "entry_hash": "7a151acf01110466a49fa9f7161adaf81c50572bdfeb3d137e4932e86ad76649"
+        "prev_hash": "3b5a337bad8322f8d62e712f178dc7728412228b093e100e85ff34403783b2a1",
+        "entry_hash": "2bfe75b16c9914f6dd52ea8cc5c54dbd7764546fd36718d0738f6f7995b978c8"
       },
       {
         "sequence": 3,
-        "timestamp": "2026-08-27T15:02:27.172879+00:00",
+        "timestamp": "2026-08-27T16:11:44.147126+00:00",
         "txn_id": "merchant:techbazaar",
         "proposed_action": {
           "action_type": "flag_for_investigation",
@@ -1547,12 +1600,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_ESCALATION",
         "outcome": "escalated",
-        "prev_hash": "7a151acf01110466a49fa9f7161adaf81c50572bdfeb3d137e4932e86ad76649",
-        "entry_hash": "f7f79bfa2bfb67f6facbb1dbafe95d8418ccac2d7c1260c678b921a5183945cf"
+        "prev_hash": "2bfe75b16c9914f6dd52ea8cc5c54dbd7764546fd36718d0738f6f7995b978c8",
+        "entry_hash": "5af1ad7a2c44f51e17ddf3bd9476128e062c34da1d291949a4fbc80d1e4f521f"
       },
       {
         "sequence": 4,
-        "timestamp": "2026-08-27T15:02:27.172879+00:00",
+        "timestamp": "2026-08-27T16:11:44.147126+00:00",
         "txn_id": "pay_techbazaar_0538",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1560,151 +1613,151 @@
           "amount_paise": 2426705,
           "target_bank": "State Bank of India",
           "scheduled_time": "2026-08-29T01:00:00+00:00",
-          "reason": "Enable automatic soft-decline retry on the payment gateway for eligible response codes (e.g. temporary bank unavailability, do-not-honour retryable). (debit_declined), unretried -- retry at +30h, the plateau: long enough for the balance to have changed",
+          "reason": "Enable automatic soft-decline retry and reissue payment links for transactions flagged with 'payment_pending_approval' and 'transaction_daily_count_exceeded' error codes. (debit_declined), unretried -- retry at +30h, the plateau: long enough for the balance to have changed",
           "requires_merchant_approval": false
         },
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "f7f79bfa2bfb67f6facbb1dbafe95d8418ccac2d7c1260c678b921a5183945cf",
-        "entry_hash": "b9d3369c64769e047f8090687d75a8898106e542927d545f319c7bfe1ec56328"
+        "prev_hash": "5af1ad7a2c44f51e17ddf3bd9476128e062c34da1d291949a4fbc80d1e4f521f",
+        "entry_hash": "58856c2a5c722b8935b34b771f2b73e80c621172ed1383f0c60fc4219b9c7c85"
       },
       {
         "sequence": 5,
-        "timestamp": "2026-08-27T15:02:27.172879+00:00",
+        "timestamp": "2026-08-27T16:11:44.148124+00:00",
         "txn_id": "pay_techbazaar_0369",
         "proposed_action": {
           "action_type": "retry_soft_decline",
           "txn_id": "pay_techbazaar_0369",
           "amount_paise": 2405515,
           "target_bank": "State Bank of India",
-          "scheduled_time": "2026-08-27T15:02:27.145860+00:00",
-          "reason": "Enable automatic soft-decline retry on the payment gateway for eligible response codes (e.g. temporary bank unavailability, do-not-honour retryable). (transaction_daily_count_exceeded), unretried -- retry at +65h, the plateau: long enough for the balance to have changed",
+          "scheduled_time": "2026-08-27T16:11:44.124120+00:00",
+          "reason": "Enable automatic soft-decline retry and reissue payment links for transactions flagged with 'payment_pending_approval' and 'transaction_daily_count_exceeded' error codes. (transaction_daily_count_exceeded), unretried -- retry at +66.2h, the plateau: long enough for the balance to have changed",
           "requires_merchant_approval": false
         },
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "b9d3369c64769e047f8090687d75a8898106e542927d545f319c7bfe1ec56328",
-        "entry_hash": "fbdcea3daf8d65f9a9084fddd61fc49517bd971f5174f3371c8a81e551400aa6"
+        "prev_hash": "58856c2a5c722b8935b34b771f2b73e80c621172ed1383f0c60fc4219b9c7c85",
+        "entry_hash": "b1f579f08f217aec4d6fc5003f76eced708aaee49617dccd56e49c652cf29044"
       },
       {
         "sequence": 6,
-        "timestamp": "2026-08-27T15:02:27.172879+00:00",
+        "timestamp": "2026-08-27T16:11:44.148124+00:00",
         "txn_id": "pay_techbazaar_0334",
         "proposed_action": {
           "action_type": "retry_soft_decline",
           "txn_id": "pay_techbazaar_0334",
           "amount_paise": 2310511,
           "target_bank": "HDFC Bank Ltd.",
-          "scheduled_time": "2026-08-27T15:02:27.145860+00:00",
-          "reason": "Enable automatic soft-decline retry on the payment gateway for eligible response codes (e.g. temporary bank unavailability, do-not-honour retryable). (transaction_daily_count_exceeded), unretried -- retry at +71h, the plateau: long enough for the balance to have changed",
+          "scheduled_time": "2026-08-27T16:11:44.124120+00:00",
+          "reason": "Enable automatic soft-decline retry and reissue payment links for transactions flagged with 'payment_pending_approval' and 'transaction_daily_count_exceeded' error codes. (transaction_daily_count_exceeded), unretried -- retry at +72.2h, past the plateau; intent goes stale",
           "requires_merchant_approval": false
         },
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "fbdcea3daf8d65f9a9084fddd61fc49517bd971f5174f3371c8a81e551400aa6",
-        "entry_hash": "44798956b7cced4341394e8b3d7af22ca9db30335a9a49c4ea5a92388075777b"
+        "prev_hash": "b1f579f08f217aec4d6fc5003f76eced708aaee49617dccd56e49c652cf29044",
+        "entry_hash": "068748b54b0bc5412e60105cacbcf9f7bd5313fb80728e9f28e74da189a316d3"
       },
       {
         "sequence": 7,
-        "timestamp": "2026-08-27T15:02:27.172879+00:00",
+        "timestamp": "2026-08-27T16:11:44.148124+00:00",
         "txn_id": "pay_techbazaar_0465",
         "proposed_action": {
           "action_type": "retry_soft_decline",
           "txn_id": "pay_techbazaar_0465",
           "amount_paise": 2176012,
           "target_bank": "State Bank of India",
-          "scheduled_time": "2026-08-27T15:02:27.145860+00:00",
-          "reason": "Enable automatic soft-decline retry on the payment gateway for eligible response codes (e.g. temporary bank unavailability, do-not-honour retryable). (card_declined), unretried -- retry at +125h, past the plateau; intent goes stale",
+          "scheduled_time": "2026-08-27T16:11:44.124120+00:00",
+          "reason": "Enable automatic soft-decline retry and reissue payment links for transactions flagged with 'payment_pending_approval' and 'transaction_daily_count_exceeded' error codes. (card_declined), unretried -- retry at +126.2h, past the plateau; intent goes stale",
           "requires_merchant_approval": false
         },
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "44798956b7cced4341394e8b3d7af22ca9db30335a9a49c4ea5a92388075777b",
-        "entry_hash": "680f7fa87cb7718f8e59bfdd3de0a9b554822c9e47309bbb032dc902459610c6"
+        "prev_hash": "068748b54b0bc5412e60105cacbcf9f7bd5313fb80728e9f28e74da189a316d3",
+        "entry_hash": "0f669c72272794218eb9220248b2e380d26ca70034dec8f0834130be831aebec"
       },
       {
         "sequence": 8,
-        "timestamp": "2026-08-27T15:02:27.172879+00:00",
+        "timestamp": "2026-08-27T16:11:44.148124+00:00",
         "txn_id": "pay_techbazaar_0186",
         "proposed_action": {
           "action_type": "retry_soft_decline",
           "txn_id": "pay_techbazaar_0186",
           "amount_paise": 1820199,
           "target_bank": "State Bank of India",
-          "scheduled_time": "2026-08-27T15:02:27.145860+00:00",
-          "reason": "Enable automatic soft-decline retry on the payment gateway for eligible response codes (e.g. temporary bank unavailability, do-not-honour retryable). (payment_declined), unretried -- retry at +94h, past the plateau; intent goes stale",
+          "scheduled_time": "2026-08-27T16:11:44.125116+00:00",
+          "reason": "Enable automatic soft-decline retry and reissue payment links for transactions flagged with 'payment_pending_approval' and 'transaction_daily_count_exceeded' error codes. (payment_declined), unretried -- retry at +95.2h, past the plateau; intent goes stale",
           "requires_merchant_approval": false
         },
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "680f7fa87cb7718f8e59bfdd3de0a9b554822c9e47309bbb032dc902459610c6",
-        "entry_hash": "c1eb80cb15da890ef3056d986bf0ca3cecb7379774356bb4b326c6f261287a12"
+        "prev_hash": "0f669c72272794218eb9220248b2e380d26ca70034dec8f0834130be831aebec",
+        "entry_hash": "14089b03cf5105c612441ef1112b328a9e640e2501e4baf559decac82d31bbcb"
       },
       {
         "sequence": 9,
-        "timestamp": "2026-08-27T15:02:27.172879+00:00",
+        "timestamp": "2026-08-27T16:11:44.148124+00:00",
         "txn_id": "pay_techbazaar_0331",
         "proposed_action": {
           "action_type": "retry_soft_decline",
           "txn_id": "pay_techbazaar_0331",
           "amount_paise": 1813704,
           "target_bank": "Central Bank of India",
-          "scheduled_time": "2026-08-27T15:02:27.145860+00:00",
-          "reason": "Enable automatic soft-decline retry on the payment gateway for eligible response codes (e.g. temporary bank unavailability, do-not-honour retryable). (payment_declined), unretried -- retry at +66h, the plateau: long enough for the balance to have changed",
+          "scheduled_time": "2026-08-27T16:11:44.125116+00:00",
+          "reason": "Enable automatic soft-decline retry and reissue payment links for transactions flagged with 'payment_pending_approval' and 'transaction_daily_count_exceeded' error codes. (payment_declined), unretried -- retry at +67.2h, the plateau: long enough for the balance to have changed",
           "requires_merchant_approval": false
         },
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "c1eb80cb15da890ef3056d986bf0ca3cecb7379774356bb4b326c6f261287a12",
-        "entry_hash": "6fbd50ca52d128f226f0c542770b4aaae405cdb68f4fbea1c98e984620cf699d"
+        "prev_hash": "14089b03cf5105c612441ef1112b328a9e640e2501e4baf559decac82d31bbcb",
+        "entry_hash": "baed56937b94a0b2014501dda41fe95159a10d1549b31e2b230526d0a9d3fa72"
       },
       {
         "sequence": 10,
-        "timestamp": "2026-08-27T15:02:27.172879+00:00",
+        "timestamp": "2026-08-27T16:11:44.148124+00:00",
         "txn_id": "pay_techbazaar_0286",
         "proposed_action": {
           "action_type": "retry_soft_decline",
           "txn_id": "pay_techbazaar_0286",
           "amount_paise": 1771979,
           "target_bank": "State Bank of India",
-          "scheduled_time": "2026-08-27T15:02:27.145860+00:00",
-          "reason": "Enable automatic soft-decline retry on the payment gateway for eligible response codes (e.g. temporary bank unavailability, do-not-honour retryable). (transaction_daily_limit_exceeded), unretried -- retry at +45h, the plateau: long enough for the balance to have changed",
+          "scheduled_time": "2026-08-27T16:11:44.125116+00:00",
+          "reason": "Enable automatic soft-decline retry and reissue payment links for transactions flagged with 'payment_pending_approval' and 'transaction_daily_count_exceeded' error codes. (transaction_daily_limit_exceeded), unretried -- retry at +46.2h, the plateau: long enough for the balance to have changed",
           "requires_merchant_approval": false
         },
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "6fbd50ca52d128f226f0c542770b4aaae405cdb68f4fbea1c98e984620cf699d",
-        "entry_hash": "6d16c2b6ee11737019e41426d2f7314ce0f633d95d4bbc1437399d82424e32dc"
+        "prev_hash": "baed56937b94a0b2014501dda41fe95159a10d1549b31e2b230526d0a9d3fa72",
+        "entry_hash": "db6f63566abda070833fdefcadba2dc143b4c0b95daa0b230fc73296db8767fa"
       },
       {
         "sequence": 11,
-        "timestamp": "2026-08-27T15:02:27.172879+00:00",
+        "timestamp": "2026-08-27T16:11:44.148124+00:00",
         "txn_id": "pay_techbazaar_0251",
         "proposed_action": {
           "action_type": "retry_soft_decline",
           "txn_id": "pay_techbazaar_0251",
           "amount_paise": 1474527,
           "target_bank": "Bank of Baroda",
-          "scheduled_time": "2026-08-27T15:02:27.145860+00:00",
-          "reason": "Enable automatic soft-decline retry on the payment gateway for eligible response codes (e.g. temporary bank unavailability, do-not-honour retryable). (transaction_daily_count_exceeded), unretried -- retry at +31h, the plateau: long enough for the balance to have changed",
+          "scheduled_time": "2026-08-27T16:11:44.125116+00:00",
+          "reason": "Enable automatic soft-decline retry and reissue payment links for transactions flagged with 'payment_pending_approval' and 'transaction_daily_count_exceeded' error codes. (transaction_daily_count_exceeded), unretried -- retry at +32.2h, the plateau: long enough for the balance to have changed",
           "requires_merchant_approval": false
         },
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "6d16c2b6ee11737019e41426d2f7314ce0f633d95d4bbc1437399d82424e32dc",
-        "entry_hash": "207c55611c39a4988cb26f6f9f1182707409113fb2f4026f54c50f78fb91c2e6"
+        "prev_hash": "db6f63566abda070833fdefcadba2dc143b4c0b95daa0b230fc73296db8767fa",
+        "entry_hash": "8118a8bdd0885cfbdf151a6a17ee7c4c8163b1f8ca7bb80c2ecefa55f69c96f9"
       },
       {
         "sequence": 12,
-        "timestamp": "2026-08-27T15:02:27.172879+00:00",
+        "timestamp": "2026-08-27T16:11:44.148124+00:00",
         "txn_id": "pay_techbazaar_0776",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1712,18 +1765,18 @@
           "amount_paise": 1442926,
           "target_bank": "State Bank of India",
           "scheduled_time": "2026-08-29T03:00:00+00:00",
-          "reason": "Enable automatic soft-decline retry on the payment gateway for eligible response codes (e.g. temporary bank unavailability, do-not-honour retryable). (payment_pending), unretried -- retry at +30h, the plateau: long enough for the balance to have changed",
+          "reason": "Enable automatic soft-decline retry and reissue payment links for transactions flagged with 'payment_pending_approval' and 'transaction_daily_count_exceeded' error codes. (payment_pending), unretried -- retry at +30h, the plateau: long enough for the balance to have changed",
           "requires_merchant_approval": false
         },
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "207c55611c39a4988cb26f6f9f1182707409113fb2f4026f54c50f78fb91c2e6",
-        "entry_hash": "5f3efebb32f5dfbf868164f9512c6e2ff4b0e9629de5c4f5e5f5b039b7b42612"
+        "prev_hash": "8118a8bdd0885cfbdf151a6a17ee7c4c8163b1f8ca7bb80c2ecefa55f69c96f9",
+        "entry_hash": "7e9796df1e989299070c3d4d6192a0a5f157f991960b1e0896409e6118fdae3f"
       },
       {
         "sequence": 13,
-        "timestamp": "2026-08-27T15:02:27.172879+00:00",
+        "timestamp": "2026-08-27T16:11:44.148124+00:00",
         "txn_id": "pay_techbazaar_0058",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1731,18 +1784,18 @@
           "amount_paise": 1326635,
           "target_bank": "Union Bank of India",
           "scheduled_time": "2026-08-27T23:00:00+00:00",
-          "reason": "Enable automatic soft-decline retry on the payment gateway for eligible response codes (e.g. temporary bank unavailability, do-not-honour retryable). (card_declined), unretried -- retry at +30h, the plateau: long enough for the balance to have changed",
+          "reason": "Enable automatic soft-decline retry and reissue payment links for transactions flagged with 'payment_pending_approval' and 'transaction_daily_count_exceeded' error codes. (card_declined), unretried -- retry at +30h, the plateau: long enough for the balance to have changed",
           "requires_merchant_approval": false
         },
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "5f3efebb32f5dfbf868164f9512c6e2ff4b0e9629de5c4f5e5f5b039b7b42612",
-        "entry_hash": "8a40baaaa37b8e23aeae4fbe3eae2c4fc1ad9fdd12f916b961377a91e485a5fc"
+        "prev_hash": "7e9796df1e989299070c3d4d6192a0a5f157f991960b1e0896409e6118fdae3f",
+        "entry_hash": "1756c508e20697a37f54e374ee627a9901c73b024937411bb676112e57cefaa8"
       },
       {
         "sequence": 14,
-        "timestamp": "2026-08-27T15:02:27.172879+00:00",
+        "timestamp": "2026-08-27T16:11:44.149124+00:00",
         "txn_id": "pay_techbazaar_0157",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1750,18 +1803,18 @@
           "amount_paise": 1216278,
           "target_bank": "Kotak Mahindra Bank",
           "scheduled_time": "2026-08-28T14:00:00+00:00",
-          "reason": "Enable automatic soft-decline retry on the payment gateway for eligible response codes (e.g. temporary bank unavailability, do-not-honour retryable). (payment_declined), unretried -- retry at +30h, the plateau: long enough for the balance to have changed",
+          "reason": "Enable automatic soft-decline retry and reissue payment links for transactions flagged with 'payment_pending_approval' and 'transaction_daily_count_exceeded' error codes. (payment_declined), unretried -- retry at +30h, the plateau: long enough for the balance to have changed",
           "requires_merchant_approval": false
         },
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "8a40baaaa37b8e23aeae4fbe3eae2c4fc1ad9fdd12f916b961377a91e485a5fc",
-        "entry_hash": "737583a29ffe64f8cf85e07fe8c6690db07d2e56667b35e09396145157891b2f"
+        "prev_hash": "1756c508e20697a37f54e374ee627a9901c73b024937411bb676112e57cefaa8",
+        "entry_hash": "06c26b2b781eaddbb3217b71b351339bd76943f5611ee8be2a584ad07d99c570"
       },
       {
         "sequence": 15,
-        "timestamp": "2026-08-27T15:02:27.172879+00:00",
+        "timestamp": "2026-08-27T16:11:44.149124+00:00",
         "txn_id": "pay_techbazaar_0746",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1769,18 +1822,18 @@
           "amount_paise": 1136865,
           "target_bank": "India Post Payments Bank Limited",
           "scheduled_time": "2026-08-27T22:00:00+00:00",
-          "reason": "Enable automatic soft-decline retry on the payment gateway for eligible response codes (e.g. temporary bank unavailability, do-not-honour retryable). (transaction_daily_count_exceeded), unretried -- retry at +30h, the plateau: long enough for the balance to have changed",
+          "reason": "Enable automatic soft-decline retry and reissue payment links for transactions flagged with 'payment_pending_approval' and 'transaction_daily_count_exceeded' error codes. (transaction_daily_count_exceeded), unretried -- retry at +30h, the plateau: long enough for the balance to have changed",
           "requires_merchant_approval": false
         },
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "737583a29ffe64f8cf85e07fe8c6690db07d2e56667b35e09396145157891b2f",
-        "entry_hash": "d653609fc81fadcfe72afc4eec51360e26cd9502e2a8eec85589d16ff426801f"
+        "prev_hash": "06c26b2b781eaddbb3217b71b351339bd76943f5611ee8be2a584ad07d99c570",
+        "entry_hash": "9e0167e7d77889678f06a3c93d840e5b82c176c4d62715a61d7036c559d6b56b"
       },
       {
         "sequence": 16,
-        "timestamp": "2026-08-27T15:02:27.172879+00:00",
+        "timestamp": "2026-08-27T16:11:44.149124+00:00",
         "txn_id": "pay_techbazaar_0815",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1788,113 +1841,113 @@
           "amount_paise": 1055013,
           "target_bank": "Union Bank of India",
           "scheduled_time": "2026-08-27T22:00:00+00:00",
-          "reason": "Enable automatic soft-decline retry on the payment gateway for eligible response codes (e.g. temporary bank unavailability, do-not-honour retryable). (card_declined), unretried -- retry at +30h, the plateau: long enough for the balance to have changed",
+          "reason": "Enable automatic soft-decline retry and reissue payment links for transactions flagged with 'payment_pending_approval' and 'transaction_daily_count_exceeded' error codes. (card_declined), unretried -- retry at +30h, the plateau: long enough for the balance to have changed",
           "requires_merchant_approval": false
         },
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "d653609fc81fadcfe72afc4eec51360e26cd9502e2a8eec85589d16ff426801f",
-        "entry_hash": "855122429e4373713eba82087e1289d7ebf24848c1b78edbeb80ada3e419875f"
+        "prev_hash": "9e0167e7d77889678f06a3c93d840e5b82c176c4d62715a61d7036c559d6b56b",
+        "entry_hash": "1891485b69daa8758db312f9222f9202e509b72bc5bdf62ddd25955ee73d48ea"
       },
       {
         "sequence": 17,
-        "timestamp": "2026-08-27T15:02:27.172879+00:00",
+        "timestamp": "2026-08-27T16:11:44.149124+00:00",
         "txn_id": "pay_techbazaar_0046",
         "proposed_action": {
           "action_type": "retry_soft_decline",
           "txn_id": "pay_techbazaar_0046",
           "amount_paise": 1018683,
           "target_bank": "Central Bank of India",
-          "scheduled_time": "2026-08-27T15:02:27.146856+00:00",
-          "reason": "Enable automatic soft-decline retry on the payment gateway for eligible response codes (e.g. temporary bank unavailability, do-not-honour retryable). (payment_declined), unretried -- retry at +90h, past the plateau; intent goes stale",
+          "scheduled_time": "2026-08-27T16:11:44.125116+00:00",
+          "reason": "Enable automatic soft-decline retry and reissue payment links for transactions flagged with 'payment_pending_approval' and 'transaction_daily_count_exceeded' error codes. (payment_declined), unretried -- retry at +91.2h, past the plateau; intent goes stale",
           "requires_merchant_approval": false
         },
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "855122429e4373713eba82087e1289d7ebf24848c1b78edbeb80ada3e419875f",
-        "entry_hash": "63c26df650bf60080115314f7ab4f793111c9cb8a7067d0d19d2457c7d0cd1b7"
+        "prev_hash": "1891485b69daa8758db312f9222f9202e509b72bc5bdf62ddd25955ee73d48ea",
+        "entry_hash": "cac4ed9358ecf0070583b338b1ad4e308b7d68b2c171abd65634ef93e54c9283"
       },
       {
         "sequence": 18,
-        "timestamp": "2026-08-27T15:02:27.172879+00:00",
+        "timestamp": "2026-08-27T16:11:44.149124+00:00",
         "txn_id": "pay_techbazaar_0018",
         "proposed_action": {
           "action_type": "retry_soft_decline",
           "txn_id": "pay_techbazaar_0018",
           "amount_paise": 858926,
           "target_bank": "Indian Bank",
-          "scheduled_time": "2026-08-27T15:02:27.146856+00:00",
-          "reason": "Enable automatic soft-decline retry on the payment gateway for eligible response codes (e.g. temporary bank unavailability, do-not-honour retryable). (debit_declined), unretried -- retry at +92h, past the plateau; intent goes stale",
+          "scheduled_time": "2026-08-27T16:11:44.125116+00:00",
+          "reason": "Enable automatic soft-decline retry and reissue payment links for transactions flagged with 'payment_pending_approval' and 'transaction_daily_count_exceeded' error codes. (debit_declined), unretried -- retry at +93.2h, past the plateau; intent goes stale",
           "requires_merchant_approval": false
         },
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "63c26df650bf60080115314f7ab4f793111c9cb8a7067d0d19d2457c7d0cd1b7",
-        "entry_hash": "1dae44ca61bff1e1c79b6ce5acaad7c5541aae2774807152a258fc0d03e7b285"
+        "prev_hash": "cac4ed9358ecf0070583b338b1ad4e308b7d68b2c171abd65634ef93e54c9283",
+        "entry_hash": "543b99de3b3d453e5dacfb2b11d416a507b9ceddd57dfdd9e83305c1c6332504"
       },
       {
         "sequence": 19,
-        "timestamp": "2026-08-27T15:02:27.172879+00:00",
+        "timestamp": "2026-08-27T16:11:44.149124+00:00",
         "txn_id": "pay_techbazaar_0354",
         "proposed_action": {
           "action_type": "retry_soft_decline",
           "txn_id": "pay_techbazaar_0354",
           "amount_paise": 767921,
           "target_bank": "State Bank of India",
-          "scheduled_time": "2026-08-27T15:02:27.146856+00:00",
-          "reason": "Enable automatic soft-decline retry on the payment gateway for eligible response codes (e.g. temporary bank unavailability, do-not-honour retryable). (transaction_limit_exceeded), unretried -- retry at +95h, past the plateau; intent goes stale",
+          "scheduled_time": "2026-08-27T16:11:44.125116+00:00",
+          "reason": "Enable automatic soft-decline retry and reissue payment links for transactions flagged with 'payment_pending_approval' and 'transaction_daily_count_exceeded' error codes. (transaction_limit_exceeded), unretried -- retry at +96.2h, past the plateau; intent goes stale",
           "requires_merchant_approval": false
         },
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "1dae44ca61bff1e1c79b6ce5acaad7c5541aae2774807152a258fc0d03e7b285",
-        "entry_hash": "ab586e62a251267cf0380a6c4e50c68933026bac85d3fce974f06979d5a6992b"
+        "prev_hash": "543b99de3b3d453e5dacfb2b11d416a507b9ceddd57dfdd9e83305c1c6332504",
+        "entry_hash": "d5aad18223b52c861a8afa52cffa518f67d89f09e160f5386c9735308b81dc8b"
       },
       {
         "sequence": 20,
-        "timestamp": "2026-08-27T15:02:27.173884+00:00",
+        "timestamp": "2026-08-27T16:11:44.149124+00:00",
         "txn_id": "pay_techbazaar_0770",
         "proposed_action": {
           "action_type": "retry_soft_decline",
           "txn_id": "pay_techbazaar_0770",
           "amount_paise": 553370,
           "target_bank": "Indusind Bank Ltd.",
-          "scheduled_time": "2026-08-27T15:02:27.146856+00:00",
-          "reason": "Enable automatic soft-decline retry on the payment gateway for eligible response codes (e.g. temporary bank unavailability, do-not-honour retryable). (transaction_daily_count_exceeded), unretried -- retry at +56h, the plateau: long enough for the balance to have changed",
+          "scheduled_time": "2026-08-27T16:11:44.125116+00:00",
+          "reason": "Enable automatic soft-decline retry and reissue payment links for transactions flagged with 'payment_pending_approval' and 'transaction_daily_count_exceeded' error codes. (transaction_daily_count_exceeded), unretried -- retry at +57.2h, the plateau: long enough for the balance to have changed",
           "requires_merchant_approval": false
         },
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "ab586e62a251267cf0380a6c4e50c68933026bac85d3fce974f06979d5a6992b",
-        "entry_hash": "847e204202115f9c713a9fff1adf7976063a504afd5acddd244404d0464e7880"
+        "prev_hash": "d5aad18223b52c861a8afa52cffa518f67d89f09e160f5386c9735308b81dc8b",
+        "entry_hash": "0f3295bf0b5dcbcbc403ed839d2d19b1244ed9474b62ec07d1ddbbab896a483e"
       },
       {
         "sequence": 21,
-        "timestamp": "2026-08-27T15:02:27.173884+00:00",
+        "timestamp": "2026-08-27T16:11:44.149124+00:00",
         "txn_id": "pay_techbazaar_0635",
         "proposed_action": {
           "action_type": "retry_soft_decline",
           "txn_id": "pay_techbazaar_0635",
           "amount_paise": 53113,
           "target_bank": "Union Bank of India",
-          "scheduled_time": "2026-08-27T15:02:27.146856+00:00",
-          "reason": "Enable automatic soft-decline retry on the payment gateway for eligible response codes (e.g. temporary bank unavailability, do-not-honour retryable). (insufficient_funds), unretried -- retry at +91h, past the plateau; intent goes stale",
+          "scheduled_time": "2026-08-27T16:11:44.125116+00:00",
+          "reason": "Enable automatic soft-decline retry and reissue payment links for transactions flagged with 'payment_pending_approval' and 'transaction_daily_count_exceeded' error codes. (insufficient_funds), unretried -- retry at +92.2h, past the plateau; intent goes stale",
           "requires_merchant_approval": false
         },
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "847e204202115f9c713a9fff1adf7976063a504afd5acddd244404d0464e7880",
-        "entry_hash": "fc4cccbc5ca49cbc95f75a4f4df57dbb9f1a524d4682cb087f45f4cb2a47e898"
+        "prev_hash": "0f3295bf0b5dcbcbc403ed839d2d19b1244ed9474b62ec07d1ddbbab896a483e",
+        "entry_hash": "de63800ff10c784b0f50fad9a65070bd67effe29dbc056b05390feefdec60735"
       },
       {
         "sequence": 22,
-        "timestamp": "2026-08-27T15:02:27.173884+00:00",
+        "timestamp": "2026-08-27T16:11:44.149124+00:00",
         "txn_id": "pay_techbazaar_0596",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -1908,12 +1961,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "fc4cccbc5ca49cbc95f75a4f4df57dbb9f1a524d4682cb087f45f4cb2a47e898",
-        "entry_hash": "ad0743445fec113e0b92d3310b64e46c3f1fff7324e86b4ecba584bb7fb1acf8"
+        "prev_hash": "de63800ff10c784b0f50fad9a65070bd67effe29dbc056b05390feefdec60735",
+        "entry_hash": "a6e0f5dd76db5dad01949270550e2871dbe0a39361a91a9902dcc875571b9e65"
       },
       {
         "sequence": 23,
-        "timestamp": "2026-08-27T15:02:27.173884+00:00",
+        "timestamp": "2026-08-27T16:11:44.149124+00:00",
         "txn_id": "pay_techbazaar_0844",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -1927,12 +1980,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "ad0743445fec113e0b92d3310b64e46c3f1fff7324e86b4ecba584bb7fb1acf8",
-        "entry_hash": "bc32aa4fb4e614ed388b03ad811b6537bc92bfb44301c43dcc2c190d4430acb5"
+        "prev_hash": "a6e0f5dd76db5dad01949270550e2871dbe0a39361a91a9902dcc875571b9e65",
+        "entry_hash": "626cac514b1be8c30bcc5062577318741cf9729c18d93b3b148f18f9857805da"
       },
       {
         "sequence": 24,
-        "timestamp": "2026-08-27T15:02:27.173884+00:00",
+        "timestamp": "2026-08-27T16:11:44.149124+00:00",
         "txn_id": "pay_techbazaar_0013",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -1946,12 +1999,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "bc32aa4fb4e614ed388b03ad811b6537bc92bfb44301c43dcc2c190d4430acb5",
-        "entry_hash": "e3ae70fc6a509c9c5106e075aa3b9107caae698c3deb1757f8a01226edeca11e"
+        "prev_hash": "626cac514b1be8c30bcc5062577318741cf9729c18d93b3b148f18f9857805da",
+        "entry_hash": "38cfc085ec3513c6f31851be852fbe8b221b041b29de5d3fa432f3e78c2453a4"
       },
       {
         "sequence": 25,
-        "timestamp": "2026-08-27T15:02:27.173884+00:00",
+        "timestamp": "2026-08-27T16:11:44.149124+00:00",
         "txn_id": "pay_techbazaar_0297",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -1965,12 +2018,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "e3ae70fc6a509c9c5106e075aa3b9107caae698c3deb1757f8a01226edeca11e",
-        "entry_hash": "6fc0d6eb31a5285b5176afa0432cb3e93936dd68b3634e781256309e746b3542"
+        "prev_hash": "38cfc085ec3513c6f31851be852fbe8b221b041b29de5d3fa432f3e78c2453a4",
+        "entry_hash": "a6b595ddfe7ac8c1744cf478a8d2a84e06f0b14a1358ccc4e1d507b0f81f1585"
       },
       {
         "sequence": 26,
-        "timestamp": "2026-08-27T15:02:27.173884+00:00",
+        "timestamp": "2026-08-27T16:11:44.149124+00:00",
         "txn_id": "pay_techbazaar_0666",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -1984,12 +2037,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "6fc0d6eb31a5285b5176afa0432cb3e93936dd68b3634e781256309e746b3542",
-        "entry_hash": "33ab93c852354ddd02fbef63babbaeb5d6a9f3f567f78e00bf0ac36946cb5ea6"
+        "prev_hash": "a6b595ddfe7ac8c1744cf478a8d2a84e06f0b14a1358ccc4e1d507b0f81f1585",
+        "entry_hash": "80cb231429bb1b76e40d4c21fa29434722db70195b42e54c79725f0436d48722"
       },
       {
         "sequence": 27,
-        "timestamp": "2026-08-27T15:02:27.173884+00:00",
+        "timestamp": "2026-08-27T16:11:44.149124+00:00",
         "txn_id": "pay_techbazaar_0716",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2003,12 +2056,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "33ab93c852354ddd02fbef63babbaeb5d6a9f3f567f78e00bf0ac36946cb5ea6",
-        "entry_hash": "e34af69ccdce2b723fab031265556d4ac5b6ca6627a3fb190f246131dbf974a5"
+        "prev_hash": "80cb231429bb1b76e40d4c21fa29434722db70195b42e54c79725f0436d48722",
+        "entry_hash": "32b4b4dc2b455aa888c0b1e16572a437a2b41b08460d6ab60dc376c4e24c16c4"
       },
       {
         "sequence": 28,
-        "timestamp": "2026-08-27T15:02:27.173884+00:00",
+        "timestamp": "2026-08-27T16:11:44.150127+00:00",
         "txn_id": "pay_techbazaar_0509",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2022,12 +2075,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "e34af69ccdce2b723fab031265556d4ac5b6ca6627a3fb190f246131dbf974a5",
-        "entry_hash": "d1ec8e0f62fae2a729f748cde5766414f45a75858d620b6ab0bb7064cb64ff26"
+        "prev_hash": "32b4b4dc2b455aa888c0b1e16572a437a2b41b08460d6ab60dc376c4e24c16c4",
+        "entry_hash": "088bcac5b652f4c54ff865f801edf48424bf77b6e7a68c16b096b13f40ea11fb"
       },
       {
         "sequence": 29,
-        "timestamp": "2026-08-27T15:02:27.173884+00:00",
+        "timestamp": "2026-08-27T16:11:44.150127+00:00",
         "txn_id": "pay_techbazaar_0689",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2041,12 +2094,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "d1ec8e0f62fae2a729f748cde5766414f45a75858d620b6ab0bb7064cb64ff26",
-        "entry_hash": "0fb450ad4b3e0f4cd62cf8b8f4ad8a6e211d8d2af79e833e30e375651a8aabe3"
+        "prev_hash": "088bcac5b652f4c54ff865f801edf48424bf77b6e7a68c16b096b13f40ea11fb",
+        "entry_hash": "6f2a3033dfcb9133ea7f254017f5fd672255e049d4fb6b6aebde11dd93f1231b"
       },
       {
         "sequence": 30,
-        "timestamp": "2026-08-27T15:02:27.173884+00:00",
+        "timestamp": "2026-08-27T16:11:44.150127+00:00",
         "txn_id": "pay_techbazaar_0425",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2060,12 +2113,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "0fb450ad4b3e0f4cd62cf8b8f4ad8a6e211d8d2af79e833e30e375651a8aabe3",
-        "entry_hash": "be3aec6eb7d2773e159dc2990a7079c05bc134dab7786f7f7da7f8d9668ff0c4"
+        "prev_hash": "6f2a3033dfcb9133ea7f254017f5fd672255e049d4fb6b6aebde11dd93f1231b",
+        "entry_hash": "d34c90ad46ea34bbf96b331b07bcce71df5557816d1010f9c8f619d0f99aea84"
       },
       {
         "sequence": 31,
-        "timestamp": "2026-08-27T15:02:27.173884+00:00",
+        "timestamp": "2026-08-27T16:11:44.150127+00:00",
         "txn_id": "pay_techbazaar_0821",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2079,12 +2132,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "be3aec6eb7d2773e159dc2990a7079c05bc134dab7786f7f7da7f8d9668ff0c4",
-        "entry_hash": "6cfb7333e2e829762a514f82db228d0429023453b4e38dfc696e9a0b665e9fc4"
+        "prev_hash": "d34c90ad46ea34bbf96b331b07bcce71df5557816d1010f9c8f619d0f99aea84",
+        "entry_hash": "ae66a7822d024fb796b6901113d61e3b27353611d90de0ee9e526054b1023966"
       },
       {
         "sequence": 32,
-        "timestamp": "2026-08-27T15:02:27.173884+00:00",
+        "timestamp": "2026-08-27T16:11:44.150127+00:00",
         "txn_id": "pay_techbazaar_0426",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2098,12 +2151,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "6cfb7333e2e829762a514f82db228d0429023453b4e38dfc696e9a0b665e9fc4",
-        "entry_hash": "773706052e6f420839cbc76e82e87f3192c0c53f1239ee82ba04686c41f6dd15"
+        "prev_hash": "ae66a7822d024fb796b6901113d61e3b27353611d90de0ee9e526054b1023966",
+        "entry_hash": "e70ab3e364777b2adde10e9204b1bbb7ecc68250d321dcdf2593b0d2a75975b2"
       },
       {
         "sequence": 33,
-        "timestamp": "2026-08-27T15:02:27.173884+00:00",
+        "timestamp": "2026-08-27T16:11:44.150127+00:00",
         "txn_id": "pay_techbazaar_0045",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2117,12 +2170,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "773706052e6f420839cbc76e82e87f3192c0c53f1239ee82ba04686c41f6dd15",
-        "entry_hash": "c42adeb934136ef217096d083780abac2dc719481546f8b0271325c61b1efbca"
+        "prev_hash": "e70ab3e364777b2adde10e9204b1bbb7ecc68250d321dcdf2593b0d2a75975b2",
+        "entry_hash": "0cc351d60f0372eae13c3a6ad5a6dd4a26b398c26e2a1e5ed133f8de9cacc2e8"
       },
       {
         "sequence": 34,
-        "timestamp": "2026-08-27T15:02:27.173884+00:00",
+        "timestamp": "2026-08-27T16:11:44.150127+00:00",
         "txn_id": "pay_techbazaar_0839",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2136,12 +2189,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "c42adeb934136ef217096d083780abac2dc719481546f8b0271325c61b1efbca",
-        "entry_hash": "b10bce801545e0dfd37f89c80330c707e325a04d6a40a6ac0581e664483d805d"
+        "prev_hash": "0cc351d60f0372eae13c3a6ad5a6dd4a26b398c26e2a1e5ed133f8de9cacc2e8",
+        "entry_hash": "ada458f4d6f7a2dd38b6e5f3f6333cafa41dccf56e8bc589d90d170ea5d5da37"
       },
       {
         "sequence": 35,
-        "timestamp": "2026-08-27T15:02:27.173884+00:00",
+        "timestamp": "2026-08-27T16:11:44.150127+00:00",
         "txn_id": "pay_techbazaar_0705",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2155,12 +2208,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "b10bce801545e0dfd37f89c80330c707e325a04d6a40a6ac0581e664483d805d",
-        "entry_hash": "6edabd8a57852c11632ebd7349343591eddbf8e91e1c03a7de8f21c3d412e6dd"
+        "prev_hash": "ada458f4d6f7a2dd38b6e5f3f6333cafa41dccf56e8bc589d90d170ea5d5da37",
+        "entry_hash": "b5a134c83e56d10cf705c340a478dd1c233fa25a7999af04b4453592bab8556d"
       },
       {
         "sequence": 36,
-        "timestamp": "2026-08-27T15:02:27.173884+00:00",
+        "timestamp": "2026-08-27T16:11:44.151122+00:00",
         "txn_id": "pay_techbazaar_0636",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2174,12 +2227,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "6edabd8a57852c11632ebd7349343591eddbf8e91e1c03a7de8f21c3d412e6dd",
-        "entry_hash": "b8500ce5a3db7589aaefe9c2ca1df94236bbf5a809169e3ba112edbe845d2536"
+        "prev_hash": "b5a134c83e56d10cf705c340a478dd1c233fa25a7999af04b4453592bab8556d",
+        "entry_hash": "382abae22755c6597e78652c79bb9957b98af1f8a5f4d5675ba1e5221654579f"
       },
       {
         "sequence": 37,
-        "timestamp": "2026-08-27T15:02:27.173884+00:00",
+        "timestamp": "2026-08-27T16:11:44.151122+00:00",
         "txn_id": "pay_techbazaar_0820",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2193,12 +2246,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "b8500ce5a3db7589aaefe9c2ca1df94236bbf5a809169e3ba112edbe845d2536",
-        "entry_hash": "fc4f5f3fd2cc1fa882958403e48b2a1848750ae0c2a95313c5266ce3a0b128a0"
+        "prev_hash": "382abae22755c6597e78652c79bb9957b98af1f8a5f4d5675ba1e5221654579f",
+        "entry_hash": "50ee8f0ff1aed625676421de8c6680a3bf440d65c2490e5f1ed7cdee777af140"
       },
       {
         "sequence": 38,
-        "timestamp": "2026-08-27T15:02:27.174882+00:00",
+        "timestamp": "2026-08-27T16:11:44.151122+00:00",
         "txn_id": "pay_techbazaar_0325",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2212,12 +2265,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "fc4f5f3fd2cc1fa882958403e48b2a1848750ae0c2a95313c5266ce3a0b128a0",
-        "entry_hash": "5a2323d28e5ceea0b5c7c3f4bf9e6daf0db5ab59031c3d7160439d59c85f4cb4"
+        "prev_hash": "50ee8f0ff1aed625676421de8c6680a3bf440d65c2490e5f1ed7cdee777af140",
+        "entry_hash": "8faf363ad5d1f618b22704e830b6d3a9d2a943448cd6f5e5c84fa5e35d19e655"
       },
       {
         "sequence": 39,
-        "timestamp": "2026-08-27T15:02:27.174882+00:00",
+        "timestamp": "2026-08-27T16:11:44.151122+00:00",
         "txn_id": "pay_techbazaar_0888",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2231,12 +2284,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "5a2323d28e5ceea0b5c7c3f4bf9e6daf0db5ab59031c3d7160439d59c85f4cb4",
-        "entry_hash": "87b4572cc285dbd77f851c6950142c61fe4acfc6a38136a1d1944b245402c3a8"
+        "prev_hash": "8faf363ad5d1f618b22704e830b6d3a9d2a943448cd6f5e5c84fa5e35d19e655",
+        "entry_hash": "884922d1aa247dd43dd811a2e61d819ee2b2e2c4a4fc27bbaf4f1a2a27f4d3c2"
       },
       {
         "sequence": 40,
-        "timestamp": "2026-08-27T15:02:27.174882+00:00",
+        "timestamp": "2026-08-27T16:11:44.151122+00:00",
         "txn_id": "pay_techbazaar_0837",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2250,12 +2303,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "87b4572cc285dbd77f851c6950142c61fe4acfc6a38136a1d1944b245402c3a8",
-        "entry_hash": "613dad5c1abb2e4932484b40876e6d4c6a60798d08b90cbaf1930b3dc9792c5b"
+        "prev_hash": "884922d1aa247dd43dd811a2e61d819ee2b2e2c4a4fc27bbaf4f1a2a27f4d3c2",
+        "entry_hash": "b372e47dd6024671f0c1229ea1c2e325506ac4ca25c58506ea02e8ce46834472"
       },
       {
         "sequence": 41,
-        "timestamp": "2026-08-27T15:02:27.174882+00:00",
+        "timestamp": "2026-08-27T16:11:44.151122+00:00",
         "txn_id": "pay_techbazaar_0625",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2269,12 +2322,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "613dad5c1abb2e4932484b40876e6d4c6a60798d08b90cbaf1930b3dc9792c5b",
-        "entry_hash": "b36d11d40a4032d9fb8e19722352c116cdb10c33a10fd2fcc6d1f0cc9ee7d726"
+        "prev_hash": "b372e47dd6024671f0c1229ea1c2e325506ac4ca25c58506ea02e8ce46834472",
+        "entry_hash": "ce47cca86c591ccdf482396b1af38b3f77d5c113c851a9a94f527b8e020ff6c6"
       },
       {
         "sequence": 42,
-        "timestamp": "2026-08-27T15:02:27.174882+00:00",
+        "timestamp": "2026-08-27T16:11:44.151122+00:00",
         "txn_id": "pay_techbazaar_0496",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2288,8 +2341,8 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "b36d11d40a4032d9fb8e19722352c116cdb10c33a10fd2fcc6d1f0cc9ee7d726",
-        "entry_hash": "53fc388f59f86cf2185affe08d49c2f64866d3be4126feea6229037455cfe002"
+        "prev_hash": "ce47cca86c591ccdf482396b1af38b3f77d5c113c851a9a94f527b8e020ff6c6",
+        "entry_hash": "7247936b064c9ebf573f335ed9233564341ce4b5608cc18447504a4f266a856e"
       }
     ],
     "exceptions": {
@@ -3485,7 +3538,7 @@
           "amount_paise": 2426705,
           "target_bank": "State Bank of India",
           "scheduled_time": "2026-08-29T01:00:00+00:00",
-          "reason": "Enable automatic soft-decline retry on the payment gateway for eligible response codes (e.g. temporary bank unavailability, do-not-honour retryable). (debit_declined), unretried -- retry at +30h, the plateau: long enough for the balance to have changed",
+          "reason": "Enable automatic soft-decline retry and reissue payment links for transactions flagged with 'payment_pending_approval' and 'transaction_daily_count_exceeded' error codes. (debit_declined), unretried -- retry at +30h, the plateau: long enough for the balance to have changed",
           "requires_merchant_approval": false
         },
         {
@@ -3493,8 +3546,8 @@
           "txn_id": "pay_techbazaar_0369",
           "amount_paise": 2405515,
           "target_bank": "State Bank of India",
-          "scheduled_time": "2026-08-27T15:02:27.145860+00:00",
-          "reason": "Enable automatic soft-decline retry on the payment gateway for eligible response codes (e.g. temporary bank unavailability, do-not-honour retryable). (transaction_daily_count_exceeded), unretried -- retry at +65h, the plateau: long enough for the balance to have changed",
+          "scheduled_time": "2026-08-27T16:11:44.124120+00:00",
+          "reason": "Enable automatic soft-decline retry and reissue payment links for transactions flagged with 'payment_pending_approval' and 'transaction_daily_count_exceeded' error codes. (transaction_daily_count_exceeded), unretried -- retry at +66.2h, the plateau: long enough for the balance to have changed",
           "requires_merchant_approval": false
         },
         {
@@ -3502,8 +3555,8 @@
           "txn_id": "pay_techbazaar_0334",
           "amount_paise": 2310511,
           "target_bank": "HDFC Bank Ltd.",
-          "scheduled_time": "2026-08-27T15:02:27.145860+00:00",
-          "reason": "Enable automatic soft-decline retry on the payment gateway for eligible response codes (e.g. temporary bank unavailability, do-not-honour retryable). (transaction_daily_count_exceeded), unretried -- retry at +71h, the plateau: long enough for the balance to have changed",
+          "scheduled_time": "2026-08-27T16:11:44.124120+00:00",
+          "reason": "Enable automatic soft-decline retry and reissue payment links for transactions flagged with 'payment_pending_approval' and 'transaction_daily_count_exceeded' error codes. (transaction_daily_count_exceeded), unretried -- retry at +72.2h, past the plateau; intent goes stale",
           "requires_merchant_approval": false
         },
         {
@@ -3511,8 +3564,8 @@
           "txn_id": "pay_techbazaar_0465",
           "amount_paise": 2176012,
           "target_bank": "State Bank of India",
-          "scheduled_time": "2026-08-27T15:02:27.145860+00:00",
-          "reason": "Enable automatic soft-decline retry on the payment gateway for eligible response codes (e.g. temporary bank unavailability, do-not-honour retryable). (card_declined), unretried -- retry at +125h, past the plateau; intent goes stale",
+          "scheduled_time": "2026-08-27T16:11:44.124120+00:00",
+          "reason": "Enable automatic soft-decline retry and reissue payment links for transactions flagged with 'payment_pending_approval' and 'transaction_daily_count_exceeded' error codes. (card_declined), unretried -- retry at +126.2h, past the plateau; intent goes stale",
           "requires_merchant_approval": false
         },
         {
@@ -3520,8 +3573,8 @@
           "txn_id": "pay_techbazaar_0186",
           "amount_paise": 1820199,
           "target_bank": "State Bank of India",
-          "scheduled_time": "2026-08-27T15:02:27.145860+00:00",
-          "reason": "Enable automatic soft-decline retry on the payment gateway for eligible response codes (e.g. temporary bank unavailability, do-not-honour retryable). (payment_declined), unretried -- retry at +94h, past the plateau; intent goes stale",
+          "scheduled_time": "2026-08-27T16:11:44.125116+00:00",
+          "reason": "Enable automatic soft-decline retry and reissue payment links for transactions flagged with 'payment_pending_approval' and 'transaction_daily_count_exceeded' error codes. (payment_declined), unretried -- retry at +95.2h, past the plateau; intent goes stale",
           "requires_merchant_approval": false
         },
         {
@@ -3529,8 +3582,8 @@
           "txn_id": "pay_techbazaar_0331",
           "amount_paise": 1813704,
           "target_bank": "Central Bank of India",
-          "scheduled_time": "2026-08-27T15:02:27.145860+00:00",
-          "reason": "Enable automatic soft-decline retry on the payment gateway for eligible response codes (e.g. temporary bank unavailability, do-not-honour retryable). (payment_declined), unretried -- retry at +66h, the plateau: long enough for the balance to have changed",
+          "scheduled_time": "2026-08-27T16:11:44.125116+00:00",
+          "reason": "Enable automatic soft-decline retry and reissue payment links for transactions flagged with 'payment_pending_approval' and 'transaction_daily_count_exceeded' error codes. (payment_declined), unretried -- retry at +67.2h, the plateau: long enough for the balance to have changed",
           "requires_merchant_approval": false
         },
         {
@@ -3538,8 +3591,8 @@
           "txn_id": "pay_techbazaar_0286",
           "amount_paise": 1771979,
           "target_bank": "State Bank of India",
-          "scheduled_time": "2026-08-27T15:02:27.145860+00:00",
-          "reason": "Enable automatic soft-decline retry on the payment gateway for eligible response codes (e.g. temporary bank unavailability, do-not-honour retryable). (transaction_daily_limit_exceeded), unretried -- retry at +45h, the plateau: long enough for the balance to have changed",
+          "scheduled_time": "2026-08-27T16:11:44.125116+00:00",
+          "reason": "Enable automatic soft-decline retry and reissue payment links for transactions flagged with 'payment_pending_approval' and 'transaction_daily_count_exceeded' error codes. (transaction_daily_limit_exceeded), unretried -- retry at +46.2h, the plateau: long enough for the balance to have changed",
           "requires_merchant_approval": false
         },
         {
@@ -3547,8 +3600,8 @@
           "txn_id": "pay_techbazaar_0251",
           "amount_paise": 1474527,
           "target_bank": "Bank of Baroda",
-          "scheduled_time": "2026-08-27T15:02:27.145860+00:00",
-          "reason": "Enable automatic soft-decline retry on the payment gateway for eligible response codes (e.g. temporary bank unavailability, do-not-honour retryable). (transaction_daily_count_exceeded), unretried -- retry at +31h, the plateau: long enough for the balance to have changed",
+          "scheduled_time": "2026-08-27T16:11:44.125116+00:00",
+          "reason": "Enable automatic soft-decline retry and reissue payment links for transactions flagged with 'payment_pending_approval' and 'transaction_daily_count_exceeded' error codes. (transaction_daily_count_exceeded), unretried -- retry at +32.2h, the plateau: long enough for the balance to have changed",
           "requires_merchant_approval": false
         },
         {
@@ -3557,7 +3610,7 @@
           "amount_paise": 1442926,
           "target_bank": "State Bank of India",
           "scheduled_time": "2026-08-29T03:00:00+00:00",
-          "reason": "Enable automatic soft-decline retry on the payment gateway for eligible response codes (e.g. temporary bank unavailability, do-not-honour retryable). (payment_pending), unretried -- retry at +30h, the plateau: long enough for the balance to have changed",
+          "reason": "Enable automatic soft-decline retry and reissue payment links for transactions flagged with 'payment_pending_approval' and 'transaction_daily_count_exceeded' error codes. (payment_pending), unretried -- retry at +30h, the plateau: long enough for the balance to have changed",
           "requires_merchant_approval": false
         },
         {
@@ -3566,7 +3619,7 @@
           "amount_paise": 1326635,
           "target_bank": "Union Bank of India",
           "scheduled_time": "2026-08-27T23:00:00+00:00",
-          "reason": "Enable automatic soft-decline retry on the payment gateway for eligible response codes (e.g. temporary bank unavailability, do-not-honour retryable). (card_declined), unretried -- retry at +30h, the plateau: long enough for the balance to have changed",
+          "reason": "Enable automatic soft-decline retry and reissue payment links for transactions flagged with 'payment_pending_approval' and 'transaction_daily_count_exceeded' error codes. (card_declined), unretried -- retry at +30h, the plateau: long enough for the balance to have changed",
           "requires_merchant_approval": false
         },
         {
@@ -3575,7 +3628,7 @@
           "amount_paise": 1216278,
           "target_bank": "Kotak Mahindra Bank",
           "scheduled_time": "2026-08-28T14:00:00+00:00",
-          "reason": "Enable automatic soft-decline retry on the payment gateway for eligible response codes (e.g. temporary bank unavailability, do-not-honour retryable). (payment_declined), unretried -- retry at +30h, the plateau: long enough for the balance to have changed",
+          "reason": "Enable automatic soft-decline retry and reissue payment links for transactions flagged with 'payment_pending_approval' and 'transaction_daily_count_exceeded' error codes. (payment_declined), unretried -- retry at +30h, the plateau: long enough for the balance to have changed",
           "requires_merchant_approval": false
         },
         {
@@ -3584,7 +3637,7 @@
           "amount_paise": 1136865,
           "target_bank": "India Post Payments Bank Limited",
           "scheduled_time": "2026-08-27T22:00:00+00:00",
-          "reason": "Enable automatic soft-decline retry on the payment gateway for eligible response codes (e.g. temporary bank unavailability, do-not-honour retryable). (transaction_daily_count_exceeded), unretried -- retry at +30h, the plateau: long enough for the balance to have changed",
+          "reason": "Enable automatic soft-decline retry and reissue payment links for transactions flagged with 'payment_pending_approval' and 'transaction_daily_count_exceeded' error codes. (transaction_daily_count_exceeded), unretried -- retry at +30h, the plateau: long enough for the balance to have changed",
           "requires_merchant_approval": false
         },
         {
@@ -3593,7 +3646,7 @@
           "amount_paise": 1055013,
           "target_bank": "Union Bank of India",
           "scheduled_time": "2026-08-27T22:00:00+00:00",
-          "reason": "Enable automatic soft-decline retry on the payment gateway for eligible response codes (e.g. temporary bank unavailability, do-not-honour retryable). (card_declined), unretried -- retry at +30h, the plateau: long enough for the balance to have changed",
+          "reason": "Enable automatic soft-decline retry and reissue payment links for transactions flagged with 'payment_pending_approval' and 'transaction_daily_count_exceeded' error codes. (card_declined), unretried -- retry at +30h, the plateau: long enough for the balance to have changed",
           "requires_merchant_approval": false
         },
         {
@@ -3601,8 +3654,8 @@
           "txn_id": "pay_techbazaar_0046",
           "amount_paise": 1018683,
           "target_bank": "Central Bank of India",
-          "scheduled_time": "2026-08-27T15:02:27.146856+00:00",
-          "reason": "Enable automatic soft-decline retry on the payment gateway for eligible response codes (e.g. temporary bank unavailability, do-not-honour retryable). (payment_declined), unretried -- retry at +90h, past the plateau; intent goes stale",
+          "scheduled_time": "2026-08-27T16:11:44.125116+00:00",
+          "reason": "Enable automatic soft-decline retry and reissue payment links for transactions flagged with 'payment_pending_approval' and 'transaction_daily_count_exceeded' error codes. (payment_declined), unretried -- retry at +91.2h, past the plateau; intent goes stale",
           "requires_merchant_approval": false
         },
         {
@@ -3610,8 +3663,8 @@
           "txn_id": "pay_techbazaar_0018",
           "amount_paise": 858926,
           "target_bank": "Indian Bank",
-          "scheduled_time": "2026-08-27T15:02:27.146856+00:00",
-          "reason": "Enable automatic soft-decline retry on the payment gateway for eligible response codes (e.g. temporary bank unavailability, do-not-honour retryable). (debit_declined), unretried -- retry at +92h, past the plateau; intent goes stale",
+          "scheduled_time": "2026-08-27T16:11:44.125116+00:00",
+          "reason": "Enable automatic soft-decline retry and reissue payment links for transactions flagged with 'payment_pending_approval' and 'transaction_daily_count_exceeded' error codes. (debit_declined), unretried -- retry at +93.2h, past the plateau; intent goes stale",
           "requires_merchant_approval": false
         },
         {
@@ -3619,8 +3672,8 @@
           "txn_id": "pay_techbazaar_0354",
           "amount_paise": 767921,
           "target_bank": "State Bank of India",
-          "scheduled_time": "2026-08-27T15:02:27.146856+00:00",
-          "reason": "Enable automatic soft-decline retry on the payment gateway for eligible response codes (e.g. temporary bank unavailability, do-not-honour retryable). (transaction_limit_exceeded), unretried -- retry at +95h, past the plateau; intent goes stale",
+          "scheduled_time": "2026-08-27T16:11:44.125116+00:00",
+          "reason": "Enable automatic soft-decline retry and reissue payment links for transactions flagged with 'payment_pending_approval' and 'transaction_daily_count_exceeded' error codes. (transaction_limit_exceeded), unretried -- retry at +96.2h, past the plateau; intent goes stale",
           "requires_merchant_approval": false
         },
         {
@@ -3628,8 +3681,8 @@
           "txn_id": "pay_techbazaar_0770",
           "amount_paise": 553370,
           "target_bank": "Indusind Bank Ltd.",
-          "scheduled_time": "2026-08-27T15:02:27.146856+00:00",
-          "reason": "Enable automatic soft-decline retry on the payment gateway for eligible response codes (e.g. temporary bank unavailability, do-not-honour retryable). (transaction_daily_count_exceeded), unretried -- retry at +56h, the plateau: long enough for the balance to have changed",
+          "scheduled_time": "2026-08-27T16:11:44.125116+00:00",
+          "reason": "Enable automatic soft-decline retry and reissue payment links for transactions flagged with 'payment_pending_approval' and 'transaction_daily_count_exceeded' error codes. (transaction_daily_count_exceeded), unretried -- retry at +57.2h, the plateau: long enough for the balance to have changed",
           "requires_merchant_approval": false
         },
         {
@@ -3637,8 +3690,8 @@
           "txn_id": "pay_techbazaar_0635",
           "amount_paise": 53113,
           "target_bank": "Union Bank of India",
-          "scheduled_time": "2026-08-27T15:02:27.146856+00:00",
-          "reason": "Enable automatic soft-decline retry on the payment gateway for eligible response codes (e.g. temporary bank unavailability, do-not-honour retryable). (insufficient_funds), unretried -- retry at +91h, past the plateau; intent goes stale",
+          "scheduled_time": "2026-08-27T16:11:44.125116+00:00",
+          "reason": "Enable automatic soft-decline retry and reissue payment links for transactions flagged with 'payment_pending_approval' and 'transaction_daily_count_exceeded' error codes. (insufficient_funds), unretried -- retry at +92.2h, past the plateau; intent goes stale",
           "requires_merchant_approval": false
         }
       ]
@@ -3696,7 +3749,7 @@
           "amount_paise": 0,
           "target_bank": null,
           "scheduled_time": null,
-          "reason": "Promote UPI as the default or first-displayed payment option at checkout to shift volume away from cards toward the higher-performing rail.",
+          "reason": "Configure the payment page to surface UPI and netbanking options more prominently (e.g., set UPI as the default tab) to reduce reliance on cards for high-ticket electronics purchases.",
           "requires_merchant_approval": true
         }
       ]
