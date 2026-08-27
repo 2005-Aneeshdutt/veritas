@@ -40,6 +40,7 @@ from .features import MerchantProfile, Transaction
 from .hypothesise import Hypothesiser
 from .llm import MODEL_FAST, MODEL_REASONING, LLMClient
 from .plan import build_plan, load_mae
+from .sequence import first_slot_hours
 from .shapley import ShapleyDecomposer, merchant_marginals
 from .stats import is_underpowered, wilson_halfwidth_pts
 from .trace import RunRecord, Tracer
@@ -307,7 +308,9 @@ def node_plan(s: State) -> State:
     page reports.
     """
     t = s.tracer.start("plan", kind="deterministic")
-    plan = build_plan(s.diagnosis, s.decomposition, s.transactions)
+    plan = build_plan(
+        s.diagnosis, s.decomposition, s.transactions, baseline=s.baseline
+    )
     s.plan = plan
     s.tracer.finish(
         t,
@@ -352,6 +355,19 @@ def node_gate(s: State) -> State:
     return s
 
 
+def _tech_share(baseline, bank: str | None) -> float | None:
+    """How much of this issuer's failures are technical, per NPCI.
+
+    Drives the retry ladder: an issuer whose failures skew technical is
+    usually mid-incident, so its soft declines want an earlier retry than a
+    customer with an empty account does.
+    """
+    if not bank:
+        return None
+    st = baseline.bank_stats(bank)
+    return st.technical_share if st else None
+
+
 def node_execute(s: State) -> State:
     """[DET] run the ALLOWed actions against the mock rail, and log every one."""
     t = s.tracer.start("execute")
@@ -364,7 +380,12 @@ def node_execute(s: State) -> State:
             txn = by_id.get(a.txn_id)
             ecls = txn.error_class.value if txn and txn.error_class else "soft_decline"
             out = rail_execute(
-                a, error_class=ecls, hours_since_failure=36.0,
+                a, error_class=ecls,
+                # The delay the sequencer chose for this error class, rather
+                # than one flat number for every failure.
+                hours_since_failure=first_slot_hours(
+                    ecls, technical_share=_tech_share(s.baseline, a.target_bank)
+                ),
                 attempt=1, calibration=s.calibration,
             )
             s.outcomes.append(out)

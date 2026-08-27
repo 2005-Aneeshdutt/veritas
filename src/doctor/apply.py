@@ -30,6 +30,8 @@ from chitragupta.ledger import Ledger, LedgerEntry
 from chitragupta.mandate import SignedMandate, parse_iso
 from chitragupta.policy import RECOVERY_WINDOW, GateContext, evaluate
 from chitragupta.rails.mock_rail import Calibration, execute as rail_execute
+from doctor.sequence import first_slot_hours
+
 from chitragupta.types import AUTO_EXECUTABLE, PolicyDecision, ProposedAction
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -278,11 +280,15 @@ def apply_group(
             else:
                 allowed += 1
             if action.action_type in AUTO_EXECUTABLE:
+                ecls = ecls_by_txn.get(action.txn_id, "soft_decline")
+                nth = attempts.get(action.txn_id, 0) + 1
                 out = rail_execute(
                     action,
-                    error_class=ecls_by_txn.get(action.txn_id, "soft_decline"),
-                    hours_since_failure=36.0,
-                    attempt=attempts.get(action.txn_id, 0) + 1,
+                    error_class=ecls,
+                    # Each attempt runs at its own slot on the ladder, so a
+                    # second try is not simply the first one repeated.
+                    hours_since_failure=first_slot_hours(ecls, nth),
+                    attempt=nth,
                     calibration=calibration,
                 )
                 recovered += out.amount_recovered_paise

@@ -23,6 +23,7 @@ exceed the mandate.
 from __future__ import annotations
 
 import json
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Literal, Sequence
 
@@ -30,8 +31,12 @@ from pydantic import BaseModel
 
 from chitragupta.types import ActionType, ProposedAction
 
+from .baseline import Baseline
 from .features import RECOVERABLE, Transaction
 from .hypothesise import Diagnosis, Hypothesis, RootCauseLabel
+from chitragupta.policy import RECOVERY_WINDOW
+
+from .sequence import plan_retries
 from .shapley import Decomposition
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -166,12 +171,36 @@ def _tier_for(
     return proposed, None
 
 
+def _failed_at(t) -> datetime:
+    """When this payment failed, as a timestamp the scheduler can work from.
+
+    The generator stamps a day and an hour rather than a clock time, so this
+    reconstructs one inside the batch's own month. It only ever feeds relative
+    offsets -- the schedule is "+26 hours from the failure", and the absolute
+    instant is presentation.
+    """
+    # Spread across the recovery window rather than the generator's 28-day
+    # month. The batch represents failures being worked now, and the policy
+    # kernel denies anything older than 7 days -- reconstructing a failure as
+    # three weeks old would schedule retries the kernel is bound to refuse.
+    span = RECOVERY_WINDOW - timedelta(days=1)
+    base = datetime.now(timezone.utc).replace(
+        hour=0, minute=0, second=0, microsecond=0
+    )
+    days_back = (t.day - 1) % max(1, span.days)
+    return base - timedelta(days=days_back) + timedelta(hours=t.hour)
+
+
 def build_plan(
     diagnosis: Diagnosis,
     dec: Decomposition,
     txns: Sequence[Transaction],
     *,
     mae_by_factor: dict[str, float] | None = None,
+    #: Used only to read each issuer's technical share, which decides how soon
+    #: its failures are worth retrying. Optional so the planner stays usable
+    #: without it -- the schedule just falls back to the funding-shaped ladder.
+    baseline: Baseline | None = None,
     # Retry every recoverable failure, not just the largest few. Capping at a
     # small number and sorting by value biases the batch toward high-ticket
     # payments, which are exactly the ones the mandate's auto-execute limit
@@ -214,13 +243,32 @@ def build_plan(
 
         if action_type == ActionType.RETRY_SOFT_DECLINE:
             for t in unretried[:max_retries]:
+                # WHEN, not just whether. The rail's own curve says a technical
+                # failure wants a retry inside four hours and an insufficient-
+                # funds decline wants a day or more; a single fixed delay for
+                # both throws that away. See sequence.py.
+                ecls = t.error_class.value if t.error_class else "soft_decline"
+                st = baseline.bank_stats(t.bank) if baseline else None
+                sched = plan_retries(
+                    t.txn_id, ecls, _failed_at(t),
+                    technical_share=st.technical_share if st else None,
+                )
+                first = sched.attempts[0] if sched.attempts else None
                 actions.append(
                     ProposedAction(
                         action_type=action_type,
                         txn_id=t.txn_id,
                         amount_paise=t.amount_paise,
                         target_bank=t.bank,
-                        reason="%s (%s), unretried" % (h.recommended_action, t.error_code),
+                        scheduled_time=first.at if first else None,
+                        reason="%s (%s), unretried%s"
+                        % (
+                            h.recommended_action,
+                            t.error_code,
+                            "" if first is None
+                            else " -- retry at +%gh, %s"
+                            % (first.hours_after_failure, first.reason),
+                        ),
                         requires_merchant_approval=(tier == "merchant_action"),
                     )
                 )
