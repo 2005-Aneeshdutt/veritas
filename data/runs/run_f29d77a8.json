@@ -1,12 +1,12 @@
 {
-  "run_id": "run_6fa194b6",
+  "run_id": "run_f29d77a8",
   "merchant_id": "medisure",
   "merchant_name": "MediSure Pharmacy",
   "mcc": "5912",
   "seed": 20260824,
-  "started_at": 1787847111.3825748,
-  "duration_ms": 3168,
-  "commit": "6f844bf",
+  "started_at": 1787855218.2657514,
+  "duration_ms": 3080,
+  "commit": "4fc83ef",
   "models": {
     "fast": "claude-haiku-4.5",
     "reasoning": "claude-sonnet-4.6",
@@ -18,13 +18,13 @@
   "used_stubs": false,
   "traces": [
     {
-      "run_id": "run_6fa194b6",
+      "run_id": "run_f29d77a8",
       "seq": 0,
       "node": "ingest",
       "kind": "deterministic",
       "status": "ok",
-      "started_at": 1787847113.625,
-      "duration_ms": 39,
+      "started_at": 1787855220.6963348,
+      "duration_ms": 29,
       "input_summary": {
         "merchant": "medisure",
         "mcc": "5912"
@@ -50,13 +50,13 @@
       }
     },
     {
-      "run_id": "run_6fa194b6",
+      "run_id": "run_f29d77a8",
       "seq": 1,
       "node": "classify",
       "kind": "llm",
       "status": "ok",
-      "started_at": 1787847113.6656969,
-      "duration_ms": 3,
+      "started_at": 1787855220.7263453,
+      "duration_ms": 2,
       "input_summary": {
         "distinct_codes": 57,
         "failures": 193
@@ -85,12 +85,12 @@
       "intermediates": {}
     },
     {
-      "run_id": "run_6fa194b6",
+      "run_id": "run_f29d77a8",
       "seq": 2,
       "node": "human_review",
       "kind": "deterministic",
       "status": "skipped",
-      "started_at": 1787847113.6697228,
+      "started_at": 1787855220.7293444,
       "duration_ms": 0,
       "input_summary": {},
       "output_summary": {
@@ -109,13 +109,13 @@
       "intermediates": {}
     },
     {
-      "run_id": "run_6fa194b6",
+      "run_id": "run_f29d77a8",
       "seq": 3,
       "node": "bank_health",
       "kind": "deterministic",
       "status": "ok",
-      "started_at": 1787847113.6707218,
-      "duration_ms": 7,
+      "started_at": 1787855220.7303429,
+      "duration_ms": 5,
       "input_summary": {},
       "output_summary": {
         "banks_examined": 10,
@@ -234,13 +234,13 @@
       }
     },
     {
-      "run_id": "run_6fa194b6",
+      "run_id": "run_f29d77a8",
       "seq": 4,
       "node": "decompose",
       "kind": "deterministic",
       "status": "ok",
-      "started_at": 1787847113.6785722,
-      "duration_ms": 650,
+      "started_at": 1787855220.7363446,
+      "duration_ms": 555,
       "input_summary": {},
       "output_summary": {
         "gap_pts": 3.796,
@@ -301,13 +301,13 @@
       }
     },
     {
-      "run_id": "run_6fa194b6",
+      "run_id": "run_f29d77a8",
       "seq": 5,
       "node": "hypothesise",
       "kind": "llm",
       "status": "ok",
-      "started_at": 1787847114.3299932,
-      "duration_ms": 150,
+      "started_at": 1787855221.293101,
+      "duration_ms": 4,
       "input_summary": {},
       "output_summary": {
         "tool_calls": [
@@ -377,13 +377,13 @@
       "intermediates": {}
     },
     {
-      "run_id": "run_6fa194b6",
+      "run_id": "run_f29d77a8",
       "seq": 6,
       "node": "plan",
       "kind": "deterministic",
       "status": "ok",
-      "started_at": 1787847114.48166,
-      "duration_ms": 2,
+      "started_at": 1787855221.2990885,
+      "duration_ms": 3,
       "input_summary": {},
       "output_summary": {
         "actions": 66,
@@ -441,13 +441,13 @@
       }
     },
     {
-      "run_id": "run_6fa194b6",
+      "run_id": "run_f29d77a8",
       "seq": 7,
       "node": "gate",
       "kind": "deterministic",
       "status": "ok",
-      "started_at": 1787847114.485649,
-      "duration_ms": 43,
+      "started_at": 1787855221.3030918,
+      "duration_ms": 25,
       "input_summary": {},
       "output_summary": {
         "decisions": {
@@ -477,13 +477,13 @@
       "intermediates": {}
     },
     {
-      "run_id": "run_6fa194b6",
+      "run_id": "run_f29d77a8",
       "seq": 8,
       "node": "execute",
       "kind": "deterministic",
       "status": "ok",
-      "started_at": 1787847114.5291898,
-      "duration_ms": 11,
+      "started_at": 1787855221.3300893,
+      "duration_ms": 7,
       "input_summary": {},
       "output_summary": {
         "executed": 18,
@@ -508,12 +508,12 @@
       "intermediates": {}
     },
     {
-      "run_id": "run_6fa194b6",
+      "run_id": "run_f29d77a8",
       "seq": 9,
       "node": "report",
       "kind": "deterministic",
       "status": "ok",
-      "started_at": 1787847114.5421884,
+      "started_at": 1787855221.3370972,
       "duration_ms": 8,
       "input_summary": {},
       "output_summary": {
@@ -1224,7 +1224,7 @@
         "method+hour": 0.3212829396701755,
         "method+amount_band": 0.245318109685555,
         "hour+amount_band": 0.23879215991349234,
-        "bank+method+hour": 3.893241142914383,
+        "bank+method+hour": 3.8932411429143943,
         "bank+method+amount_band": 3.8397833637317635,
         "bank+hour+amount_band": 3.83491346315582,
         "method+hour+amount_band": 0.23984707933952798,
@@ -1488,7 +1488,7 @@
     "ledger": [
       {
         "sequence": 0,
-        "timestamp": "2026-08-27T16:11:54.530184+00:00",
+        "timestamp": "2026-08-27T18:27:01.330089+00:00",
         "txn_id": "merchant:medisure",
         "proposed_action": {
           "action_type": "enable_multi_bank_routing",
@@ -1503,448 +1503,448 @@
         "gate_reason": "OK_MERCHANT_ACTION",
         "outcome": "merchant_action",
         "prev_hash": "0000000000000000000000000000000000000000000000000000000000000000",
-        "entry_hash": "19e23a027759eb82ebfb3a68c448e7c09eda758054a2cfe53e8eae5dc01e3fc0"
+        "entry_hash": "d64ec2cefc3af5dd5b26e63bce4665eb53342b2f41abdd6341bb36a380dbe33c"
       },
       {
         "sequence": 1,
-        "timestamp": "2026-08-27T16:11:54.530184+00:00",
+        "timestamp": "2026-08-27T18:27:01.330089+00:00",
         "txn_id": "pay_medisure_0250",
         "proposed_action": {
           "action_type": "retry_soft_decline",
           "txn_id": "pay_medisure_0250",
           "amount_paise": 1565176,
           "target_bank": "Airtel Payments Bank Limited",
-          "scheduled_time": "2026-08-27T16:11:54.481659+00:00",
-          "reason": "Enable automatic retry logic for soft-decline codes (payment_session_expired, otp_expired) by reissuing the payment link or refreshing the session within the same checkout flow. (transaction_limit_exceeded), unretried -- retry at +90.2h, past the plateau; intent goes stale",
+          "scheduled_time": "2026-08-24T00:00:00+00:00",
+          "reason": "Enable automatic retry logic for soft-decline codes (payment_session_expired, otp_expired) by reissuing the payment link or refreshing the session within the same checkout flow. (transaction_limit_exceeded), unretried -- retry at +74h, past the plateau; intent goes stale",
           "requires_merchant_approval": false
         },
         "gate_decision": "deny",
         "gate_reason": "DENY_AMOUNT_ABOVE_CEILING",
         "outcome": "denied",
-        "prev_hash": "19e23a027759eb82ebfb3a68c448e7c09eda758054a2cfe53e8eae5dc01e3fc0",
-        "entry_hash": "dc7377100c009f6ae5571839bf4d118dea7be269fd78d5e1916ac2335965a6cb"
+        "prev_hash": "d64ec2cefc3af5dd5b26e63bce4665eb53342b2f41abdd6341bb36a380dbe33c",
+        "entry_hash": "ed036749ac1a13dfe6c5fb07e217fb5dde89a5a206471ec8f3b8c50307bfc88b"
       },
       {
         "sequence": 2,
-        "timestamp": "2026-08-27T16:11:54.530184+00:00",
+        "timestamp": "2026-08-27T18:27:01.330089+00:00",
         "txn_id": "pay_medisure_1365",
         "proposed_action": {
           "action_type": "retry_soft_decline",
           "txn_id": "pay_medisure_1365",
           "amount_paise": 827932,
           "target_bank": "Punjab National Bank",
-          "scheduled_time": "2026-08-27T16:11:54.482652+00:00",
-          "reason": "Enable automatic retry logic for soft-decline codes (payment_session_expired, otp_expired) by reissuing the payment link or refreshing the session within the same checkout flow. (transaction_daily_limit_exceeded), unretried -- retry at +100.2h, past the plateau; intent goes stale",
+          "scheduled_time": "2026-08-24T00:00:00+00:00",
+          "reason": "Enable automatic retry logic for soft-decline codes (payment_session_expired, otp_expired) by reissuing the payment link or refreshing the session within the same checkout flow. (transaction_daily_limit_exceeded), unretried -- retry at +84h, past the plateau; intent goes stale",
           "requires_merchant_approval": false
         },
         "gate_decision": "deny",
         "gate_reason": "DENY_AMOUNT_ABOVE_CEILING",
         "outcome": "denied",
-        "prev_hash": "dc7377100c009f6ae5571839bf4d118dea7be269fd78d5e1916ac2335965a6cb",
-        "entry_hash": "ca3e532eaffbb1a1aeddd5c62a022f0ee9008c7dbb9bdc62f08bee1e9f82220e"
+        "prev_hash": "ed036749ac1a13dfe6c5fb07e217fb5dde89a5a206471ec8f3b8c50307bfc88b",
+        "entry_hash": "bcf22d3e869fa3e8d0b50b641594f1f042d310fc60deaeaa5aae14ba15cdffcb"
       },
       {
         "sequence": 3,
-        "timestamp": "2026-08-27T16:11:54.531186+00:00",
+        "timestamp": "2026-08-27T18:27:01.330089+00:00",
         "txn_id": "pay_medisure_0513",
         "proposed_action": {
           "action_type": "retry_soft_decline",
           "txn_id": "pay_medisure_0513",
           "amount_paise": 259216,
           "target_bank": "Airtel Payments Bank Limited",
-          "scheduled_time": "2026-08-27T16:11:54.482652+00:00",
-          "reason": "Enable automatic retry logic for soft-decline codes (payment_session_expired, otp_expired) by reissuing the payment link or refreshing the session within the same checkout flow. (payment_session_expired), unretried -- retry at +30.2h, the plateau: long enough for the balance to have changed",
+          "scheduled_time": "2026-08-24T16:00:00+00:00",
+          "reason": "Enable automatic retry logic for soft-decline codes (payment_session_expired, otp_expired) by reissuing the payment link or refreshing the session within the same checkout flow. (payment_session_expired), unretried -- retry at +30h, the plateau: long enough for the balance to have changed",
           "requires_merchant_approval": false
         },
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "ca3e532eaffbb1a1aeddd5c62a022f0ee9008c7dbb9bdc62f08bee1e9f82220e",
-        "entry_hash": "945ce86f2f8a92ec79790244825d61a56f27df85bf9f81827ae34c8d94adfa62"
+        "prev_hash": "bcf22d3e869fa3e8d0b50b641594f1f042d310fc60deaeaa5aae14ba15cdffcb",
+        "entry_hash": "f87a8fd42ff5eb290c13b87d13a57fa88b3489ab738c7abb38cd4d08ffa98d2d"
       },
       {
         "sequence": 4,
-        "timestamp": "2026-08-27T16:11:54.531186+00:00",
+        "timestamp": "2026-08-27T18:27:01.330089+00:00",
         "txn_id": "pay_medisure_0822",
         "proposed_action": {
           "action_type": "retry_soft_decline",
           "txn_id": "pay_medisure_0822",
           "amount_paise": 211199,
           "target_bank": "Airtel Payments Bank Limited",
-          "scheduled_time": "2026-08-27T16:11:54.482652+00:00",
-          "reason": "Enable automatic retry logic for soft-decline codes (payment_session_expired, otp_expired) by reissuing the payment link or refreshing the session within the same checkout flow. (insufficient_funds), unretried -- retry at +46.2h, the plateau: long enough for the balance to have changed",
+          "scheduled_time": "2026-08-24T00:00:00+00:00",
+          "reason": "Enable automatic retry logic for soft-decline codes (payment_session_expired, otp_expired) by reissuing the payment link or refreshing the session within the same checkout flow. (insufficient_funds), unretried -- retry at +30h, the plateau: long enough for the balance to have changed",
           "requires_merchant_approval": false
         },
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "945ce86f2f8a92ec79790244825d61a56f27df85bf9f81827ae34c8d94adfa62",
-        "entry_hash": "8cab3b1b638b9c982291e848df1a93d00e179fdaf3064be7d056954411c9b5ec"
+        "prev_hash": "f87a8fd42ff5eb290c13b87d13a57fa88b3489ab738c7abb38cd4d08ffa98d2d",
+        "entry_hash": "983448dab7ac52201066c46c7f8d948d049f7762536be822b564e75f423ee238"
       },
       {
         "sequence": 5,
-        "timestamp": "2026-08-27T16:11:54.531186+00:00",
+        "timestamp": "2026-08-27T18:27:01.331088+00:00",
         "txn_id": "pay_medisure_1137",
         "proposed_action": {
           "action_type": "retry_soft_decline",
           "txn_id": "pay_medisure_1137",
           "amount_paise": 183195,
           "target_bank": "Indusind Bank Ltd.",
-          "scheduled_time": "2026-08-28T00:00:00+00:00",
+          "scheduled_time": "2026-08-25T00:00:00+00:00",
           "reason": "Enable automatic retry logic for soft-decline codes (payment_session_expired, otp_expired) by reissuing the payment link or refreshing the session within the same checkout flow. (debit_declined), unretried -- retry at +30h, the plateau: long enough for the balance to have changed",
           "requires_merchant_approval": false
         },
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "8cab3b1b638b9c982291e848df1a93d00e179fdaf3064be7d056954411c9b5ec",
-        "entry_hash": "36e66f5de57d8208b84cf7160a27146fe74ab4b68477759e9ac0e7df0c2f0bd2"
+        "prev_hash": "983448dab7ac52201066c46c7f8d948d049f7762536be822b564e75f423ee238",
+        "entry_hash": "3bc8b5eb0381784c1ba5c5e9612e692c185a05d5b2b07f9327a4ba3fffe8174d"
       },
       {
         "sequence": 6,
-        "timestamp": "2026-08-27T16:11:54.531186+00:00",
+        "timestamp": "2026-08-27T18:27:01.331088+00:00",
         "txn_id": "pay_medisure_1009",
         "proposed_action": {
           "action_type": "retry_soft_decline",
           "txn_id": "pay_medisure_1009",
           "amount_paise": 93769,
           "target_bank": "Airtel Payments Bank Limited",
-          "scheduled_time": "2026-08-27T16:11:54.482652+00:00",
-          "reason": "Enable automatic retry logic for soft-decline codes (payment_session_expired, otp_expired) by reissuing the payment link or refreshing the session within the same checkout flow. (transaction_frequency_limit_exceeded), unretried -- retry at +120.2h, past the plateau; intent goes stale",
+          "scheduled_time": "2026-08-24T00:00:00+00:00",
+          "reason": "Enable automatic retry logic for soft-decline codes (payment_session_expired, otp_expired) by reissuing the payment link or refreshing the session within the same checkout flow. (transaction_frequency_limit_exceeded), unretried -- retry at +104h, past the plateau; intent goes stale",
           "requires_merchant_approval": false
         },
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "36e66f5de57d8208b84cf7160a27146fe74ab4b68477759e9ac0e7df0c2f0bd2",
-        "entry_hash": "a44fbcac374881d12dac7a7e2ff7795a637d02a0c0e9c4c423d38fca7c98af6d"
+        "prev_hash": "3bc8b5eb0381784c1ba5c5e9612e692c185a05d5b2b07f9327a4ba3fffe8174d",
+        "entry_hash": "ddd7e9ee5000c6fb9223b7ae1299547eb5bef2fbc886f09ae81cc9faa1d87ddc"
       },
       {
         "sequence": 7,
-        "timestamp": "2026-08-27T16:11:54.532183+00:00",
+        "timestamp": "2026-08-27T18:27:01.331088+00:00",
         "txn_id": "pay_medisure_1266",
         "proposed_action": {
           "action_type": "retry_soft_decline",
           "txn_id": "pay_medisure_1266",
           "amount_paise": 91211,
           "target_bank": "Airtel Payments Bank Limited",
-          "scheduled_time": "2026-08-28T12:00:00+00:00",
+          "scheduled_time": "2026-08-25T12:00:00+00:00",
           "reason": "Enable automatic retry logic for soft-decline codes (payment_session_expired, otp_expired) by reissuing the payment link or refreshing the session within the same checkout flow. (debit_declined), unretried -- retry at +30h, the plateau: long enough for the balance to have changed",
           "requires_merchant_approval": false
         },
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "a44fbcac374881d12dac7a7e2ff7795a637d02a0c0e9c4c423d38fca7c98af6d",
-        "entry_hash": "d1a56637bbb5313f5fd6f58e1df76576ec73e536ff1f5b619c07ab2777518f8d"
+        "prev_hash": "ddd7e9ee5000c6fb9223b7ae1299547eb5bef2fbc886f09ae81cc9faa1d87ddc",
+        "entry_hash": "a17c8f6ee7ae8aadcf8c373f0bab48ac4cf603cfc6938d6aca0fac6ce125a888"
       },
       {
         "sequence": 8,
-        "timestamp": "2026-08-27T16:11:54.532183+00:00",
+        "timestamp": "2026-08-27T18:27:01.331088+00:00",
         "txn_id": "pay_medisure_0314",
         "proposed_action": {
           "action_type": "retry_soft_decline",
           "txn_id": "pay_medisure_0314",
           "amount_paise": 90715,
           "target_bank": "Airtel Payments Bank Limited",
-          "scheduled_time": "2026-08-27T16:11:54.482652+00:00",
-          "reason": "Enable automatic retry logic for soft-decline codes (payment_session_expired, otp_expired) by reissuing the payment link or refreshing the session within the same checkout flow. (collect_request_pending), unretried -- retry at +33.2h, the plateau: long enough for the balance to have changed",
+          "scheduled_time": "2026-08-24T13:00:00+00:00",
+          "reason": "Enable automatic retry logic for soft-decline codes (payment_session_expired, otp_expired) by reissuing the payment link or refreshing the session within the same checkout flow. (collect_request_pending), unretried -- retry at +30h, the plateau: long enough for the balance to have changed",
           "requires_merchant_approval": false
         },
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "d1a56637bbb5313f5fd6f58e1df76576ec73e536ff1f5b619c07ab2777518f8d",
-        "entry_hash": "89498a81589572e158fe7fb129424c868b49939e5ab4d838477fc433882d0e6a"
+        "prev_hash": "a17c8f6ee7ae8aadcf8c373f0bab48ac4cf603cfc6938d6aca0fac6ce125a888",
+        "entry_hash": "5625109bcf153fcbde1df33c50b5cd450de5a1910d03f52d73e57903cfa7c05c"
       },
       {
         "sequence": 9,
-        "timestamp": "2026-08-27T16:11:54.532183+00:00",
+        "timestamp": "2026-08-27T18:27:01.331088+00:00",
         "txn_id": "pay_medisure_0608",
         "proposed_action": {
           "action_type": "retry_soft_decline",
           "txn_id": "pay_medisure_0608",
           "amount_paise": 82969,
           "target_bank": "State Bank of India",
-          "scheduled_time": "2026-08-27T16:11:54.482652+00:00",
-          "reason": "Enable automatic retry logic for soft-decline codes (payment_session_expired, otp_expired) by reissuing the payment link or refreshing the session within the same checkout flow. (transaction_frequency_limit_exceeded), unretried -- retry at +127.2h, past the plateau; intent goes stale",
+          "scheduled_time": "2026-08-24T00:00:00+00:00",
+          "reason": "Enable automatic retry logic for soft-decline codes (payment_session_expired, otp_expired) by reissuing the payment link or refreshing the session within the same checkout flow. (transaction_frequency_limit_exceeded), unretried -- retry at +111h, past the plateau; intent goes stale",
           "requires_merchant_approval": false
         },
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "89498a81589572e158fe7fb129424c868b49939e5ab4d838477fc433882d0e6a",
-        "entry_hash": "2b870d2c146274d662cb57594c2bf89a1ba70185e1fe07054a84eb04e1317dc7"
+        "prev_hash": "5625109bcf153fcbde1df33c50b5cd450de5a1910d03f52d73e57903cfa7c05c",
+        "entry_hash": "a693f9173aa2d0698394c3997ac02828f9887f35d8b5079e61ff1782bd7b8f96"
       },
       {
         "sequence": 10,
-        "timestamp": "2026-08-27T16:11:54.532183+00:00",
+        "timestamp": "2026-08-27T18:27:01.331088+00:00",
         "txn_id": "pay_medisure_1168",
         "proposed_action": {
           "action_type": "retry_soft_decline",
           "txn_id": "pay_medisure_1168",
           "amount_paise": 82640,
           "target_bank": "Airtel Payments Bank Limited",
-          "scheduled_time": "2026-08-27T21:00:00+00:00",
+          "scheduled_time": "2026-08-24T21:00:00+00:00",
           "reason": "Enable automatic retry logic for soft-decline codes (payment_session_expired, otp_expired) by reissuing the payment link or refreshing the session within the same checkout flow. (payment_session_expired), unretried -- retry at +30h, the plateau: long enough for the balance to have changed",
           "requires_merchant_approval": false
         },
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "2b870d2c146274d662cb57594c2bf89a1ba70185e1fe07054a84eb04e1317dc7",
-        "entry_hash": "950ee605e09c3f393e4dbd51933e9128bdeff0cd1e3ba30f59dea9d68ad02ba4"
+        "prev_hash": "a693f9173aa2d0698394c3997ac02828f9887f35d8b5079e61ff1782bd7b8f96",
+        "entry_hash": "84d88919bfe657edb59eea1da2fc37a9d6f536e8bd92ad5f6b0bde1f53815c45"
       },
       {
         "sequence": 11,
-        "timestamp": "2026-08-27T16:11:54.533184+00:00",
+        "timestamp": "2026-08-27T18:27:01.331088+00:00",
         "txn_id": "pay_medisure_0326",
         "proposed_action": {
           "action_type": "retry_soft_decline",
           "txn_id": "pay_medisure_0326",
           "amount_paise": 74736,
           "target_bank": "Kotak Mahindra Bank",
-          "scheduled_time": "2026-08-29T01:00:00+00:00",
+          "scheduled_time": "2026-08-26T01:00:00+00:00",
           "reason": "Enable automatic retry logic for soft-decline codes (payment_session_expired, otp_expired) by reissuing the payment link or refreshing the session within the same checkout flow. (credit_limit_exceeded), unretried -- retry at +30h, the plateau: long enough for the balance to have changed",
           "requires_merchant_approval": false
         },
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "950ee605e09c3f393e4dbd51933e9128bdeff0cd1e3ba30f59dea9d68ad02ba4",
-        "entry_hash": "3adac020df0a674c97873e83f78712312057069b0302f9c1562838bb87dadf8d"
+        "prev_hash": "84d88919bfe657edb59eea1da2fc37a9d6f536e8bd92ad5f6b0bde1f53815c45",
+        "entry_hash": "1aa8a8366bfded356fa144cc23b9d2c4d91d8851785ab6f673339cde10b78903"
       },
       {
         "sequence": 12,
-        "timestamp": "2026-08-27T16:11:54.533184+00:00",
+        "timestamp": "2026-08-27T18:27:01.331088+00:00",
         "txn_id": "pay_medisure_0129",
         "proposed_action": {
           "action_type": "retry_soft_decline",
           "txn_id": "pay_medisure_0129",
           "amount_paise": 69628,
           "target_bank": "Bank Of India",
-          "scheduled_time": "2026-08-27T16:11:54.482652+00:00",
-          "reason": "Enable automatic retry logic for soft-decline codes (payment_session_expired, otp_expired) by reissuing the payment link or refreshing the session within the same checkout flow. (capture_failed), unretried -- retry at +68.2h, last look before the odds fall away",
+          "scheduled_time": "2026-08-24T00:00:00+00:00",
+          "reason": "Enable automatic retry logic for soft-decline codes (payment_session_expired, otp_expired) by reissuing the payment link or refreshing the session within the same checkout flow. (capture_failed), unretried -- retry at +52h, last look before the odds fall away",
           "requires_merchant_approval": false
         },
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "3adac020df0a674c97873e83f78712312057069b0302f9c1562838bb87dadf8d",
-        "entry_hash": "a3b74cebf7e34c77e99cfb8458843fc3dca2c8785e700bda310ceca4ae43b698"
+        "prev_hash": "1aa8a8366bfded356fa144cc23b9d2c4d91d8851785ab6f673339cde10b78903",
+        "entry_hash": "507a3908b1199675b9488e5c573e95d17ae1665f28356523248594ba9e367f18"
       },
       {
         "sequence": 13,
-        "timestamp": "2026-08-27T16:11:54.533184+00:00",
+        "timestamp": "2026-08-27T18:27:01.331088+00:00",
         "txn_id": "pay_medisure_0722",
         "proposed_action": {
           "action_type": "retry_soft_decline",
           "txn_id": "pay_medisure_0722",
           "amount_paise": 67788,
           "target_bank": "Airtel Payments Bank Limited",
-          "scheduled_time": "2026-08-27T16:11:54.482652+00:00",
-          "reason": "Enable automatic retry logic for soft-decline codes (payment_session_expired, otp_expired) by reissuing the payment link or refreshing the session within the same checkout flow. (record_not_found), unretried -- retry at +73.2h, last look before the odds fall away",
+          "scheduled_time": "2026-08-24T00:00:00+00:00",
+          "reason": "Enable automatic retry logic for soft-decline codes (payment_session_expired, otp_expired) by reissuing the payment link or refreshing the session within the same checkout flow. (record_not_found), unretried -- retry at +57h, last look before the odds fall away",
           "requires_merchant_approval": false
         },
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "a3b74cebf7e34c77e99cfb8458843fc3dca2c8785e700bda310ceca4ae43b698",
-        "entry_hash": "149314908206fcc870f64fb47a2ecee97f2cf5e1087741e9cb85a4a3d3987076"
+        "prev_hash": "507a3908b1199675b9488e5c573e95d17ae1665f28356523248594ba9e367f18",
+        "entry_hash": "3dc8a0def014c35d1bc780d4e28f3bb6c63b8af6f373870b9ef5d2c4eeae86a4"
       },
       {
         "sequence": 14,
-        "timestamp": "2026-08-27T16:11:54.533184+00:00",
+        "timestamp": "2026-08-27T18:27:01.331088+00:00",
         "txn_id": "pay_medisure_1152",
         "proposed_action": {
           "action_type": "retry_soft_decline",
           "txn_id": "pay_medisure_1152",
           "amount_paise": 53976,
           "target_bank": "Punjab National Bank",
-          "scheduled_time": "2026-08-28T10:00:00+00:00",
+          "scheduled_time": "2026-08-25T10:00:00+00:00",
           "reason": "Enable automatic retry logic for soft-decline codes (payment_session_expired, otp_expired) by reissuing the payment link or refreshing the session within the same checkout flow. (payment_pending_approval), unretried -- retry at +30h, the plateau: long enough for the balance to have changed",
           "requires_merchant_approval": false
         },
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "149314908206fcc870f64fb47a2ecee97f2cf5e1087741e9cb85a4a3d3987076",
-        "entry_hash": "7aa859ec2e5a742936f90023a69400182ff82bb93f528c36451da1974ff66678"
+        "prev_hash": "3dc8a0def014c35d1bc780d4e28f3bb6c63b8af6f373870b9ef5d2c4eeae86a4",
+        "entry_hash": "2267c6d0f350365d83ca0814598e88bd78a968c29b40488e54001ed4992076c8"
       },
       {
         "sequence": 15,
-        "timestamp": "2026-08-27T16:11:54.533184+00:00",
+        "timestamp": "2026-08-27T18:27:01.331088+00:00",
         "txn_id": "pay_medisure_0727",
         "proposed_action": {
           "action_type": "retry_soft_decline",
           "txn_id": "pay_medisure_0727",
           "amount_paise": 45454,
           "target_bank": "Airtel Payments Bank Limited",
-          "scheduled_time": "2026-08-27T16:11:54.482652+00:00",
-          "reason": "Enable automatic retry logic for soft-decline codes (payment_session_expired, otp_expired) by reissuing the payment link or refreshing the session within the same checkout flow. (credit_limit_exceeded), unretried -- retry at +76.2h, past the plateau; intent goes stale",
+          "scheduled_time": "2026-08-24T00:00:00+00:00",
+          "reason": "Enable automatic retry logic for soft-decline codes (payment_session_expired, otp_expired) by reissuing the payment link or refreshing the session within the same checkout flow. (credit_limit_exceeded), unretried -- retry at +60h, the plateau: long enough for the balance to have changed",
           "requires_merchant_approval": false
         },
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "7aa859ec2e5a742936f90023a69400182ff82bb93f528c36451da1974ff66678",
-        "entry_hash": "a04b7c7b9a4c1809e8a5456a17cb7b43beb3e0e93825862993b451740975c122"
+        "prev_hash": "2267c6d0f350365d83ca0814598e88bd78a968c29b40488e54001ed4992076c8",
+        "entry_hash": "d4aa70d952d2f4b8694e58e2c1ecf0ac1387790e69abf0460960d1bbb4c4436b"
       },
       {
         "sequence": 16,
-        "timestamp": "2026-08-27T16:11:54.533184+00:00",
+        "timestamp": "2026-08-27T18:27:01.331088+00:00",
         "txn_id": "pay_medisure_1347",
         "proposed_action": {
           "action_type": "retry_soft_decline",
           "txn_id": "pay_medisure_1347",
           "amount_paise": 42937,
           "target_bank": "State Bank of India",
-          "scheduled_time": "2026-08-27T16:11:54.482652+00:00",
-          "reason": "Enable automatic retry logic for soft-decline codes (payment_session_expired, otp_expired) by reissuing the payment link or refreshing the session within the same checkout flow. (request_timed_out), unretried -- retry at +80.2h, last look before the odds fall away",
+          "scheduled_time": "2026-08-24T00:00:00+00:00",
+          "reason": "Enable automatic retry logic for soft-decline codes (payment_session_expired, otp_expired) by reissuing the payment link or refreshing the session within the same checkout flow. (request_timed_out), unretried -- retry at +64h, last look before the odds fall away",
           "requires_merchant_approval": false
         },
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "a04b7c7b9a4c1809e8a5456a17cb7b43beb3e0e93825862993b451740975c122",
-        "entry_hash": "257fac3ac3c6b99999a877cc6c2e370580643b2ac06153202fb54f10865a52d0"
+        "prev_hash": "d4aa70d952d2f4b8694e58e2c1ecf0ac1387790e69abf0460960d1bbb4c4436b",
+        "entry_hash": "c8137387a0afbffe059f226cae3917998e5caae042bd3eba18d92e962b664352"
       },
       {
         "sequence": 17,
-        "timestamp": "2026-08-27T16:11:54.533184+00:00",
+        "timestamp": "2026-08-27T18:27:01.331088+00:00",
         "txn_id": "pay_medisure_1308",
         "proposed_action": {
           "action_type": "retry_soft_decline",
           "txn_id": "pay_medisure_1308",
           "amount_paise": 34838,
           "target_bank": "Airtel Payments Bank Limited",
-          "scheduled_time": "2026-08-28T19:00:00+00:00",
+          "scheduled_time": "2026-08-25T19:00:00+00:00",
           "reason": "Enable automatic retry logic for soft-decline codes (payment_session_expired, otp_expired) by reissuing the payment link or refreshing the session within the same checkout flow. (payment_collect_request_expired), unretried -- retry at +30h, the plateau: long enough for the balance to have changed",
           "requires_merchant_approval": false
         },
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "257fac3ac3c6b99999a877cc6c2e370580643b2ac06153202fb54f10865a52d0",
-        "entry_hash": "aec61b4c4c0ed552b8c0aa8731d17e3ab2ec5ef71d47ea706a4e61f910942f75"
+        "prev_hash": "c8137387a0afbffe059f226cae3917998e5caae042bd3eba18d92e962b664352",
+        "entry_hash": "4a8d6c7650d85dee00d7ac4391543d08427aa8847af8ade70a925f2c5d35e0a2"
       },
       {
         "sequence": 18,
-        "timestamp": "2026-08-27T16:11:54.533184+00:00",
+        "timestamp": "2026-08-27T18:27:01.332088+00:00",
         "txn_id": "pay_medisure_0983",
         "proposed_action": {
           "action_type": "retry_soft_decline",
           "txn_id": "pay_medisure_0983",
           "amount_paise": 15061,
           "target_bank": "UCO Bank",
-          "scheduled_time": "2026-08-27T16:11:54.482652+00:00",
-          "reason": "Enable automatic retry logic for soft-decline codes (payment_session_expired, otp_expired) by reissuing the payment link or refreshing the session within the same checkout flow. (credit_failed), unretried -- retry at +46.2h, last look before the odds fall away",
+          "scheduled_time": "2026-08-24T00:00:00+00:00",
+          "reason": "Enable automatic retry logic for soft-decline codes (payment_session_expired, otp_expired) by reissuing the payment link or refreshing the session within the same checkout flow. (credit_failed), unretried -- retry at +30h, last look before the odds fall away",
           "requires_merchant_approval": false
         },
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "aec61b4c4c0ed552b8c0aa8731d17e3ab2ec5ef71d47ea706a4e61f910942f75",
-        "entry_hash": "5b7959c3ff7f6f74a8bbcf3abfcab1679161e533227829e07e90b81a49d55df7"
+        "prev_hash": "4a8d6c7650d85dee00d7ac4391543d08427aa8847af8ade70a925f2c5d35e0a2",
+        "entry_hash": "bce3b0f9b4cdee37115457f7672710288ebee9fb1df61dd6da59f25031d7b9ae"
       },
       {
         "sequence": 19,
-        "timestamp": "2026-08-27T16:11:54.533184+00:00",
+        "timestamp": "2026-08-27T18:27:01.332088+00:00",
         "txn_id": "pay_medisure_1399",
         "proposed_action": {
           "action_type": "retry_soft_decline",
           "txn_id": "pay_medisure_1399",
           "amount_paise": 14502,
           "target_bank": "Airtel Payments Bank Limited",
-          "scheduled_time": "2026-08-28T21:00:00+00:00",
+          "scheduled_time": "2026-08-25T21:00:00+00:00",
           "reason": "Enable automatic retry logic for soft-decline codes (payment_session_expired, otp_expired) by reissuing the payment link or refreshing the session within the same checkout flow. (transaction_daily_count_exceeded), unretried -- retry at +30h, the plateau: long enough for the balance to have changed",
           "requires_merchant_approval": false
         },
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "5b7959c3ff7f6f74a8bbcf3abfcab1679161e533227829e07e90b81a49d55df7",
-        "entry_hash": "6a8163ac82061105f5e5b8cbadb2fb2d8078d8c8de13072c34a084d272074736"
+        "prev_hash": "bce3b0f9b4cdee37115457f7672710288ebee9fb1df61dd6da59f25031d7b9ae",
+        "entry_hash": "de5e88bab857b77b0cb45de3cddc0c987e770c52f93ef403f972e253a4283893"
       },
       {
         "sequence": 20,
-        "timestamp": "2026-08-27T16:11:54.534183+00:00",
+        "timestamp": "2026-08-27T18:27:01.332088+00:00",
         "txn_id": "pay_medisure_1049",
         "proposed_action": {
           "action_type": "retry_soft_decline",
           "txn_id": "pay_medisure_1049",
           "amount_paise": 10605,
           "target_bank": "Kotak Mahindra Bank",
-          "scheduled_time": "2026-08-27T16:11:54.483648+00:00",
-          "reason": "Enable automatic retry logic for soft-decline codes (payment_session_expired, otp_expired) by reissuing the payment link or refreshing the session within the same checkout flow. (debit_declined), unretried -- retry at +48.2h, the plateau: long enough for the balance to have changed",
+          "scheduled_time": "2026-08-24T00:00:00+00:00",
+          "reason": "Enable automatic retry logic for soft-decline codes (payment_session_expired, otp_expired) by reissuing the payment link or refreshing the session within the same checkout flow. (debit_declined), unretried -- retry at +32h, the plateau: long enough for the balance to have changed",
           "requires_merchant_approval": false
         },
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "6a8163ac82061105f5e5b8cbadb2fb2d8078d8c8de13072c34a084d272074736",
-        "entry_hash": "faf10c08778a999c5998b2aa6581231bea2c9dc937c52a6d458714d602b0a8c8"
+        "prev_hash": "de5e88bab857b77b0cb45de3cddc0c987e770c52f93ef403f972e253a4283893",
+        "entry_hash": "49df9bed24a515abe2137b972fd6ae6661df6048547e39e3aea60d720a2e6825"
       },
       {
         "sequence": 21,
-        "timestamp": "2026-08-27T16:11:54.534183+00:00",
+        "timestamp": "2026-08-27T18:27:01.332088+00:00",
         "txn_id": "pay_medisure_0234",
         "proposed_action": {
           "action_type": "retry_soft_decline",
           "txn_id": "pay_medisure_0234",
           "amount_paise": 10024,
           "target_bank": "Airtel Payments Bank Limited",
-          "scheduled_time": "2026-08-27T16:11:54.483648+00:00",
-          "reason": "Enable automatic retry logic for soft-decline codes (payment_session_expired, otp_expired) by reissuing the payment link or refreshing the session within the same checkout flow. (debit_declined), unretried -- retry at +45.2h, the plateau: long enough for the balance to have changed",
+          "scheduled_time": "2026-08-24T01:00:00+00:00",
+          "reason": "Enable automatic retry logic for soft-decline codes (payment_session_expired, otp_expired) by reissuing the payment link or refreshing the session within the same checkout flow. (debit_declined), unretried -- retry at +30h, the plateau: long enough for the balance to have changed",
           "requires_merchant_approval": false
         },
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "faf10c08778a999c5998b2aa6581231bea2c9dc937c52a6d458714d602b0a8c8",
-        "entry_hash": "0720364e1c6671d322295e2b1238aec4a9c6857a1fa55c466da596f0711d9154"
+        "prev_hash": "49df9bed24a515abe2137b972fd6ae6661df6048547e39e3aea60d720a2e6825",
+        "entry_hash": "886a7010bbfcb21756fb992c19f52b1ceae758e2ac0606a7edb8ea5647ce3004"
       },
       {
         "sequence": 22,
-        "timestamp": "2026-08-27T16:11:54.534183+00:00",
+        "timestamp": "2026-08-27T18:27:01.332088+00:00",
         "txn_id": "pay_medisure_0594",
         "proposed_action": {
           "action_type": "retry_soft_decline",
           "txn_id": "pay_medisure_0594",
           "amount_paise": 8734,
           "target_bank": "Airtel Payments Bank Limited",
-          "scheduled_time": "2026-08-29T04:00:00+00:00",
+          "scheduled_time": "2026-08-26T04:00:00+00:00",
           "reason": "Enable automatic retry logic for soft-decline codes (payment_session_expired, otp_expired) by reissuing the payment link or refreshing the session within the same checkout flow. (credit_limit_exceeded), unretried -- retry at +30h, the plateau: long enough for the balance to have changed",
           "requires_merchant_approval": false
         },
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "0720364e1c6671d322295e2b1238aec4a9c6857a1fa55c466da596f0711d9154",
-        "entry_hash": "43e1c9eb3469b09471b82a9e6c3b89e6bd25394dccef6d8d6b3ae485591c7240"
+        "prev_hash": "886a7010bbfcb21756fb992c19f52b1ceae758e2ac0606a7edb8ea5647ce3004",
+        "entry_hash": "0c83dbe009a29b15d41011805efcfa522ecfcf5e1bf73de0c12e617f35096332"
       },
       {
         "sequence": 23,
-        "timestamp": "2026-08-27T16:11:54.534183+00:00",
+        "timestamp": "2026-08-27T18:27:01.332088+00:00",
         "txn_id": "pay_medisure_1349",
         "proposed_action": {
           "action_type": "retry_soft_decline",
           "txn_id": "pay_medisure_1349",
           "amount_paise": 1796,
           "target_bank": "Airtel Payments Bank Limited",
-          "scheduled_time": "2026-08-28T13:00:00+00:00",
+          "scheduled_time": "2026-08-25T13:00:00+00:00",
           "reason": "Enable automatic retry logic for soft-decline codes (payment_session_expired, otp_expired) by reissuing the payment link or refreshing the session within the same checkout flow. (transaction_daily_count_exceeded), unretried -- retry at +30h, the plateau: long enough for the balance to have changed",
           "requires_merchant_approval": false
         },
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "43e1c9eb3469b09471b82a9e6c3b89e6bd25394dccef6d8d6b3ae485591c7240",
-        "entry_hash": "a1facce186f2474420d0b02455d1c69509c505571f650c7773c03842e38ec779"
+        "prev_hash": "0c83dbe009a29b15d41011805efcfa522ecfcf5e1bf73de0c12e617f35096332",
+        "entry_hash": "d6c08fcc6d3fdef6b8a920f849ced1ea247af4ae3c779097de45a2f5ee97ff71"
       },
       {
         "sequence": 24,
-        "timestamp": "2026-08-27T16:11:54.534183+00:00",
+        "timestamp": "2026-08-27T18:27:01.332088+00:00",
         "txn_id": "merchant:medisure",
         "proposed_action": {
           "action_type": "flag_for_investigation",
@@ -1958,12 +1958,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_ESCALATION",
         "outcome": "escalated",
-        "prev_hash": "a1facce186f2474420d0b02455d1c69509c505571f650c7773c03842e38ec779",
-        "entry_hash": "e6292325e77fff0cd222819ec0af196722d0e8fc5a542b3d4e0e65a285ac0e30"
+        "prev_hash": "d6c08fcc6d3fdef6b8a920f849ced1ea247af4ae3c779097de45a2f5ee97ff71",
+        "entry_hash": "510972e65b70e8dbed58e1e6833d4504c088914ff4b836b219fe3bf3c115b4e4"
       },
       {
         "sequence": 25,
-        "timestamp": "2026-08-27T16:11:54.534183+00:00",
+        "timestamp": "2026-08-27T18:27:01.333089+00:00",
         "txn_id": "merchant:medisure",
         "proposed_action": {
           "action_type": "flag_for_investigation",
@@ -1977,12 +1977,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_ESCALATION",
         "outcome": "escalated",
-        "prev_hash": "e6292325e77fff0cd222819ec0af196722d0e8fc5a542b3d4e0e65a285ac0e30",
-        "entry_hash": "de4d46908417f19d14435d52e5c1c9497c5410a1f4e5aa74bfca40d58a9f0c33"
+        "prev_hash": "510972e65b70e8dbed58e1e6833d4504c088914ff4b836b219fe3bf3c115b4e4",
+        "entry_hash": "983fd21866fcc84768bc602e76f51533298d2cf7a497d378c7550855c42b7ae0"
       },
       {
         "sequence": 26,
-        "timestamp": "2026-08-27T16:11:54.535185+00:00",
+        "timestamp": "2026-08-27T18:27:01.333089+00:00",
         "txn_id": "merchant:medisure",
         "proposed_action": {
           "action_type": "flag_for_investigation",
@@ -1996,12 +1996,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_ESCALATION",
         "outcome": "escalated",
-        "prev_hash": "de4d46908417f19d14435d52e5c1c9497c5410a1f4e5aa74bfca40d58a9f0c33",
-        "entry_hash": "502d73ba63d9d494747ad2d33566a58c333fe408c345430184ba63fbe7349318"
+        "prev_hash": "983fd21866fcc84768bc602e76f51533298d2cf7a497d378c7550855c42b7ae0",
+        "entry_hash": "31b90bdb4b4af06567033469c7826a0dd5ad850b9c67d56be7ec21b5a82dcaad"
       },
       {
         "sequence": 27,
-        "timestamp": "2026-08-27T16:11:54.535185+00:00",
+        "timestamp": "2026-08-27T18:27:01.333089+00:00",
         "txn_id": "pay_medisure_1328",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2015,12 +2015,12 @@
         "gate_decision": "deny",
         "gate_reason": "DENY_AMOUNT_ABOVE_CEILING",
         "outcome": "denied",
-        "prev_hash": "502d73ba63d9d494747ad2d33566a58c333fe408c345430184ba63fbe7349318",
-        "entry_hash": "d33df499d134fda58c97e40ae3068e2254b4d94269282e67e2371b515ccb42ef"
+        "prev_hash": "31b90bdb4b4af06567033469c7826a0dd5ad850b9c67d56be7ec21b5a82dcaad",
+        "entry_hash": "e81d943e9ff06bfb21a2c24e08ed1fa503e07dbada32cc0aa31f15574c433d68"
       },
       {
         "sequence": 28,
-        "timestamp": "2026-08-27T16:11:54.535185+00:00",
+        "timestamp": "2026-08-27T18:27:01.333089+00:00",
         "txn_id": "pay_medisure_0479",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2034,12 +2034,12 @@
         "gate_decision": "deny",
         "gate_reason": "DENY_AMOUNT_ABOVE_CEILING",
         "outcome": "denied",
-        "prev_hash": "d33df499d134fda58c97e40ae3068e2254b4d94269282e67e2371b515ccb42ef",
-        "entry_hash": "cb4165d084d17b4da0d29f02f492ccfe88592b18e964716da5a31fce0fdaa153"
+        "prev_hash": "e81d943e9ff06bfb21a2c24e08ed1fa503e07dbada32cc0aa31f15574c433d68",
+        "entry_hash": "3d662af4eb4b7bfde4a6bf7d5270c8ac16118e62a43f983513e5ec8868a8803b"
       },
       {
         "sequence": 29,
-        "timestamp": "2026-08-27T16:11:54.535185+00:00",
+        "timestamp": "2026-08-27T18:27:01.333089+00:00",
         "txn_id": "pay_medisure_0416",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2053,12 +2053,12 @@
         "gate_decision": "deny",
         "gate_reason": "DENY_AMOUNT_ABOVE_CEILING",
         "outcome": "denied",
-        "prev_hash": "cb4165d084d17b4da0d29f02f492ccfe88592b18e964716da5a31fce0fdaa153",
-        "entry_hash": "246679f8cd6686772a256216f48e7bdf3a915bbf91901c789dff7cd27c11efd7"
+        "prev_hash": "3d662af4eb4b7bfde4a6bf7d5270c8ac16118e62a43f983513e5ec8868a8803b",
+        "entry_hash": "f9e632c1139a644935b67086d1ea018c12390e6cc56dcab2ecfdb7b90d92584c"
       },
       {
         "sequence": 30,
-        "timestamp": "2026-08-27T16:11:54.535185+00:00",
+        "timestamp": "2026-08-27T18:27:01.333089+00:00",
         "txn_id": "pay_medisure_1329",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2072,12 +2072,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "246679f8cd6686772a256216f48e7bdf3a915bbf91901c789dff7cd27c11efd7",
-        "entry_hash": "2342aec8fd9a813404be310e916f839705c605cf17ab27304fadae40001bf95a"
+        "prev_hash": "f9e632c1139a644935b67086d1ea018c12390e6cc56dcab2ecfdb7b90d92584c",
+        "entry_hash": "bfc4e2ea51cef87ca689799a5d7f97fd8d120e5c8ddeb54793b751bb9059e33d"
       },
       {
         "sequence": 31,
-        "timestamp": "2026-08-27T16:11:54.535185+00:00",
+        "timestamp": "2026-08-27T18:27:01.333089+00:00",
         "txn_id": "pay_medisure_0226",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2091,12 +2091,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "2342aec8fd9a813404be310e916f839705c605cf17ab27304fadae40001bf95a",
-        "entry_hash": "d6d585589f2e3cff8e4baa4addc6cc4526657f1a5be99c79d9808418eeca8413"
+        "prev_hash": "bfc4e2ea51cef87ca689799a5d7f97fd8d120e5c8ddeb54793b751bb9059e33d",
+        "entry_hash": "eee9be2f24f62d2349df94cb4056777c3177fef98d6456131813ea6884b0303f"
       },
       {
         "sequence": 32,
-        "timestamp": "2026-08-27T16:11:54.535185+00:00",
+        "timestamp": "2026-08-27T18:27:01.333089+00:00",
         "txn_id": "pay_medisure_0057",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2110,12 +2110,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "d6d585589f2e3cff8e4baa4addc6cc4526657f1a5be99c79d9808418eeca8413",
-        "entry_hash": "db87bb68dbfbcf6a19a5601433529edf1816b87795b438222ff5baf295d50421"
+        "prev_hash": "eee9be2f24f62d2349df94cb4056777c3177fef98d6456131813ea6884b0303f",
+        "entry_hash": "ef56042a420fa21fcbdf19b14b72fef443ffd8ded30544f966faa95ec5348ead"
       },
       {
         "sequence": 33,
-        "timestamp": "2026-08-27T16:11:54.535185+00:00",
+        "timestamp": "2026-08-27T18:27:01.333089+00:00",
         "txn_id": "pay_medisure_0858",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2129,12 +2129,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "db87bb68dbfbcf6a19a5601433529edf1816b87795b438222ff5baf295d50421",
-        "entry_hash": "75bcac2823c4c3612f7a93849c78a52475101ebce9859fb42faf9332f18a6244"
+        "prev_hash": "ef56042a420fa21fcbdf19b14b72fef443ffd8ded30544f966faa95ec5348ead",
+        "entry_hash": "757b4cfa05c4953d30189040187815d298f89abcba657e73bd8b1b8e674580c1"
       },
       {
         "sequence": 34,
-        "timestamp": "2026-08-27T16:11:54.535185+00:00",
+        "timestamp": "2026-08-27T18:27:01.333089+00:00",
         "txn_id": "pay_medisure_1020",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2148,12 +2148,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "75bcac2823c4c3612f7a93849c78a52475101ebce9859fb42faf9332f18a6244",
-        "entry_hash": "9c99a0446dc1b38562afb27970aecaef08987d58e2f34633e96a7d364f066bf8"
+        "prev_hash": "757b4cfa05c4953d30189040187815d298f89abcba657e73bd8b1b8e674580c1",
+        "entry_hash": "d6d662f775b8daf95288d70cce629584cff00824d12f6bf7ba38a4e251682283"
       },
       {
         "sequence": 35,
-        "timestamp": "2026-08-27T16:11:54.535185+00:00",
+        "timestamp": "2026-08-27T18:27:01.333089+00:00",
         "txn_id": "pay_medisure_0260",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2167,12 +2167,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "9c99a0446dc1b38562afb27970aecaef08987d58e2f34633e96a7d364f066bf8",
-        "entry_hash": "7476e6d90c7ea6c94e6d3cc210d0a64bc1ff3652115e2a3f939d9c9923d3805f"
+        "prev_hash": "d6d662f775b8daf95288d70cce629584cff00824d12f6bf7ba38a4e251682283",
+        "entry_hash": "da52394a194816249c9c8556d46ce672361d3b3411a7dace4cc9766845af3179"
       },
       {
         "sequence": 36,
-        "timestamp": "2026-08-27T16:11:54.535185+00:00",
+        "timestamp": "2026-08-27T18:27:01.333089+00:00",
         "txn_id": "pay_medisure_1406",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2186,12 +2186,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "7476e6d90c7ea6c94e6d3cc210d0a64bc1ff3652115e2a3f939d9c9923d3805f",
-        "entry_hash": "083bb2b5c89bd2d7eb050a249e3147ad45e98e2417a851bc100bef565449aea9"
+        "prev_hash": "da52394a194816249c9c8556d46ce672361d3b3411a7dace4cc9766845af3179",
+        "entry_hash": "6d616ee65aacab788579033c4ba2345b958668c8ea37fdd78991fdedadabd2ad"
       },
       {
         "sequence": 37,
-        "timestamp": "2026-08-27T16:11:54.535185+00:00",
+        "timestamp": "2026-08-27T18:27:01.333089+00:00",
         "txn_id": "pay_medisure_0427",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2205,12 +2205,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "083bb2b5c89bd2d7eb050a249e3147ad45e98e2417a851bc100bef565449aea9",
-        "entry_hash": "b9e6702bfb8e72ad6a8dee65c91b919c15116be3bf5f8143b54ab9d517bf69db"
+        "prev_hash": "6d616ee65aacab788579033c4ba2345b958668c8ea37fdd78991fdedadabd2ad",
+        "entry_hash": "fdd28a6613054e35d3a04cdbe6afa79b872913f2288a457e276b16390e85983d"
       },
       {
         "sequence": 38,
-        "timestamp": "2026-08-27T16:11:54.535185+00:00",
+        "timestamp": "2026-08-27T18:27:01.333089+00:00",
         "txn_id": "pay_medisure_1295",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2224,12 +2224,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "b9e6702bfb8e72ad6a8dee65c91b919c15116be3bf5f8143b54ab9d517bf69db",
-        "entry_hash": "b4f76b5c14b9e3bd191b9da9be5d63837345cc34868f443fdad8e048b6f31e6c"
+        "prev_hash": "fdd28a6613054e35d3a04cdbe6afa79b872913f2288a457e276b16390e85983d",
+        "entry_hash": "81b3e4a4b90b8a966f5e09198bf77d863d33f5dd1415d9ce79f38062fa336ea9"
       },
       {
         "sequence": 39,
-        "timestamp": "2026-08-27T16:11:54.535185+00:00",
+        "timestamp": "2026-08-27T18:27:01.333089+00:00",
         "txn_id": "pay_medisure_0227",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2243,12 +2243,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "b4f76b5c14b9e3bd191b9da9be5d63837345cc34868f443fdad8e048b6f31e6c",
-        "entry_hash": "522456ff2673498d14ba236dc78a91e1765d1015b8e5566b4eead7c29c648b32"
+        "prev_hash": "81b3e4a4b90b8a966f5e09198bf77d863d33f5dd1415d9ce79f38062fa336ea9",
+        "entry_hash": "5c8e7692e1147cf47effe69e54d7b3597a24f6b389781576a6600df77eb0c627"
       },
       {
         "sequence": 40,
-        "timestamp": "2026-08-27T16:11:54.535185+00:00",
+        "timestamp": "2026-08-27T18:27:01.333089+00:00",
         "txn_id": "pay_medisure_0059",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2262,12 +2262,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "522456ff2673498d14ba236dc78a91e1765d1015b8e5566b4eead7c29c648b32",
-        "entry_hash": "d7fe154728f1becd073b43507e3b0a6020b1888508010507a43dfe5941394fee"
+        "prev_hash": "5c8e7692e1147cf47effe69e54d7b3597a24f6b389781576a6600df77eb0c627",
+        "entry_hash": "23a39bf871a11866bcf663e65110c0aa8b9c2dbc73088daa98acf59cc6ce4bc0"
       },
       {
         "sequence": 41,
-        "timestamp": "2026-08-27T16:11:54.535185+00:00",
+        "timestamp": "2026-08-27T18:27:01.333089+00:00",
         "txn_id": "pay_medisure_1068",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2281,12 +2281,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "d7fe154728f1becd073b43507e3b0a6020b1888508010507a43dfe5941394fee",
-        "entry_hash": "2b56c8d57e0d762c501c2c4c2e82f9118f35eae80c6e4551f6b0637f0e8ba216"
+        "prev_hash": "23a39bf871a11866bcf663e65110c0aa8b9c2dbc73088daa98acf59cc6ce4bc0",
+        "entry_hash": "a78b282daf9a5be3822a3278a5c03e2250c06f413a59e8a6256ea89d56ef1148"
       },
       {
         "sequence": 42,
-        "timestamp": "2026-08-27T16:11:54.535185+00:00",
+        "timestamp": "2026-08-27T18:27:01.333089+00:00",
         "txn_id": "pay_medisure_1476",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2300,12 +2300,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "2b56c8d57e0d762c501c2c4c2e82f9118f35eae80c6e4551f6b0637f0e8ba216",
-        "entry_hash": "7c52566a665b4144f6bc08881006dd28e9fb5f9eb7f6b45feef61d14d6668932"
+        "prev_hash": "a78b282daf9a5be3822a3278a5c03e2250c06f413a59e8a6256ea89d56ef1148",
+        "entry_hash": "d59fed5248be0dcf83ce27c9c458d5e2b57db3423ea07145b1a11173f31063be"
       },
       {
         "sequence": 43,
-        "timestamp": "2026-08-27T16:11:54.535185+00:00",
+        "timestamp": "2026-08-27T18:27:01.333089+00:00",
         "txn_id": "pay_medisure_0800",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2319,12 +2319,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "7c52566a665b4144f6bc08881006dd28e9fb5f9eb7f6b45feef61d14d6668932",
-        "entry_hash": "f825cb050267d9b3e263aea0a30466077d9094b4ea09ccd591660b27b01d4759"
+        "prev_hash": "d59fed5248be0dcf83ce27c9c458d5e2b57db3423ea07145b1a11173f31063be",
+        "entry_hash": "d06dd9d9037014cd68b21296a8ad45ae25d4db8c74177473584f5b9ebf9e50b3"
       },
       {
         "sequence": 44,
-        "timestamp": "2026-08-27T16:11:54.535185+00:00",
+        "timestamp": "2026-08-27T18:27:01.333089+00:00",
         "txn_id": "pay_medisure_0842",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2338,12 +2338,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "f825cb050267d9b3e263aea0a30466077d9094b4ea09ccd591660b27b01d4759",
-        "entry_hash": "9d1aa6a4958c1029e38ec7b3ba9e7ee2df1c3f237bc35152b6af8ade1ae0843c"
+        "prev_hash": "d06dd9d9037014cd68b21296a8ad45ae25d4db8c74177473584f5b9ebf9e50b3",
+        "entry_hash": "8b5da3ca1d3e250b6e399f736e2f0cfa7833d3c7df89398dd6230a33d4bf8ee4"
       },
       {
         "sequence": 45,
-        "timestamp": "2026-08-27T16:11:54.535185+00:00",
+        "timestamp": "2026-08-27T18:27:01.333089+00:00",
         "txn_id": "pay_medisure_0208",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2357,12 +2357,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "9d1aa6a4958c1029e38ec7b3ba9e7ee2df1c3f237bc35152b6af8ade1ae0843c",
-        "entry_hash": "ee512fa61787bdebc69a9bdba2dcab432bdb24def567e5ae5ed66452d5c3370c"
+        "prev_hash": "8b5da3ca1d3e250b6e399f736e2f0cfa7833d3c7df89398dd6230a33d4bf8ee4",
+        "entry_hash": "d1f9eedeeb71d1f74d84446a58844034acc7bf0924150e5195e2207ea31e616e"
       },
       {
         "sequence": 46,
-        "timestamp": "2026-08-27T16:11:54.535185+00:00",
+        "timestamp": "2026-08-27T18:27:01.333089+00:00",
         "txn_id": "pay_medisure_0852",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2376,12 +2376,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "ee512fa61787bdebc69a9bdba2dcab432bdb24def567e5ae5ed66452d5c3370c",
-        "entry_hash": "3bc6b242ac4fdc726569972f9799f6216119accb13c6f3063224b7dac4ed2398"
+        "prev_hash": "d1f9eedeeb71d1f74d84446a58844034acc7bf0924150e5195e2207ea31e616e",
+        "entry_hash": "3ca3572088c3224594af61b982ab511e9398206282ae8bab4d4e0970e4fdb1de"
       },
       {
         "sequence": 47,
-        "timestamp": "2026-08-27T16:11:54.535185+00:00",
+        "timestamp": "2026-08-27T18:27:01.333089+00:00",
         "txn_id": "pay_medisure_1559",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2395,12 +2395,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "3bc6b242ac4fdc726569972f9799f6216119accb13c6f3063224b7dac4ed2398",
-        "entry_hash": "24e8bb4e10c72e38f2243f1a0dc615474a74c97a2202c453d3fa4624938ac460"
+        "prev_hash": "3ca3572088c3224594af61b982ab511e9398206282ae8bab4d4e0970e4fdb1de",
+        "entry_hash": "aa51a387d2009b54844bc6936fcc1dc972e91b25e25ce50d6cd6f647dff26691"
       },
       {
         "sequence": 48,
-        "timestamp": "2026-08-27T16:11:54.535185+00:00",
+        "timestamp": "2026-08-27T18:27:01.333089+00:00",
         "txn_id": "pay_medisure_0143",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2414,12 +2414,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "24e8bb4e10c72e38f2243f1a0dc615474a74c97a2202c453d3fa4624938ac460",
-        "entry_hash": "60b5ba00f25bb8c8b6c82bff7546ea84b0594fdc09a9c2fff3e71d33b37d2855"
+        "prev_hash": "aa51a387d2009b54844bc6936fcc1dc972e91b25e25ce50d6cd6f647dff26691",
+        "entry_hash": "832f20d561fc873f88ad1f1a8bd3fecaeb12489824600480979b81524ff4cafb"
       },
       {
         "sequence": 49,
-        "timestamp": "2026-08-27T16:11:54.535185+00:00",
+        "timestamp": "2026-08-27T18:27:01.334100+00:00",
         "txn_id": "pay_medisure_0665",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2433,12 +2433,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "60b5ba00f25bb8c8b6c82bff7546ea84b0594fdc09a9c2fff3e71d33b37d2855",
-        "entry_hash": "d99fe53a824d046b1eda6946b4221720dc772d8d7824f40a6ea6da33303b373c"
+        "prev_hash": "832f20d561fc873f88ad1f1a8bd3fecaeb12489824600480979b81524ff4cafb",
+        "entry_hash": "2fe05958aee16f2994134cde295a1194047d5a9c66a436632c880bc409feb6ae"
       },
       {
         "sequence": 50,
-        "timestamp": "2026-08-27T16:11:54.535185+00:00",
+        "timestamp": "2026-08-27T18:27:01.334100+00:00",
         "txn_id": "pay_medisure_1048",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2452,12 +2452,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "d99fe53a824d046b1eda6946b4221720dc772d8d7824f40a6ea6da33303b373c",
-        "entry_hash": "e403349cd47e8a7d5154dc8d04cfe2108337260b67bb77cb2d7fc5a6d19bc840"
+        "prev_hash": "2fe05958aee16f2994134cde295a1194047d5a9c66a436632c880bc409feb6ae",
+        "entry_hash": "30ad13ba23d66cfd02de633109024a4e8c06d453a29269b1f39f2e97f48568a0"
       },
       {
         "sequence": 51,
-        "timestamp": "2026-08-27T16:11:54.535185+00:00",
+        "timestamp": "2026-08-27T18:27:01.334100+00:00",
         "txn_id": "pay_medisure_0536",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2471,12 +2471,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "e403349cd47e8a7d5154dc8d04cfe2108337260b67bb77cb2d7fc5a6d19bc840",
-        "entry_hash": "df46c00f1e5d38f11de1e051f8ae60208360bc25ab991a7e970a0c4632fa36f9"
+        "prev_hash": "30ad13ba23d66cfd02de633109024a4e8c06d453a29269b1f39f2e97f48568a0",
+        "entry_hash": "faed1d1dfc26b44d1089d81246c9aaa3250611818ab5f5acd4628a41a369ba3d"
       },
       {
         "sequence": 52,
-        "timestamp": "2026-08-27T16:11:54.536182+00:00",
+        "timestamp": "2026-08-27T18:27:01.334100+00:00",
         "txn_id": "pay_medisure_1050",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2490,12 +2490,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "df46c00f1e5d38f11de1e051f8ae60208360bc25ab991a7e970a0c4632fa36f9",
-        "entry_hash": "5f08b2029982978eeb28d5e88bd3517e3795833484bcbe249ba16b53907a47c8"
+        "prev_hash": "faed1d1dfc26b44d1089d81246c9aaa3250611818ab5f5acd4628a41a369ba3d",
+        "entry_hash": "015809d16e9e8aceeb6ab7f8a2286909456da24b72e85212b08d9ad0019aba77"
       },
       {
         "sequence": 53,
-        "timestamp": "2026-08-27T16:11:54.536182+00:00",
+        "timestamp": "2026-08-27T18:27:01.334100+00:00",
         "txn_id": "pay_medisure_0962",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2509,12 +2509,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "5f08b2029982978eeb28d5e88bd3517e3795833484bcbe249ba16b53907a47c8",
-        "entry_hash": "1c25f0f16387f5a1136e9243ff429d267d938528e52c0924289bc71582f926c0"
+        "prev_hash": "015809d16e9e8aceeb6ab7f8a2286909456da24b72e85212b08d9ad0019aba77",
+        "entry_hash": "f735627b1b5059cefad508a86bc08c8c430f72887273f03f130377dff8610f1a"
       },
       {
         "sequence": 54,
-        "timestamp": "2026-08-27T16:11:54.536182+00:00",
+        "timestamp": "2026-08-27T18:27:01.334100+00:00",
         "txn_id": "pay_medisure_1439",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2528,12 +2528,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "1c25f0f16387f5a1136e9243ff429d267d938528e52c0924289bc71582f926c0",
-        "entry_hash": "1d685f8a42535b9c0c5ab7a74d55d4294c389bf3ba605ca0acb22d7ec22d788c"
+        "prev_hash": "f735627b1b5059cefad508a86bc08c8c430f72887273f03f130377dff8610f1a",
+        "entry_hash": "e4b69e4c2547900ebeb98431ba1c21380ebc2767025381b9450b8c29db994bfd"
       },
       {
         "sequence": 55,
-        "timestamp": "2026-08-27T16:11:54.536182+00:00",
+        "timestamp": "2026-08-27T18:27:01.334100+00:00",
         "txn_id": "pay_medisure_0825",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2547,12 +2547,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "1d685f8a42535b9c0c5ab7a74d55d4294c389bf3ba605ca0acb22d7ec22d788c",
-        "entry_hash": "2162bb5162b597c6bb3e195710a7829d1c62c891c5c55cdfb30b77dba1e47df1"
+        "prev_hash": "e4b69e4c2547900ebeb98431ba1c21380ebc2767025381b9450b8c29db994bfd",
+        "entry_hash": "5d037c1b574e3ed98a08be149b48281dd74df7d96622d8702caadb02d1fd8f0e"
       },
       {
         "sequence": 56,
-        "timestamp": "2026-08-27T16:11:54.536182+00:00",
+        "timestamp": "2026-08-27T18:27:01.334100+00:00",
         "txn_id": "pay_medisure_0923",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2566,12 +2566,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "2162bb5162b597c6bb3e195710a7829d1c62c891c5c55cdfb30b77dba1e47df1",
-        "entry_hash": "34412a3725c95da236ba2da9a1e81bf58b3ac1a685d43355e2eefa597bfbd26b"
+        "prev_hash": "5d037c1b574e3ed98a08be149b48281dd74df7d96622d8702caadb02d1fd8f0e",
+        "entry_hash": "e9608b99288a6c7d98b164ca9f9f27a0fa843cf1af92ad3f9993814ef32a9680"
       },
       {
         "sequence": 57,
-        "timestamp": "2026-08-27T16:11:54.536182+00:00",
+        "timestamp": "2026-08-27T18:27:01.334100+00:00",
         "txn_id": "pay_medisure_0333",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2585,12 +2585,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "34412a3725c95da236ba2da9a1e81bf58b3ac1a685d43355e2eefa597bfbd26b",
-        "entry_hash": "81ad86b67e6b6d7f24319bae8e38d0a88b6541be34ef22282199f4fe1554b76c"
+        "prev_hash": "e9608b99288a6c7d98b164ca9f9f27a0fa843cf1af92ad3f9993814ef32a9680",
+        "entry_hash": "952e8257ef171a7126c285ac218dc38c7e62dd65fd407aa21cde78b483209432"
       },
       {
         "sequence": 58,
-        "timestamp": "2026-08-27T16:11:54.536182+00:00",
+        "timestamp": "2026-08-27T18:27:01.334100+00:00",
         "txn_id": "pay_medisure_0742",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2604,12 +2604,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "81ad86b67e6b6d7f24319bae8e38d0a88b6541be34ef22282199f4fe1554b76c",
-        "entry_hash": "f0fc7a99cd943a873480f1d6faae774a64c41d3c3c4875877681cc6203f81648"
+        "prev_hash": "952e8257ef171a7126c285ac218dc38c7e62dd65fd407aa21cde78b483209432",
+        "entry_hash": "a0475ef55ffbb8ee0eee9754dc477a00b5ac340554ef662b13a5ae5d5570c8d5"
       },
       {
         "sequence": 59,
-        "timestamp": "2026-08-27T16:11:54.536182+00:00",
+        "timestamp": "2026-08-27T18:27:01.334100+00:00",
         "txn_id": "pay_medisure_1191",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2623,12 +2623,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "f0fc7a99cd943a873480f1d6faae774a64c41d3c3c4875877681cc6203f81648",
-        "entry_hash": "9ad18efb7864849b092ad419489376439a085579162331d30ce04742787c6658"
+        "prev_hash": "a0475ef55ffbb8ee0eee9754dc477a00b5ac340554ef662b13a5ae5d5570c8d5",
+        "entry_hash": "58217c45073e62e4a56ad1d9b364496c9d324c2a3fc124f4e892c682d32757ab"
       },
       {
         "sequence": 60,
-        "timestamp": "2026-08-27T16:11:54.536182+00:00",
+        "timestamp": "2026-08-27T18:27:01.334100+00:00",
         "txn_id": "pay_medisure_1495",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2642,12 +2642,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "9ad18efb7864849b092ad419489376439a085579162331d30ce04742787c6658",
-        "entry_hash": "e00e86968814f02c80e8abe2aa6a8e2a1414b5d9a9a6f35bc60204cdb3b48b6f"
+        "prev_hash": "58217c45073e62e4a56ad1d9b364496c9d324c2a3fc124f4e892c682d32757ab",
+        "entry_hash": "4ec33814e6371d632049a86c2b93ba27e74eb93f29af4f9c5fd9a94fe1d0481c"
       },
       {
         "sequence": 61,
-        "timestamp": "2026-08-27T16:11:54.536182+00:00",
+        "timestamp": "2026-08-27T18:27:01.334100+00:00",
         "txn_id": "pay_medisure_0614",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2661,12 +2661,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "e00e86968814f02c80e8abe2aa6a8e2a1414b5d9a9a6f35bc60204cdb3b48b6f",
-        "entry_hash": "7698217be39c3e17200b03066f71acf3dee7ddbc2fa641e402aadb932646038f"
+        "prev_hash": "4ec33814e6371d632049a86c2b93ba27e74eb93f29af4f9c5fd9a94fe1d0481c",
+        "entry_hash": "7e7f846045a42eb5fe5627bee1a6f283fe98b9e56d3d6e340a24076819b52762"
       },
       {
         "sequence": 62,
-        "timestamp": "2026-08-27T16:11:54.536182+00:00",
+        "timestamp": "2026-08-27T18:27:01.334100+00:00",
         "txn_id": "pay_medisure_0460",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2680,12 +2680,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "7698217be39c3e17200b03066f71acf3dee7ddbc2fa641e402aadb932646038f",
-        "entry_hash": "c8f69bd41e736a5428b21259c26082011348014c40da30a10ca7a7a384076076"
+        "prev_hash": "7e7f846045a42eb5fe5627bee1a6f283fe98b9e56d3d6e340a24076819b52762",
+        "entry_hash": "b5ab270939aee4036eaa57c2dd3715b736f35b41130933664dd16572bc6edfbd"
       },
       {
         "sequence": 63,
-        "timestamp": "2026-08-27T16:11:54.536182+00:00",
+        "timestamp": "2026-08-27T18:27:01.334100+00:00",
         "txn_id": "pay_medisure_0414",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2699,12 +2699,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "c8f69bd41e736a5428b21259c26082011348014c40da30a10ca7a7a384076076",
-        "entry_hash": "a9162d096673ae39660042c487390c3043cfd416ef6f9b810a6c836e4bcb4214"
+        "prev_hash": "b5ab270939aee4036eaa57c2dd3715b736f35b41130933664dd16572bc6edfbd",
+        "entry_hash": "f7629fbc780e55df6830b62cc33a30bbcec471b85bc0b804531022512c6ea05f"
       },
       {
         "sequence": 64,
-        "timestamp": "2026-08-27T16:11:54.537181+00:00",
+        "timestamp": "2026-08-27T18:27:01.334100+00:00",
         "txn_id": "pay_medisure_0949",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2718,12 +2718,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "a9162d096673ae39660042c487390c3043cfd416ef6f9b810a6c836e4bcb4214",
-        "entry_hash": "33ba2fe95165d249c9b8bceec5c8d3f76517f1645e69ca7d95f2f5fea17101a8"
+        "prev_hash": "f7629fbc780e55df6830b62cc33a30bbcec471b85bc0b804531022512c6ea05f",
+        "entry_hash": "9eecc08ecc42fed828bce5194beb4540f941b799e893907c21e79ac364e458a8"
       },
       {
         "sequence": 65,
-        "timestamp": "2026-08-27T16:11:54.537181+00:00",
+        "timestamp": "2026-08-27T18:27:01.334100+00:00",
         "txn_id": "pay_medisure_0020",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2737,8 +2737,8 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "33ba2fe95165d249c9b8bceec5c8d3f76517f1645e69ca7d95f2f5fea17101a8",
-        "entry_hash": "36f6d11cc32a51e751062e61ef961693c2bfa0452e9226123ef2477675bd95e2"
+        "prev_hash": "9eecc08ecc42fed828bce5194beb4540f941b799e893907c21e79ac364e458a8",
+        "entry_hash": "fe2789c5c116ca6dd957ea69d5f812ff7a3694bcfdbb9887f56eae63f5e00ad4"
       }
     ],
     "exceptions": {
@@ -4175,8 +4175,8 @@
           "txn_id": "pay_medisure_0250",
           "amount_paise": 1565176,
           "target_bank": "Airtel Payments Bank Limited",
-          "scheduled_time": "2026-08-27T16:11:54.481659+00:00",
-          "reason": "Enable automatic retry logic for soft-decline codes (payment_session_expired, otp_expired) by reissuing the payment link or refreshing the session within the same checkout flow. (transaction_limit_exceeded), unretried -- retry at +90.2h, past the plateau; intent goes stale",
+          "scheduled_time": "2026-08-24T00:00:00+00:00",
+          "reason": "Enable automatic retry logic for soft-decline codes (payment_session_expired, otp_expired) by reissuing the payment link or refreshing the session within the same checkout flow. (transaction_limit_exceeded), unretried -- retry at +74h, past the plateau; intent goes stale",
           "requires_merchant_approval": false
         },
         {
@@ -4184,8 +4184,8 @@
           "txn_id": "pay_medisure_1365",
           "amount_paise": 827932,
           "target_bank": "Punjab National Bank",
-          "scheduled_time": "2026-08-27T16:11:54.482652+00:00",
-          "reason": "Enable automatic retry logic for soft-decline codes (payment_session_expired, otp_expired) by reissuing the payment link or refreshing the session within the same checkout flow. (transaction_daily_limit_exceeded), unretried -- retry at +100.2h, past the plateau; intent goes stale",
+          "scheduled_time": "2026-08-24T00:00:00+00:00",
+          "reason": "Enable automatic retry logic for soft-decline codes (payment_session_expired, otp_expired) by reissuing the payment link or refreshing the session within the same checkout flow. (transaction_daily_limit_exceeded), unretried -- retry at +84h, past the plateau; intent goes stale",
           "requires_merchant_approval": false
         },
         {
@@ -4193,8 +4193,8 @@
           "txn_id": "pay_medisure_0513",
           "amount_paise": 259216,
           "target_bank": "Airtel Payments Bank Limited",
-          "scheduled_time": "2026-08-27T16:11:54.482652+00:00",
-          "reason": "Enable automatic retry logic for soft-decline codes (payment_session_expired, otp_expired) by reissuing the payment link or refreshing the session within the same checkout flow. (payment_session_expired), unretried -- retry at +30.2h, the plateau: long enough for the balance to have changed",
+          "scheduled_time": "2026-08-24T16:00:00+00:00",
+          "reason": "Enable automatic retry logic for soft-decline codes (payment_session_expired, otp_expired) by reissuing the payment link or refreshing the session within the same checkout flow. (payment_session_expired), unretried -- retry at +30h, the plateau: long enough for the balance to have changed",
           "requires_merchant_approval": false
         },
         {
@@ -4202,8 +4202,8 @@
           "txn_id": "pay_medisure_0822",
           "amount_paise": 211199,
           "target_bank": "Airtel Payments Bank Limited",
-          "scheduled_time": "2026-08-27T16:11:54.482652+00:00",
-          "reason": "Enable automatic retry logic for soft-decline codes (payment_session_expired, otp_expired) by reissuing the payment link or refreshing the session within the same checkout flow. (insufficient_funds), unretried -- retry at +46.2h, the plateau: long enough for the balance to have changed",
+          "scheduled_time": "2026-08-24T00:00:00+00:00",
+          "reason": "Enable automatic retry logic for soft-decline codes (payment_session_expired, otp_expired) by reissuing the payment link or refreshing the session within the same checkout flow. (insufficient_funds), unretried -- retry at +30h, the plateau: long enough for the balance to have changed",
           "requires_merchant_approval": false
         },
         {
@@ -4211,7 +4211,7 @@
           "txn_id": "pay_medisure_1137",
           "amount_paise": 183195,
           "target_bank": "Indusind Bank Ltd.",
-          "scheduled_time": "2026-08-28T00:00:00+00:00",
+          "scheduled_time": "2026-08-25T00:00:00+00:00",
           "reason": "Enable automatic retry logic for soft-decline codes (payment_session_expired, otp_expired) by reissuing the payment link or refreshing the session within the same checkout flow. (debit_declined), unretried -- retry at +30h, the plateau: long enough for the balance to have changed",
           "requires_merchant_approval": false
         },
@@ -4220,8 +4220,8 @@
           "txn_id": "pay_medisure_1009",
           "amount_paise": 93769,
           "target_bank": "Airtel Payments Bank Limited",
-          "scheduled_time": "2026-08-27T16:11:54.482652+00:00",
-          "reason": "Enable automatic retry logic for soft-decline codes (payment_session_expired, otp_expired) by reissuing the payment link or refreshing the session within the same checkout flow. (transaction_frequency_limit_exceeded), unretried -- retry at +120.2h, past the plateau; intent goes stale",
+          "scheduled_time": "2026-08-24T00:00:00+00:00",
+          "reason": "Enable automatic retry logic for soft-decline codes (payment_session_expired, otp_expired) by reissuing the payment link or refreshing the session within the same checkout flow. (transaction_frequency_limit_exceeded), unretried -- retry at +104h, past the plateau; intent goes stale",
           "requires_merchant_approval": false
         },
         {
@@ -4229,7 +4229,7 @@
           "txn_id": "pay_medisure_1266",
           "amount_paise": 91211,
           "target_bank": "Airtel Payments Bank Limited",
-          "scheduled_time": "2026-08-28T12:00:00+00:00",
+          "scheduled_time": "2026-08-25T12:00:00+00:00",
           "reason": "Enable automatic retry logic for soft-decline codes (payment_session_expired, otp_expired) by reissuing the payment link or refreshing the session within the same checkout flow. (debit_declined), unretried -- retry at +30h, the plateau: long enough for the balance to have changed",
           "requires_merchant_approval": false
         },
@@ -4238,8 +4238,8 @@
           "txn_id": "pay_medisure_0314",
           "amount_paise": 90715,
           "target_bank": "Airtel Payments Bank Limited",
-          "scheduled_time": "2026-08-27T16:11:54.482652+00:00",
-          "reason": "Enable automatic retry logic for soft-decline codes (payment_session_expired, otp_expired) by reissuing the payment link or refreshing the session within the same checkout flow. (collect_request_pending), unretried -- retry at +33.2h, the plateau: long enough for the balance to have changed",
+          "scheduled_time": "2026-08-24T13:00:00+00:00",
+          "reason": "Enable automatic retry logic for soft-decline codes (payment_session_expired, otp_expired) by reissuing the payment link or refreshing the session within the same checkout flow. (collect_request_pending), unretried -- retry at +30h, the plateau: long enough for the balance to have changed",
           "requires_merchant_approval": false
         },
         {
@@ -4247,8 +4247,8 @@
           "txn_id": "pay_medisure_0608",
           "amount_paise": 82969,
           "target_bank": "State Bank of India",
-          "scheduled_time": "2026-08-27T16:11:54.482652+00:00",
-          "reason": "Enable automatic retry logic for soft-decline codes (payment_session_expired, otp_expired) by reissuing the payment link or refreshing the session within the same checkout flow. (transaction_frequency_limit_exceeded), unretried -- retry at +127.2h, past the plateau; intent goes stale",
+          "scheduled_time": "2026-08-24T00:00:00+00:00",
+          "reason": "Enable automatic retry logic for soft-decline codes (payment_session_expired, otp_expired) by reissuing the payment link or refreshing the session within the same checkout flow. (transaction_frequency_limit_exceeded), unretried -- retry at +111h, past the plateau; intent goes stale",
           "requires_merchant_approval": false
         },
         {
@@ -4256,7 +4256,7 @@
           "txn_id": "pay_medisure_1168",
           "amount_paise": 82640,
           "target_bank": "Airtel Payments Bank Limited",
-          "scheduled_time": "2026-08-27T21:00:00+00:00",
+          "scheduled_time": "2026-08-24T21:00:00+00:00",
           "reason": "Enable automatic retry logic for soft-decline codes (payment_session_expired, otp_expired) by reissuing the payment link or refreshing the session within the same checkout flow. (payment_session_expired), unretried -- retry at +30h, the plateau: long enough for the balance to have changed",
           "requires_merchant_approval": false
         },
@@ -4265,7 +4265,7 @@
           "txn_id": "pay_medisure_0326",
           "amount_paise": 74736,
           "target_bank": "Kotak Mahindra Bank",
-          "scheduled_time": "2026-08-29T01:00:00+00:00",
+          "scheduled_time": "2026-08-26T01:00:00+00:00",
           "reason": "Enable automatic retry logic for soft-decline codes (payment_session_expired, otp_expired) by reissuing the payment link or refreshing the session within the same checkout flow. (credit_limit_exceeded), unretried -- retry at +30h, the plateau: long enough for the balance to have changed",
           "requires_merchant_approval": false
         },
@@ -4274,8 +4274,8 @@
           "txn_id": "pay_medisure_0129",
           "amount_paise": 69628,
           "target_bank": "Bank Of India",
-          "scheduled_time": "2026-08-27T16:11:54.482652+00:00",
-          "reason": "Enable automatic retry logic for soft-decline codes (payment_session_expired, otp_expired) by reissuing the payment link or refreshing the session within the same checkout flow. (capture_failed), unretried -- retry at +68.2h, last look before the odds fall away",
+          "scheduled_time": "2026-08-24T00:00:00+00:00",
+          "reason": "Enable automatic retry logic for soft-decline codes (payment_session_expired, otp_expired) by reissuing the payment link or refreshing the session within the same checkout flow. (capture_failed), unretried -- retry at +52h, last look before the odds fall away",
           "requires_merchant_approval": false
         },
         {
@@ -4283,8 +4283,8 @@
           "txn_id": "pay_medisure_0722",
           "amount_paise": 67788,
           "target_bank": "Airtel Payments Bank Limited",
-          "scheduled_time": "2026-08-27T16:11:54.482652+00:00",
-          "reason": "Enable automatic retry logic for soft-decline codes (payment_session_expired, otp_expired) by reissuing the payment link or refreshing the session within the same checkout flow. (record_not_found), unretried -- retry at +73.2h, last look before the odds fall away",
+          "scheduled_time": "2026-08-24T00:00:00+00:00",
+          "reason": "Enable automatic retry logic for soft-decline codes (payment_session_expired, otp_expired) by reissuing the payment link or refreshing the session within the same checkout flow. (record_not_found), unretried -- retry at +57h, last look before the odds fall away",
           "requires_merchant_approval": false
         },
         {
@@ -4292,7 +4292,7 @@
           "txn_id": "pay_medisure_1152",
           "amount_paise": 53976,
           "target_bank": "Punjab National Bank",
-          "scheduled_time": "2026-08-28T10:00:00+00:00",
+          "scheduled_time": "2026-08-25T10:00:00+00:00",
           "reason": "Enable automatic retry logic for soft-decline codes (payment_session_expired, otp_expired) by reissuing the payment link or refreshing the session within the same checkout flow. (payment_pending_approval), unretried -- retry at +30h, the plateau: long enough for the balance to have changed",
           "requires_merchant_approval": false
         },
@@ -4301,8 +4301,8 @@
           "txn_id": "pay_medisure_0727",
           "amount_paise": 45454,
           "target_bank": "Airtel Payments Bank Limited",
-          "scheduled_time": "2026-08-27T16:11:54.482652+00:00",
-          "reason": "Enable automatic retry logic for soft-decline codes (payment_session_expired, otp_expired) by reissuing the payment link or refreshing the session within the same checkout flow. (credit_limit_exceeded), unretried -- retry at +76.2h, past the plateau; intent goes stale",
+          "scheduled_time": "2026-08-24T00:00:00+00:00",
+          "reason": "Enable automatic retry logic for soft-decline codes (payment_session_expired, otp_expired) by reissuing the payment link or refreshing the session within the same checkout flow. (credit_limit_exceeded), unretried -- retry at +60h, the plateau: long enough for the balance to have changed",
           "requires_merchant_approval": false
         },
         {
@@ -4310,8 +4310,8 @@
           "txn_id": "pay_medisure_1347",
           "amount_paise": 42937,
           "target_bank": "State Bank of India",
-          "scheduled_time": "2026-08-27T16:11:54.482652+00:00",
-          "reason": "Enable automatic retry logic for soft-decline codes (payment_session_expired, otp_expired) by reissuing the payment link or refreshing the session within the same checkout flow. (request_timed_out), unretried -- retry at +80.2h, last look before the odds fall away",
+          "scheduled_time": "2026-08-24T00:00:00+00:00",
+          "reason": "Enable automatic retry logic for soft-decline codes (payment_session_expired, otp_expired) by reissuing the payment link or refreshing the session within the same checkout flow. (request_timed_out), unretried -- retry at +64h, last look before the odds fall away",
           "requires_merchant_approval": false
         },
         {
@@ -4319,7 +4319,7 @@
           "txn_id": "pay_medisure_1308",
           "amount_paise": 34838,
           "target_bank": "Airtel Payments Bank Limited",
-          "scheduled_time": "2026-08-28T19:00:00+00:00",
+          "scheduled_time": "2026-08-25T19:00:00+00:00",
           "reason": "Enable automatic retry logic for soft-decline codes (payment_session_expired, otp_expired) by reissuing the payment link or refreshing the session within the same checkout flow. (payment_collect_request_expired), unretried -- retry at +30h, the plateau: long enough for the balance to have changed",
           "requires_merchant_approval": false
         },
@@ -4328,8 +4328,8 @@
           "txn_id": "pay_medisure_0983",
           "amount_paise": 15061,
           "target_bank": "UCO Bank",
-          "scheduled_time": "2026-08-27T16:11:54.482652+00:00",
-          "reason": "Enable automatic retry logic for soft-decline codes (payment_session_expired, otp_expired) by reissuing the payment link or refreshing the session within the same checkout flow. (credit_failed), unretried -- retry at +46.2h, last look before the odds fall away",
+          "scheduled_time": "2026-08-24T00:00:00+00:00",
+          "reason": "Enable automatic retry logic for soft-decline codes (payment_session_expired, otp_expired) by reissuing the payment link or refreshing the session within the same checkout flow. (credit_failed), unretried -- retry at +30h, last look before the odds fall away",
           "requires_merchant_approval": false
         },
         {
@@ -4337,7 +4337,7 @@
           "txn_id": "pay_medisure_1399",
           "amount_paise": 14502,
           "target_bank": "Airtel Payments Bank Limited",
-          "scheduled_time": "2026-08-28T21:00:00+00:00",
+          "scheduled_time": "2026-08-25T21:00:00+00:00",
           "reason": "Enable automatic retry logic for soft-decline codes (payment_session_expired, otp_expired) by reissuing the payment link or refreshing the session within the same checkout flow. (transaction_daily_count_exceeded), unretried -- retry at +30h, the plateau: long enough for the balance to have changed",
           "requires_merchant_approval": false
         },
@@ -4346,8 +4346,8 @@
           "txn_id": "pay_medisure_1049",
           "amount_paise": 10605,
           "target_bank": "Kotak Mahindra Bank",
-          "scheduled_time": "2026-08-27T16:11:54.483648+00:00",
-          "reason": "Enable automatic retry logic for soft-decline codes (payment_session_expired, otp_expired) by reissuing the payment link or refreshing the session within the same checkout flow. (debit_declined), unretried -- retry at +48.2h, the plateau: long enough for the balance to have changed",
+          "scheduled_time": "2026-08-24T00:00:00+00:00",
+          "reason": "Enable automatic retry logic for soft-decline codes (payment_session_expired, otp_expired) by reissuing the payment link or refreshing the session within the same checkout flow. (debit_declined), unretried -- retry at +32h, the plateau: long enough for the balance to have changed",
           "requires_merchant_approval": false
         },
         {
@@ -4355,8 +4355,8 @@
           "txn_id": "pay_medisure_0234",
           "amount_paise": 10024,
           "target_bank": "Airtel Payments Bank Limited",
-          "scheduled_time": "2026-08-27T16:11:54.483648+00:00",
-          "reason": "Enable automatic retry logic for soft-decline codes (payment_session_expired, otp_expired) by reissuing the payment link or refreshing the session within the same checkout flow. (debit_declined), unretried -- retry at +45.2h, the plateau: long enough for the balance to have changed",
+          "scheduled_time": "2026-08-24T01:00:00+00:00",
+          "reason": "Enable automatic retry logic for soft-decline codes (payment_session_expired, otp_expired) by reissuing the payment link or refreshing the session within the same checkout flow. (debit_declined), unretried -- retry at +30h, the plateau: long enough for the balance to have changed",
           "requires_merchant_approval": false
         },
         {
@@ -4364,7 +4364,7 @@
           "txn_id": "pay_medisure_0594",
           "amount_paise": 8734,
           "target_bank": "Airtel Payments Bank Limited",
-          "scheduled_time": "2026-08-29T04:00:00+00:00",
+          "scheduled_time": "2026-08-26T04:00:00+00:00",
           "reason": "Enable automatic retry logic for soft-decline codes (payment_session_expired, otp_expired) by reissuing the payment link or refreshing the session within the same checkout flow. (credit_limit_exceeded), unretried -- retry at +30h, the plateau: long enough for the balance to have changed",
           "requires_merchant_approval": false
         },
@@ -4373,7 +4373,7 @@
           "txn_id": "pay_medisure_1349",
           "amount_paise": 1796,
           "target_bank": "Airtel Payments Bank Limited",
-          "scheduled_time": "2026-08-28T13:00:00+00:00",
+          "scheduled_time": "2026-08-25T13:00:00+00:00",
           "reason": "Enable automatic retry logic for soft-decline codes (payment_session_expired, otp_expired) by reissuing the payment link or refreshing the session within the same checkout flow. (transaction_daily_count_exceeded), unretried -- retry at +30h, the plateau: long enough for the balance to have changed",
           "requires_merchant_approval": false
         }
