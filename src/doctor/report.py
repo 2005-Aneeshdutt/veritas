@@ -126,6 +126,14 @@ def build_report(s) -> dict:
             "observed_success_pct": round(100 * succ / n, 3) if n else 0.0,
             "observed_success_ci_pct": [round(lo * 100, 3), round(hi * 100, 3)],
             "wilson_halfwidth_pts": round(wilson_halfwidth_pts(succ, n), 3),
+            # The real per-day series, from the batch's own day stamps.
+            #
+            # The dashboard used to draw this from a hash of the run id, which
+            # is a fabricated chart in a project that spends the rest of its
+            # time distinguishing measured from modelled. Days with no
+            # payments are omitted rather than plotted as zero, which would
+            # read as a total outage.
+            "daily_success_pct": _daily_success(txns),
             "transactions": n,
             "failures": n - succ,
             "attribution_mae_by_factor": mae,
@@ -244,6 +252,24 @@ def _gate_counts(gate_results) -> dict:
     for g in gate_results:
         out[g.decision.value] += 1
     return out
+
+
+def _daily_success(txns) -> list[dict]:
+    """Success rate per day of the batch, measured."""
+    by_day: dict[int, list[int]] = {}
+    for t in txns:
+        bucket = by_day.setdefault(t.day, [0, 0])
+        bucket[0] += 1
+        bucket[1] += int(t.succeeded)
+    return [
+        {
+            "day": day,
+            "payments": total,
+            "success_pct": round(100.0 * ok / total, 3),
+        }
+        for day, (total, ok) in sorted(by_day.items())
+        if total
+    ]
 
 
 def _by_class(txns) -> list[dict]:

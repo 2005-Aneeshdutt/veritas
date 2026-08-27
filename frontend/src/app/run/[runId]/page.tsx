@@ -63,10 +63,17 @@ export default function Overview({ params }: { params: { runId: string } }) {
 
   // A plausible 30-day series around the observed rate. Derived from the run
   // id so it is stable across reloads rather than reshuffling on every render.
-  const dailySeries = Array.from({ length: 30 }, (_, i) => {
-    const seed = (rec.run_id.charCodeAt(i % rec.run_id.length) * (i + 7)) % 100;
-    return m.observed_success_pct + (seed / 100 - 0.5) * 2.4;
-  });
+  // Measured, from the batch's own day stamps. This used to be derived from
+  // a hash of the run id -- a fabricated chart, in a project that spends the
+  // rest of its time separating measured from modelled.
+  const daily: { day: number; payments: number; success_pct: number }[] =
+    m.daily_success_pct ?? [];
+  // Auto-scaled with a floor, so a bar can never round to nothing. The fixed
+  // formula this replaces went negative below 84% and the whole chart
+  // vanished on any merchant worse than that -- which is most of them.
+  const dayLo = daily.length ? Math.min(...daily.map((d) => d.success_pct)) : 0;
+  const dayHi = daily.length ? Math.max(...daily.map((d) => d.success_pct)) : 100;
+  const daySpan = Math.max(dayHi - dayLo, 1);
 
   const positive = d.factors.filter((f: any) => f.points > 0);
   const stackTotal =
@@ -271,26 +278,34 @@ export default function Overview({ params }: { params: { runId: string } }) {
               </div>
 
               <div>
-                <div className="eyebrow mb-2">success rate, last 30 days</div>
+                <div className="eyebrow mb-2">
+                  success rate by day &middot; measured from this batch
+                </div>
                 <div className="h-24 flex items-end gap-[3px]">
-                  {dailySeries.map((v, i) => (
+                  {daily.map((d) => (
                     <div
-                      key={i}
-                      className="flex-1 bg-muted/25 rounded-sm hover:bg-muted/40
-                                 transition-colors relative group"
-                      style={{ height: `${18 + (v - 84) * 7}%` }}
+                      key={d.day}
+                      className="flex-1 bg-muted/30 rounded-sm hover:bg-brand/50
+                                 transition-colors relative group min-h-[3px]"
+                      style={{
+                        height: `${12 + ((d.success_pct - dayLo) / daySpan) * 88}%`,
+                      }}
                     >
-                      <span className="absolute -top-6 left-1/2 -translate-x-1/2 hidden
+                      <span className="absolute -top-7 left-1/2 -translate-x-1/2 hidden
                                        group-hover:block num text-[10px] text-muted
-                                       whitespace-nowrap">
-                        {v.toFixed(1)}%
+                                       whitespace-nowrap bg-surface px-1.5 py-0.5
+                                       rounded border border-line z-10">
+                        day {d.day} · {d.success_pct.toFixed(1)}% · {d.payments}
                       </span>
                     </div>
                   ))}
                 </div>
                 <div className="flex justify-between eyebrow mt-1.5">
-                  <span>30 days ago</span>
-                  <span>today</span>
+                  <span>day 1</span>
+                  <span className="num">
+                    {dayLo.toFixed(1)}% – {dayHi.toFixed(1)}%
+                  </span>
+                  <span>day {daily.length ? daily[daily.length - 1].day : 28}</span>
                 </div>
               </div>
 
