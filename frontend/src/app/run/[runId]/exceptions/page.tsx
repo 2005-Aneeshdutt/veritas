@@ -176,6 +176,13 @@ export default function ExceptionsPage({ params }: { params: { runId: string } }
         </Card>
       </Stagger>
 
+      {/* ─────────────── whose move is it */}
+      {ex.unrecoverable_by_fault?.length > 0 && (
+        <Stagger i={2}>
+          <FaultPanel groups={ex.unrecoverable_by_fault} />
+        </Stagger>
+      )}
+
       {/* ─────────────── unrecoverable money, grouped by why */}
       <Stagger i={2}>
         <Card>
@@ -355,5 +362,100 @@ export default function ExceptionsPage({ params }: { params: { runId: string } }
         </Card>
       </Stagger>
     </div>
+  );
+}
+
+/* -------------------------------------------------------------- fault */
+
+const OWNER_TONE: Record<string, string> = {
+  merchant: "border-l-brand",
+  platform: "border-l-amber",
+  customer: "border-l-muted",
+  unknown: "border-l-line",
+};
+
+/**
+ * Whose move is it.
+ *
+ * This class used to be labelled "permanently unusable — only the customer can
+ * fix this", and it contained things like `live_mode_not_enabled` and
+ * `invalid_order_id`. Those are the merchant's own integration, losing them
+ * money on every affected payment, filed under hopeless.
+ *
+ * Attribution comes from Razorpay's published `next_steps` for each code, not
+ * from a list here — so a code added tomorrow is classified by its own
+ * guidance rather than by something that has quietly gone stale. Codes whose
+ * wording is genuinely ambiguous are shown as unattributable rather than
+ * guessed, because guessing puts a merchant to work on something that was
+ * never theirs.
+ */
+function FaultPanel({ groups }: { groups: any[] }) {
+  const [open, setOpen] = useState<string | null>("merchant");
+  const mine = groups.find((g) => g.owner === "merchant");
+
+  return (
+    <Card className="border-l-2 border-l-brand">
+      <Eyebrow>Not all of this is out of your hands</Eyebrow>
+      <h2 className="text-lg font-semibold mt-1">
+        {mine
+          ? `${inr(mine.total_paise)} of this is your own configuration`
+          : "None of this is yours to fix"}
+      </h2>
+      <p className="text-sm text-muted mt-1.5 max-w-3xl leading-relaxed">
+        Attributed from Razorpay&apos;s own published next step for each error
+        code. This is the one figure here with no error bar on it — a payment
+        method you have not enabled does not fail probabilistically, it fails
+        every time until the setting changes.
+      </p>
+
+      <div className="mt-4 space-y-2">
+        {groups.map((g) => {
+          const isOpen = open === g.owner;
+          return (
+            <div
+              key={g.owner}
+              className={`card-raised border-l-2 ${OWNER_TONE[g.owner] ?? "border-l-line"} overflow-hidden`}
+            >
+              <button
+                onClick={() => setOpen(isOpen ? null : g.owner)}
+                className="w-full p-3 text-left hover:bg-raised transition-colors"
+              >
+                <div className="flex items-center gap-4 flex-wrap">
+                  <span className="text-sm font-medium">{g.label}</span>
+                  <span className="ml-auto num text-sm text-amber shrink-0">
+                    {inr(g.total_paise, { compact: true })}
+                  </span>
+                  <span className="eyebrow shrink-0">{g.count} payments</span>
+                  <span className="text-brand w-3 shrink-0">
+                    {isOpen ? "−" : "+"}
+                  </span>
+                </div>
+              </button>
+
+              {isOpen && (
+                <div className="border-t border-line divide-y divide-line/40 animate-rise">
+                  {g.codes.slice(0, 8).map((c: any) => (
+                    <div key={c.code} className="px-4 py-2.5">
+                      <div className="flex items-center gap-3 flex-wrap">
+                        <span className="num text-[11px]">{c.code}</span>
+                        <span className="num text-[11px] text-amber ml-auto">
+                          {inr(c.total_paise)}
+                        </span>
+                        <span className="eyebrow">{c.count}</span>
+                      </div>
+                      {c.next_steps && (
+                        <p className="text-[11px] text-muted mt-1 leading-relaxed">
+                          {c.next_steps}
+                        </p>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    </Card>
   );
 }
