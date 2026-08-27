@@ -1,12 +1,12 @@
 {
-  "run_id": "run_f29d77a8",
+  "run_id": "run_c7a89460",
   "merchant_id": "medisure",
   "merchant_name": "MediSure Pharmacy",
   "mcc": "5912",
   "seed": 20260824,
-  "started_at": 1787855218.2657514,
-  "duration_ms": 3080,
-  "commit": "4fc83ef",
+  "started_at": 1787857270.5654492,
+  "duration_ms": 3401,
+  "commit": "c89d107",
   "models": {
     "fast": "claude-haiku-4.5",
     "reasoning": "claude-sonnet-4.6",
@@ -18,13 +18,13 @@
   "used_stubs": false,
   "traces": [
     {
-      "run_id": "run_f29d77a8",
+      "run_id": "run_c7a89460",
       "seq": 0,
       "node": "ingest",
       "kind": "deterministic",
       "status": "ok",
-      "started_at": 1787855220.6963348,
-      "duration_ms": 29,
+      "started_at": 1787857273.1999493,
+      "duration_ms": 28,
       "input_summary": {
         "merchant": "medisure",
         "mcc": "5912"
@@ -50,13 +50,13 @@
       }
     },
     {
-      "run_id": "run_f29d77a8",
+      "run_id": "run_c7a89460",
       "seq": 1,
       "node": "classify",
       "kind": "llm",
       "status": "ok",
-      "started_at": 1787855220.7263453,
-      "duration_ms": 2,
+      "started_at": 1787857273.2299507,
+      "duration_ms": 3,
       "input_summary": {
         "distinct_codes": 57,
         "failures": 193
@@ -85,12 +85,12 @@
       "intermediates": {}
     },
     {
-      "run_id": "run_f29d77a8",
+      "run_id": "run_c7a89460",
       "seq": 2,
       "node": "human_review",
       "kind": "deterministic",
       "status": "skipped",
-      "started_at": 1787855220.7293444,
+      "started_at": 1787857273.2339306,
       "duration_ms": 0,
       "input_summary": {},
       "output_summary": {
@@ -109,13 +109,13 @@
       "intermediates": {}
     },
     {
-      "run_id": "run_f29d77a8",
+      "run_id": "run_c7a89460",
       "seq": 3,
       "node": "bank_health",
       "kind": "deterministic",
       "status": "ok",
-      "started_at": 1787855220.7303429,
-      "duration_ms": 5,
+      "started_at": 1787857273.235933,
+      "duration_ms": 7,
       "input_summary": {},
       "output_summary": {
         "banks_examined": 10,
@@ -234,13 +234,13 @@
       }
     },
     {
-      "run_id": "run_f29d77a8",
+      "run_id": "run_c7a89460",
       "seq": 4,
       "node": "decompose",
       "kind": "deterministic",
       "status": "ok",
-      "started_at": 1787855220.7363446,
-      "duration_ms": 555,
+      "started_at": 1787857273.2439287,
+      "duration_ms": 645,
       "input_summary": {},
       "output_summary": {
         "gap_pts": 3.796,
@@ -301,13 +301,13 @@
       }
     },
     {
-      "run_id": "run_f29d77a8",
+      "run_id": "run_c7a89460",
       "seq": 5,
       "node": "hypothesise",
       "kind": "llm",
       "status": "ok",
-      "started_at": 1787855221.293101,
-      "duration_ms": 4,
+      "started_at": 1787857273.8904262,
+      "duration_ms": 9,
       "input_summary": {},
       "output_summary": {
         "tool_calls": [
@@ -377,12 +377,12 @@
       "intermediates": {}
     },
     {
-      "run_id": "run_f29d77a8",
+      "run_id": "run_c7a89460",
       "seq": 6,
       "node": "plan",
       "kind": "deterministic",
       "status": "ok",
-      "started_at": 1787855221.2990885,
+      "started_at": 1787857273.900448,
       "duration_ms": 3,
       "input_summary": {},
       "output_summary": {
@@ -441,13 +441,13 @@
       }
     },
     {
-      "run_id": "run_f29d77a8",
+      "run_id": "run_c7a89460",
       "seq": 7,
       "node": "gate",
       "kind": "deterministic",
       "status": "ok",
-      "started_at": 1787855221.3030918,
-      "duration_ms": 25,
+      "started_at": 1787857273.905448,
+      "duration_ms": 40,
       "input_summary": {},
       "output_summary": {
         "decisions": {
@@ -477,12 +477,12 @@
       "intermediates": {}
     },
     {
-      "run_id": "run_f29d77a8",
+      "run_id": "run_c7a89460",
       "seq": 8,
       "node": "execute",
       "kind": "deterministic",
       "status": "ok",
-      "started_at": 1787855221.3300893,
+      "started_at": 1787857273.9464226,
       "duration_ms": 7,
       "input_summary": {},
       "output_summary": {
@@ -508,19 +508,20 @@
       "intermediates": {}
     },
     {
-      "run_id": "run_f29d77a8",
+      "run_id": "run_c7a89460",
       "seq": 9,
       "node": "report",
       "kind": "deterministic",
       "status": "ok",
-      "started_at": 1787855221.3370972,
-      "duration_ms": 8,
+      "started_at": 1787857273.9545035,
+      "duration_ms": 11,
       "input_summary": {},
       "output_summary": {
         "measured_keys": [
           "observed_success_pct",
           "observed_success_ci_pct",
           "wilson_halfwidth_pts",
+          "daily_success_pct",
           "transactions",
           "failures",
           "attribution_mae_by_factor",
@@ -582,6 +583,148 @@
         89.17
       ],
       "wilson_halfwidth_pts": 1.635,
+      "daily_success_pct": [
+        {
+          "day": 1,
+          "payments": 70,
+          "success_pct": 95.714
+        },
+        {
+          "day": 2,
+          "payments": 56,
+          "success_pct": 94.643
+        },
+        {
+          "day": 3,
+          "payments": 63,
+          "success_pct": 82.54
+        },
+        {
+          "day": 4,
+          "payments": 51,
+          "success_pct": 86.275
+        },
+        {
+          "day": 5,
+          "payments": 49,
+          "success_pct": 89.796
+        },
+        {
+          "day": 6,
+          "payments": 49,
+          "success_pct": 91.837
+        },
+        {
+          "day": 7,
+          "payments": 59,
+          "success_pct": 89.831
+        },
+        {
+          "day": 8,
+          "payments": 53,
+          "success_pct": 81.132
+        },
+        {
+          "day": 9,
+          "payments": 54,
+          "success_pct": 88.889
+        },
+        {
+          "day": 10,
+          "payments": 73,
+          "success_pct": 80.822
+        },
+        {
+          "day": 11,
+          "payments": 55,
+          "success_pct": 80.0
+        },
+        {
+          "day": 12,
+          "payments": 49,
+          "success_pct": 81.633
+        },
+        {
+          "day": 13,
+          "payments": 48,
+          "success_pct": 85.417
+        },
+        {
+          "day": 14,
+          "payments": 55,
+          "success_pct": 89.091
+        },
+        {
+          "day": 15,
+          "payments": 37,
+          "success_pct": 89.189
+        },
+        {
+          "day": 16,
+          "payments": 56,
+          "success_pct": 85.714
+        },
+        {
+          "day": 17,
+          "payments": 59,
+          "success_pct": 89.831
+        },
+        {
+          "day": 18,
+          "payments": 54,
+          "success_pct": 87.037
+        },
+        {
+          "day": 19,
+          "payments": 60,
+          "success_pct": 86.667
+        },
+        {
+          "day": 20,
+          "payments": 61,
+          "success_pct": 90.164
+        },
+        {
+          "day": 21,
+          "payments": 77,
+          "success_pct": 92.208
+        },
+        {
+          "day": 22,
+          "payments": 52,
+          "success_pct": 84.615
+        },
+        {
+          "day": 23,
+          "payments": 56,
+          "success_pct": 91.071
+        },
+        {
+          "day": 24,
+          "payments": 67,
+          "success_pct": 94.03
+        },
+        {
+          "day": 25,
+          "payments": 47,
+          "success_pct": 78.723
+        },
+        {
+          "day": 26,
+          "payments": 51,
+          "success_pct": 92.157
+        },
+        {
+          "day": 27,
+          "payments": 46,
+          "success_pct": 84.783
+        },
+        {
+          "day": 28,
+          "payments": 53,
+          "success_pct": 84.906
+        }
+      ],
       "transactions": 1560,
       "failures": 193,
       "attribution_mae_by_factor": {
@@ -1227,7 +1370,7 @@
         "bank+method+hour": 3.8932411429143943,
         "bank+method+amount_band": 3.8397833637317635,
         "bank+hour+amount_band": 3.83491346315582,
-        "method+hour+amount_band": 0.23984707933952798,
+        "method+hour+amount_band": 0.23984707933951688,
         "bank+method+hour+amount_band": 3.8351632115771195
       },
       "factors": [
@@ -1488,7 +1631,7 @@
     "ledger": [
       {
         "sequence": 0,
-        "timestamp": "2026-08-27T18:27:01.330089+00:00",
+        "timestamp": "2026-08-27T19:01:13.946422+00:00",
         "txn_id": "merchant:medisure",
         "proposed_action": {
           "action_type": "enable_multi_bank_routing",
@@ -1503,11 +1646,11 @@
         "gate_reason": "OK_MERCHANT_ACTION",
         "outcome": "merchant_action",
         "prev_hash": "0000000000000000000000000000000000000000000000000000000000000000",
-        "entry_hash": "d64ec2cefc3af5dd5b26e63bce4665eb53342b2f41abdd6341bb36a380dbe33c"
+        "entry_hash": "0c964e63e8b8fd9d3d140c2a0478b9392c88666473b918fc2e011f530a662a59"
       },
       {
         "sequence": 1,
-        "timestamp": "2026-08-27T18:27:01.330089+00:00",
+        "timestamp": "2026-08-27T19:01:13.946422+00:00",
         "txn_id": "pay_medisure_0250",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1521,12 +1664,12 @@
         "gate_decision": "deny",
         "gate_reason": "DENY_AMOUNT_ABOVE_CEILING",
         "outcome": "denied",
-        "prev_hash": "d64ec2cefc3af5dd5b26e63bce4665eb53342b2f41abdd6341bb36a380dbe33c",
-        "entry_hash": "ed036749ac1a13dfe6c5fb07e217fb5dde89a5a206471ec8f3b8c50307bfc88b"
+        "prev_hash": "0c964e63e8b8fd9d3d140c2a0478b9392c88666473b918fc2e011f530a662a59",
+        "entry_hash": "d72aeef8696c30c63566ea2e4d99fcfa9a80a36fa4f4180d13c155fb435479d5"
       },
       {
         "sequence": 2,
-        "timestamp": "2026-08-27T18:27:01.330089+00:00",
+        "timestamp": "2026-08-27T19:01:13.946422+00:00",
         "txn_id": "pay_medisure_1365",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1540,12 +1683,12 @@
         "gate_decision": "deny",
         "gate_reason": "DENY_AMOUNT_ABOVE_CEILING",
         "outcome": "denied",
-        "prev_hash": "ed036749ac1a13dfe6c5fb07e217fb5dde89a5a206471ec8f3b8c50307bfc88b",
-        "entry_hash": "bcf22d3e869fa3e8d0b50b641594f1f042d310fc60deaeaa5aae14ba15cdffcb"
+        "prev_hash": "d72aeef8696c30c63566ea2e4d99fcfa9a80a36fa4f4180d13c155fb435479d5",
+        "entry_hash": "789a62abe09fba200be2771f075eecca27bd151cda43911bb2f868637b51edcf"
       },
       {
         "sequence": 3,
-        "timestamp": "2026-08-27T18:27:01.330089+00:00",
+        "timestamp": "2026-08-27T19:01:13.946422+00:00",
         "txn_id": "pay_medisure_0513",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1559,12 +1702,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "bcf22d3e869fa3e8d0b50b641594f1f042d310fc60deaeaa5aae14ba15cdffcb",
-        "entry_hash": "f87a8fd42ff5eb290c13b87d13a57fa88b3489ab738c7abb38cd4d08ffa98d2d"
+        "prev_hash": "789a62abe09fba200be2771f075eecca27bd151cda43911bb2f868637b51edcf",
+        "entry_hash": "40c962d17000a04e4822801b242b6daa2874642a25aeec79eb5c45e18644949f"
       },
       {
         "sequence": 4,
-        "timestamp": "2026-08-27T18:27:01.330089+00:00",
+        "timestamp": "2026-08-27T19:01:13.946422+00:00",
         "txn_id": "pay_medisure_0822",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1578,12 +1721,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "f87a8fd42ff5eb290c13b87d13a57fa88b3489ab738c7abb38cd4d08ffa98d2d",
-        "entry_hash": "983448dab7ac52201066c46c7f8d948d049f7762536be822b564e75f423ee238"
+        "prev_hash": "40c962d17000a04e4822801b242b6daa2874642a25aeec79eb5c45e18644949f",
+        "entry_hash": "9c38147dcdd2d3f29073ebaba0157e2bfd1843ee140e92cea6e890855e8e81f0"
       },
       {
         "sequence": 5,
-        "timestamp": "2026-08-27T18:27:01.331088+00:00",
+        "timestamp": "2026-08-27T19:01:13.946422+00:00",
         "txn_id": "pay_medisure_1137",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1597,12 +1740,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "983448dab7ac52201066c46c7f8d948d049f7762536be822b564e75f423ee238",
-        "entry_hash": "3bc8b5eb0381784c1ba5c5e9612e692c185a05d5b2b07f9327a4ba3fffe8174d"
+        "prev_hash": "9c38147dcdd2d3f29073ebaba0157e2bfd1843ee140e92cea6e890855e8e81f0",
+        "entry_hash": "6e2803f10e166fc2fc40fe5b2e62029d2076bed69129a6cac82f607f882b87bc"
       },
       {
         "sequence": 6,
-        "timestamp": "2026-08-27T18:27:01.331088+00:00",
+        "timestamp": "2026-08-27T19:01:13.946422+00:00",
         "txn_id": "pay_medisure_1009",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1616,12 +1759,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "3bc8b5eb0381784c1ba5c5e9612e692c185a05d5b2b07f9327a4ba3fffe8174d",
-        "entry_hash": "ddd7e9ee5000c6fb9223b7ae1299547eb5bef2fbc886f09ae81cc9faa1d87ddc"
+        "prev_hash": "6e2803f10e166fc2fc40fe5b2e62029d2076bed69129a6cac82f607f882b87bc",
+        "entry_hash": "1728d3426f7da0a74628ce00c9b99a1a11ac8bb580c50fc217c838112219e18b"
       },
       {
         "sequence": 7,
-        "timestamp": "2026-08-27T18:27:01.331088+00:00",
+        "timestamp": "2026-08-27T19:01:13.946422+00:00",
         "txn_id": "pay_medisure_1266",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1635,12 +1778,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "ddd7e9ee5000c6fb9223b7ae1299547eb5bef2fbc886f09ae81cc9faa1d87ddc",
-        "entry_hash": "a17c8f6ee7ae8aadcf8c373f0bab48ac4cf603cfc6938d6aca0fac6ce125a888"
+        "prev_hash": "1728d3426f7da0a74628ce00c9b99a1a11ac8bb580c50fc217c838112219e18b",
+        "entry_hash": "b29875ab16ec56b737cc9ef82d96015aa16495747ee0b63d2c1fc1a21f7e2866"
       },
       {
         "sequence": 8,
-        "timestamp": "2026-08-27T18:27:01.331088+00:00",
+        "timestamp": "2026-08-27T19:01:13.946422+00:00",
         "txn_id": "pay_medisure_0314",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1654,12 +1797,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "a17c8f6ee7ae8aadcf8c373f0bab48ac4cf603cfc6938d6aca0fac6ce125a888",
-        "entry_hash": "5625109bcf153fcbde1df33c50b5cd450de5a1910d03f52d73e57903cfa7c05c"
+        "prev_hash": "b29875ab16ec56b737cc9ef82d96015aa16495747ee0b63d2c1fc1a21f7e2866",
+        "entry_hash": "81c67d7e780637ddf784563d974d683802d4069dc55a574e9a3ab611487e0fb5"
       },
       {
         "sequence": 9,
-        "timestamp": "2026-08-27T18:27:01.331088+00:00",
+        "timestamp": "2026-08-27T19:01:13.947459+00:00",
         "txn_id": "pay_medisure_0608",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1673,12 +1816,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "5625109bcf153fcbde1df33c50b5cd450de5a1910d03f52d73e57903cfa7c05c",
-        "entry_hash": "a693f9173aa2d0698394c3997ac02828f9887f35d8b5079e61ff1782bd7b8f96"
+        "prev_hash": "81c67d7e780637ddf784563d974d683802d4069dc55a574e9a3ab611487e0fb5",
+        "entry_hash": "e0c40b452442415bc66ac0e7d355d16a1aa0e83f4514b42fd233aaae84c9419d"
       },
       {
         "sequence": 10,
-        "timestamp": "2026-08-27T18:27:01.331088+00:00",
+        "timestamp": "2026-08-27T19:01:13.947459+00:00",
         "txn_id": "pay_medisure_1168",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1692,12 +1835,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "a693f9173aa2d0698394c3997ac02828f9887f35d8b5079e61ff1782bd7b8f96",
-        "entry_hash": "84d88919bfe657edb59eea1da2fc37a9d6f536e8bd92ad5f6b0bde1f53815c45"
+        "prev_hash": "e0c40b452442415bc66ac0e7d355d16a1aa0e83f4514b42fd233aaae84c9419d",
+        "entry_hash": "e1026ee8e347e9c77e580616e0177ccfc7e59be0ef31bbf24898db77731c28dd"
       },
       {
         "sequence": 11,
-        "timestamp": "2026-08-27T18:27:01.331088+00:00",
+        "timestamp": "2026-08-27T19:01:13.947459+00:00",
         "txn_id": "pay_medisure_0326",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1711,12 +1854,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "84d88919bfe657edb59eea1da2fc37a9d6f536e8bd92ad5f6b0bde1f53815c45",
-        "entry_hash": "1aa8a8366bfded356fa144cc23b9d2c4d91d8851785ab6f673339cde10b78903"
+        "prev_hash": "e1026ee8e347e9c77e580616e0177ccfc7e59be0ef31bbf24898db77731c28dd",
+        "entry_hash": "892e9b0412672941d1951ee000b80fc4220fcf351098f54d2b11fcd94d093013"
       },
       {
         "sequence": 12,
-        "timestamp": "2026-08-27T18:27:01.331088+00:00",
+        "timestamp": "2026-08-27T19:01:13.947459+00:00",
         "txn_id": "pay_medisure_0129",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1730,12 +1873,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "1aa8a8366bfded356fa144cc23b9d2c4d91d8851785ab6f673339cde10b78903",
-        "entry_hash": "507a3908b1199675b9488e5c573e95d17ae1665f28356523248594ba9e367f18"
+        "prev_hash": "892e9b0412672941d1951ee000b80fc4220fcf351098f54d2b11fcd94d093013",
+        "entry_hash": "b6feed04604e9634a9c53c2bc15096f1b9b294d46866927c3f27272f64efe0fa"
       },
       {
         "sequence": 13,
-        "timestamp": "2026-08-27T18:27:01.331088+00:00",
+        "timestamp": "2026-08-27T19:01:13.947459+00:00",
         "txn_id": "pay_medisure_0722",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1749,12 +1892,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "507a3908b1199675b9488e5c573e95d17ae1665f28356523248594ba9e367f18",
-        "entry_hash": "3dc8a0def014c35d1bc780d4e28f3bb6c63b8af6f373870b9ef5d2c4eeae86a4"
+        "prev_hash": "b6feed04604e9634a9c53c2bc15096f1b9b294d46866927c3f27272f64efe0fa",
+        "entry_hash": "c70b00cf9ee669ed2b9b1d7061acbf67d848d43f903c6b043271bcda0b9fd97d"
       },
       {
         "sequence": 14,
-        "timestamp": "2026-08-27T18:27:01.331088+00:00",
+        "timestamp": "2026-08-27T19:01:13.947459+00:00",
         "txn_id": "pay_medisure_1152",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1768,12 +1911,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "3dc8a0def014c35d1bc780d4e28f3bb6c63b8af6f373870b9ef5d2c4eeae86a4",
-        "entry_hash": "2267c6d0f350365d83ca0814598e88bd78a968c29b40488e54001ed4992076c8"
+        "prev_hash": "c70b00cf9ee669ed2b9b1d7061acbf67d848d43f903c6b043271bcda0b9fd97d",
+        "entry_hash": "99edccb772b1cf62dff31624963c66bda1062ae4b15fff34ed82b60ff74119cb"
       },
       {
         "sequence": 15,
-        "timestamp": "2026-08-27T18:27:01.331088+00:00",
+        "timestamp": "2026-08-27T19:01:13.947459+00:00",
         "txn_id": "pay_medisure_0727",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1787,12 +1930,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "2267c6d0f350365d83ca0814598e88bd78a968c29b40488e54001ed4992076c8",
-        "entry_hash": "d4aa70d952d2f4b8694e58e2c1ecf0ac1387790e69abf0460960d1bbb4c4436b"
+        "prev_hash": "99edccb772b1cf62dff31624963c66bda1062ae4b15fff34ed82b60ff74119cb",
+        "entry_hash": "4b8b36d1d12f89869f653c08ac732534ad36853b83d3946410ca451c8b507f18"
       },
       {
         "sequence": 16,
-        "timestamp": "2026-08-27T18:27:01.331088+00:00",
+        "timestamp": "2026-08-27T19:01:13.947459+00:00",
         "txn_id": "pay_medisure_1347",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1806,12 +1949,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "d4aa70d952d2f4b8694e58e2c1ecf0ac1387790e69abf0460960d1bbb4c4436b",
-        "entry_hash": "c8137387a0afbffe059f226cae3917998e5caae042bd3eba18d92e962b664352"
+        "prev_hash": "4b8b36d1d12f89869f653c08ac732534ad36853b83d3946410ca451c8b507f18",
+        "entry_hash": "5a29ef1519753f440ad5970b58391504f4e020b078215db25aada077253f21ae"
       },
       {
         "sequence": 17,
-        "timestamp": "2026-08-27T18:27:01.331088+00:00",
+        "timestamp": "2026-08-27T19:01:13.947459+00:00",
         "txn_id": "pay_medisure_1308",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1825,12 +1968,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "c8137387a0afbffe059f226cae3917998e5caae042bd3eba18d92e962b664352",
-        "entry_hash": "4a8d6c7650d85dee00d7ac4391543d08427aa8847af8ade70a925f2c5d35e0a2"
+        "prev_hash": "5a29ef1519753f440ad5970b58391504f4e020b078215db25aada077253f21ae",
+        "entry_hash": "b87353c5198d7b4567594bf4dbdbf19cf87b0da99615927b5759cdb46ddaef7b"
       },
       {
         "sequence": 18,
-        "timestamp": "2026-08-27T18:27:01.332088+00:00",
+        "timestamp": "2026-08-27T19:01:13.948453+00:00",
         "txn_id": "pay_medisure_0983",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1844,12 +1987,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "4a8d6c7650d85dee00d7ac4391543d08427aa8847af8ade70a925f2c5d35e0a2",
-        "entry_hash": "bce3b0f9b4cdee37115457f7672710288ebee9fb1df61dd6da59f25031d7b9ae"
+        "prev_hash": "b87353c5198d7b4567594bf4dbdbf19cf87b0da99615927b5759cdb46ddaef7b",
+        "entry_hash": "b8e83851c3ce77198b17da5774cd66527398ac559dac3d8c5c91370d911511e4"
       },
       {
         "sequence": 19,
-        "timestamp": "2026-08-27T18:27:01.332088+00:00",
+        "timestamp": "2026-08-27T19:01:13.948453+00:00",
         "txn_id": "pay_medisure_1399",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1863,12 +2006,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "bce3b0f9b4cdee37115457f7672710288ebee9fb1df61dd6da59f25031d7b9ae",
-        "entry_hash": "de5e88bab857b77b0cb45de3cddc0c987e770c52f93ef403f972e253a4283893"
+        "prev_hash": "b8e83851c3ce77198b17da5774cd66527398ac559dac3d8c5c91370d911511e4",
+        "entry_hash": "c7124be480eb8137b983ab357072e7b64ad54799b465b52f8c0a84de9e8183b0"
       },
       {
         "sequence": 20,
-        "timestamp": "2026-08-27T18:27:01.332088+00:00",
+        "timestamp": "2026-08-27T19:01:13.948453+00:00",
         "txn_id": "pay_medisure_1049",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1882,12 +2025,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "de5e88bab857b77b0cb45de3cddc0c987e770c52f93ef403f972e253a4283893",
-        "entry_hash": "49df9bed24a515abe2137b972fd6ae6661df6048547e39e3aea60d720a2e6825"
+        "prev_hash": "c7124be480eb8137b983ab357072e7b64ad54799b465b52f8c0a84de9e8183b0",
+        "entry_hash": "705015f1e277d502344e0b9471f0f806a07219c5b028e0886729c49e3adb3007"
       },
       {
         "sequence": 21,
-        "timestamp": "2026-08-27T18:27:01.332088+00:00",
+        "timestamp": "2026-08-27T19:01:13.948453+00:00",
         "txn_id": "pay_medisure_0234",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1901,12 +2044,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "49df9bed24a515abe2137b972fd6ae6661df6048547e39e3aea60d720a2e6825",
-        "entry_hash": "886a7010bbfcb21756fb992c19f52b1ceae758e2ac0606a7edb8ea5647ce3004"
+        "prev_hash": "705015f1e277d502344e0b9471f0f806a07219c5b028e0886729c49e3adb3007",
+        "entry_hash": "de681cace5e8d50113b7062d80dfcd8c4511ef00fc19e5ff0ea23bba0d125675"
       },
       {
         "sequence": 22,
-        "timestamp": "2026-08-27T18:27:01.332088+00:00",
+        "timestamp": "2026-08-27T19:01:13.948453+00:00",
         "txn_id": "pay_medisure_0594",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1920,12 +2063,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "886a7010bbfcb21756fb992c19f52b1ceae758e2ac0606a7edb8ea5647ce3004",
-        "entry_hash": "0c83dbe009a29b15d41011805efcfa522ecfcf5e1bf73de0c12e617f35096332"
+        "prev_hash": "de681cace5e8d50113b7062d80dfcd8c4511ef00fc19e5ff0ea23bba0d125675",
+        "entry_hash": "9c7b41b730578b525aefa3da6e529ef1ea766c3e8a8cc6e620ad478ca1273f3b"
       },
       {
         "sequence": 23,
-        "timestamp": "2026-08-27T18:27:01.332088+00:00",
+        "timestamp": "2026-08-27T19:01:13.948453+00:00",
         "txn_id": "pay_medisure_1349",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1939,12 +2082,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "0c83dbe009a29b15d41011805efcfa522ecfcf5e1bf73de0c12e617f35096332",
-        "entry_hash": "d6c08fcc6d3fdef6b8a920f849ced1ea247af4ae3c779097de45a2f5ee97ff71"
+        "prev_hash": "9c7b41b730578b525aefa3da6e529ef1ea766c3e8a8cc6e620ad478ca1273f3b",
+        "entry_hash": "b1362ae31ba027a8b33c303317af3489e91f7be61c269e650e179c306180c043"
       },
       {
         "sequence": 24,
-        "timestamp": "2026-08-27T18:27:01.332088+00:00",
+        "timestamp": "2026-08-27T19:01:13.948453+00:00",
         "txn_id": "merchant:medisure",
         "proposed_action": {
           "action_type": "flag_for_investigation",
@@ -1958,12 +2101,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_ESCALATION",
         "outcome": "escalated",
-        "prev_hash": "d6c08fcc6d3fdef6b8a920f849ced1ea247af4ae3c779097de45a2f5ee97ff71",
-        "entry_hash": "510972e65b70e8dbed58e1e6833d4504c088914ff4b836b219fe3bf3c115b4e4"
+        "prev_hash": "b1362ae31ba027a8b33c303317af3489e91f7be61c269e650e179c306180c043",
+        "entry_hash": "7e71c6970b265a1195ef1a284a71930e41b43afdc78e72aef01888a92e4ce6e5"
       },
       {
         "sequence": 25,
-        "timestamp": "2026-08-27T18:27:01.333089+00:00",
+        "timestamp": "2026-08-27T19:01:13.948453+00:00",
         "txn_id": "merchant:medisure",
         "proposed_action": {
           "action_type": "flag_for_investigation",
@@ -1977,12 +2120,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_ESCALATION",
         "outcome": "escalated",
-        "prev_hash": "510972e65b70e8dbed58e1e6833d4504c088914ff4b836b219fe3bf3c115b4e4",
-        "entry_hash": "983fd21866fcc84768bc602e76f51533298d2cf7a497d378c7550855c42b7ae0"
+        "prev_hash": "7e71c6970b265a1195ef1a284a71930e41b43afdc78e72aef01888a92e4ce6e5",
+        "entry_hash": "aa63b9b0105a8caad4d7df5bf7b06218d321b434ebf9674c5d13755c871eee05"
       },
       {
         "sequence": 26,
-        "timestamp": "2026-08-27T18:27:01.333089+00:00",
+        "timestamp": "2026-08-27T19:01:13.948453+00:00",
         "txn_id": "merchant:medisure",
         "proposed_action": {
           "action_type": "flag_for_investigation",
@@ -1996,12 +2139,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_ESCALATION",
         "outcome": "escalated",
-        "prev_hash": "983fd21866fcc84768bc602e76f51533298d2cf7a497d378c7550855c42b7ae0",
-        "entry_hash": "31b90bdb4b4af06567033469c7826a0dd5ad850b9c67d56be7ec21b5a82dcaad"
+        "prev_hash": "aa63b9b0105a8caad4d7df5bf7b06218d321b434ebf9674c5d13755c871eee05",
+        "entry_hash": "10ef8c240d8cea8cba6e7674c8f945389f31fd053db1204140f6be22a0c075d1"
       },
       {
         "sequence": 27,
-        "timestamp": "2026-08-27T18:27:01.333089+00:00",
+        "timestamp": "2026-08-27T19:01:13.948453+00:00",
         "txn_id": "pay_medisure_1328",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2015,12 +2158,12 @@
         "gate_decision": "deny",
         "gate_reason": "DENY_AMOUNT_ABOVE_CEILING",
         "outcome": "denied",
-        "prev_hash": "31b90bdb4b4af06567033469c7826a0dd5ad850b9c67d56be7ec21b5a82dcaad",
-        "entry_hash": "e81d943e9ff06bfb21a2c24e08ed1fa503e07dbada32cc0aa31f15574c433d68"
+        "prev_hash": "10ef8c240d8cea8cba6e7674c8f945389f31fd053db1204140f6be22a0c075d1",
+        "entry_hash": "fff52f6ba508db2803cf33fe08098d40bf9e749eef4607ffe7688693b56cc832"
       },
       {
         "sequence": 28,
-        "timestamp": "2026-08-27T18:27:01.333089+00:00",
+        "timestamp": "2026-08-27T19:01:13.948453+00:00",
         "txn_id": "pay_medisure_0479",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2034,12 +2177,12 @@
         "gate_decision": "deny",
         "gate_reason": "DENY_AMOUNT_ABOVE_CEILING",
         "outcome": "denied",
-        "prev_hash": "e81d943e9ff06bfb21a2c24e08ed1fa503e07dbada32cc0aa31f15574c433d68",
-        "entry_hash": "3d662af4eb4b7bfde4a6bf7d5270c8ac16118e62a43f983513e5ec8868a8803b"
+        "prev_hash": "fff52f6ba508db2803cf33fe08098d40bf9e749eef4607ffe7688693b56cc832",
+        "entry_hash": "d7fa51d6fd4e1fe746ab34a601cd2908b88040e5b7813504dc7ff6c1aeb48b52"
       },
       {
         "sequence": 29,
-        "timestamp": "2026-08-27T18:27:01.333089+00:00",
+        "timestamp": "2026-08-27T19:01:13.948453+00:00",
         "txn_id": "pay_medisure_0416",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2053,12 +2196,12 @@
         "gate_decision": "deny",
         "gate_reason": "DENY_AMOUNT_ABOVE_CEILING",
         "outcome": "denied",
-        "prev_hash": "3d662af4eb4b7bfde4a6bf7d5270c8ac16118e62a43f983513e5ec8868a8803b",
-        "entry_hash": "f9e632c1139a644935b67086d1ea018c12390e6cc56dcab2ecfdb7b90d92584c"
+        "prev_hash": "d7fa51d6fd4e1fe746ab34a601cd2908b88040e5b7813504dc7ff6c1aeb48b52",
+        "entry_hash": "a397a69e4e8755163ffa7283ce3c8d21b2982e1342ee187c6e23d25fa78ff5e9"
       },
       {
         "sequence": 30,
-        "timestamp": "2026-08-27T18:27:01.333089+00:00",
+        "timestamp": "2026-08-27T19:01:13.949456+00:00",
         "txn_id": "pay_medisure_1329",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2072,12 +2215,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "f9e632c1139a644935b67086d1ea018c12390e6cc56dcab2ecfdb7b90d92584c",
-        "entry_hash": "bfc4e2ea51cef87ca689799a5d7f97fd8d120e5c8ddeb54793b751bb9059e33d"
+        "prev_hash": "a397a69e4e8755163ffa7283ce3c8d21b2982e1342ee187c6e23d25fa78ff5e9",
+        "entry_hash": "5cfaeb2b896123eaeb6b4edfe964c3b7c16b3cb91bae59c29e1e1d68fde0734e"
       },
       {
         "sequence": 31,
-        "timestamp": "2026-08-27T18:27:01.333089+00:00",
+        "timestamp": "2026-08-27T19:01:13.949456+00:00",
         "txn_id": "pay_medisure_0226",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2091,12 +2234,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "bfc4e2ea51cef87ca689799a5d7f97fd8d120e5c8ddeb54793b751bb9059e33d",
-        "entry_hash": "eee9be2f24f62d2349df94cb4056777c3177fef98d6456131813ea6884b0303f"
+        "prev_hash": "5cfaeb2b896123eaeb6b4edfe964c3b7c16b3cb91bae59c29e1e1d68fde0734e",
+        "entry_hash": "7490327bb4a7127de826fc60cd42723cfb8b4d7ca8405c069b0bdaddd320c3aa"
       },
       {
         "sequence": 32,
-        "timestamp": "2026-08-27T18:27:01.333089+00:00",
+        "timestamp": "2026-08-27T19:01:13.949456+00:00",
         "txn_id": "pay_medisure_0057",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2110,12 +2253,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "eee9be2f24f62d2349df94cb4056777c3177fef98d6456131813ea6884b0303f",
-        "entry_hash": "ef56042a420fa21fcbdf19b14b72fef443ffd8ded30544f966faa95ec5348ead"
+        "prev_hash": "7490327bb4a7127de826fc60cd42723cfb8b4d7ca8405c069b0bdaddd320c3aa",
+        "entry_hash": "2e2ca4b71d59d089ddc18072f9c3033a41adbd3b73fc88ca9c4c23e03f8e7aa8"
       },
       {
         "sequence": 33,
-        "timestamp": "2026-08-27T18:27:01.333089+00:00",
+        "timestamp": "2026-08-27T19:01:13.949456+00:00",
         "txn_id": "pay_medisure_0858",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2129,12 +2272,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "ef56042a420fa21fcbdf19b14b72fef443ffd8ded30544f966faa95ec5348ead",
-        "entry_hash": "757b4cfa05c4953d30189040187815d298f89abcba657e73bd8b1b8e674580c1"
+        "prev_hash": "2e2ca4b71d59d089ddc18072f9c3033a41adbd3b73fc88ca9c4c23e03f8e7aa8",
+        "entry_hash": "806fa34bc96084f9dc0b38a48e4931a3d0f83521012c5f26f7a2a43ef91be217"
       },
       {
         "sequence": 34,
-        "timestamp": "2026-08-27T18:27:01.333089+00:00",
+        "timestamp": "2026-08-27T19:01:13.949456+00:00",
         "txn_id": "pay_medisure_1020",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2148,12 +2291,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "757b4cfa05c4953d30189040187815d298f89abcba657e73bd8b1b8e674580c1",
-        "entry_hash": "d6d662f775b8daf95288d70cce629584cff00824d12f6bf7ba38a4e251682283"
+        "prev_hash": "806fa34bc96084f9dc0b38a48e4931a3d0f83521012c5f26f7a2a43ef91be217",
+        "entry_hash": "89250773bccb8c73983d4597f544348f4a73387d09e7063181a8fe5791cba683"
       },
       {
         "sequence": 35,
-        "timestamp": "2026-08-27T18:27:01.333089+00:00",
+        "timestamp": "2026-08-27T19:01:13.949456+00:00",
         "txn_id": "pay_medisure_0260",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2167,12 +2310,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "d6d662f775b8daf95288d70cce629584cff00824d12f6bf7ba38a4e251682283",
-        "entry_hash": "da52394a194816249c9c8556d46ce672361d3b3411a7dace4cc9766845af3179"
+        "prev_hash": "89250773bccb8c73983d4597f544348f4a73387d09e7063181a8fe5791cba683",
+        "entry_hash": "d4eaf6d2a5e2053435c88b64e682a43837a3e8c2c9ba29b9d2091b8a28995339"
       },
       {
         "sequence": 36,
-        "timestamp": "2026-08-27T18:27:01.333089+00:00",
+        "timestamp": "2026-08-27T19:01:13.949456+00:00",
         "txn_id": "pay_medisure_1406",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2186,12 +2329,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "da52394a194816249c9c8556d46ce672361d3b3411a7dace4cc9766845af3179",
-        "entry_hash": "6d616ee65aacab788579033c4ba2345b958668c8ea37fdd78991fdedadabd2ad"
+        "prev_hash": "d4eaf6d2a5e2053435c88b64e682a43837a3e8c2c9ba29b9d2091b8a28995339",
+        "entry_hash": "b271691cc8b17fc90c0aa8c387e3952aa8421253718eefa6055a2526e74594fc"
       },
       {
         "sequence": 37,
-        "timestamp": "2026-08-27T18:27:01.333089+00:00",
+        "timestamp": "2026-08-27T19:01:13.949456+00:00",
         "txn_id": "pay_medisure_0427",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2205,12 +2348,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "6d616ee65aacab788579033c4ba2345b958668c8ea37fdd78991fdedadabd2ad",
-        "entry_hash": "fdd28a6613054e35d3a04cdbe6afa79b872913f2288a457e276b16390e85983d"
+        "prev_hash": "b271691cc8b17fc90c0aa8c387e3952aa8421253718eefa6055a2526e74594fc",
+        "entry_hash": "a89d5d7311d5ad9a1b62c0a3657f937d088be37f5e20a374aef1e76f0cd4bdea"
       },
       {
         "sequence": 38,
-        "timestamp": "2026-08-27T18:27:01.333089+00:00",
+        "timestamp": "2026-08-27T19:01:13.949456+00:00",
         "txn_id": "pay_medisure_1295",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2224,12 +2367,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "fdd28a6613054e35d3a04cdbe6afa79b872913f2288a457e276b16390e85983d",
-        "entry_hash": "81b3e4a4b90b8a966f5e09198bf77d863d33f5dd1415d9ce79f38062fa336ea9"
+        "prev_hash": "a89d5d7311d5ad9a1b62c0a3657f937d088be37f5e20a374aef1e76f0cd4bdea",
+        "entry_hash": "53a2c7acd80a1811345703b84548c852061e7b6e80d4b524fc688008bdee062c"
       },
       {
         "sequence": 39,
-        "timestamp": "2026-08-27T18:27:01.333089+00:00",
+        "timestamp": "2026-08-27T19:01:13.949456+00:00",
         "txn_id": "pay_medisure_0227",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2243,12 +2386,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "81b3e4a4b90b8a966f5e09198bf77d863d33f5dd1415d9ce79f38062fa336ea9",
-        "entry_hash": "5c8e7692e1147cf47effe69e54d7b3597a24f6b389781576a6600df77eb0c627"
+        "prev_hash": "53a2c7acd80a1811345703b84548c852061e7b6e80d4b524fc688008bdee062c",
+        "entry_hash": "e14eb3503d0b1c7aebd5786dc020d2c66743af673b7bf9cdf5233155106181a1"
       },
       {
         "sequence": 40,
-        "timestamp": "2026-08-27T18:27:01.333089+00:00",
+        "timestamp": "2026-08-27T19:01:13.949456+00:00",
         "txn_id": "pay_medisure_0059",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2262,12 +2405,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "5c8e7692e1147cf47effe69e54d7b3597a24f6b389781576a6600df77eb0c627",
-        "entry_hash": "23a39bf871a11866bcf663e65110c0aa8b9c2dbc73088daa98acf59cc6ce4bc0"
+        "prev_hash": "e14eb3503d0b1c7aebd5786dc020d2c66743af673b7bf9cdf5233155106181a1",
+        "entry_hash": "93be427cbcff0edcb428c514cfd82e6a7a0084ec01eaca83563893983db48826"
       },
       {
         "sequence": 41,
-        "timestamp": "2026-08-27T18:27:01.333089+00:00",
+        "timestamp": "2026-08-27T19:01:13.949456+00:00",
         "txn_id": "pay_medisure_1068",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2281,12 +2424,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "23a39bf871a11866bcf663e65110c0aa8b9c2dbc73088daa98acf59cc6ce4bc0",
-        "entry_hash": "a78b282daf9a5be3822a3278a5c03e2250c06f413a59e8a6256ea89d56ef1148"
+        "prev_hash": "93be427cbcff0edcb428c514cfd82e6a7a0084ec01eaca83563893983db48826",
+        "entry_hash": "da3685d2fa68d2d583b0b6bd6f77fd722835be41be5ede497d4d9f4f0981beed"
       },
       {
         "sequence": 42,
-        "timestamp": "2026-08-27T18:27:01.333089+00:00",
+        "timestamp": "2026-08-27T19:01:13.949456+00:00",
         "txn_id": "pay_medisure_1476",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2300,12 +2443,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "a78b282daf9a5be3822a3278a5c03e2250c06f413a59e8a6256ea89d56ef1148",
-        "entry_hash": "d59fed5248be0dcf83ce27c9c458d5e2b57db3423ea07145b1a11173f31063be"
+        "prev_hash": "da3685d2fa68d2d583b0b6bd6f77fd722835be41be5ede497d4d9f4f0981beed",
+        "entry_hash": "c1745d91937720a247120100958dec297b52804f57de51d4f6c2f11c8a7348b2"
       },
       {
         "sequence": 43,
-        "timestamp": "2026-08-27T18:27:01.333089+00:00",
+        "timestamp": "2026-08-27T19:01:13.949456+00:00",
         "txn_id": "pay_medisure_0800",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2319,12 +2462,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "d59fed5248be0dcf83ce27c9c458d5e2b57db3423ea07145b1a11173f31063be",
-        "entry_hash": "d06dd9d9037014cd68b21296a8ad45ae25d4db8c74177473584f5b9ebf9e50b3"
+        "prev_hash": "c1745d91937720a247120100958dec297b52804f57de51d4f6c2f11c8a7348b2",
+        "entry_hash": "99ba3483fa5fedc45fc5fffed7d4ed7f53c45367022bb5de860cb19091e61d3f"
       },
       {
         "sequence": 44,
-        "timestamp": "2026-08-27T18:27:01.333089+00:00",
+        "timestamp": "2026-08-27T19:01:13.950455+00:00",
         "txn_id": "pay_medisure_0842",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2338,12 +2481,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "d06dd9d9037014cd68b21296a8ad45ae25d4db8c74177473584f5b9ebf9e50b3",
-        "entry_hash": "8b5da3ca1d3e250b6e399f736e2f0cfa7833d3c7df89398dd6230a33d4bf8ee4"
+        "prev_hash": "99ba3483fa5fedc45fc5fffed7d4ed7f53c45367022bb5de860cb19091e61d3f",
+        "entry_hash": "5ec8b7e93141db2fd1a8af00b9263573326e876f92d6fd5fa7cb81c5c6d1c0c6"
       },
       {
         "sequence": 45,
-        "timestamp": "2026-08-27T18:27:01.333089+00:00",
+        "timestamp": "2026-08-27T19:01:13.950455+00:00",
         "txn_id": "pay_medisure_0208",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2357,12 +2500,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "8b5da3ca1d3e250b6e399f736e2f0cfa7833d3c7df89398dd6230a33d4bf8ee4",
-        "entry_hash": "d1f9eedeeb71d1f74d84446a58844034acc7bf0924150e5195e2207ea31e616e"
+        "prev_hash": "5ec8b7e93141db2fd1a8af00b9263573326e876f92d6fd5fa7cb81c5c6d1c0c6",
+        "entry_hash": "df1ed8f1ab6856efa2b46aabb607dcc14181fcb6bdc5d724bf461e4e0a7a8452"
       },
       {
         "sequence": 46,
-        "timestamp": "2026-08-27T18:27:01.333089+00:00",
+        "timestamp": "2026-08-27T19:01:13.950455+00:00",
         "txn_id": "pay_medisure_0852",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2376,12 +2519,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "d1f9eedeeb71d1f74d84446a58844034acc7bf0924150e5195e2207ea31e616e",
-        "entry_hash": "3ca3572088c3224594af61b982ab511e9398206282ae8bab4d4e0970e4fdb1de"
+        "prev_hash": "df1ed8f1ab6856efa2b46aabb607dcc14181fcb6bdc5d724bf461e4e0a7a8452",
+        "entry_hash": "335195a415f62b4706a6be199889dd38b0b4beb0a80414932f3acf5ea94d877d"
       },
       {
         "sequence": 47,
-        "timestamp": "2026-08-27T18:27:01.333089+00:00",
+        "timestamp": "2026-08-27T19:01:13.950455+00:00",
         "txn_id": "pay_medisure_1559",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2395,12 +2538,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "3ca3572088c3224594af61b982ab511e9398206282ae8bab4d4e0970e4fdb1de",
-        "entry_hash": "aa51a387d2009b54844bc6936fcc1dc972e91b25e25ce50d6cd6f647dff26691"
+        "prev_hash": "335195a415f62b4706a6be199889dd38b0b4beb0a80414932f3acf5ea94d877d",
+        "entry_hash": "0fe27b9a7783a0070c3587e0974e89a7df6a8b1d1c7d3af648ef0b1964b5ff1a"
       },
       {
         "sequence": 48,
-        "timestamp": "2026-08-27T18:27:01.333089+00:00",
+        "timestamp": "2026-08-27T19:01:13.950455+00:00",
         "txn_id": "pay_medisure_0143",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2414,12 +2557,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "aa51a387d2009b54844bc6936fcc1dc972e91b25e25ce50d6cd6f647dff26691",
-        "entry_hash": "832f20d561fc873f88ad1f1a8bd3fecaeb12489824600480979b81524ff4cafb"
+        "prev_hash": "0fe27b9a7783a0070c3587e0974e89a7df6a8b1d1c7d3af648ef0b1964b5ff1a",
+        "entry_hash": "0d9e22fe3d8cb55fbc03e7dce1f3f8e7849563534d22873728c3cb2be2e13128"
       },
       {
         "sequence": 49,
-        "timestamp": "2026-08-27T18:27:01.334100+00:00",
+        "timestamp": "2026-08-27T19:01:13.950455+00:00",
         "txn_id": "pay_medisure_0665",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2433,12 +2576,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "832f20d561fc873f88ad1f1a8bd3fecaeb12489824600480979b81524ff4cafb",
-        "entry_hash": "2fe05958aee16f2994134cde295a1194047d5a9c66a436632c880bc409feb6ae"
+        "prev_hash": "0d9e22fe3d8cb55fbc03e7dce1f3f8e7849563534d22873728c3cb2be2e13128",
+        "entry_hash": "81d93cf1a3cfbd4fd8344283c94aba44c24ff7e7e0813f4535cc45183e499b1f"
       },
       {
         "sequence": 50,
-        "timestamp": "2026-08-27T18:27:01.334100+00:00",
+        "timestamp": "2026-08-27T19:01:13.950455+00:00",
         "txn_id": "pay_medisure_1048",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2452,12 +2595,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "2fe05958aee16f2994134cde295a1194047d5a9c66a436632c880bc409feb6ae",
-        "entry_hash": "30ad13ba23d66cfd02de633109024a4e8c06d453a29269b1f39f2e97f48568a0"
+        "prev_hash": "81d93cf1a3cfbd4fd8344283c94aba44c24ff7e7e0813f4535cc45183e499b1f",
+        "entry_hash": "7df0b20dd31fb5d6baa17ad035ffdb227cc1831586203aba3a36bcd46216673f"
       },
       {
         "sequence": 51,
-        "timestamp": "2026-08-27T18:27:01.334100+00:00",
+        "timestamp": "2026-08-27T19:01:13.950455+00:00",
         "txn_id": "pay_medisure_0536",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2471,12 +2614,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "30ad13ba23d66cfd02de633109024a4e8c06d453a29269b1f39f2e97f48568a0",
-        "entry_hash": "faed1d1dfc26b44d1089d81246c9aaa3250611818ab5f5acd4628a41a369ba3d"
+        "prev_hash": "7df0b20dd31fb5d6baa17ad035ffdb227cc1831586203aba3a36bcd46216673f",
+        "entry_hash": "c8e19f7d537636a9f48c1400cf75c5f01f2ab29a2eb39e413cab76271918d6d6"
       },
       {
         "sequence": 52,
-        "timestamp": "2026-08-27T18:27:01.334100+00:00",
+        "timestamp": "2026-08-27T19:01:13.950455+00:00",
         "txn_id": "pay_medisure_1050",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2490,12 +2633,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "faed1d1dfc26b44d1089d81246c9aaa3250611818ab5f5acd4628a41a369ba3d",
-        "entry_hash": "015809d16e9e8aceeb6ab7f8a2286909456da24b72e85212b08d9ad0019aba77"
+        "prev_hash": "c8e19f7d537636a9f48c1400cf75c5f01f2ab29a2eb39e413cab76271918d6d6",
+        "entry_hash": "f9c05ed31c410f5f22ba49232d79b5db3569fc976beb5870d039914c555e6faa"
       },
       {
         "sequence": 53,
-        "timestamp": "2026-08-27T18:27:01.334100+00:00",
+        "timestamp": "2026-08-27T19:01:13.950455+00:00",
         "txn_id": "pay_medisure_0962",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2509,12 +2652,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "015809d16e9e8aceeb6ab7f8a2286909456da24b72e85212b08d9ad0019aba77",
-        "entry_hash": "f735627b1b5059cefad508a86bc08c8c430f72887273f03f130377dff8610f1a"
+        "prev_hash": "f9c05ed31c410f5f22ba49232d79b5db3569fc976beb5870d039914c555e6faa",
+        "entry_hash": "caaae84271bd5030f58c1ce6ccd1ce45673c304184f82788b09b589a7dc6c1ba"
       },
       {
         "sequence": 54,
-        "timestamp": "2026-08-27T18:27:01.334100+00:00",
+        "timestamp": "2026-08-27T19:01:13.950455+00:00",
         "txn_id": "pay_medisure_1439",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2528,12 +2671,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "f735627b1b5059cefad508a86bc08c8c430f72887273f03f130377dff8610f1a",
-        "entry_hash": "e4b69e4c2547900ebeb98431ba1c21380ebc2767025381b9450b8c29db994bfd"
+        "prev_hash": "caaae84271bd5030f58c1ce6ccd1ce45673c304184f82788b09b589a7dc6c1ba",
+        "entry_hash": "4c878b07c1cbc547a9f54a9e853108ee0ebb2b3826e62700a90d1cd57d338822"
       },
       {
         "sequence": 55,
-        "timestamp": "2026-08-27T18:27:01.334100+00:00",
+        "timestamp": "2026-08-27T19:01:13.950455+00:00",
         "txn_id": "pay_medisure_0825",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2547,12 +2690,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "e4b69e4c2547900ebeb98431ba1c21380ebc2767025381b9450b8c29db994bfd",
-        "entry_hash": "5d037c1b574e3ed98a08be149b48281dd74df7d96622d8702caadb02d1fd8f0e"
+        "prev_hash": "4c878b07c1cbc547a9f54a9e853108ee0ebb2b3826e62700a90d1cd57d338822",
+        "entry_hash": "6e7cc96d18e8ec3e2ff9dc58cbcf5c4b903ca755d8bf8410643663dcbd427e56"
       },
       {
         "sequence": 56,
-        "timestamp": "2026-08-27T18:27:01.334100+00:00",
+        "timestamp": "2026-08-27T19:01:13.950455+00:00",
         "txn_id": "pay_medisure_0923",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2566,12 +2709,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "5d037c1b574e3ed98a08be149b48281dd74df7d96622d8702caadb02d1fd8f0e",
-        "entry_hash": "e9608b99288a6c7d98b164ca9f9f27a0fa843cf1af92ad3f9993814ef32a9680"
+        "prev_hash": "6e7cc96d18e8ec3e2ff9dc58cbcf5c4b903ca755d8bf8410643663dcbd427e56",
+        "entry_hash": "c1be3e225b2238aee5740f5e927caa3d0f25176ef6f61dca725eb4001aa67edd"
       },
       {
         "sequence": 57,
-        "timestamp": "2026-08-27T18:27:01.334100+00:00",
+        "timestamp": "2026-08-27T19:01:13.950455+00:00",
         "txn_id": "pay_medisure_0333",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2585,12 +2728,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "e9608b99288a6c7d98b164ca9f9f27a0fa843cf1af92ad3f9993814ef32a9680",
-        "entry_hash": "952e8257ef171a7126c285ac218dc38c7e62dd65fd407aa21cde78b483209432"
+        "prev_hash": "c1be3e225b2238aee5740f5e927caa3d0f25176ef6f61dca725eb4001aa67edd",
+        "entry_hash": "bd7ba3000efae24b8dff38b28cba2e86b33d94e2f2c9939043a637e5608f2f49"
       },
       {
         "sequence": 58,
-        "timestamp": "2026-08-27T18:27:01.334100+00:00",
+        "timestamp": "2026-08-27T19:01:13.950455+00:00",
         "txn_id": "pay_medisure_0742",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2604,12 +2747,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "952e8257ef171a7126c285ac218dc38c7e62dd65fd407aa21cde78b483209432",
-        "entry_hash": "a0475ef55ffbb8ee0eee9754dc477a00b5ac340554ef662b13a5ae5d5570c8d5"
+        "prev_hash": "bd7ba3000efae24b8dff38b28cba2e86b33d94e2f2c9939043a637e5608f2f49",
+        "entry_hash": "436de25dbfef307991fe86ac0bcd8cb875f963c70a82ad3c69296ab9cec5cd29"
       },
       {
         "sequence": 59,
-        "timestamp": "2026-08-27T18:27:01.334100+00:00",
+        "timestamp": "2026-08-27T19:01:13.950455+00:00",
         "txn_id": "pay_medisure_1191",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2623,12 +2766,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "a0475ef55ffbb8ee0eee9754dc477a00b5ac340554ef662b13a5ae5d5570c8d5",
-        "entry_hash": "58217c45073e62e4a56ad1d9b364496c9d324c2a3fc124f4e892c682d32757ab"
+        "prev_hash": "436de25dbfef307991fe86ac0bcd8cb875f963c70a82ad3c69296ab9cec5cd29",
+        "entry_hash": "292a6dbfdbf37ec19184e48bc5405b70da97d829cbcf26d608696fee8f89398b"
       },
       {
         "sequence": 60,
-        "timestamp": "2026-08-27T18:27:01.334100+00:00",
+        "timestamp": "2026-08-27T19:01:13.950455+00:00",
         "txn_id": "pay_medisure_1495",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2642,12 +2785,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "58217c45073e62e4a56ad1d9b364496c9d324c2a3fc124f4e892c682d32757ab",
-        "entry_hash": "4ec33814e6371d632049a86c2b93ba27e74eb93f29af4f9c5fd9a94fe1d0481c"
+        "prev_hash": "292a6dbfdbf37ec19184e48bc5405b70da97d829cbcf26d608696fee8f89398b",
+        "entry_hash": "1f0f5b1ec14f170b8c746539a585776233ad92fcffd84ee997b6f63453eee032"
       },
       {
         "sequence": 61,
-        "timestamp": "2026-08-27T18:27:01.334100+00:00",
+        "timestamp": "2026-08-27T19:01:13.951963+00:00",
         "txn_id": "pay_medisure_0614",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2661,12 +2804,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "4ec33814e6371d632049a86c2b93ba27e74eb93f29af4f9c5fd9a94fe1d0481c",
-        "entry_hash": "7e7f846045a42eb5fe5627bee1a6f283fe98b9e56d3d6e340a24076819b52762"
+        "prev_hash": "1f0f5b1ec14f170b8c746539a585776233ad92fcffd84ee997b6f63453eee032",
+        "entry_hash": "98ca84f1348df6c629cc5e555358e475e44d0a1d1afe8058395c65bf662e3669"
       },
       {
         "sequence": 62,
-        "timestamp": "2026-08-27T18:27:01.334100+00:00",
+        "timestamp": "2026-08-27T19:01:13.951963+00:00",
         "txn_id": "pay_medisure_0460",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2680,12 +2823,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "7e7f846045a42eb5fe5627bee1a6f283fe98b9e56d3d6e340a24076819b52762",
-        "entry_hash": "b5ab270939aee4036eaa57c2dd3715b736f35b41130933664dd16572bc6edfbd"
+        "prev_hash": "98ca84f1348df6c629cc5e555358e475e44d0a1d1afe8058395c65bf662e3669",
+        "entry_hash": "bf41edb6219ee54841f9264a78cd149c94fab0bbf4e67b3661e609795d8f6090"
       },
       {
         "sequence": 63,
-        "timestamp": "2026-08-27T18:27:01.334100+00:00",
+        "timestamp": "2026-08-27T19:01:13.951963+00:00",
         "txn_id": "pay_medisure_0414",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2699,12 +2842,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "b5ab270939aee4036eaa57c2dd3715b736f35b41130933664dd16572bc6edfbd",
-        "entry_hash": "f7629fbc780e55df6830b62cc33a30bbcec471b85bc0b804531022512c6ea05f"
+        "prev_hash": "bf41edb6219ee54841f9264a78cd149c94fab0bbf4e67b3661e609795d8f6090",
+        "entry_hash": "973b36a817ff5d3613abf73260130761adfbf61171c3c54e7f72d6fd397c9ddc"
       },
       {
         "sequence": 64,
-        "timestamp": "2026-08-27T18:27:01.334100+00:00",
+        "timestamp": "2026-08-27T19:01:13.951963+00:00",
         "txn_id": "pay_medisure_0949",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2718,12 +2861,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "f7629fbc780e55df6830b62cc33a30bbcec471b85bc0b804531022512c6ea05f",
-        "entry_hash": "9eecc08ecc42fed828bce5194beb4540f941b799e893907c21e79ac364e458a8"
+        "prev_hash": "973b36a817ff5d3613abf73260130761adfbf61171c3c54e7f72d6fd397c9ddc",
+        "entry_hash": "4174be92d5325c507d62766abc94d59047c2746353b56c7628636a9dfb6d6f46"
       },
       {
         "sequence": 65,
-        "timestamp": "2026-08-27T18:27:01.334100+00:00",
+        "timestamp": "2026-08-27T19:01:13.951963+00:00",
         "txn_id": "pay_medisure_0020",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2737,8 +2880,8 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "9eecc08ecc42fed828bce5194beb4540f941b799e893907c21e79ac364e458a8",
-        "entry_hash": "fe2789c5c116ca6dd957ea69d5f812ff7a3694bcfdbb9887f56eae63f5e00ad4"
+        "prev_hash": "4174be92d5325c507d62766abc94d59047c2746353b56c7628636a9dfb6d6f46",
+        "entry_hash": "82b042fb089e679f6a1fe876ce47f92f3f78f8d44a21aa145f4549ec16bec6f2"
       }
     ],
     "exceptions": {

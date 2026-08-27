@@ -1,12 +1,12 @@
 {
-  "run_id": "run_e3edebf4",
+  "run_id": "run_a84dfcf5",
   "merchant_id": "urbanthread",
   "merchant_name": "UrbanThread",
   "mcc": "5691",
   "seed": 20260824,
-  "started_at": 1787855227.0563533,
-  "duration_ms": 2717,
-  "commit": "4fc83ef",
+  "started_at": 1787857281.112612,
+  "duration_ms": 3127,
+  "commit": "c89d107",
   "models": {
     "fast": "claude-haiku-4.5",
     "reasoning": "claude-sonnet-4.6",
@@ -18,13 +18,13 @@
   "used_stubs": false,
   "traces": [
     {
-      "run_id": "run_e3edebf4",
+      "run_id": "run_a84dfcf5",
       "seq": 0,
       "node": "ingest",
       "kind": "deterministic",
       "status": "ok",
-      "started_at": 1787855229.3547554,
-      "duration_ms": 26,
+      "started_at": 1787857283.8001306,
+      "duration_ms": 28,
       "input_summary": {
         "merchant": "urbanthread",
         "mcc": "5691"
@@ -50,13 +50,13 @@
       }
     },
     {
-      "run_id": "run_e3edebf4",
+      "run_id": "run_a84dfcf5",
       "seq": 1,
       "node": "classify",
       "kind": "llm",
       "status": "ok",
-      "started_at": 1787855229.382918,
-      "duration_ms": 0,
+      "started_at": 1787857283.829036,
+      "duration_ms": 1,
       "input_summary": {
         "distinct_codes": 44,
         "failures": 103
@@ -85,12 +85,12 @@
       "intermediates": {}
     },
     {
-      "run_id": "run_e3edebf4",
+      "run_id": "run_a84dfcf5",
       "seq": 2,
       "node": "human_review",
       "kind": "deterministic",
       "status": "skipped",
-      "started_at": 1787855229.3844154,
+      "started_at": 1787857283.8310378,
       "duration_ms": 0,
       "input_summary": {},
       "output_summary": {
@@ -109,13 +109,13 @@
       "intermediates": {}
     },
     {
-      "run_id": "run_e3edebf4",
+      "run_id": "run_a84dfcf5",
       "seq": 3,
       "node": "bank_health",
       "kind": "deterministic",
       "status": "ok",
-      "started_at": 1787855229.385424,
-      "duration_ms": 1,
+      "started_at": 1787857283.8320456,
+      "duration_ms": 4,
       "input_summary": {},
       "output_summary": {
         "banks_examined": 10,
@@ -234,13 +234,13 @@
       }
     },
     {
-      "run_id": "run_e3edebf4",
+      "run_id": "run_a84dfcf5",
       "seq": 4,
       "node": "decompose",
       "kind": "deterministic",
       "status": "ok",
-      "started_at": 1787855229.3884108,
-      "duration_ms": 315,
+      "started_at": 1787857283.8370361,
+      "duration_ms": 340,
       "input_summary": {},
       "output_summary": {
         "gap_pts": 1.621,
@@ -305,12 +305,12 @@
       }
     },
     {
-      "run_id": "run_e3edebf4",
+      "run_id": "run_a84dfcf5",
       "seq": 5,
       "node": "hypothesise",
       "kind": "llm",
       "status": "ok",
-      "started_at": 1787855229.704753,
+      "started_at": 1787857284.1787972,
       "duration_ms": 18,
       "input_summary": {},
       "output_summary": {
@@ -414,13 +414,13 @@
       "intermediates": {}
     },
     {
-      "run_id": "run_e3edebf4",
+      "run_id": "run_a84dfcf5",
       "seq": 6,
       "node": "plan",
       "kind": "deterministic",
       "status": "ok",
-      "started_at": 1787855229.7237566,
-      "duration_ms": 4,
+      "started_at": 1787857284.1978755,
+      "duration_ms": 2,
       "input_summary": {},
       "output_summary": {
         "actions": 36,
@@ -487,13 +487,13 @@
       }
     },
     {
-      "run_id": "run_e3edebf4",
+      "run_id": "run_a84dfcf5",
       "seq": 7,
       "node": "gate",
       "kind": "deterministic",
       "status": "ok",
-      "started_at": 1787855229.7287848,
-      "duration_ms": 28,
+      "started_at": 1787857284.2009277,
+      "duration_ms": 24,
       "input_summary": {},
       "output_summary": {
         "decisions": {
@@ -522,12 +522,12 @@
       "intermediates": {}
     },
     {
-      "run_id": "run_e3edebf4",
+      "run_id": "run_a84dfcf5",
       "seq": 8,
       "node": "execute",
       "kind": "deterministic",
       "status": "ok",
-      "started_at": 1787855229.757921,
+      "started_at": 1787857284.2278013,
       "duration_ms": 4,
       "input_summary": {},
       "output_summary": {
@@ -553,19 +553,20 @@
       "intermediates": {}
     },
     {
-      "run_id": "run_e3edebf4",
+      "run_id": "run_a84dfcf5",
       "seq": 9,
       "node": "report",
       "kind": "deterministic",
       "status": "ok",
-      "started_at": 1787855229.7629266,
-      "duration_ms": 10,
+      "started_at": 1787857284.2328255,
+      "duration_ms": 6,
       "input_summary": {},
       "output_summary": {
         "measured_keys": [
           "observed_success_pct",
           "observed_success_ci_pct",
           "wilson_halfwidth_pts",
+          "daily_success_pct",
           "transactions",
           "failures",
           "attribution_mae_by_factor",
@@ -627,6 +628,148 @@
         90.142
       ],
       "wilson_halfwidth_pts": 2.149,
+      "daily_success_pct": [
+        {
+          "day": 1,
+          "payments": 32,
+          "success_pct": 96.875
+        },
+        {
+          "day": 2,
+          "payments": 27,
+          "success_pct": 88.889
+        },
+        {
+          "day": 3,
+          "payments": 39,
+          "success_pct": 87.179
+        },
+        {
+          "day": 4,
+          "payments": 28,
+          "success_pct": 92.857
+        },
+        {
+          "day": 5,
+          "payments": 27,
+          "success_pct": 92.593
+        },
+        {
+          "day": 6,
+          "payments": 27,
+          "success_pct": 92.593
+        },
+        {
+          "day": 7,
+          "payments": 35,
+          "success_pct": 88.571
+        },
+        {
+          "day": 8,
+          "payments": 48,
+          "success_pct": 79.167
+        },
+        {
+          "day": 9,
+          "payments": 26,
+          "success_pct": 92.308
+        },
+        {
+          "day": 10,
+          "payments": 47,
+          "success_pct": 91.489
+        },
+        {
+          "day": 11,
+          "payments": 25,
+          "success_pct": 88.0
+        },
+        {
+          "day": 12,
+          "payments": 25,
+          "success_pct": 84.0
+        },
+        {
+          "day": 13,
+          "payments": 20,
+          "success_pct": 90.0
+        },
+        {
+          "day": 14,
+          "payments": 24,
+          "success_pct": 100.0
+        },
+        {
+          "day": 15,
+          "payments": 23,
+          "success_pct": 73.913
+        },
+        {
+          "day": 16,
+          "payments": 25,
+          "success_pct": 84.0
+        },
+        {
+          "day": 17,
+          "payments": 42,
+          "success_pct": 88.095
+        },
+        {
+          "day": 18,
+          "payments": 35,
+          "success_pct": 94.286
+        },
+        {
+          "day": 19,
+          "payments": 29,
+          "success_pct": 82.759
+        },
+        {
+          "day": 20,
+          "payments": 24,
+          "success_pct": 83.333
+        },
+        {
+          "day": 21,
+          "payments": 36,
+          "success_pct": 91.667
+        },
+        {
+          "day": 22,
+          "payments": 28,
+          "success_pct": 96.429
+        },
+        {
+          "day": 23,
+          "payments": 35,
+          "success_pct": 91.429
+        },
+        {
+          "day": 24,
+          "payments": 36,
+          "success_pct": 77.778
+        },
+        {
+          "day": 25,
+          "payments": 39,
+          "success_pct": 76.923
+        },
+        {
+          "day": 26,
+          "payments": 29,
+          "success_pct": 96.552
+        },
+        {
+          "day": 27,
+          "payments": 30,
+          "success_pct": 83.333
+        },
+        {
+          "day": 28,
+          "payments": 29,
+          "success_pct": 89.655
+        }
+      ],
       "transactions": 870,
       "failures": 103,
       "attribution_mae_by_factor": {
@@ -1538,7 +1681,7 @@
     "ledger": [
       {
         "sequence": 0,
-        "timestamp": "2026-08-27T18:27:09.757920+00:00",
+        "timestamp": "2026-08-27T19:01:24.227801+00:00",
         "txn_id": "pay_urbanthread_0717",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1553,11 +1696,11 @@
         "gate_reason": "DENY_AMOUNT_ABOVE_CEILING",
         "outcome": "denied",
         "prev_hash": "0000000000000000000000000000000000000000000000000000000000000000",
-        "entry_hash": "3aa870e370bf70b2baed0c42a2539bc35399527c5bd95c6305b4251843f4994c"
+        "entry_hash": "f8da81dfcfcb6b531f21558986a7676f2dbd323c2f1acaeb2e5acfa315c32459"
       },
       {
         "sequence": 1,
-        "timestamp": "2026-08-27T18:27:09.757920+00:00",
+        "timestamp": "2026-08-27T19:01:24.228797+00:00",
         "txn_id": "pay_urbanthread_0245",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1571,12 +1714,12 @@
         "gate_decision": "deny",
         "gate_reason": "DENY_AMOUNT_ABOVE_CEILING",
         "outcome": "denied",
-        "prev_hash": "3aa870e370bf70b2baed0c42a2539bc35399527c5bd95c6305b4251843f4994c",
-        "entry_hash": "22da75b3f281735bbd27cc478657bd5e18b1575ad3aec16f3b42e7bd25d17f0b"
+        "prev_hash": "f8da81dfcfcb6b531f21558986a7676f2dbd323c2f1acaeb2e5acfa315c32459",
+        "entry_hash": "3a633cc42931030a7b9a856c75f27a0e256ff0d7d6f029723475f3dc3e3916c0"
       },
       {
         "sequence": 2,
-        "timestamp": "2026-08-27T18:27:09.757920+00:00",
+        "timestamp": "2026-08-27T19:01:24.228797+00:00",
         "txn_id": "pay_urbanthread_0531",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1590,12 +1733,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "22da75b3f281735bbd27cc478657bd5e18b1575ad3aec16f3b42e7bd25d17f0b",
-        "entry_hash": "feaf3421cbd68a714517a99203ae75c5db3efc1b19a4ad420201b0fa524e4d95"
+        "prev_hash": "3a633cc42931030a7b9a856c75f27a0e256ff0d7d6f029723475f3dc3e3916c0",
+        "entry_hash": "a93dcd0f0646dfc0ed65f37b6ade82e5085ec265cc3abdde0e5f7cb49ad0cacb"
       },
       {
         "sequence": 3,
-        "timestamp": "2026-08-27T18:27:09.757920+00:00",
+        "timestamp": "2026-08-27T19:01:24.228797+00:00",
         "txn_id": "pay_urbanthread_0805",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1609,12 +1752,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "feaf3421cbd68a714517a99203ae75c5db3efc1b19a4ad420201b0fa524e4d95",
-        "entry_hash": "67d7cba75f58cdddd0418382f1b2f1d81aa57c5b7fb7def4badcab8efdd2c838"
+        "prev_hash": "a93dcd0f0646dfc0ed65f37b6ade82e5085ec265cc3abdde0e5f7cb49ad0cacb",
+        "entry_hash": "c1f11425df6c0fcad30946ad1876501e96fd45eb2c27f1e519580f606903feac"
       },
       {
         "sequence": 4,
-        "timestamp": "2026-08-27T18:27:09.757920+00:00",
+        "timestamp": "2026-08-27T19:01:24.228797+00:00",
         "txn_id": "pay_urbanthread_0187",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1628,12 +1771,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "67d7cba75f58cdddd0418382f1b2f1d81aa57c5b7fb7def4badcab8efdd2c838",
-        "entry_hash": "26c2917ff84e0d660b61e89d3758229159a7d1bcc469f6ceabe85a06f6045ffc"
+        "prev_hash": "c1f11425df6c0fcad30946ad1876501e96fd45eb2c27f1e519580f606903feac",
+        "entry_hash": "652a74396e0824dde9d82fa713c98c3a2bb4325a0a3ab06238494cc9531bbb7c"
       },
       {
         "sequence": 5,
-        "timestamp": "2026-08-27T18:27:09.757920+00:00",
+        "timestamp": "2026-08-27T19:01:24.228797+00:00",
         "txn_id": "pay_urbanthread_0250",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1647,12 +1790,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "26c2917ff84e0d660b61e89d3758229159a7d1bcc469f6ceabe85a06f6045ffc",
-        "entry_hash": "daa5a0192b9cb8625ac203c0c98c2e55b627c64232ff0f9a06a0dbc0c3f18302"
+        "prev_hash": "652a74396e0824dde9d82fa713c98c3a2bb4325a0a3ab06238494cc9531bbb7c",
+        "entry_hash": "7d55b119f7060a638fb61a55a4d4ea129d7a2e9c4a94043135ae3af25d70eb0e"
       },
       {
         "sequence": 6,
-        "timestamp": "2026-08-27T18:27:09.757920+00:00",
+        "timestamp": "2026-08-27T19:01:24.228797+00:00",
         "txn_id": "pay_urbanthread_0813",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1666,12 +1809,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "daa5a0192b9cb8625ac203c0c98c2e55b627c64232ff0f9a06a0dbc0c3f18302",
-        "entry_hash": "b31d15a5d4b3b578147738574ec071485b75cff5649c9b6c84753e4d19fe9440"
+        "prev_hash": "7d55b119f7060a638fb61a55a4d4ea129d7a2e9c4a94043135ae3af25d70eb0e",
+        "entry_hash": "725088843c4e3effe2857c1010dc9e03fd7c51515e710234067e14f99ad2352e"
       },
       {
         "sequence": 7,
-        "timestamp": "2026-08-27T18:27:09.757920+00:00",
+        "timestamp": "2026-08-27T19:01:24.228797+00:00",
         "txn_id": "pay_urbanthread_0668",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1685,12 +1828,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "b31d15a5d4b3b578147738574ec071485b75cff5649c9b6c84753e4d19fe9440",
-        "entry_hash": "921607cec4c790707dc01f143c894fa59609c821eaa866f4128ebf6b557fe2e6"
+        "prev_hash": "725088843c4e3effe2857c1010dc9e03fd7c51515e710234067e14f99ad2352e",
+        "entry_hash": "217e8b71d45edde6e773dbffb8f01d6dcec34a33071b82404bbfd8c036971265"
       },
       {
         "sequence": 8,
-        "timestamp": "2026-08-27T18:27:09.758921+00:00",
+        "timestamp": "2026-08-27T19:01:24.228797+00:00",
         "txn_id": "pay_urbanthread_0807",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1704,12 +1847,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "921607cec4c790707dc01f143c894fa59609c821eaa866f4128ebf6b557fe2e6",
-        "entry_hash": "31e4fa3b859ac27dfdd7f068ed7137d6d02d2966e6f8b8eae5e97422501cc670"
+        "prev_hash": "217e8b71d45edde6e773dbffb8f01d6dcec34a33071b82404bbfd8c036971265",
+        "entry_hash": "06ddace05f4d13fc5bcb7ddad2247407be395440da7a71caeac586d7649c86fc"
       },
       {
         "sequence": 9,
-        "timestamp": "2026-08-27T18:27:09.758921+00:00",
+        "timestamp": "2026-08-27T19:01:24.228797+00:00",
         "txn_id": "pay_urbanthread_0203",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1723,12 +1866,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "31e4fa3b859ac27dfdd7f068ed7137d6d02d2966e6f8b8eae5e97422501cc670",
-        "entry_hash": "a2782106b77b5ca7c2528f44e36ef3d077dbebc7104eea5024bf78fe4c9a4c82"
+        "prev_hash": "06ddace05f4d13fc5bcb7ddad2247407be395440da7a71caeac586d7649c86fc",
+        "entry_hash": "e8a2c73f4724932db5ad6667c53e11e1c15ee5b79418861635159ab511e2c0a2"
       },
       {
         "sequence": 10,
-        "timestamp": "2026-08-27T18:27:09.758921+00:00",
+        "timestamp": "2026-08-27T19:01:24.228797+00:00",
         "txn_id": "pay_urbanthread_0278",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1742,12 +1885,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "a2782106b77b5ca7c2528f44e36ef3d077dbebc7104eea5024bf78fe4c9a4c82",
-        "entry_hash": "d8b5f8e73b18139a13b0ade45ab12c5fc0ba755053571cfb9d4c39401736077b"
+        "prev_hash": "e8a2c73f4724932db5ad6667c53e11e1c15ee5b79418861635159ab511e2c0a2",
+        "entry_hash": "22608e91f4779f38b7158d8d940327fc73aee8e1cf25512ca6fe05dacff7550e"
       },
       {
         "sequence": 11,
-        "timestamp": "2026-08-27T18:27:09.758921+00:00",
+        "timestamp": "2026-08-27T19:01:24.228797+00:00",
         "txn_id": "pay_urbanthread_0756",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1761,12 +1904,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "d8b5f8e73b18139a13b0ade45ab12c5fc0ba755053571cfb9d4c39401736077b",
-        "entry_hash": "3ddf4e4c5f6de27d1d1868ea32f2cb93f982fbcd91ba747d26dc932dc7447518"
+        "prev_hash": "22608e91f4779f38b7158d8d940327fc73aee8e1cf25512ca6fe05dacff7550e",
+        "entry_hash": "b7a936e2104c203cd520902ec87dbd9215a08072fe3b7fa90699824a100c7e66"
       },
       {
         "sequence": 12,
-        "timestamp": "2026-08-27T18:27:09.758921+00:00",
+        "timestamp": "2026-08-27T19:01:24.228797+00:00",
         "txn_id": "pay_urbanthread_0275",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1780,12 +1923,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "3ddf4e4c5f6de27d1d1868ea32f2cb93f982fbcd91ba747d26dc932dc7447518",
-        "entry_hash": "eb190dcc6c8a64a2e7ac4e294f9b8b9dc0aa00dac7fd62689221ad7631c06afd"
+        "prev_hash": "b7a936e2104c203cd520902ec87dbd9215a08072fe3b7fa90699824a100c7e66",
+        "entry_hash": "1ea4519e1eedf0b7521f32458fd2fc594aa83c6d707e36495f14d4e9d2c39408"
       },
       {
         "sequence": 13,
-        "timestamp": "2026-08-27T18:27:09.758921+00:00",
+        "timestamp": "2026-08-27T19:01:24.228797+00:00",
         "txn_id": "pay_urbanthread_0558",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1799,12 +1942,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "eb190dcc6c8a64a2e7ac4e294f9b8b9dc0aa00dac7fd62689221ad7631c06afd",
-        "entry_hash": "a28c2545e056f34367274c1e7e24ce77e933098eb5057c358ae4908ed9f80660"
+        "prev_hash": "1ea4519e1eedf0b7521f32458fd2fc594aa83c6d707e36495f14d4e9d2c39408",
+        "entry_hash": "36df63dd355755843dc3261c77318f2b358c633289c34321ad41e2daca0940ec"
       },
       {
         "sequence": 14,
-        "timestamp": "2026-08-27T18:27:09.758921+00:00",
+        "timestamp": "2026-08-27T19:01:24.228797+00:00",
         "txn_id": "pay_urbanthread_0437",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1818,12 +1961,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "a28c2545e056f34367274c1e7e24ce77e933098eb5057c358ae4908ed9f80660",
-        "entry_hash": "2f0dd70f8172d15c0ca9588d658255567534a2fb416a54d9da8ff249fc27e3d0"
+        "prev_hash": "36df63dd355755843dc3261c77318f2b358c633289c34321ad41e2daca0940ec",
+        "entry_hash": "b313a0bc5a76a14795bba497694c2488015cedc88cb40c4a0c1df691b65fd1cd"
       },
       {
         "sequence": 15,
-        "timestamp": "2026-08-27T18:27:09.758921+00:00",
+        "timestamp": "2026-08-27T19:01:24.229797+00:00",
         "txn_id": "pay_urbanthread_0810",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1837,12 +1980,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "2f0dd70f8172d15c0ca9588d658255567534a2fb416a54d9da8ff249fc27e3d0",
-        "entry_hash": "d2a97da9f234d05e6d8a7965fe81be9119c667af889c506ed214bff03a8e5613"
+        "prev_hash": "b313a0bc5a76a14795bba497694c2488015cedc88cb40c4a0c1df691b65fd1cd",
+        "entry_hash": "6345bce4ec617a4786846601243cddcb32ab7e1d0bf7ee0c8031b3f7d60e79f2"
       },
       {
         "sequence": 16,
-        "timestamp": "2026-08-27T18:27:09.758921+00:00",
+        "timestamp": "2026-08-27T19:01:24.229797+00:00",
         "txn_id": "pay_urbanthread_0068",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1856,12 +1999,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "d2a97da9f234d05e6d8a7965fe81be9119c667af889c506ed214bff03a8e5613",
-        "entry_hash": "ad070b5cd7c419aaf57974d0c8616e4f0e3b3a7e19abb174c671548c40eea182"
+        "prev_hash": "6345bce4ec617a4786846601243cddcb32ab7e1d0bf7ee0c8031b3f7d60e79f2",
+        "entry_hash": "86ca42e1f569ab80edc08e1a52303ec34aa146177c4ddd71764a76681a438358"
       },
       {
         "sequence": 17,
-        "timestamp": "2026-08-27T18:27:09.758921+00:00",
+        "timestamp": "2026-08-27T19:01:24.229797+00:00",
         "txn_id": "pay_urbanthread_0175",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1875,12 +2018,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "ad070b5cd7c419aaf57974d0c8616e4f0e3b3a7e19abb174c671548c40eea182",
-        "entry_hash": "4d4d0cdbe48b0940aae21e5ecaeec71bf6447ef2161c3989a575844b6137b447"
+        "prev_hash": "86ca42e1f569ab80edc08e1a52303ec34aa146177c4ddd71764a76681a438358",
+        "entry_hash": "cf1ad5568475025752260aea1c234351237fc2149060a41ddbd365d64d2371a6"
       },
       {
         "sequence": 18,
-        "timestamp": "2026-08-27T18:27:09.758921+00:00",
+        "timestamp": "2026-08-27T19:01:24.229797+00:00",
         "txn_id": "merchant:urbanthread",
         "proposed_action": {
           "action_type": "flag_for_investigation",
@@ -1894,12 +2037,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_ESCALATION",
         "outcome": "escalated",
-        "prev_hash": "4d4d0cdbe48b0940aae21e5ecaeec71bf6447ef2161c3989a575844b6137b447",
-        "entry_hash": "d8ee0aa21e8f15df7eef1411316e275be54e6628faf4aa29a1f890e16596f047"
+        "prev_hash": "cf1ad5568475025752260aea1c234351237fc2149060a41ddbd365d64d2371a6",
+        "entry_hash": "07cd7f97817ac0efbdb61108ff656c86c7242b5dd9bbc5082b7a4d0157619f6a"
       },
       {
         "sequence": 19,
-        "timestamp": "2026-08-27T18:27:09.758921+00:00",
+        "timestamp": "2026-08-27T19:01:24.229797+00:00",
         "txn_id": "merchant:urbanthread",
         "proposed_action": {
           "action_type": "flag_for_investigation",
@@ -1913,12 +2056,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_ESCALATION",
         "outcome": "escalated",
-        "prev_hash": "d8ee0aa21e8f15df7eef1411316e275be54e6628faf4aa29a1f890e16596f047",
-        "entry_hash": "0d222f819189afc52fd90a3d700e1dcbd37f11cd67da9427e45f21c817a5f670"
+        "prev_hash": "07cd7f97817ac0efbdb61108ff656c86c7242b5dd9bbc5082b7a4d0157619f6a",
+        "entry_hash": "c6c0785732bea60bc0508e171aab6f192ee5be24620d3080f7df207a494d0e28"
       },
       {
         "sequence": 20,
-        "timestamp": "2026-08-27T18:27:09.758921+00:00",
+        "timestamp": "2026-08-27T19:01:24.229797+00:00",
         "txn_id": "merchant:urbanthread",
         "proposed_action": {
           "action_type": "flag_for_investigation",
@@ -1932,12 +2075,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_ESCALATION",
         "outcome": "escalated",
-        "prev_hash": "0d222f819189afc52fd90a3d700e1dcbd37f11cd67da9427e45f21c817a5f670",
-        "entry_hash": "e755717c5e32f2076ad0521286fc0cff94fdd03e0927ee36df5ae4736fa25b89"
+        "prev_hash": "c6c0785732bea60bc0508e171aab6f192ee5be24620d3080f7df207a494d0e28",
+        "entry_hash": "6140df9a5bc13843ed85a62c74955d656012b6e8ee76cb2fabcf70b02c11c074"
       },
       {
         "sequence": 21,
-        "timestamp": "2026-08-27T18:27:09.758921+00:00",
+        "timestamp": "2026-08-27T19:01:24.229797+00:00",
         "txn_id": "merchant:urbanthread",
         "proposed_action": {
           "action_type": "flag_for_investigation",
@@ -1951,12 +2094,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_ESCALATION",
         "outcome": "escalated",
-        "prev_hash": "e755717c5e32f2076ad0521286fc0cff94fdd03e0927ee36df5ae4736fa25b89",
-        "entry_hash": "69a77a352fcee8e1ff550ea67b866b4333723a799fd5678632dbf17803f1a756"
+        "prev_hash": "6140df9a5bc13843ed85a62c74955d656012b6e8ee76cb2fabcf70b02c11c074",
+        "entry_hash": "07846b2e0633f13c9061e3defda3ed2ab5e2c6aaf661616d90300df01c69174e"
       },
       {
         "sequence": 22,
-        "timestamp": "2026-08-27T18:27:09.758921+00:00",
+        "timestamp": "2026-08-27T19:01:24.229797+00:00",
         "txn_id": "pay_urbanthread_0342",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -1970,12 +2113,12 @@
         "gate_decision": "deny",
         "gate_reason": "DENY_AMOUNT_ABOVE_CEILING",
         "outcome": "denied",
-        "prev_hash": "69a77a352fcee8e1ff550ea67b866b4333723a799fd5678632dbf17803f1a756",
-        "entry_hash": "36d5c9e8ae6aa3a0308273395766300caa3773072682c07dcdf5f40c0a624aa2"
+        "prev_hash": "07846b2e0633f13c9061e3defda3ed2ab5e2c6aaf661616d90300df01c69174e",
+        "entry_hash": "276433ee0de4746d0be8ca7db6b3e7c1be86855d45a12f126f7212e243ff0dd2"
       },
       {
         "sequence": 23,
-        "timestamp": "2026-08-27T18:27:09.758921+00:00",
+        "timestamp": "2026-08-27T19:01:24.229797+00:00",
         "txn_id": "pay_urbanthread_0650",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -1989,12 +2132,12 @@
         "gate_decision": "deny",
         "gate_reason": "DENY_AMOUNT_ABOVE_CEILING",
         "outcome": "denied",
-        "prev_hash": "36d5c9e8ae6aa3a0308273395766300caa3773072682c07dcdf5f40c0a624aa2",
-        "entry_hash": "3d39f38b1f30d95f2e84e4054ec2aa640d4bd8d5a63e36337868f913507edf2a"
+        "prev_hash": "276433ee0de4746d0be8ca7db6b3e7c1be86855d45a12f126f7212e243ff0dd2",
+        "entry_hash": "2d7f60e065c33e52edcda060df08f36e04162e428e5e8fe8f09f301500c71944"
       },
       {
         "sequence": 24,
-        "timestamp": "2026-08-27T18:27:09.758921+00:00",
+        "timestamp": "2026-08-27T19:01:24.229797+00:00",
         "txn_id": "pay_urbanthread_0331",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2008,12 +2151,12 @@
         "gate_decision": "deny",
         "gate_reason": "DENY_AMOUNT_ABOVE_CEILING",
         "outcome": "denied",
-        "prev_hash": "3d39f38b1f30d95f2e84e4054ec2aa640d4bd8d5a63e36337868f913507edf2a",
-        "entry_hash": "b34843b588e0e605e0edc96b9aea5ba4cc5daf61db0ab5bf8846ca61d441d836"
+        "prev_hash": "2d7f60e065c33e52edcda060df08f36e04162e428e5e8fe8f09f301500c71944",
+        "entry_hash": "c76351cc229f4070743f3447a7033b939cd04fa7f143d9bf39210a64a633e2cd"
       },
       {
         "sequence": 25,
-        "timestamp": "2026-08-27T18:27:09.759930+00:00",
+        "timestamp": "2026-08-27T19:01:24.229797+00:00",
         "txn_id": "pay_urbanthread_0679",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2027,12 +2170,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "b34843b588e0e605e0edc96b9aea5ba4cc5daf61db0ab5bf8846ca61d441d836",
-        "entry_hash": "e9683b4c002b00999bb8e3ea7e0ee8e23dd2aa492ffda4c5596662751c23c241"
+        "prev_hash": "c76351cc229f4070743f3447a7033b939cd04fa7f143d9bf39210a64a633e2cd",
+        "entry_hash": "00e652b3d220f7b3d64380d4ef04c04c1da848bd4aea66cf3fc0993ec6552038"
       },
       {
         "sequence": 26,
-        "timestamp": "2026-08-27T18:27:09.759930+00:00",
+        "timestamp": "2026-08-27T19:01:24.229797+00:00",
         "txn_id": "pay_urbanthread_0612",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2046,12 +2189,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "e9683b4c002b00999bb8e3ea7e0ee8e23dd2aa492ffda4c5596662751c23c241",
-        "entry_hash": "67035ebaea2efbfa9f40e313d071e2fc34a2d2490c5a5d337fe5d520108dee0a"
+        "prev_hash": "00e652b3d220f7b3d64380d4ef04c04c1da848bd4aea66cf3fc0993ec6552038",
+        "entry_hash": "a45be952ab77f4bcc5e1c2e1f164868810b82b04c13f05928ceaa08c15db6942"
       },
       {
         "sequence": 27,
-        "timestamp": "2026-08-27T18:27:09.759930+00:00",
+        "timestamp": "2026-08-27T19:01:24.229797+00:00",
         "txn_id": "pay_urbanthread_0223",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2065,12 +2208,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "67035ebaea2efbfa9f40e313d071e2fc34a2d2490c5a5d337fe5d520108dee0a",
-        "entry_hash": "1b7d6ccf0fdd39fd2b0066a346db838e030e70612027de4756182296d0f6e519"
+        "prev_hash": "a45be952ab77f4bcc5e1c2e1f164868810b82b04c13f05928ceaa08c15db6942",
+        "entry_hash": "0d7ea2a9b9fff06b009a217b2804e641126bd030611520579bfd70b9cdebf319"
       },
       {
         "sequence": 28,
-        "timestamp": "2026-08-27T18:27:09.759930+00:00",
+        "timestamp": "2026-08-27T19:01:24.229797+00:00",
         "txn_id": "pay_urbanthread_0400",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2084,12 +2227,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "1b7d6ccf0fdd39fd2b0066a346db838e030e70612027de4756182296d0f6e519",
-        "entry_hash": "f1735ecf48eb2ff63dd41c8a56ab642be6c5d838bb3648112974775f305f4ba2"
+        "prev_hash": "0d7ea2a9b9fff06b009a217b2804e641126bd030611520579bfd70b9cdebf319",
+        "entry_hash": "c2996adac54f4cdfd685070fb3c7c6a66770a4986f9804dcba49442a2d1544a2"
       },
       {
         "sequence": 29,
-        "timestamp": "2026-08-27T18:27:09.759930+00:00",
+        "timestamp": "2026-08-27T19:01:24.230787+00:00",
         "txn_id": "pay_urbanthread_0822",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2103,12 +2246,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "f1735ecf48eb2ff63dd41c8a56ab642be6c5d838bb3648112974775f305f4ba2",
-        "entry_hash": "f31248d9b3d43ca527d327a82b1be28b2f783b98e5330aa4645fbdea357684b8"
+        "prev_hash": "c2996adac54f4cdfd685070fb3c7c6a66770a4986f9804dcba49442a2d1544a2",
+        "entry_hash": "f84fbd5802ee6e7630193b2546ac2c75e3d3867745f0b441f6198b5083d0c567"
       },
       {
         "sequence": 30,
-        "timestamp": "2026-08-27T18:27:09.759930+00:00",
+        "timestamp": "2026-08-27T19:01:24.230787+00:00",
         "txn_id": "pay_urbanthread_0540",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2122,12 +2265,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "f31248d9b3d43ca527d327a82b1be28b2f783b98e5330aa4645fbdea357684b8",
-        "entry_hash": "4e15efb663d5a74ee721f3ca78f87698a048bb84808028b61746d49a32d8ee2e"
+        "prev_hash": "f84fbd5802ee6e7630193b2546ac2c75e3d3867745f0b441f6198b5083d0c567",
+        "entry_hash": "bbb14292d720e859046405a23bf3a741ed9676e2ef181d76eaa3acd34a038f54"
       },
       {
         "sequence": 31,
-        "timestamp": "2026-08-27T18:27:09.759930+00:00",
+        "timestamp": "2026-08-27T19:01:24.230787+00:00",
         "txn_id": "pay_urbanthread_0504",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2141,12 +2284,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "4e15efb663d5a74ee721f3ca78f87698a048bb84808028b61746d49a32d8ee2e",
-        "entry_hash": "ac3b7df4d8f6f914142e173fdd06aa8de240c5eb92858f011c3f142eb0103d78"
+        "prev_hash": "bbb14292d720e859046405a23bf3a741ed9676e2ef181d76eaa3acd34a038f54",
+        "entry_hash": "431fce00f22b39fd8a404beb1065f7515e3c6ab888695a53e256d4b8ca241827"
       },
       {
         "sequence": 32,
-        "timestamp": "2026-08-27T18:27:09.759930+00:00",
+        "timestamp": "2026-08-27T19:01:24.230787+00:00",
         "txn_id": "pay_urbanthread_0067",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2160,12 +2303,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "ac3b7df4d8f6f914142e173fdd06aa8de240c5eb92858f011c3f142eb0103d78",
-        "entry_hash": "676b2b096aeda05b198bae355f40439c218d055565b4a73d329d6f9d9e1dceac"
+        "prev_hash": "431fce00f22b39fd8a404beb1065f7515e3c6ab888695a53e256d4b8ca241827",
+        "entry_hash": "149300966837110b5bcc064d4d39d65f625cbf27029eba6293a0199a4f758c51"
       },
       {
         "sequence": 33,
-        "timestamp": "2026-08-27T18:27:09.759930+00:00",
+        "timestamp": "2026-08-27T19:01:24.230787+00:00",
         "txn_id": "pay_urbanthread_0429",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2179,12 +2322,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "676b2b096aeda05b198bae355f40439c218d055565b4a73d329d6f9d9e1dceac",
-        "entry_hash": "8e23a00c68b8b756f5defa4c1154ae523b16bd866c11da2454404515fe1a0665"
+        "prev_hash": "149300966837110b5bcc064d4d39d65f625cbf27029eba6293a0199a4f758c51",
+        "entry_hash": "e143145fcb3a7be60227048f0aa2abe663e4ead5144f4ae1e5b6faac814ebd5f"
       },
       {
         "sequence": 34,
-        "timestamp": "2026-08-27T18:27:09.759930+00:00",
+        "timestamp": "2026-08-27T19:01:24.230787+00:00",
         "txn_id": "pay_urbanthread_0018",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2198,12 +2341,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "8e23a00c68b8b756f5defa4c1154ae523b16bd866c11da2454404515fe1a0665",
-        "entry_hash": "ef61edbddd36091c5ff1c7328e4aed0796002db08aa8004a43aeff7b1176485b"
+        "prev_hash": "e143145fcb3a7be60227048f0aa2abe663e4ead5144f4ae1e5b6faac814ebd5f",
+        "entry_hash": "c44545cbdac7c104782674dac684a2a22144f16d6e3a9edfd6047e8113e23777"
       },
       {
         "sequence": 35,
-        "timestamp": "2026-08-27T18:27:09.759930+00:00",
+        "timestamp": "2026-08-27T19:01:24.230787+00:00",
         "txn_id": "pay_urbanthread_0294",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2217,8 +2360,8 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "ef61edbddd36091c5ff1c7328e4aed0796002db08aa8004a43aeff7b1176485b",
-        "entry_hash": "ad41840d3c7b59dd156a98794328abd8d2afe4af8be8096e3f4be7a080c248c4"
+        "prev_hash": "c44545cbdac7c104782674dac684a2a22144f16d6e3a9edfd6047e8113e23777",
+        "entry_hash": "27ad943e73d32c6c516d7e2d1fe0a601c40fbf42b5a06c8c3f7b5146f0755c98"
       }
     ],
     "exceptions": {
