@@ -1,0 +1,11 @@
+{
+  "model": "claude-haiku-4.5",
+  "provider": "openrouter",
+  "resolved_model": "anthropic/claude-haiku-4.5",
+  "schema": "merchant_claims",
+  "system": "You read a merchant's own description of what they think is wrong\nwith their payments, and extract the claims they are making.\n\nExtract ONLY claims that match one of these labels:\n  midnight_billing_penalty  charging at night / late / after hours / cron at 2am\n  bank_concentration        too much volume on one bank or issuer\n  amount_band_risk          large or high-value payments failing\n  method_mix_mismatch       a payment method being wrong or overused (UPI, card,\n                            netbanking, autopay/mandate)\n  no_soft_decline_retry     failures not being retried, no dunning, giving up\n\nRules:\n1. Quote the exact span of the merchant's text each claim came from. Do not\n   paraphrase the quote.\n2. A sentence that fits none of the labels is NOT a claim. Leave it out. Saying\n   the merchant made no extractable claim is a good answer.\n3. Do not infer a claim the merchant did not make. \"Revenue is down\" is not a\n   claim about a cause.\n4. Never invent numbers. You are extracting what they said, not analysing it.\n\nReply with JSON and nothing else:\n{\"claims\": [{\"label\": \"...\", \"quote\": \"...\", \"paraphrase\": \"...\"}]}\n",
+  "prompt": "MERCHANT NOTE\nWe moved billing to 2am and we never retry failed payments",
+  "text": "```json\n{\n  \"claims\": [\n    {\n      \"label\": \"midnight_billing_penalty\",\n      \"quote\": \"We moved billing to 2am\",\n      \"paraphrase\": \"Billing is being charged at 2am (late night)\"\n    },\n    {\n      \"label\": \"no_soft_decline_retry\",\n      \"quote\": \"we never retry failed payments\",\n      \"paraphrase\": \"Failed payments are not being retried\"\n    }\n  ]\n}\n```",
+  "tokens_in": 324,
+  "tokens_out": 121
+}
