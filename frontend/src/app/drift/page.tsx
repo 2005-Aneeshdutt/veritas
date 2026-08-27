@@ -38,10 +38,7 @@ export default function DriftPage() {
               Issuers that moved before anyone complained
             </h1>
             <p className="text-sm text-muted mt-1.5 max-w-3xl leading-relaxed">
-              Every other page waits for a merchant to have a problem. This one
-              watches NPCI&apos;s published bank series and says so first. A merchant
-              on a degrading issuer is losing money for reasons that have nothing to
-              do with anything they changed.
+              NPCI publishes bank performance monthly, and it moves. This watches it and prices the damage.
             </p>
           </div>
         </Stagger>

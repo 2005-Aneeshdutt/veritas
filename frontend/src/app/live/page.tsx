@@ -139,12 +139,8 @@ export default function LivePage() {
               <Eyebrow>Watching it happen</Eyebrow>
               <h1 className="text-2xl font-semibold mt-1">Live payment feed</h1>
               <p className="text-sm text-muted mt-1.5 max-w-3xl leading-relaxed">
-                The same payments the batch pages explain afterwards, arriving in
-                order with the detector running over them. A rolling window per
-                bank, compared against what NPCI publishes for that bank
-                nationally — and it only speaks when the confidence interval says
-                it should.
-              </p>
+                Payments arriving in order, with the detector running over them. It only speaks when the interval says it should.
+            </p>
             </div>
 
             <div className="flex items-center gap-2 flex-wrap">

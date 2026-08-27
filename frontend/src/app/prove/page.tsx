@@ -203,15 +203,7 @@ export default function ProvePage() {
             <Eyebrow>Falsification on demand</Eyebrow>
             <h1 className="text-2xl font-semibold mt-1">Prove it</h1>
             <p className="text-sm text-muted mt-1.5 max-w-3xl leading-relaxed">
-              You choose the merchant. The answer is computed analytically before a
-              single payment is sampled, and its SHA-256 is published{" "}
-              <em>before</em> the engine runs. Then the engine sees the payments and
-              nothing else. Break the seal at the end and check the hash yourself.
-              <br />
-              <span className="text-ink">
-                Nobody working on real merchant data can run this — because nobody
-                knows the real answer.
-              </span>
+              You choose the merchant. The answer is hashed before the engine runs. Break the seal and check it yourself.
             </p>
           </div>
         </Stagger>
