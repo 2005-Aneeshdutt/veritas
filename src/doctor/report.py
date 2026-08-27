@@ -27,6 +27,7 @@ from chitragupta.rails.mock_rail import Calibration, p_retry_success
 from chitragupta.types import AUTO_EXECUTABLE, PolicyDecision
 
 from .features import RECOVERABLE
+from .fault import attribute
 from .stats import is_underpowered, wilson_interval, wilson_halfwidth_pts
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -212,6 +213,12 @@ def build_report(s) -> dict:
             # chart drawn from the first 50 of 113 would be a lie with a
             # legend on it.
             "unrecoverable_by_class": _by_class(unrecoverable),
+            # Whose move is it. Computed over EVERY unrecoverable payment, not
+            # the capped row sample -- the merchant's own share is the whole
+            # point and truncating it would hide most of it.
+            "unrecoverable_by_fault": [
+                g.model_dump(mode="json") for g in attribute(unrecoverable)
+            ],
             "unrecoverable_sample_size": min(50, len(unrecoverable)),
             "unrecoverable_transactions": [
                 {
