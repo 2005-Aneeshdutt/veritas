@@ -1,12 +1,12 @@
 {
-  "run_id": "run_54112ac2",
+  "run_id": "run_4806fae9",
   "merchant_id": "medisure",
   "merchant_name": "MediSure Pharmacy",
   "mcc": "5912",
   "seed": 20260824,
-  "started_at": 1787825899.4756768,
-  "duration_ms": 2857,
-  "commit": "2526381",
+  "started_at": 1787826813.1103513,
+  "duration_ms": 2714,
+  "commit": "6ca2278",
   "models": {
     "fast": "claude-haiku-4.5",
     "reasoning": "claude-sonnet-4.6",
@@ -18,13 +18,13 @@
   "used_stubs": false,
   "traces": [
     {
-      "run_id": "run_54112ac2",
+      "run_id": "run_4806fae9",
       "seq": 0,
       "node": "ingest",
       "kind": "deterministic",
       "status": "ok",
-      "started_at": 1787825901.7429347,
-      "duration_ms": 33,
+      "started_at": 1787826815.2561595,
+      "duration_ms": 23,
       "input_summary": {
         "merchant": "medisure",
         "mcc": "5912"
@@ -50,13 +50,13 @@
       }
     },
     {
-      "run_id": "run_54112ac2",
+      "run_id": "run_4806fae9",
       "seq": 1,
       "node": "classify",
       "kind": "llm",
       "status": "ok",
-      "started_at": 1787825901.7769384,
-      "duration_ms": 2,
+      "started_at": 1787826815.2807102,
+      "duration_ms": 1,
       "input_summary": {
         "distinct_codes": 57,
         "failures": 193
@@ -85,12 +85,12 @@
       "intermediates": {}
     },
     {
-      "run_id": "run_54112ac2",
+      "run_id": "run_4806fae9",
       "seq": 2,
       "node": "human_review",
       "kind": "deterministic",
       "status": "skipped",
-      "started_at": 1787825901.7798336,
+      "started_at": 1787826815.2822547,
       "duration_ms": 0,
       "input_summary": {},
       "output_summary": {
@@ -109,13 +109,13 @@
       "intermediates": {}
     },
     {
-      "run_id": "run_54112ac2",
+      "run_id": "run_4806fae9",
       "seq": 3,
       "node": "bank_health",
       "kind": "deterministic",
       "status": "ok",
-      "started_at": 1787825901.7808352,
-      "duration_ms": 6,
+      "started_at": 1787826815.2822547,
+      "duration_ms": 4,
       "input_summary": {},
       "output_summary": {
         "banks_examined": 10,
@@ -234,13 +234,13 @@
       }
     },
     {
-      "run_id": "run_54112ac2",
+      "run_id": "run_4806fae9",
       "seq": 4,
       "node": "decompose",
       "kind": "deterministic",
       "status": "ok",
-      "started_at": 1787825901.7888293,
-      "duration_ms": 503,
+      "started_at": 1787826815.2878656,
+      "duration_ms": 486,
       "input_summary": {},
       "output_summary": {
         "gap_pts": 3.796,
@@ -301,13 +301,13 @@
       }
     },
     {
-      "run_id": "run_54112ac2",
+      "run_id": "run_4806fae9",
       "seq": 5,
       "node": "hypothesise",
       "kind": "llm",
       "status": "ok",
-      "started_at": 1787825902.294001,
-      "duration_ms": 2,
+      "started_at": 1787826815.7744124,
+      "duration_ms": 1,
       "input_summary": {},
       "output_summary": {
         "primary_label": "bank_concentration",
@@ -358,16 +358,16 @@
       "intermediates": {}
     },
     {
-      "run_id": "run_54112ac2",
+      "run_id": "run_4806fae9",
       "seq": 6,
       "node": "plan",
       "kind": "deterministic",
       "status": "ok",
-      "started_at": 1787825902.2970068,
-      "duration_ms": 2,
+      "started_at": 1787826815.777407,
+      "duration_ms": 3,
       "input_summary": {},
       "output_summary": {
-        "actions": 27,
+        "actions": 66,
         "withheld": 3,
         "headline": "5 fixes proposed, 3 withheld because the attribution is inside its own error bar.",
         "withheld_detail": [
@@ -422,21 +422,21 @@
       }
     },
     {
-      "run_id": "run_54112ac2",
+      "run_id": "run_4806fae9",
       "seq": 7,
       "node": "gate",
       "kind": "deterministic",
       "status": "ok",
-      "started_at": 1787825902.2999973,
-      "duration_ms": 22,
+      "started_at": 1787826815.7804127,
+      "duration_ms": 30,
       "input_summary": {},
       "output_summary": {
         "decisions": {
           "allow": 21,
-          "step_up": 4,
-          "deny": 2
+          "step_up": 40,
+          "deny": 5
         },
-        "total": 27
+        "total": 66
       },
       "branch_taken": "execute",
       "model": null,
@@ -452,24 +452,25 @@
         "OK_ESCALATION",
         "OK_MERCHANT_ACTION",
         "OK_WITHIN_MANDATE",
-        "STEP_UP_ABOVE_AUTO_LIMIT"
+        "STEP_UP_ABOVE_AUTO_LIMIT",
+        "STEP_UP_MERCHANT_APPROVAL_REQUESTED"
       ],
       "intermediates": {}
     },
     {
-      "run_id": "run_54112ac2",
+      "run_id": "run_4806fae9",
       "seq": 8,
       "node": "execute",
       "kind": "deterministic",
       "status": "ok",
-      "started_at": 1787825902.3231096,
-      "duration_ms": 4,
+      "started_at": 1787826815.811407,
+      "duration_ms": 5,
       "input_summary": {},
       "output_summary": {
         "executed": 18,
         "recovered_paise": 412546,
         "recovered_inr": 4125.46,
-        "ledger_entries": 27,
+        "ledger_entries": 66,
         "chain_verified": true,
         "calibration": "central"
       },
@@ -488,13 +489,13 @@
       "intermediates": {}
     },
     {
-      "run_id": "run_54112ac2",
+      "run_id": "run_4806fae9",
       "seq": 9,
       "node": "report",
       "kind": "deterministic",
       "status": "ok",
-      "started_at": 1787825902.3281283,
-      "duration_ms": 4,
+      "started_at": 1787826815.8184032,
+      "duration_ms": 5,
       "input_summary": {},
       "output_summary": {
         "measured_keys": [
@@ -1134,7 +1135,7 @@
         ]
       },
       "mandate_violations": 0,
-      "ledger_entries": 27,
+      "ledger_entries": 66,
       "chain_verified": true,
       "chain_detail": "chain verified from genesis to head",
       "efficiency_check": {
@@ -1443,26 +1444,27 @@
           "reason": "attribution 0.01 pts is inside its own measured error of +/-0.58 pts -- the engine cannot tell this from zero"
         }
       ],
-      "actions": 27
+      "actions": 66
     },
     "gate": {
       "decisions": {
         "allow": 21,
-        "step_up": 4,
-        "deny": 2
+        "step_up": 40,
+        "deny": 5
       },
       "reason_codes": [
         "DENY_AMOUNT_ABOVE_CEILING",
         "OK_ESCALATION",
         "OK_MERCHANT_ACTION",
         "OK_WITHIN_MANDATE",
-        "STEP_UP_ABOVE_AUTO_LIMIT"
+        "STEP_UP_ABOVE_AUTO_LIMIT",
+        "STEP_UP_MERCHANT_APPROVAL_REQUESTED"
       ]
     },
     "ledger": [
       {
         "sequence": 0,
-        "timestamp": "2026-08-27T10:18:22.324112+00:00",
+        "timestamp": "2026-08-27T10:33:35.812402+00:00",
         "txn_id": "merchant:medisure",
         "proposed_action": {
           "action_type": "enable_multi_bank_routing",
@@ -1477,49 +1479,49 @@
         "gate_reason": "OK_MERCHANT_ACTION",
         "outcome": "merchant_action",
         "prev_hash": "0000000000000000000000000000000000000000000000000000000000000000",
-        "entry_hash": "55f0c596517663995d4c9b2c01c8f89a2a2c518e6a7a181bb15122135cfa6739"
+        "entry_hash": "b90e2030b08bd4067fd919a6d7bfddbb2e6943b982c6b982ceb723f215573368"
       },
       {
         "sequence": 1,
-        "timestamp": "2026-08-27T10:18:22.324112+00:00",
+        "timestamp": "2026-08-27T10:33:35.812402+00:00",
         "txn_id": "pay_medisure_0250",
         "proposed_action": {
           "action_type": "retry_soft_decline",
           "txn_id": "pay_medisure_0250",
           "amount_paise": 1565176,
           "target_bank": "Airtel Payments Bank Limited",
-          "scheduled_time": "2026-08-27T10:18:22.297006+00:00",
-          "reason": "Enable automatic soft-decline retry logic on the payment gateway so that recoverable failure codes are retried at least once before the transaction is finalised as failed. (transaction_limit_exceeded), unretried -- retry at +84.3h, past the plateau; intent goes stale",
+          "scheduled_time": "2026-08-27T10:33:35.777407+00:00",
+          "reason": "Enable automatic soft-decline retry logic on the payment gateway so that recoverable failure codes are retried at least once before the transaction is finalised as failed. (transaction_limit_exceeded), unretried -- retry at +84.6h, past the plateau; intent goes stale",
           "requires_merchant_approval": false
         },
         "gate_decision": "deny",
         "gate_reason": "DENY_AMOUNT_ABOVE_CEILING",
         "outcome": "denied",
-        "prev_hash": "55f0c596517663995d4c9b2c01c8f89a2a2c518e6a7a181bb15122135cfa6739",
-        "entry_hash": "82ad33e41fa07f992e3033ae047392f7bf2321e42cd3402be309958f45345e7d"
+        "prev_hash": "b90e2030b08bd4067fd919a6d7bfddbb2e6943b982c6b982ceb723f215573368",
+        "entry_hash": "802fc6f8884e492032185e64866298eee645f647af01380c312ae6748012ad49"
       },
       {
         "sequence": 2,
-        "timestamp": "2026-08-27T10:18:22.324112+00:00",
+        "timestamp": "2026-08-27T10:33:35.812402+00:00",
         "txn_id": "pay_medisure_1365",
         "proposed_action": {
           "action_type": "retry_soft_decline",
           "txn_id": "pay_medisure_1365",
           "amount_paise": 827932,
           "target_bank": "Punjab National Bank",
-          "scheduled_time": "2026-08-27T10:18:22.298011+00:00",
-          "reason": "Enable automatic soft-decline retry logic on the payment gateway so that recoverable failure codes are retried at least once before the transaction is finalised as failed. (transaction_daily_limit_exceeded), unretried -- retry at +94.3h, past the plateau; intent goes stale",
+          "scheduled_time": "2026-08-27T10:33:35.777407+00:00",
+          "reason": "Enable automatic soft-decline retry logic on the payment gateway so that recoverable failure codes are retried at least once before the transaction is finalised as failed. (transaction_daily_limit_exceeded), unretried -- retry at +94.6h, past the plateau; intent goes stale",
           "requires_merchant_approval": false
         },
         "gate_decision": "deny",
         "gate_reason": "DENY_AMOUNT_ABOVE_CEILING",
         "outcome": "denied",
-        "prev_hash": "82ad33e41fa07f992e3033ae047392f7bf2321e42cd3402be309958f45345e7d",
-        "entry_hash": "11cdc331ef54987b1d75faba916daebf7f5e4195af57f08c932329918b3258a6"
+        "prev_hash": "802fc6f8884e492032185e64866298eee645f647af01380c312ae6748012ad49",
+        "entry_hash": "d77f3cc11c3531b195d40f5c2f8fc4eeb7e83419dc27d227c53fa4143177042d"
       },
       {
         "sequence": 3,
-        "timestamp": "2026-08-27T10:18:22.324112+00:00",
+        "timestamp": "2026-08-27T10:33:35.812402+00:00",
         "txn_id": "pay_medisure_0513",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1533,31 +1535,31 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "11cdc331ef54987b1d75faba916daebf7f5e4195af57f08c932329918b3258a6",
-        "entry_hash": "a5b96e2b7c063ed391a9911964f096fa76426ed9e421e4f56e943abb8252d761"
+        "prev_hash": "d77f3cc11c3531b195d40f5c2f8fc4eeb7e83419dc27d227c53fa4143177042d",
+        "entry_hash": "db9c3def05e637647092ea5c60fa0d8d362dde3f124a1a3878a04be1fe37f055"
       },
       {
         "sequence": 4,
-        "timestamp": "2026-08-27T10:18:22.324112+00:00",
+        "timestamp": "2026-08-27T10:33:35.812402+00:00",
         "txn_id": "pay_medisure_0822",
         "proposed_action": {
           "action_type": "retry_soft_decline",
           "txn_id": "pay_medisure_0822",
           "amount_paise": 211199,
           "target_bank": "Airtel Payments Bank Limited",
-          "scheduled_time": "2026-08-27T10:18:22.298011+00:00",
-          "reason": "Enable automatic soft-decline retry logic on the payment gateway so that recoverable failure codes are retried at least once before the transaction is finalised as failed. (insufficient_funds), unretried -- retry at +40.3h, the plateau: long enough for the balance to have changed",
+          "scheduled_time": "2026-08-27T10:33:35.778403+00:00",
+          "reason": "Enable automatic soft-decline retry logic on the payment gateway so that recoverable failure codes are retried at least once before the transaction is finalised as failed. (insufficient_funds), unretried -- retry at +40.6h, the plateau: long enough for the balance to have changed",
           "requires_merchant_approval": false
         },
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "a5b96e2b7c063ed391a9911964f096fa76426ed9e421e4f56e943abb8252d761",
-        "entry_hash": "b59fc71e5aaeda518af6450a6c94b09da87121285780a73af81aa0aa3bb9929d"
+        "prev_hash": "db9c3def05e637647092ea5c60fa0d8d362dde3f124a1a3878a04be1fe37f055",
+        "entry_hash": "3eca9f98eaf95a67987482c827ecdc2a678f61ba21c12f8b12117de4abfe81ac"
       },
       {
         "sequence": 5,
-        "timestamp": "2026-08-27T10:18:22.324112+00:00",
+        "timestamp": "2026-08-27T10:33:35.812402+00:00",
         "txn_id": "pay_medisure_1137",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1571,31 +1573,31 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "b59fc71e5aaeda518af6450a6c94b09da87121285780a73af81aa0aa3bb9929d",
-        "entry_hash": "3c121a98956e272593e9f2e330ef4f676253bb19bb3fd0eda537371404cf4017"
+        "prev_hash": "3eca9f98eaf95a67987482c827ecdc2a678f61ba21c12f8b12117de4abfe81ac",
+        "entry_hash": "406b83e04e321a1774db0dae491b959ceb64e91ab9db78b4982dfb3d1eb39b02"
       },
       {
         "sequence": 6,
-        "timestamp": "2026-08-27T10:18:22.324112+00:00",
+        "timestamp": "2026-08-27T10:33:35.812402+00:00",
         "txn_id": "pay_medisure_1009",
         "proposed_action": {
           "action_type": "retry_soft_decline",
           "txn_id": "pay_medisure_1009",
           "amount_paise": 93769,
           "target_bank": "Airtel Payments Bank Limited",
-          "scheduled_time": "2026-08-27T10:18:22.298011+00:00",
-          "reason": "Enable automatic soft-decline retry logic on the payment gateway so that recoverable failure codes are retried at least once before the transaction is finalised as failed. (transaction_frequency_limit_exceeded), unretried -- retry at +114.3h, past the plateau; intent goes stale",
+          "scheduled_time": "2026-08-27T10:33:35.778403+00:00",
+          "reason": "Enable automatic soft-decline retry logic on the payment gateway so that recoverable failure codes are retried at least once before the transaction is finalised as failed. (transaction_frequency_limit_exceeded), unretried -- retry at +114.6h, past the plateau; intent goes stale",
           "requires_merchant_approval": false
         },
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "3c121a98956e272593e9f2e330ef4f676253bb19bb3fd0eda537371404cf4017",
-        "entry_hash": "f50b1176871514066ddfaaab1479dd89ae1d82ca1ae9fb94f10449c515fb5496"
+        "prev_hash": "406b83e04e321a1774db0dae491b959ceb64e91ab9db78b4982dfb3d1eb39b02",
+        "entry_hash": "00b376503749cabaac1bd408040dc829ab0d5f35aeece65c79a1debc89c2d29a"
       },
       {
         "sequence": 7,
-        "timestamp": "2026-08-27T10:18:22.325112+00:00",
+        "timestamp": "2026-08-27T10:33:35.812402+00:00",
         "txn_id": "pay_medisure_1266",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1609,12 +1611,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "f50b1176871514066ddfaaab1479dd89ae1d82ca1ae9fb94f10449c515fb5496",
-        "entry_hash": "ca40d35c9a727bdbd9f66bc2c063be8e74469e72a94683a99629a5c941f6bfd8"
+        "prev_hash": "00b376503749cabaac1bd408040dc829ab0d5f35aeece65c79a1debc89c2d29a",
+        "entry_hash": "d8c2730824c7aaefe771085a7230e7b72352384be2bde924b183b5c1a6172eec"
       },
       {
         "sequence": 8,
-        "timestamp": "2026-08-27T10:18:22.325112+00:00",
+        "timestamp": "2026-08-27T10:33:35.813408+00:00",
         "txn_id": "pay_medisure_0314",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1628,31 +1630,31 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "ca40d35c9a727bdbd9f66bc2c063be8e74469e72a94683a99629a5c941f6bfd8",
-        "entry_hash": "b68130da038fc8ae8ce74f9a2e77451c037ed833a68cb857e071c4cba9a41e6f"
+        "prev_hash": "d8c2730824c7aaefe771085a7230e7b72352384be2bde924b183b5c1a6172eec",
+        "entry_hash": "3dfa3cd65df8a42b6a545793a9aeffe0e99e5aba8041f9ba736c7e61977da784"
       },
       {
         "sequence": 9,
-        "timestamp": "2026-08-27T10:18:22.325112+00:00",
+        "timestamp": "2026-08-27T10:33:35.813408+00:00",
         "txn_id": "pay_medisure_0608",
         "proposed_action": {
           "action_type": "retry_soft_decline",
           "txn_id": "pay_medisure_0608",
           "amount_paise": 82969,
           "target_bank": "State Bank of India",
-          "scheduled_time": "2026-08-27T10:18:22.298011+00:00",
-          "reason": "Enable automatic soft-decline retry logic on the payment gateway so that recoverable failure codes are retried at least once before the transaction is finalised as failed. (transaction_frequency_limit_exceeded), unretried -- retry at +121.3h, past the plateau; intent goes stale",
+          "scheduled_time": "2026-08-27T10:33:35.778403+00:00",
+          "reason": "Enable automatic soft-decline retry logic on the payment gateway so that recoverable failure codes are retried at least once before the transaction is finalised as failed. (transaction_frequency_limit_exceeded), unretried -- retry at +121.6h, past the plateau; intent goes stale",
           "requires_merchant_approval": false
         },
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "b68130da038fc8ae8ce74f9a2e77451c037ed833a68cb857e071c4cba9a41e6f",
-        "entry_hash": "9d2966e1105ed4ac86f9a115a2d0815c1d8d0a39cafca9d995bd37e11487ccb6"
+        "prev_hash": "3dfa3cd65df8a42b6a545793a9aeffe0e99e5aba8041f9ba736c7e61977da784",
+        "entry_hash": "e76f7e3b27ed308f278dbaaeebb93041c160376d9dee30860481af3621f80f0c"
       },
       {
         "sequence": 10,
-        "timestamp": "2026-08-27T10:18:22.325112+00:00",
+        "timestamp": "2026-08-27T10:33:35.813408+00:00",
         "txn_id": "pay_medisure_1168",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1666,12 +1668,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "9d2966e1105ed4ac86f9a115a2d0815c1d8d0a39cafca9d995bd37e11487ccb6",
-        "entry_hash": "4a616583d6ac460333b5743dbad942ce32e3e89c80f8545ce3f0ba94c5b24a09"
+        "prev_hash": "e76f7e3b27ed308f278dbaaeebb93041c160376d9dee30860481af3621f80f0c",
+        "entry_hash": "cebac3a47a491e2e39d5bbd927f27fa74cf7958d279b23495399c052e94a512d"
       },
       {
         "sequence": 11,
-        "timestamp": "2026-08-27T10:18:22.325112+00:00",
+        "timestamp": "2026-08-27T10:33:35.813408+00:00",
         "txn_id": "pay_medisure_0326",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1685,50 +1687,50 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "4a616583d6ac460333b5743dbad942ce32e3e89c80f8545ce3f0ba94c5b24a09",
-        "entry_hash": "5ebe8de8d1c2c780745211fbec565bfe0a329a9fb696e4f86c2f90e70aa68b73"
+        "prev_hash": "cebac3a47a491e2e39d5bbd927f27fa74cf7958d279b23495399c052e94a512d",
+        "entry_hash": "03b45a34137b01ba1a801a836afb7a1e41d05cbe953d5ff856ef1b774bab690a"
       },
       {
         "sequence": 12,
-        "timestamp": "2026-08-27T10:18:22.325112+00:00",
+        "timestamp": "2026-08-27T10:33:35.813408+00:00",
         "txn_id": "pay_medisure_0129",
         "proposed_action": {
           "action_type": "retry_soft_decline",
           "txn_id": "pay_medisure_0129",
           "amount_paise": 69628,
           "target_bank": "Bank Of India",
-          "scheduled_time": "2026-08-27T10:18:22.298011+00:00",
-          "reason": "Enable automatic soft-decline retry logic on the payment gateway so that recoverable failure codes are retried at least once before the transaction is finalised as failed. (capture_failed), unretried -- retry at +62.3h, last look before the odds fall away",
+          "scheduled_time": "2026-08-27T10:33:35.778403+00:00",
+          "reason": "Enable automatic soft-decline retry logic on the payment gateway so that recoverable failure codes are retried at least once before the transaction is finalised as failed. (capture_failed), unretried -- retry at +62.6h, last look before the odds fall away",
           "requires_merchant_approval": false
         },
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "5ebe8de8d1c2c780745211fbec565bfe0a329a9fb696e4f86c2f90e70aa68b73",
-        "entry_hash": "6e876ead4fd68ac14a51519c80845f4b00f7d77ad07b1b09e31337b4674142e8"
+        "prev_hash": "03b45a34137b01ba1a801a836afb7a1e41d05cbe953d5ff856ef1b774bab690a",
+        "entry_hash": "616cfe05bda90b8ccd5d83f0c5c4b32c1d658a5dea010306dae3a15cc78eac2b"
       },
       {
         "sequence": 13,
-        "timestamp": "2026-08-27T10:18:22.326110+00:00",
+        "timestamp": "2026-08-27T10:33:35.813408+00:00",
         "txn_id": "pay_medisure_0722",
         "proposed_action": {
           "action_type": "retry_soft_decline",
           "txn_id": "pay_medisure_0722",
           "amount_paise": 67788,
           "target_bank": "Airtel Payments Bank Limited",
-          "scheduled_time": "2026-08-27T10:18:22.298011+00:00",
-          "reason": "Enable automatic soft-decline retry logic on the payment gateway so that recoverable failure codes are retried at least once before the transaction is finalised as failed. (record_not_found), unretried -- retry at +67.3h, last look before the odds fall away",
+          "scheduled_time": "2026-08-27T10:33:35.778403+00:00",
+          "reason": "Enable automatic soft-decline retry logic on the payment gateway so that recoverable failure codes are retried at least once before the transaction is finalised as failed. (record_not_found), unretried -- retry at +67.6h, last look before the odds fall away",
           "requires_merchant_approval": false
         },
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "6e876ead4fd68ac14a51519c80845f4b00f7d77ad07b1b09e31337b4674142e8",
-        "entry_hash": "892b5a0fa9377327ff8ddbde0248de6c1d7d0c002bdf8d16ed3e37533672de9b"
+        "prev_hash": "616cfe05bda90b8ccd5d83f0c5c4b32c1d658a5dea010306dae3a15cc78eac2b",
+        "entry_hash": "f09a128a87e01d31066f9cbdbf0312f762a920879ae66b55cfa66b4d9a1a63e7"
       },
       {
         "sequence": 14,
-        "timestamp": "2026-08-27T10:18:22.326110+00:00",
+        "timestamp": "2026-08-27T10:33:35.813408+00:00",
         "txn_id": "pay_medisure_1152",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1742,50 +1744,50 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "892b5a0fa9377327ff8ddbde0248de6c1d7d0c002bdf8d16ed3e37533672de9b",
-        "entry_hash": "51c7bccc8aa1f8540d9bfb2feeeb66e600b840418455726b646ab010ed699239"
+        "prev_hash": "f09a128a87e01d31066f9cbdbf0312f762a920879ae66b55cfa66b4d9a1a63e7",
+        "entry_hash": "1472f186e337e7a8dc1aa063e88b7dd88edefbfe1a08dbdfd5c60d4ea56971fd"
       },
       {
         "sequence": 15,
-        "timestamp": "2026-08-27T10:18:22.326110+00:00",
+        "timestamp": "2026-08-27T10:33:35.813408+00:00",
         "txn_id": "pay_medisure_0727",
         "proposed_action": {
           "action_type": "retry_soft_decline",
           "txn_id": "pay_medisure_0727",
           "amount_paise": 45454,
           "target_bank": "Airtel Payments Bank Limited",
-          "scheduled_time": "2026-08-27T10:18:22.298011+00:00",
-          "reason": "Enable automatic soft-decline retry logic on the payment gateway so that recoverable failure codes are retried at least once before the transaction is finalised as failed. (credit_limit_exceeded), unretried -- retry at +70.3h, the plateau: long enough for the balance to have changed",
+          "scheduled_time": "2026-08-27T10:33:35.778403+00:00",
+          "reason": "Enable automatic soft-decline retry logic on the payment gateway so that recoverable failure codes are retried at least once before the transaction is finalised as failed. (credit_limit_exceeded), unretried -- retry at +70.6h, the plateau: long enough for the balance to have changed",
           "requires_merchant_approval": false
         },
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "51c7bccc8aa1f8540d9bfb2feeeb66e600b840418455726b646ab010ed699239",
-        "entry_hash": "70c12824c5bc7026c958928bbfabd7c91516907dccb696aa30fcc812305f1a8c"
+        "prev_hash": "1472f186e337e7a8dc1aa063e88b7dd88edefbfe1a08dbdfd5c60d4ea56971fd",
+        "entry_hash": "2732af1d5332ca3fa0dc7cdf2b5b5f8408580b7082558120fe6a0051eedc15ce"
       },
       {
         "sequence": 16,
-        "timestamp": "2026-08-27T10:18:22.326110+00:00",
+        "timestamp": "2026-08-27T10:33:35.813408+00:00",
         "txn_id": "pay_medisure_1347",
         "proposed_action": {
           "action_type": "retry_soft_decline",
           "txn_id": "pay_medisure_1347",
           "amount_paise": 42937,
           "target_bank": "State Bank of India",
-          "scheduled_time": "2026-08-27T10:18:22.298011+00:00",
-          "reason": "Enable automatic soft-decline retry logic on the payment gateway so that recoverable failure codes are retried at least once before the transaction is finalised as failed. (request_timed_out), unretried -- retry at +74.3h, last look before the odds fall away",
+          "scheduled_time": "2026-08-27T10:33:35.778403+00:00",
+          "reason": "Enable automatic soft-decline retry logic on the payment gateway so that recoverable failure codes are retried at least once before the transaction is finalised as failed. (request_timed_out), unretried -- retry at +74.6h, last look before the odds fall away",
           "requires_merchant_approval": false
         },
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "70c12824c5bc7026c958928bbfabd7c91516907dccb696aa30fcc812305f1a8c",
-        "entry_hash": "3ba2f9c1ff94f01baf7f342a6c6f029cd273d1d623aebf9380ccde27b1f6ceb8"
+        "prev_hash": "2732af1d5332ca3fa0dc7cdf2b5b5f8408580b7082558120fe6a0051eedc15ce",
+        "entry_hash": "5411d34208bc377b2aa0e2ae8702fa543a57ef24995e89e187d0fa6bb81f3672"
       },
       {
         "sequence": 17,
-        "timestamp": "2026-08-27T10:18:22.326110+00:00",
+        "timestamp": "2026-08-27T10:33:35.813408+00:00",
         "txn_id": "pay_medisure_1308",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1799,31 +1801,31 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "3ba2f9c1ff94f01baf7f342a6c6f029cd273d1d623aebf9380ccde27b1f6ceb8",
-        "entry_hash": "b50adc038578c00fc65560044342b1b03238507bf4823d64bf9511a0f1c69409"
+        "prev_hash": "5411d34208bc377b2aa0e2ae8702fa543a57ef24995e89e187d0fa6bb81f3672",
+        "entry_hash": "4da689e18e6ce7db934c3d8d9cc6608a4aa8f1a737d1bb7e70dd6fe000fcead5"
       },
       {
         "sequence": 18,
-        "timestamp": "2026-08-27T10:18:22.326110+00:00",
+        "timestamp": "2026-08-27T10:33:35.813408+00:00",
         "txn_id": "pay_medisure_0983",
         "proposed_action": {
           "action_type": "retry_soft_decline",
           "txn_id": "pay_medisure_0983",
           "amount_paise": 15061,
           "target_bank": "UCO Bank",
-          "scheduled_time": "2026-08-27T10:18:22.299055+00:00",
-          "reason": "Enable automatic soft-decline retry logic on the payment gateway so that recoverable failure codes are retried at least once before the transaction is finalised as failed. (credit_failed), unretried -- retry at +40.3h, last look before the odds fall away",
+          "scheduled_time": "2026-08-27T10:33:35.778403+00:00",
+          "reason": "Enable automatic soft-decline retry logic on the payment gateway so that recoverable failure codes are retried at least once before the transaction is finalised as failed. (credit_failed), unretried -- retry at +40.6h, last look before the odds fall away",
           "requires_merchant_approval": false
         },
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "b50adc038578c00fc65560044342b1b03238507bf4823d64bf9511a0f1c69409",
-        "entry_hash": "f6c0e70d9fcdfabb313ea1a55afd5c09b1daf994e48241cb2822dca1d3de3ab6"
+        "prev_hash": "4da689e18e6ce7db934c3d8d9cc6608a4aa8f1a737d1bb7e70dd6fe000fcead5",
+        "entry_hash": "31c8bd2b7ff18c56007cf7760adaa908b4a3cbfcc99267ea4f9148dc5a8a6616"
       },
       {
         "sequence": 19,
-        "timestamp": "2026-08-27T10:18:22.326110+00:00",
+        "timestamp": "2026-08-27T10:33:35.813408+00:00",
         "txn_id": "pay_medisure_1399",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1837,50 +1839,50 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "f6c0e70d9fcdfabb313ea1a55afd5c09b1daf994e48241cb2822dca1d3de3ab6",
-        "entry_hash": "3fdd4d1534edde7d09a1d1cb55801bd9d6730130232c5d32f590672d9780b1c1"
+        "prev_hash": "31c8bd2b7ff18c56007cf7760adaa908b4a3cbfcc99267ea4f9148dc5a8a6616",
+        "entry_hash": "5afc9f175cd5d2b1552d13b5840f5a0a20f0e400fd569cbc8d85cb34cc22d8e8"
       },
       {
         "sequence": 20,
-        "timestamp": "2026-08-27T10:18:22.326110+00:00",
+        "timestamp": "2026-08-27T10:33:35.813408+00:00",
         "txn_id": "pay_medisure_1049",
         "proposed_action": {
           "action_type": "retry_soft_decline",
           "txn_id": "pay_medisure_1049",
           "amount_paise": 10605,
           "target_bank": "Kotak Mahindra Bank",
-          "scheduled_time": "2026-08-27T10:18:22.299055+00:00",
-          "reason": "Enable automatic soft-decline retry logic on the payment gateway so that recoverable failure codes are retried at least once before the transaction is finalised as failed. (debit_declined), unretried -- retry at +42.3h, the plateau: long enough for the balance to have changed",
+          "scheduled_time": "2026-08-27T10:33:35.779408+00:00",
+          "reason": "Enable automatic soft-decline retry logic on the payment gateway so that recoverable failure codes are retried at least once before the transaction is finalised as failed. (debit_declined), unretried -- retry at +42.6h, the plateau: long enough for the balance to have changed",
           "requires_merchant_approval": false
         },
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "3fdd4d1534edde7d09a1d1cb55801bd9d6730130232c5d32f590672d9780b1c1",
-        "entry_hash": "00612b27009132df2e24f03f6e3590ef5d813e3bbfdd49eed43e0a46b82ec5c7"
+        "prev_hash": "5afc9f175cd5d2b1552d13b5840f5a0a20f0e400fd569cbc8d85cb34cc22d8e8",
+        "entry_hash": "6ee1b106cd7a66c8eb180dedc3ce5997d076106ea75f0692d5c8464e79a4415d"
       },
       {
         "sequence": 21,
-        "timestamp": "2026-08-27T10:18:22.326110+00:00",
+        "timestamp": "2026-08-27T10:33:35.813408+00:00",
         "txn_id": "pay_medisure_0234",
         "proposed_action": {
           "action_type": "retry_soft_decline",
           "txn_id": "pay_medisure_0234",
           "amount_paise": 10024,
           "target_bank": "Airtel Payments Bank Limited",
-          "scheduled_time": "2026-08-27T10:18:22.299055+00:00",
-          "reason": "Enable automatic soft-decline retry logic on the payment gateway so that recoverable failure codes are retried at least once before the transaction is finalised as failed. (debit_declined), unretried -- retry at +39.3h, the plateau: long enough for the balance to have changed",
+          "scheduled_time": "2026-08-27T10:33:35.779408+00:00",
+          "reason": "Enable automatic soft-decline retry logic on the payment gateway so that recoverable failure codes are retried at least once before the transaction is finalised as failed. (debit_declined), unretried -- retry at +39.6h, the plateau: long enough for the balance to have changed",
           "requires_merchant_approval": false
         },
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "00612b27009132df2e24f03f6e3590ef5d813e3bbfdd49eed43e0a46b82ec5c7",
-        "entry_hash": "510bae4f875a0d2b6a3081cefdb53ffbf1250748eee759a0a3d0d36c6ae70223"
+        "prev_hash": "6ee1b106cd7a66c8eb180dedc3ce5997d076106ea75f0692d5c8464e79a4415d",
+        "entry_hash": "580a6900c5d49f65092b8097d378acb2fcd9b9b819a837b8c6396e4f98fff83e"
       },
       {
         "sequence": 22,
-        "timestamp": "2026-08-27T10:18:22.326110+00:00",
+        "timestamp": "2026-08-27T10:33:35.813408+00:00",
         "txn_id": "pay_medisure_0594",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1894,12 +1896,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "510bae4f875a0d2b6a3081cefdb53ffbf1250748eee759a0a3d0d36c6ae70223",
-        "entry_hash": "173c205d16a3d177e0a9876dd99ecdf8cc98e04bf9b284c2849182c6f5e3d133"
+        "prev_hash": "580a6900c5d49f65092b8097d378acb2fcd9b9b819a837b8c6396e4f98fff83e",
+        "entry_hash": "2898b6436a601843f23b7a648a1f9dce9fcc06702c2a95976f7869e12c205c4a"
       },
       {
         "sequence": 23,
-        "timestamp": "2026-08-27T10:18:22.327126+00:00",
+        "timestamp": "2026-08-27T10:33:35.813408+00:00",
         "txn_id": "pay_medisure_1349",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1913,12 +1915,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "173c205d16a3d177e0a9876dd99ecdf8cc98e04bf9b284c2849182c6f5e3d133",
-        "entry_hash": "4666203e0beef6062117041ded3acf68cbec121c3e8da674f4b317c2fa26b55d"
+        "prev_hash": "2898b6436a601843f23b7a648a1f9dce9fcc06702c2a95976f7869e12c205c4a",
+        "entry_hash": "0fb373682a7879130758091983e11cd2420337cb1d97e8b76714b439d54abcaa"
       },
       {
         "sequence": 24,
-        "timestamp": "2026-08-27T10:18:22.327126+00:00",
+        "timestamp": "2026-08-27T10:33:35.813408+00:00",
         "txn_id": "merchant:medisure",
         "proposed_action": {
           "action_type": "flag_for_investigation",
@@ -1932,12 +1934,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_ESCALATION",
         "outcome": "escalated",
-        "prev_hash": "4666203e0beef6062117041ded3acf68cbec121c3e8da674f4b317c2fa26b55d",
-        "entry_hash": "b82041ccdeb082f024a0fdfb6f70cbb2c9b0a9041f1682c67e5db2a925861434"
+        "prev_hash": "0fb373682a7879130758091983e11cd2420337cb1d97e8b76714b439d54abcaa",
+        "entry_hash": "659ee6166dcf443761f1cddba58a7db7b264d4ae194a311e439387a609acc44b"
       },
       {
         "sequence": 25,
-        "timestamp": "2026-08-27T10:18:22.327126+00:00",
+        "timestamp": "2026-08-27T10:33:35.814408+00:00",
         "txn_id": "merchant:medisure",
         "proposed_action": {
           "action_type": "flag_for_investigation",
@@ -1951,12 +1953,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_ESCALATION",
         "outcome": "escalated",
-        "prev_hash": "b82041ccdeb082f024a0fdfb6f70cbb2c9b0a9041f1682c67e5db2a925861434",
-        "entry_hash": "f79dba1db3f236b4a6283132f355b5e5c8d52e64567527c22dc5f2c65587b2bf"
+        "prev_hash": "659ee6166dcf443761f1cddba58a7db7b264d4ae194a311e439387a609acc44b",
+        "entry_hash": "46fab9c77e38115f8ee8113324fe18c8fe6ea3b1df15423ae1667a48bc67fbad"
       },
       {
         "sequence": 26,
-        "timestamp": "2026-08-27T10:18:22.327126+00:00",
+        "timestamp": "2026-08-27T10:33:35.814408+00:00",
         "txn_id": "merchant:medisure",
         "proposed_action": {
           "action_type": "flag_for_investigation",
@@ -1970,8 +1972,749 @@
         "gate_decision": "allow",
         "gate_reason": "OK_ESCALATION",
         "outcome": "escalated",
-        "prev_hash": "f79dba1db3f236b4a6283132f355b5e5c8d52e64567527c22dc5f2c65587b2bf",
-        "entry_hash": "37c77e05b547969bbe8f5442cf3a8b1915a77e24f0719304ba45b117182a2cc5"
+        "prev_hash": "46fab9c77e38115f8ee8113324fe18c8fe6ea3b1df15423ae1667a48bc67fbad",
+        "entry_hash": "2b85d922e0e8e3305214100ecab3b9ede7e928a254c88f24c19ea92a67d48dcd"
+      },
+      {
+        "sequence": 27,
+        "timestamp": "2026-08-27T10:33:35.814408+00:00",
+        "txn_id": "pay_medisure_1328",
+        "proposed_action": {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_medisure_1328",
+          "amount_paise": 1536314,
+          "target_bank": "Airtel Payments Bank Limited",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (incorrect_pin). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        "gate_decision": "deny",
+        "gate_reason": "DENY_AMOUNT_ABOVE_CEILING",
+        "outcome": "denied",
+        "prev_hash": "2b85d922e0e8e3305214100ecab3b9ede7e928a254c88f24c19ea92a67d48dcd",
+        "entry_hash": "ffb827cf2d7a596df6428769fcffb11f2a1e8aa0da7efd704b450e78ec2de129"
+      },
+      {
+        "sequence": 28,
+        "timestamp": "2026-08-27T10:33:35.814408+00:00",
+        "txn_id": "pay_medisure_0479",
+        "proposed_action": {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_medisure_0479",
+          "amount_paise": 1274747,
+          "target_bank": "Bank of Baroda",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (payment_cancelled). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        "gate_decision": "deny",
+        "gate_reason": "DENY_AMOUNT_ABOVE_CEILING",
+        "outcome": "denied",
+        "prev_hash": "ffb827cf2d7a596df6428769fcffb11f2a1e8aa0da7efd704b450e78ec2de129",
+        "entry_hash": "099afd70f21ceb8c298abf8bb99d2774eba64150884a50c522bc68df81665bd6"
+      },
+      {
+        "sequence": 29,
+        "timestamp": "2026-08-27T10:33:35.814408+00:00",
+        "txn_id": "pay_medisure_0416",
+        "proposed_action": {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_medisure_0416",
+          "amount_paise": 1178042,
+          "target_bank": "Airtel Payments Bank Limited",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (invalid_device). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        "gate_decision": "deny",
+        "gate_reason": "DENY_AMOUNT_ABOVE_CEILING",
+        "outcome": "denied",
+        "prev_hash": "099afd70f21ceb8c298abf8bb99d2774eba64150884a50c522bc68df81665bd6",
+        "entry_hash": "4c199170df2f5a1d284a26d6485bea8712959e8d57e68bd331a547a49d861185"
+      },
+      {
+        "sequence": 30,
+        "timestamp": "2026-08-27T10:33:35.814408+00:00",
+        "txn_id": "pay_medisure_1329",
+        "proposed_action": {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_medisure_1329",
+          "amount_paise": 556470,
+          "target_bank": "Bank of Baroda",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (pin_not_set). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        "gate_decision": "step_up",
+        "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
+        "outcome": "merchant_action",
+        "prev_hash": "4c199170df2f5a1d284a26d6485bea8712959e8d57e68bd331a547a49d861185",
+        "entry_hash": "2ab82c76048e5e397c0dbb4f8a7a5b286c442a6cd1f3c313d2790adbd8bec65b"
+      },
+      {
+        "sequence": 31,
+        "timestamp": "2026-08-27T10:33:35.814408+00:00",
+        "txn_id": "pay_medisure_0226",
+        "proposed_action": {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_medisure_0226",
+          "amount_paise": 457639,
+          "target_bank": "Airtel Payments Bank Limited",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (payment_cancelled). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        "gate_decision": "step_up",
+        "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
+        "outcome": "merchant_action",
+        "prev_hash": "2ab82c76048e5e397c0dbb4f8a7a5b286c442a6cd1f3c313d2790adbd8bec65b",
+        "entry_hash": "3ecfcc4156481890261b8f30342c625fff240965221f3fa87236f4cbf6ee0481"
+      },
+      {
+        "sequence": 32,
+        "timestamp": "2026-08-27T10:33:35.814408+00:00",
+        "txn_id": "pay_medisure_0057",
+        "proposed_action": {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_medisure_0057",
+          "amount_paise": 448999,
+          "target_bank": "Airtel Payments Bank Limited",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (otp_expired). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        "gate_decision": "step_up",
+        "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
+        "outcome": "merchant_action",
+        "prev_hash": "3ecfcc4156481890261b8f30342c625fff240965221f3fa87236f4cbf6ee0481",
+        "entry_hash": "0b2f587c63ff7b43fe54a80734dc2b2a04a7515f5fc5f827ea9d3f6c62058519"
+      },
+      {
+        "sequence": 33,
+        "timestamp": "2026-08-27T10:33:35.814408+00:00",
+        "txn_id": "pay_medisure_0858",
+        "proposed_action": {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_medisure_0858",
+          "amount_paise": 212833,
+          "target_bank": "Airtel Payments Bank Limited",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (pin_not_set). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        "gate_decision": "step_up",
+        "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
+        "outcome": "merchant_action",
+        "prev_hash": "0b2f587c63ff7b43fe54a80734dc2b2a04a7515f5fc5f827ea9d3f6c62058519",
+        "entry_hash": "0bf8ba664cdd995a4bbdeeade774ffbcdc15d0b02324481b7cf2586340eb3731"
+      },
+      {
+        "sequence": 34,
+        "timestamp": "2026-08-27T10:33:35.814408+00:00",
+        "txn_id": "pay_medisure_1020",
+        "proposed_action": {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_medisure_1020",
+          "amount_paise": 168691,
+          "target_bank": "Airtel Payments Bank Limited",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (otp_attempts_exceeded). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        "gate_decision": "step_up",
+        "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
+        "outcome": "merchant_action",
+        "prev_hash": "0bf8ba664cdd995a4bbdeeade774ffbcdc15d0b02324481b7cf2586340eb3731",
+        "entry_hash": "3201f4c43f84c393277f17a30b03b7d20c9b43304d6dfdee2aa9b333166a0ade"
+      },
+      {
+        "sequence": 35,
+        "timestamp": "2026-08-27T10:33:35.814408+00:00",
+        "txn_id": "pay_medisure_0260",
+        "proposed_action": {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_medisure_0260",
+          "amount_paise": 158020,
+          "target_bank": "Airtel Payments Bank Limited",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (otp_attempts_exceeded). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        "gate_decision": "step_up",
+        "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
+        "outcome": "merchant_action",
+        "prev_hash": "3201f4c43f84c393277f17a30b03b7d20c9b43304d6dfdee2aa9b333166a0ade",
+        "entry_hash": "7b0c86849b47b417ccb1cb77e5632da5621eb0e82e21735973c85c2f69f2e50f"
+      },
+      {
+        "sequence": 36,
+        "timestamp": "2026-08-27T10:33:35.814408+00:00",
+        "txn_id": "pay_medisure_1406",
+        "proposed_action": {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_medisure_1406",
+          "amount_paise": 154027,
+          "target_bank": "Airtel Payments Bank Limited",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (incorrect_pin). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        "gate_decision": "step_up",
+        "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
+        "outcome": "merchant_action",
+        "prev_hash": "7b0c86849b47b417ccb1cb77e5632da5621eb0e82e21735973c85c2f69f2e50f",
+        "entry_hash": "66359445719b4114ca2668420725b1da539628fef329e7529560db8372db0116"
+      },
+      {
+        "sequence": 37,
+        "timestamp": "2026-08-27T10:33:35.814408+00:00",
+        "txn_id": "pay_medisure_0427",
+        "proposed_action": {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_medisure_0427",
+          "amount_paise": 130957,
+          "target_bank": "Airtel Payments Bank Limited",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (payment_cancelled). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        "gate_decision": "step_up",
+        "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
+        "outcome": "merchant_action",
+        "prev_hash": "66359445719b4114ca2668420725b1da539628fef329e7529560db8372db0116",
+        "entry_hash": "5012ccb741b0cca719f4412b7fb6aa62613e41e7225a58888e8664fee015dd70"
+      },
+      {
+        "sequence": 38,
+        "timestamp": "2026-08-27T10:33:35.814408+00:00",
+        "txn_id": "pay_medisure_1295",
+        "proposed_action": {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_medisure_1295",
+          "amount_paise": 99792,
+          "target_bank": "Union Bank of India",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (otp_attempts_exceeded). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        "gate_decision": "step_up",
+        "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
+        "outcome": "merchant_action",
+        "prev_hash": "5012ccb741b0cca719f4412b7fb6aa62613e41e7225a58888e8664fee015dd70",
+        "entry_hash": "8ddbcffd49acdb49798b7d0df5fef6f70150250e732f038f57245afe5c860b5d"
+      },
+      {
+        "sequence": 39,
+        "timestamp": "2026-08-27T10:33:35.814408+00:00",
+        "txn_id": "pay_medisure_0227",
+        "proposed_action": {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_medisure_0227",
+          "amount_paise": 99084,
+          "target_bank": "Airtel Payments Bank Limited",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (incorrect_otp). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        "gate_decision": "step_up",
+        "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
+        "outcome": "merchant_action",
+        "prev_hash": "8ddbcffd49acdb49798b7d0df5fef6f70150250e732f038f57245afe5c860b5d",
+        "entry_hash": "962a51b9cba5b7c8654065ea0e85037f64a1194d31453208fd5cf224d955c3ea"
+      },
+      {
+        "sequence": 40,
+        "timestamp": "2026-08-27T10:33:35.814408+00:00",
+        "txn_id": "pay_medisure_0059",
+        "proposed_action": {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_medisure_0059",
+          "amount_paise": 87796,
+          "target_bank": "Airtel Payments Bank Limited",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (incorrect_card_expiry_date). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        "gate_decision": "step_up",
+        "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
+        "outcome": "merchant_action",
+        "prev_hash": "962a51b9cba5b7c8654065ea0e85037f64a1194d31453208fd5cf224d955c3ea",
+        "entry_hash": "b3fdcb4b7464d15da0ea0d91852d9bbf6360a6b6dfcdd06f383f953f2d55fac1"
+      },
+      {
+        "sequence": 41,
+        "timestamp": "2026-08-27T10:33:35.814408+00:00",
+        "txn_id": "pay_medisure_1068",
+        "proposed_action": {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_medisure_1068",
+          "amount_paise": 86280,
+          "target_bank": "Airtel Payments Bank Limited",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (invalid_device). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        "gate_decision": "step_up",
+        "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
+        "outcome": "merchant_action",
+        "prev_hash": "b3fdcb4b7464d15da0ea0d91852d9bbf6360a6b6dfcdd06f383f953f2d55fac1",
+        "entry_hash": "dfe6751481aa0fb96e4f7f083dd22fd7a77255bd5720c0886b5125e311c08b7c"
+      },
+      {
+        "sequence": 42,
+        "timestamp": "2026-08-27T10:33:35.814408+00:00",
+        "txn_id": "pay_medisure_1476",
+        "proposed_action": {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_medisure_1476",
+          "amount_paise": 80586,
+          "target_bank": "Airtel Payments Bank Limited",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (payment_cancelled). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        "gate_decision": "step_up",
+        "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
+        "outcome": "merchant_action",
+        "prev_hash": "dfe6751481aa0fb96e4f7f083dd22fd7a77255bd5720c0886b5125e311c08b7c",
+        "entry_hash": "b4bb6fb1f48a4459ffeda625d2cc82bd4ae4a77595e15a214d762a0df92b9bf8"
+      },
+      {
+        "sequence": 43,
+        "timestamp": "2026-08-27T10:33:35.814408+00:00",
+        "txn_id": "pay_medisure_0800",
+        "proposed_action": {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_medisure_0800",
+          "amount_paise": 74954,
+          "target_bank": "Airtel Payments Bank Limited",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (pin_attempts_exceeded). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        "gate_decision": "step_up",
+        "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
+        "outcome": "merchant_action",
+        "prev_hash": "b4bb6fb1f48a4459ffeda625d2cc82bd4ae4a77595e15a214d762a0df92b9bf8",
+        "entry_hash": "8a1870bf4f687219b6e746decc54bac9ee32b9b7b12a0038f9cfdafd888bf93b"
+      },
+      {
+        "sequence": 44,
+        "timestamp": "2026-08-27T10:33:35.814408+00:00",
+        "txn_id": "pay_medisure_0842",
+        "proposed_action": {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_medisure_0842",
+          "amount_paise": 66892,
+          "target_bank": "Union Bank of India",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (pin_not_set). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        "gate_decision": "step_up",
+        "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
+        "outcome": "merchant_action",
+        "prev_hash": "8a1870bf4f687219b6e746decc54bac9ee32b9b7b12a0038f9cfdafd888bf93b",
+        "entry_hash": "6be9fb4539d3daea2ef28404ac8e90d18b86218ff3cca3784b8bbfc24aa49996"
+      },
+      {
+        "sequence": 45,
+        "timestamp": "2026-08-27T10:33:35.814408+00:00",
+        "txn_id": "pay_medisure_0208",
+        "proposed_action": {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_medisure_0208",
+          "amount_paise": 66685,
+          "target_bank": "Airtel Payments Bank Limited",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (invalid_device). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        "gate_decision": "step_up",
+        "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
+        "outcome": "merchant_action",
+        "prev_hash": "6be9fb4539d3daea2ef28404ac8e90d18b86218ff3cca3784b8bbfc24aa49996",
+        "entry_hash": "c4d7a15b71962bf50196a221935d3f6c3546b7a95428362c629e1108bea69a9e"
+      },
+      {
+        "sequence": 46,
+        "timestamp": "2026-08-27T10:33:35.814408+00:00",
+        "txn_id": "pay_medisure_0852",
+        "proposed_action": {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_medisure_0852",
+          "amount_paise": 66433,
+          "target_bank": "India Post Payments Bank Limited",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (incorrect_otp). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        "gate_decision": "step_up",
+        "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
+        "outcome": "merchant_action",
+        "prev_hash": "c4d7a15b71962bf50196a221935d3f6c3546b7a95428362c629e1108bea69a9e",
+        "entry_hash": "997c435da03df79e3e80cc169f1c9fb9f40498bdffe49174d0989b81ee9a8c0d"
+      },
+      {
+        "sequence": 47,
+        "timestamp": "2026-08-27T10:33:35.814408+00:00",
+        "txn_id": "pay_medisure_1559",
+        "proposed_action": {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_medisure_1559",
+          "amount_paise": 64541,
+          "target_bank": "HDFC Bank Ltd.",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (pin_attempts_exceeded). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        "gate_decision": "step_up",
+        "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
+        "outcome": "merchant_action",
+        "prev_hash": "997c435da03df79e3e80cc169f1c9fb9f40498bdffe49174d0989b81ee9a8c0d",
+        "entry_hash": "abbc3f119f9c81dc87eb738ae5ff51ec8a48dda01132d20a79bb0e7eeb02c6f3"
+      },
+      {
+        "sequence": 48,
+        "timestamp": "2026-08-27T10:33:35.814408+00:00",
+        "txn_id": "pay_medisure_0143",
+        "proposed_action": {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_medisure_0143",
+          "amount_paise": 61973,
+          "target_bank": "Kotak Mahindra Bank",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (pin_attempts_exceeded). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        "gate_decision": "step_up",
+        "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
+        "outcome": "merchant_action",
+        "prev_hash": "abbc3f119f9c81dc87eb738ae5ff51ec8a48dda01132d20a79bb0e7eeb02c6f3",
+        "entry_hash": "07a3709acb3d70ac49e6a89b635469d2b0a84b1500171fe1f8a4a80740464205"
+      },
+      {
+        "sequence": 49,
+        "timestamp": "2026-08-27T10:33:35.814408+00:00",
+        "txn_id": "pay_medisure_0665",
+        "proposed_action": {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_medisure_0665",
+          "amount_paise": 59126,
+          "target_bank": "Airtel Payments Bank Limited",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (pin_not_set). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        "gate_decision": "step_up",
+        "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
+        "outcome": "merchant_action",
+        "prev_hash": "07a3709acb3d70ac49e6a89b635469d2b0a84b1500171fe1f8a4a80740464205",
+        "entry_hash": "65624380127050ad046a12ef5a2704456b74db4b872c18907ec96af7c2d11ea5"
+      },
+      {
+        "sequence": 50,
+        "timestamp": "2026-08-27T10:33:35.814408+00:00",
+        "txn_id": "pay_medisure_1048",
+        "proposed_action": {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_medisure_1048",
+          "amount_paise": 54797,
+          "target_bank": "State Bank of India",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (otp_expired). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        "gate_decision": "step_up",
+        "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
+        "outcome": "merchant_action",
+        "prev_hash": "65624380127050ad046a12ef5a2704456b74db4b872c18907ec96af7c2d11ea5",
+        "entry_hash": "f6983d9f9d2561215452d739f148e6db1edfbfcddffe6ef10c6d53967a733a95"
+      },
+      {
+        "sequence": 51,
+        "timestamp": "2026-08-27T10:33:35.814408+00:00",
+        "txn_id": "pay_medisure_0536",
+        "proposed_action": {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_medisure_0536",
+          "amount_paise": 53419,
+          "target_bank": "Airtel Payments Bank Limited",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (incorrect_pin). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        "gate_decision": "step_up",
+        "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
+        "outcome": "merchant_action",
+        "prev_hash": "f6983d9f9d2561215452d739f148e6db1edfbfcddffe6ef10c6d53967a733a95",
+        "entry_hash": "cb9b96a0fe3036a52a9562f0ec7066376b6fe8f1c198ea14b51e0ffa2ce3b537"
+      },
+      {
+        "sequence": 52,
+        "timestamp": "2026-08-27T10:33:35.814408+00:00",
+        "txn_id": "pay_medisure_1050",
+        "proposed_action": {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_medisure_1050",
+          "amount_paise": 45309,
+          "target_bank": "Airtel Payments Bank Limited",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (authentication_failed). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        "gate_decision": "step_up",
+        "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
+        "outcome": "merchant_action",
+        "prev_hash": "cb9b96a0fe3036a52a9562f0ec7066376b6fe8f1c198ea14b51e0ffa2ce3b537",
+        "entry_hash": "28ec43951f24df382a1841fc9ea0ebfa461e52813f1f4941f3ae63c3324946a0"
+      },
+      {
+        "sequence": 53,
+        "timestamp": "2026-08-27T10:33:35.814408+00:00",
+        "txn_id": "pay_medisure_0962",
+        "proposed_action": {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_medisure_0962",
+          "amount_paise": 44814,
+          "target_bank": "Airtel Payments Bank Limited",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (invalid_device). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        "gate_decision": "step_up",
+        "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
+        "outcome": "merchant_action",
+        "prev_hash": "28ec43951f24df382a1841fc9ea0ebfa461e52813f1f4941f3ae63c3324946a0",
+        "entry_hash": "2b913cf2146feca32f8d587289b03d4e88c8ed4d5f117d21ddcd9ba3f5b12f3c"
+      },
+      {
+        "sequence": 54,
+        "timestamp": "2026-08-27T10:33:35.815402+00:00",
+        "txn_id": "pay_medisure_1439",
+        "proposed_action": {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_medisure_1439",
+          "amount_paise": 34330,
+          "target_bank": "Airtel Payments Bank Limited",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (otp_expired). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        "gate_decision": "step_up",
+        "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
+        "outcome": "merchant_action",
+        "prev_hash": "2b913cf2146feca32f8d587289b03d4e88c8ed4d5f117d21ddcd9ba3f5b12f3c",
+        "entry_hash": "7ac5b09bd8549aeb5cc38d9530741a9c63bebabb8b6a5262853a9309b3025fa7"
+      },
+      {
+        "sequence": 55,
+        "timestamp": "2026-08-27T10:33:35.815402+00:00",
+        "txn_id": "pay_medisure_0825",
+        "proposed_action": {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_medisure_0825",
+          "amount_paise": 28111,
+          "target_bank": "Indian Bank",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (incorrect_otp). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        "gate_decision": "step_up",
+        "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
+        "outcome": "merchant_action",
+        "prev_hash": "7ac5b09bd8549aeb5cc38d9530741a9c63bebabb8b6a5262853a9309b3025fa7",
+        "entry_hash": "b81df42467268c6cf9660e89ec3789301e8b112793e5d4d971f06de2203057db"
+      },
+      {
+        "sequence": 56,
+        "timestamp": "2026-08-27T10:33:35.815402+00:00",
+        "txn_id": "pay_medisure_0923",
+        "proposed_action": {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_medisure_0923",
+          "amount_paise": 24162,
+          "target_bank": "Airtel Payments Bank Limited",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (pin_attempts_exceeded). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        "gate_decision": "step_up",
+        "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
+        "outcome": "merchant_action",
+        "prev_hash": "b81df42467268c6cf9660e89ec3789301e8b112793e5d4d971f06de2203057db",
+        "entry_hash": "2e708caf41bfb08a47f669b28e5070fad0f981c202e265694b9e97398b00665d"
+      },
+      {
+        "sequence": 57,
+        "timestamp": "2026-08-27T10:33:35.815402+00:00",
+        "txn_id": "pay_medisure_0333",
+        "proposed_action": {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_medisure_0333",
+          "amount_paise": 23370,
+          "target_bank": "Airtel Payments Bank Limited",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (otp_expired). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        "gate_decision": "step_up",
+        "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
+        "outcome": "merchant_action",
+        "prev_hash": "2e708caf41bfb08a47f669b28e5070fad0f981c202e265694b9e97398b00665d",
+        "entry_hash": "8bac17d8675760f866946f67533d6016e5dc38efaac0ba651b56945bd751a16b"
+      },
+      {
+        "sequence": 58,
+        "timestamp": "2026-08-27T10:33:35.815402+00:00",
+        "txn_id": "pay_medisure_0742",
+        "proposed_action": {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_medisure_0742",
+          "amount_paise": 17736,
+          "target_bank": "Airtel Payments Bank Limited",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (otp_expired). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        "gate_decision": "step_up",
+        "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
+        "outcome": "merchant_action",
+        "prev_hash": "8bac17d8675760f866946f67533d6016e5dc38efaac0ba651b56945bd751a16b",
+        "entry_hash": "6e71888c2c7cca863a011f79e4f4b702e77837a907c97fafdc6ad80057af22da"
+      },
+      {
+        "sequence": 59,
+        "timestamp": "2026-08-27T10:33:35.815402+00:00",
+        "txn_id": "pay_medisure_1191",
+        "proposed_action": {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_medisure_1191",
+          "amount_paise": 17207,
+          "target_bank": "Airtel Payments Bank Limited",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (pin_not_set). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        "gate_decision": "step_up",
+        "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
+        "outcome": "merchant_action",
+        "prev_hash": "6e71888c2c7cca863a011f79e4f4b702e77837a907c97fafdc6ad80057af22da",
+        "entry_hash": "e268150fa12d7fee96d1169aa81de99da0ced9067b66e3fbc344ce28279279b5"
+      },
+      {
+        "sequence": 60,
+        "timestamp": "2026-08-27T10:33:35.815402+00:00",
+        "txn_id": "pay_medisure_1495",
+        "proposed_action": {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_medisure_1495",
+          "amount_paise": 13311,
+          "target_bank": "Airtel Payments Bank Limited",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (incorrect_card_details). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        "gate_decision": "step_up",
+        "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
+        "outcome": "merchant_action",
+        "prev_hash": "e268150fa12d7fee96d1169aa81de99da0ced9067b66e3fbc344ce28279279b5",
+        "entry_hash": "6d4d3ae7fe23c4b1143c31c2e1d66e7ff941e6ff0e5236a958a91c8c99b28ca3"
+      },
+      {
+        "sequence": 61,
+        "timestamp": "2026-08-27T10:33:35.815402+00:00",
+        "txn_id": "pay_medisure_0614",
+        "proposed_action": {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_medisure_0614",
+          "amount_paise": 13297,
+          "target_bank": "Airtel Payments Bank Limited",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (pin_not_set). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        "gate_decision": "step_up",
+        "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
+        "outcome": "merchant_action",
+        "prev_hash": "6d4d3ae7fe23c4b1143c31c2e1d66e7ff941e6ff0e5236a958a91c8c99b28ca3",
+        "entry_hash": "e75dbf66f3ed819cf57ce00f542613c17c9275206fbf9d9ffbc40a3c535ee745"
+      },
+      {
+        "sequence": 62,
+        "timestamp": "2026-08-27T10:33:35.815402+00:00",
+        "txn_id": "pay_medisure_0460",
+        "proposed_action": {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_medisure_0460",
+          "amount_paise": 7872,
+          "target_bank": "Kotak Mahindra Bank",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (pin_not_set). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        "gate_decision": "step_up",
+        "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
+        "outcome": "merchant_action",
+        "prev_hash": "e75dbf66f3ed819cf57ce00f542613c17c9275206fbf9d9ffbc40a3c535ee745",
+        "entry_hash": "41ed1b699a7c0dd21faa98b096729a3a458c7181eff3e59409f4ef943c19316c"
+      },
+      {
+        "sequence": 63,
+        "timestamp": "2026-08-27T10:33:35.815402+00:00",
+        "txn_id": "pay_medisure_0414",
+        "proposed_action": {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_medisure_0414",
+          "amount_paise": 7014,
+          "target_bank": "Airtel Payments Bank Limited",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (otp_attempts_exceeded). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        "gate_decision": "step_up",
+        "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
+        "outcome": "merchant_action",
+        "prev_hash": "41ed1b699a7c0dd21faa98b096729a3a458c7181eff3e59409f4ef943c19316c",
+        "entry_hash": "af997fc93f0cab2128e2d0a40916cee480dc51b3c00f612ee3ea98b001dc5b7f"
+      },
+      {
+        "sequence": 64,
+        "timestamp": "2026-08-27T10:33:35.815402+00:00",
+        "txn_id": "pay_medisure_0949",
+        "proposed_action": {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_medisure_0949",
+          "amount_paise": 2334,
+          "target_bank": "Airtel Payments Bank Limited",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (otp_expired). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        "gate_decision": "step_up",
+        "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
+        "outcome": "merchant_action",
+        "prev_hash": "af997fc93f0cab2128e2d0a40916cee480dc51b3c00f612ee3ea98b001dc5b7f",
+        "entry_hash": "a9c813b7430444de89b57b0a74aaf71c897d02b612ed8c609d22e6481808c592"
+      },
+      {
+        "sequence": 65,
+        "timestamp": "2026-08-27T10:33:35.815402+00:00",
+        "txn_id": "pay_medisure_0020",
+        "proposed_action": {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_medisure_0020",
+          "amount_paise": 1041,
+          "target_bank": "Indian Bank",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (pin_not_set). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        "gate_decision": "step_up",
+        "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
+        "outcome": "merchant_action",
+        "prev_hash": "a9c813b7430444de89b57b0a74aaf71c897d02b612ed8c609d22e6481808c592",
+        "entry_hash": "2cbb2bdbff13e637558b866bca8e9e9d26fbec4d5a01cac8f863daec8e3e3797"
       }
     ],
     "exceptions": {
@@ -2747,6 +3490,368 @@
   },
   "pending_actions": [
     {
+      "group_id": "reissue_payment_link",
+      "action_type": "reissue_payment_link",
+      "title": "Send 39 customers a fresh payment link",
+      "why": "Rs 75,790 where the customer never finished authenticating -- wrong OTP, wrong PIN, or they walked away. Retrying the same payment does nothing; a new link gives them another go. No conversion rate is claimed.",
+      "count": 39,
+      "total_paise": 7579005,
+      "auto": false,
+      "actions": [
+        {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_medisure_1328",
+          "amount_paise": 1536314,
+          "target_bank": "Airtel Payments Bank Limited",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (incorrect_pin). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_medisure_0479",
+          "amount_paise": 1274747,
+          "target_bank": "Bank of Baroda",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (payment_cancelled). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_medisure_0416",
+          "amount_paise": 1178042,
+          "target_bank": "Airtel Payments Bank Limited",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (invalid_device). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_medisure_1329",
+          "amount_paise": 556470,
+          "target_bank": "Bank of Baroda",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (pin_not_set). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_medisure_0226",
+          "amount_paise": 457639,
+          "target_bank": "Airtel Payments Bank Limited",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (payment_cancelled). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_medisure_0057",
+          "amount_paise": 448999,
+          "target_bank": "Airtel Payments Bank Limited",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (otp_expired). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_medisure_0858",
+          "amount_paise": 212833,
+          "target_bank": "Airtel Payments Bank Limited",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (pin_not_set). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_medisure_1020",
+          "amount_paise": 168691,
+          "target_bank": "Airtel Payments Bank Limited",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (otp_attempts_exceeded). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_medisure_0260",
+          "amount_paise": 158020,
+          "target_bank": "Airtel Payments Bank Limited",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (otp_attempts_exceeded). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_medisure_1406",
+          "amount_paise": 154027,
+          "target_bank": "Airtel Payments Bank Limited",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (incorrect_pin). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_medisure_0427",
+          "amount_paise": 130957,
+          "target_bank": "Airtel Payments Bank Limited",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (payment_cancelled). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_medisure_1295",
+          "amount_paise": 99792,
+          "target_bank": "Union Bank of India",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (otp_attempts_exceeded). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_medisure_0227",
+          "amount_paise": 99084,
+          "target_bank": "Airtel Payments Bank Limited",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (incorrect_otp). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_medisure_0059",
+          "amount_paise": 87796,
+          "target_bank": "Airtel Payments Bank Limited",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (incorrect_card_expiry_date). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_medisure_1068",
+          "amount_paise": 86280,
+          "target_bank": "Airtel Payments Bank Limited",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (invalid_device). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_medisure_1476",
+          "amount_paise": 80586,
+          "target_bank": "Airtel Payments Bank Limited",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (payment_cancelled). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_medisure_0800",
+          "amount_paise": 74954,
+          "target_bank": "Airtel Payments Bank Limited",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (pin_attempts_exceeded). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_medisure_0842",
+          "amount_paise": 66892,
+          "target_bank": "Union Bank of India",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (pin_not_set). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_medisure_0208",
+          "amount_paise": 66685,
+          "target_bank": "Airtel Payments Bank Limited",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (invalid_device). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_medisure_0852",
+          "amount_paise": 66433,
+          "target_bank": "India Post Payments Bank Limited",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (incorrect_otp). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_medisure_1559",
+          "amount_paise": 64541,
+          "target_bank": "HDFC Bank Ltd.",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (pin_attempts_exceeded). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_medisure_0143",
+          "amount_paise": 61973,
+          "target_bank": "Kotak Mahindra Bank",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (pin_attempts_exceeded). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_medisure_0665",
+          "amount_paise": 59126,
+          "target_bank": "Airtel Payments Bank Limited",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (pin_not_set). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_medisure_1048",
+          "amount_paise": 54797,
+          "target_bank": "State Bank of India",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (otp_expired). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_medisure_0536",
+          "amount_paise": 53419,
+          "target_bank": "Airtel Payments Bank Limited",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (incorrect_pin). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_medisure_1050",
+          "amount_paise": 45309,
+          "target_bank": "Airtel Payments Bank Limited",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (authentication_failed). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_medisure_0962",
+          "amount_paise": 44814,
+          "target_bank": "Airtel Payments Bank Limited",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (invalid_device). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_medisure_1439",
+          "amount_paise": 34330,
+          "target_bank": "Airtel Payments Bank Limited",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (otp_expired). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_medisure_0825",
+          "amount_paise": 28111,
+          "target_bank": "Indian Bank",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (incorrect_otp). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_medisure_0923",
+          "amount_paise": 24162,
+          "target_bank": "Airtel Payments Bank Limited",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (pin_attempts_exceeded). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_medisure_0333",
+          "amount_paise": 23370,
+          "target_bank": "Airtel Payments Bank Limited",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (otp_expired). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_medisure_0742",
+          "amount_paise": 17736,
+          "target_bank": "Airtel Payments Bank Limited",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (otp_expired). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_medisure_1191",
+          "amount_paise": 17207,
+          "target_bank": "Airtel Payments Bank Limited",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (pin_not_set). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_medisure_1495",
+          "amount_paise": 13311,
+          "target_bank": "Airtel Payments Bank Limited",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (incorrect_card_details). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_medisure_0614",
+          "amount_paise": 13297,
+          "target_bank": "Airtel Payments Bank Limited",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (pin_not_set). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_medisure_0460",
+          "amount_paise": 7872,
+          "target_bank": "Kotak Mahindra Bank",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (pin_not_set). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_medisure_0414",
+          "amount_paise": 7014,
+          "target_bank": "Airtel Payments Bank Limited",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (otp_attempts_exceeded). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_medisure_0949",
+          "amount_paise": 2334,
+          "target_bank": "Airtel Payments Bank Limited",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (otp_expired). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_medisure_0020",
+          "amount_paise": 1041,
+          "target_bank": "Indian Bank",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (pin_not_set). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        }
+      ]
+    },
+    {
       "group_id": "retry_soft_decline",
       "action_type": "retry_soft_decline",
       "title": "Retry 23 unretried soft declines",
@@ -2760,8 +3865,8 @@
           "txn_id": "pay_medisure_0250",
           "amount_paise": 1565176,
           "target_bank": "Airtel Payments Bank Limited",
-          "scheduled_time": "2026-08-27T10:18:22.297006+00:00",
-          "reason": "Enable automatic soft-decline retry logic on the payment gateway so that recoverable failure codes are retried at least once before the transaction is finalised as failed. (transaction_limit_exceeded), unretried -- retry at +84.3h, past the plateau; intent goes stale",
+          "scheduled_time": "2026-08-27T10:33:35.777407+00:00",
+          "reason": "Enable automatic soft-decline retry logic on the payment gateway so that recoverable failure codes are retried at least once before the transaction is finalised as failed. (transaction_limit_exceeded), unretried -- retry at +84.6h, past the plateau; intent goes stale",
           "requires_merchant_approval": false
         },
         {
@@ -2769,8 +3874,8 @@
           "txn_id": "pay_medisure_1365",
           "amount_paise": 827932,
           "target_bank": "Punjab National Bank",
-          "scheduled_time": "2026-08-27T10:18:22.298011+00:00",
-          "reason": "Enable automatic soft-decline retry logic on the payment gateway so that recoverable failure codes are retried at least once before the transaction is finalised as failed. (transaction_daily_limit_exceeded), unretried -- retry at +94.3h, past the plateau; intent goes stale",
+          "scheduled_time": "2026-08-27T10:33:35.777407+00:00",
+          "reason": "Enable automatic soft-decline retry logic on the payment gateway so that recoverable failure codes are retried at least once before the transaction is finalised as failed. (transaction_daily_limit_exceeded), unretried -- retry at +94.6h, past the plateau; intent goes stale",
           "requires_merchant_approval": false
         },
         {
@@ -2787,8 +3892,8 @@
           "txn_id": "pay_medisure_0822",
           "amount_paise": 211199,
           "target_bank": "Airtel Payments Bank Limited",
-          "scheduled_time": "2026-08-27T10:18:22.298011+00:00",
-          "reason": "Enable automatic soft-decline retry logic on the payment gateway so that recoverable failure codes are retried at least once before the transaction is finalised as failed. (insufficient_funds), unretried -- retry at +40.3h, the plateau: long enough for the balance to have changed",
+          "scheduled_time": "2026-08-27T10:33:35.778403+00:00",
+          "reason": "Enable automatic soft-decline retry logic on the payment gateway so that recoverable failure codes are retried at least once before the transaction is finalised as failed. (insufficient_funds), unretried -- retry at +40.6h, the plateau: long enough for the balance to have changed",
           "requires_merchant_approval": false
         },
         {
@@ -2805,8 +3910,8 @@
           "txn_id": "pay_medisure_1009",
           "amount_paise": 93769,
           "target_bank": "Airtel Payments Bank Limited",
-          "scheduled_time": "2026-08-27T10:18:22.298011+00:00",
-          "reason": "Enable automatic soft-decline retry logic on the payment gateway so that recoverable failure codes are retried at least once before the transaction is finalised as failed. (transaction_frequency_limit_exceeded), unretried -- retry at +114.3h, past the plateau; intent goes stale",
+          "scheduled_time": "2026-08-27T10:33:35.778403+00:00",
+          "reason": "Enable automatic soft-decline retry logic on the payment gateway so that recoverable failure codes are retried at least once before the transaction is finalised as failed. (transaction_frequency_limit_exceeded), unretried -- retry at +114.6h, past the plateau; intent goes stale",
           "requires_merchant_approval": false
         },
         {
@@ -2832,8 +3937,8 @@
           "txn_id": "pay_medisure_0608",
           "amount_paise": 82969,
           "target_bank": "State Bank of India",
-          "scheduled_time": "2026-08-27T10:18:22.298011+00:00",
-          "reason": "Enable automatic soft-decline retry logic on the payment gateway so that recoverable failure codes are retried at least once before the transaction is finalised as failed. (transaction_frequency_limit_exceeded), unretried -- retry at +121.3h, past the plateau; intent goes stale",
+          "scheduled_time": "2026-08-27T10:33:35.778403+00:00",
+          "reason": "Enable automatic soft-decline retry logic on the payment gateway so that recoverable failure codes are retried at least once before the transaction is finalised as failed. (transaction_frequency_limit_exceeded), unretried -- retry at +121.6h, past the plateau; intent goes stale",
           "requires_merchant_approval": false
         },
         {
@@ -2859,8 +3964,8 @@
           "txn_id": "pay_medisure_0129",
           "amount_paise": 69628,
           "target_bank": "Bank Of India",
-          "scheduled_time": "2026-08-27T10:18:22.298011+00:00",
-          "reason": "Enable automatic soft-decline retry logic on the payment gateway so that recoverable failure codes are retried at least once before the transaction is finalised as failed. (capture_failed), unretried -- retry at +62.3h, last look before the odds fall away",
+          "scheduled_time": "2026-08-27T10:33:35.778403+00:00",
+          "reason": "Enable automatic soft-decline retry logic on the payment gateway so that recoverable failure codes are retried at least once before the transaction is finalised as failed. (capture_failed), unretried -- retry at +62.6h, last look before the odds fall away",
           "requires_merchant_approval": false
         },
         {
@@ -2868,8 +3973,8 @@
           "txn_id": "pay_medisure_0722",
           "amount_paise": 67788,
           "target_bank": "Airtel Payments Bank Limited",
-          "scheduled_time": "2026-08-27T10:18:22.298011+00:00",
-          "reason": "Enable automatic soft-decline retry logic on the payment gateway so that recoverable failure codes are retried at least once before the transaction is finalised as failed. (record_not_found), unretried -- retry at +67.3h, last look before the odds fall away",
+          "scheduled_time": "2026-08-27T10:33:35.778403+00:00",
+          "reason": "Enable automatic soft-decline retry logic on the payment gateway so that recoverable failure codes are retried at least once before the transaction is finalised as failed. (record_not_found), unretried -- retry at +67.6h, last look before the odds fall away",
           "requires_merchant_approval": false
         },
         {
@@ -2886,8 +3991,8 @@
           "txn_id": "pay_medisure_0727",
           "amount_paise": 45454,
           "target_bank": "Airtel Payments Bank Limited",
-          "scheduled_time": "2026-08-27T10:18:22.298011+00:00",
-          "reason": "Enable automatic soft-decline retry logic on the payment gateway so that recoverable failure codes are retried at least once before the transaction is finalised as failed. (credit_limit_exceeded), unretried -- retry at +70.3h, the plateau: long enough for the balance to have changed",
+          "scheduled_time": "2026-08-27T10:33:35.778403+00:00",
+          "reason": "Enable automatic soft-decline retry logic on the payment gateway so that recoverable failure codes are retried at least once before the transaction is finalised as failed. (credit_limit_exceeded), unretried -- retry at +70.6h, the plateau: long enough for the balance to have changed",
           "requires_merchant_approval": false
         },
         {
@@ -2895,8 +4000,8 @@
           "txn_id": "pay_medisure_1347",
           "amount_paise": 42937,
           "target_bank": "State Bank of India",
-          "scheduled_time": "2026-08-27T10:18:22.298011+00:00",
-          "reason": "Enable automatic soft-decline retry logic on the payment gateway so that recoverable failure codes are retried at least once before the transaction is finalised as failed. (request_timed_out), unretried -- retry at +74.3h, last look before the odds fall away",
+          "scheduled_time": "2026-08-27T10:33:35.778403+00:00",
+          "reason": "Enable automatic soft-decline retry logic on the payment gateway so that recoverable failure codes are retried at least once before the transaction is finalised as failed. (request_timed_out), unretried -- retry at +74.6h, last look before the odds fall away",
           "requires_merchant_approval": false
         },
         {
@@ -2913,8 +4018,8 @@
           "txn_id": "pay_medisure_0983",
           "amount_paise": 15061,
           "target_bank": "UCO Bank",
-          "scheduled_time": "2026-08-27T10:18:22.299055+00:00",
-          "reason": "Enable automatic soft-decline retry logic on the payment gateway so that recoverable failure codes are retried at least once before the transaction is finalised as failed. (credit_failed), unretried -- retry at +40.3h, last look before the odds fall away",
+          "scheduled_time": "2026-08-27T10:33:35.778403+00:00",
+          "reason": "Enable automatic soft-decline retry logic on the payment gateway so that recoverable failure codes are retried at least once before the transaction is finalised as failed. (credit_failed), unretried -- retry at +40.6h, last look before the odds fall away",
           "requires_merchant_approval": false
         },
         {
@@ -2931,8 +4036,8 @@
           "txn_id": "pay_medisure_1049",
           "amount_paise": 10605,
           "target_bank": "Kotak Mahindra Bank",
-          "scheduled_time": "2026-08-27T10:18:22.299055+00:00",
-          "reason": "Enable automatic soft-decline retry logic on the payment gateway so that recoverable failure codes are retried at least once before the transaction is finalised as failed. (debit_declined), unretried -- retry at +42.3h, the plateau: long enough for the balance to have changed",
+          "scheduled_time": "2026-08-27T10:33:35.779408+00:00",
+          "reason": "Enable automatic soft-decline retry logic on the payment gateway so that recoverable failure codes are retried at least once before the transaction is finalised as failed. (debit_declined), unretried -- retry at +42.6h, the plateau: long enough for the balance to have changed",
           "requires_merchant_approval": false
         },
         {
@@ -2940,8 +4045,8 @@
           "txn_id": "pay_medisure_0234",
           "amount_paise": 10024,
           "target_bank": "Airtel Payments Bank Limited",
-          "scheduled_time": "2026-08-27T10:18:22.299055+00:00",
-          "reason": "Enable automatic soft-decline retry logic on the payment gateway so that recoverable failure codes are retried at least once before the transaction is finalised as failed. (debit_declined), unretried -- retry at +39.3h, the plateau: long enough for the balance to have changed",
+          "scheduled_time": "2026-08-27T10:33:35.779408+00:00",
+          "reason": "Enable automatic soft-decline retry logic on the payment gateway so that recoverable failure codes are retried at least once before the transaction is finalised as failed. (debit_declined), unretried -- retry at +39.6h, the plateau: long enough for the balance to have changed",
           "requires_merchant_approval": false
         },
         {

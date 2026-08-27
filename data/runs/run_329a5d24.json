@@ -1,12 +1,12 @@
 {
-  "run_id": "run_d090d51b",
+  "run_id": "run_329a5d24",
   "merchant_id": "urbanthread",
   "merchant_name": "UrbanThread",
   "mcc": "5691",
   "seed": 20260824,
-  "started_at": 1787825908.536,
-  "duration_ms": 2777,
-  "commit": "2526381",
+  "started_at": 1787826821.2609572,
+  "duration_ms": 2540,
+  "commit": "6ca2278",
   "models": {
     "fast": "claude-haiku-4.5",
     "reasoning": "claude-sonnet-4.6",
@@ -18,13 +18,13 @@
   "used_stubs": false,
   "traces": [
     {
-      "run_id": "run_d090d51b",
+      "run_id": "run_329a5d24",
       "seq": 0,
       "node": "ingest",
       "kind": "deterministic",
       "status": "ok",
-      "started_at": 1787825910.9357073,
-      "duration_ms": 29,
+      "started_at": 1787826823.4476342,
+      "duration_ms": 28,
       "input_summary": {
         "merchant": "urbanthread",
         "mcc": "5691"
@@ -50,13 +50,13 @@
       }
     },
     {
-      "run_id": "run_d090d51b",
+      "run_id": "run_329a5d24",
       "seq": 1,
       "node": "classify",
       "kind": "llm",
       "status": "ok",
-      "started_at": 1787825910.9667048,
-      "duration_ms": 0,
+      "started_at": 1787826823.4772234,
+      "duration_ms": 1,
       "input_summary": {
         "distinct_codes": 44,
         "failures": 103
@@ -85,12 +85,12 @@
       "intermediates": {}
     },
     {
-      "run_id": "run_d090d51b",
+      "run_id": "run_329a5d24",
       "seq": 2,
       "node": "human_review",
       "kind": "deterministic",
       "status": "skipped",
-      "started_at": 1787825910.9687037,
+      "started_at": 1787826823.4792194,
       "duration_ms": 0,
       "input_summary": {},
       "output_summary": {
@@ -109,13 +109,13 @@
       "intermediates": {}
     },
     {
-      "run_id": "run_d090d51b",
+      "run_id": "run_329a5d24",
       "seq": 3,
       "node": "bank_health",
       "kind": "deterministic",
       "status": "ok",
-      "started_at": 1787825910.9687037,
-      "duration_ms": 2,
+      "started_at": 1787826823.4802706,
+      "duration_ms": 1,
       "input_summary": {},
       "output_summary": {
         "banks_examined": 10,
@@ -234,13 +234,13 @@
       }
     },
     {
-      "run_id": "run_d090d51b",
+      "run_id": "run_329a5d24",
       "seq": 4,
       "node": "decompose",
       "kind": "deterministic",
       "status": "ok",
-      "started_at": 1787825910.9727051,
-      "duration_ms": 309,
+      "started_at": 1787826823.4832592,
+      "duration_ms": 275,
       "input_summary": {},
       "output_summary": {
         "gap_pts": 1.621,
@@ -305,13 +305,13 @@
       }
     },
     {
-      "run_id": "run_d090d51b",
+      "run_id": "run_329a5d24",
       "seq": 5,
       "node": "hypothesise",
       "kind": "llm",
       "status": "ok",
-      "started_at": 1787825911.283149,
-      "duration_ms": 2,
+      "started_at": 1787826823.7595835,
+      "duration_ms": 3,
       "input_summary": {},
       "output_summary": {
         "primary_label": "no_soft_decline_retry",
@@ -362,16 +362,16 @@
       "intermediates": {}
     },
     {
-      "run_id": "run_d090d51b",
+      "run_id": "run_329a5d24",
       "seq": 6,
       "node": "plan",
       "kind": "deterministic",
       "status": "ok",
-      "started_at": 1787825911.2851903,
-      "duration_ms": 1,
+      "started_at": 1787826823.763594,
+      "duration_ms": 2,
       "input_summary": {},
       "output_summary": {
-        "actions": 22,
+        "actions": 36,
         "withheld": 4,
         "headline": "5 fixes proposed, 4 withheld because the attribution is inside its own error bar.",
         "withheld_detail": [
@@ -435,21 +435,21 @@
       }
     },
     {
-      "run_id": "run_d090d51b",
+      "run_id": "run_329a5d24",
       "seq": 7,
       "node": "gate",
       "kind": "deterministic",
       "status": "ok",
-      "started_at": 1787825911.2881567,
-      "duration_ms": 15,
+      "started_at": 1787826823.7675917,
+      "duration_ms": 20,
       "input_summary": {},
       "output_summary": {
         "decisions": {
           "allow": 15,
-          "step_up": 5,
-          "deny": 2
+          "step_up": 16,
+          "deny": 5
         },
-        "total": 22
+        "total": 36
       },
       "branch_taken": "execute",
       "model": null,
@@ -464,24 +464,25 @@
         "DENY_AMOUNT_ABOVE_CEILING",
         "OK_ESCALATION",
         "OK_WITHIN_MANDATE",
-        "STEP_UP_ABOVE_AUTO_LIMIT"
+        "STEP_UP_ABOVE_AUTO_LIMIT",
+        "STEP_UP_MERCHANT_APPROVAL_REQUESTED"
       ],
       "intermediates": {}
     },
     {
-      "run_id": "run_d090d51b",
+      "run_id": "run_329a5d24",
       "seq": 8,
       "node": "execute",
       "kind": "deterministic",
       "status": "ok",
-      "started_at": 1787825911.305613,
-      "duration_ms": 1,
+      "started_at": 1787826823.789663,
+      "duration_ms": 4,
       "input_summary": {},
       "output_summary": {
         "executed": 11,
         "recovered_paise": 567932,
         "recovered_inr": 5679.32,
-        "ledger_entries": 22,
+        "ledger_entries": 36,
         "chain_verified": true,
         "calibration": "central"
       },
@@ -500,13 +501,13 @@
       "intermediates": {}
     },
     {
-      "run_id": "run_d090d51b",
+      "run_id": "run_329a5d24",
       "seq": 9,
       "node": "report",
       "kind": "deterministic",
       "status": "ok",
-      "started_at": 1787825911.3085742,
-      "duration_ms": 3,
+      "started_at": 1787826823.7956595,
+      "duration_ms": 5,
       "input_summary": {},
       "output_summary": {
         "measured_keys": [
@@ -1146,7 +1147,7 @@
         ]
       },
       "mandate_violations": 0,
-      "ledger_entries": 22,
+      "ledger_entries": 36,
       "chain_verified": true,
       "chain_detail": "chain verified from genesis to head",
       "efficiency_check": {
@@ -1219,7 +1220,7 @@
         "method+amount_band": 1.7245826336892756,
         "hour+amount_band": -0.8707238149045615,
         "bank+method+hour": 1.567632903765137,
-        "bank+method+amount_band": 1.7194376601988526,
+        "bank+method+amount_band": 1.7194376601988637,
         "bank+hour+amount_band": -0.7809424150257094,
         "method+hour+amount_band": 1.61135863919587,
         "bank+method+hour+amount_band": 1.5989865220050081
@@ -1463,25 +1464,26 @@
           "reason": "attribution -0.18 pts is inside its own measured error of +/-0.58 pts -- the engine cannot tell this from zero"
         }
       ],
-      "actions": 22
+      "actions": 36
     },
     "gate": {
       "decisions": {
         "allow": 15,
-        "step_up": 5,
-        "deny": 2
+        "step_up": 16,
+        "deny": 5
       },
       "reason_codes": [
         "DENY_AMOUNT_ABOVE_CEILING",
         "OK_ESCALATION",
         "OK_WITHIN_MANDATE",
-        "STEP_UP_ABOVE_AUTO_LIMIT"
+        "STEP_UP_ABOVE_AUTO_LIMIT",
+        "STEP_UP_MERCHANT_APPROVAL_REQUESTED"
       ]
     },
     "ledger": [
       {
         "sequence": 0,
-        "timestamp": "2026-08-27T10:18:31.305613+00:00",
+        "timestamp": "2026-08-27T10:33:43.789663+00:00",
         "txn_id": "merchant:urbanthread",
         "proposed_action": {
           "action_type": "flag_for_investigation",
@@ -1496,11 +1498,11 @@
         "gate_reason": "OK_ESCALATION",
         "outcome": "escalated",
         "prev_hash": "0000000000000000000000000000000000000000000000000000000000000000",
-        "entry_hash": "70ed1be12f443aa516b236dd09ce41f2d7051a52e21bcd78b073537476a5ced8"
+        "entry_hash": "69fed32f1ae6735b51664472e8f9b49ead032dff6dfdc28e5c2b801350e5c68f"
       },
       {
         "sequence": 1,
-        "timestamp": "2026-08-27T10:18:31.305613+00:00",
+        "timestamp": "2026-08-27T10:33:43.789663+00:00",
         "txn_id": "merchant:urbanthread",
         "proposed_action": {
           "action_type": "flag_for_investigation",
@@ -1514,12 +1516,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_ESCALATION",
         "outcome": "escalated",
-        "prev_hash": "70ed1be12f443aa516b236dd09ce41f2d7051a52e21bcd78b073537476a5ced8",
-        "entry_hash": "1abbb71185f3df12de69421ca37a8bc122010ac921ae72b341fb68e6994e7df5"
+        "prev_hash": "69fed32f1ae6735b51664472e8f9b49ead032dff6dfdc28e5c2b801350e5c68f",
+        "entry_hash": "baa09a886ff0b5a132923e25c066dc95d508b4560248b547081d8c7dedec27fb"
       },
       {
         "sequence": 2,
-        "timestamp": "2026-08-27T10:18:31.305613+00:00",
+        "timestamp": "2026-08-27T10:33:43.789663+00:00",
         "txn_id": "merchant:urbanthread",
         "proposed_action": {
           "action_type": "flag_for_investigation",
@@ -1533,12 +1535,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_ESCALATION",
         "outcome": "escalated",
-        "prev_hash": "1abbb71185f3df12de69421ca37a8bc122010ac921ae72b341fb68e6994e7df5",
-        "entry_hash": "1bd1f338fbd37efb2f18323f4cccd985bd093e5847b6c7b3a1d84122e8017f93"
+        "prev_hash": "baa09a886ff0b5a132923e25c066dc95d508b4560248b547081d8c7dedec27fb",
+        "entry_hash": "39a96035abbff45cc0b9a538efae102df6c1ea8d719af04d8a1901d2f9f86e1e"
       },
       {
         "sequence": 3,
-        "timestamp": "2026-08-27T10:18:31.305613+00:00",
+        "timestamp": "2026-08-27T10:33:43.789663+00:00",
         "txn_id": "merchant:urbanthread",
         "proposed_action": {
           "action_type": "flag_for_investigation",
@@ -1552,12 +1554,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_ESCALATION",
         "outcome": "escalated",
-        "prev_hash": "1bd1f338fbd37efb2f18323f4cccd985bd093e5847b6c7b3a1d84122e8017f93",
-        "entry_hash": "2c81b1c7c8fcf4b1e9b1b14d38a5397d0bcf5038cdf2bca1d327c2c562631dac"
+        "prev_hash": "39a96035abbff45cc0b9a538efae102df6c1ea8d719af04d8a1901d2f9f86e1e",
+        "entry_hash": "b36bc11465df94615796a7b9da47764dd5e0eb7dde402e77ee8a6724e80516fd"
       },
       {
         "sequence": 4,
-        "timestamp": "2026-08-27T10:18:31.305613+00:00",
+        "timestamp": "2026-08-27T10:33:43.790672+00:00",
         "txn_id": "pay_urbanthread_0717",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1571,31 +1573,31 @@
         "gate_decision": "deny",
         "gate_reason": "DENY_AMOUNT_ABOVE_CEILING",
         "outcome": "denied",
-        "prev_hash": "2c81b1c7c8fcf4b1e9b1b14d38a5397d0bcf5038cdf2bca1d327c2c562631dac",
-        "entry_hash": "63dd8e9a520e5d167ee28652fa7a8f3c4c3a90f8c03e8116954f5047425ebb22"
+        "prev_hash": "b36bc11465df94615796a7b9da47764dd5e0eb7dde402e77ee8a6724e80516fd",
+        "entry_hash": "f0cdb406c076669b2bee085fd10e67b3efa69f5aaeb48f88493c7fb6cb51092b"
       },
       {
         "sequence": 5,
-        "timestamp": "2026-08-27T10:18:31.305613+00:00",
+        "timestamp": "2026-08-27T10:33:43.790672+00:00",
         "txn_id": "pay_urbanthread_0245",
         "proposed_action": {
           "action_type": "retry_soft_decline",
           "txn_id": "pay_urbanthread_0245",
           "amount_paise": 1814752,
           "target_bank": "Central Bank of India",
-          "scheduled_time": "2026-08-27T10:18:31.286155+00:00",
-          "reason": "Enable automatic soft-decline retry for retriable failure codes on UrbanThread's payment flows. (duplicate_rrn_found), unretried -- retry at +119.3h, last look before the odds fall away",
+          "scheduled_time": "2026-08-27T10:33:43.764640+00:00",
+          "reason": "Enable automatic soft-decline retry for retriable failure codes on UrbanThread's payment flows. (duplicate_rrn_found), unretried -- retry at +119.6h, last look before the odds fall away",
           "requires_merchant_approval": false
         },
         "gate_decision": "deny",
         "gate_reason": "DENY_AMOUNT_ABOVE_CEILING",
         "outcome": "denied",
-        "prev_hash": "63dd8e9a520e5d167ee28652fa7a8f3c4c3a90f8c03e8116954f5047425ebb22",
-        "entry_hash": "0aa308a051b9793acb5a882a55b269d044475e056fc568e3c213cd5be7f6349f"
+        "prev_hash": "f0cdb406c076669b2bee085fd10e67b3efa69f5aaeb48f88493c7fb6cb51092b",
+        "entry_hash": "b3180abb6211859794cca1eae635769250c188beb951ac6c9bb11dd2769f964d"
       },
       {
         "sequence": 6,
-        "timestamp": "2026-08-27T10:18:31.305613+00:00",
+        "timestamp": "2026-08-27T10:33:43.790672+00:00",
         "txn_id": "pay_urbanthread_0531",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1609,12 +1611,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "0aa308a051b9793acb5a882a55b269d044475e056fc568e3c213cd5be7f6349f",
-        "entry_hash": "535390fc0e897c7afd9d704cc3a3cb4d4823051069594cc4ee5fd473a35130fe"
+        "prev_hash": "b3180abb6211859794cca1eae635769250c188beb951ac6c9bb11dd2769f964d",
+        "entry_hash": "3447c1ea6a9fdc7da646229f98676a11f84abc97cc63875fa15eba9e5267ad8a"
       },
       {
         "sequence": 7,
-        "timestamp": "2026-08-27T10:18:31.305613+00:00",
+        "timestamp": "2026-08-27T10:33:43.790672+00:00",
         "txn_id": "pay_urbanthread_0805",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1628,221 +1630,221 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "535390fc0e897c7afd9d704cc3a3cb4d4823051069594cc4ee5fd473a35130fe",
-        "entry_hash": "df275ace80b860f334b172f29318f0ca128db45e068bf3f511389e526db1e7f9"
+        "prev_hash": "3447c1ea6a9fdc7da646229f98676a11f84abc97cc63875fa15eba9e5267ad8a",
+        "entry_hash": "04cb7a1a6a0fd88a0bf77aaff95e20f7b8c912533b53f5c17b24569fbbb8304f"
       },
       {
         "sequence": 8,
-        "timestamp": "2026-08-27T10:18:31.305613+00:00",
+        "timestamp": "2026-08-27T10:33:43.790672+00:00",
         "txn_id": "pay_urbanthread_0187",
         "proposed_action": {
           "action_type": "retry_soft_decline",
           "txn_id": "pay_urbanthread_0187",
           "amount_paise": 397289,
           "target_bank": "Central Bank of India",
-          "scheduled_time": "2026-08-27T10:18:31.286155+00:00",
-          "reason": "Enable automatic soft-decline retry for retriable failure codes on UrbanThread's payment flows. (card_declined), unretried -- retry at +48.3h, the plateau: long enough for the balance to have changed",
+          "scheduled_time": "2026-08-27T10:33:43.765591+00:00",
+          "reason": "Enable automatic soft-decline retry for retriable failure codes on UrbanThread's payment flows. (card_declined), unretried -- retry at +48.6h, the plateau: long enough for the balance to have changed",
           "requires_merchant_approval": false
         },
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "df275ace80b860f334b172f29318f0ca128db45e068bf3f511389e526db1e7f9",
-        "entry_hash": "efeccab60bce69b236c82f30a83179df8bb642206dd6285dbf1a6c9e94401e4a"
+        "prev_hash": "04cb7a1a6a0fd88a0bf77aaff95e20f7b8c912533b53f5c17b24569fbbb8304f",
+        "entry_hash": "2a4de509d1d2e23f2c4bea2e51a5caff0088bf7b98fc766310d5d1dc28757814"
       },
       {
         "sequence": 9,
-        "timestamp": "2026-08-27T10:18:31.305613+00:00",
+        "timestamp": "2026-08-27T10:33:43.790672+00:00",
         "txn_id": "pay_urbanthread_0250",
         "proposed_action": {
           "action_type": "retry_soft_decline",
           "txn_id": "pay_urbanthread_0250",
           "amount_paise": 378837,
           "target_bank": "Canara Bank",
-          "scheduled_time": "2026-08-27T10:18:31.286155+00:00",
-          "reason": "Enable automatic soft-decline retry for retriable failure codes on UrbanThread's payment flows. (transaction_daily_limit_exceeded), unretried -- retry at +110.3h, past the plateau; intent goes stale",
+          "scheduled_time": "2026-08-27T10:33:43.765591+00:00",
+          "reason": "Enable automatic soft-decline retry for retriable failure codes on UrbanThread's payment flows. (transaction_daily_limit_exceeded), unretried -- retry at +110.6h, past the plateau; intent goes stale",
           "requires_merchant_approval": false
         },
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "efeccab60bce69b236c82f30a83179df8bb642206dd6285dbf1a6c9e94401e4a",
-        "entry_hash": "b51f94023b5e55f21b9d39d962fa8232d07dae0dd3a1447d491a5efa4dc4e13f"
+        "prev_hash": "2a4de509d1d2e23f2c4bea2e51a5caff0088bf7b98fc766310d5d1dc28757814",
+        "entry_hash": "64d2d37ebb53a4f74a8b06fb11f6120ee8c6234d3fe1d48c2da8e6141a70d6eb"
       },
       {
         "sequence": 10,
-        "timestamp": "2026-08-27T10:18:31.305613+00:00",
+        "timestamp": "2026-08-27T10:33:43.790672+00:00",
         "txn_id": "pay_urbanthread_0813",
         "proposed_action": {
           "action_type": "retry_soft_decline",
           "txn_id": "pay_urbanthread_0813",
           "amount_paise": 287533,
           "target_bank": "State Bank of India",
-          "scheduled_time": "2026-08-27T10:18:31.286155+00:00",
-          "reason": "Enable automatic soft-decline retry for retriable failure codes on UrbanThread's payment flows. (transaction_daily_count_exceeded), unretried -- retry at +115.3h, past the plateau; intent goes stale",
+          "scheduled_time": "2026-08-27T10:33:43.765591+00:00",
+          "reason": "Enable automatic soft-decline retry for retriable failure codes on UrbanThread's payment flows. (transaction_daily_count_exceeded), unretried -- retry at +115.6h, past the plateau; intent goes stale",
           "requires_merchant_approval": false
         },
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "b51f94023b5e55f21b9d39d962fa8232d07dae0dd3a1447d491a5efa4dc4e13f",
-        "entry_hash": "87d81873f9017f21c72910e13ad169d956bb74e110ffc4e050e4959f7cf9fe8c"
+        "prev_hash": "64d2d37ebb53a4f74a8b06fb11f6120ee8c6234d3fe1d48c2da8e6141a70d6eb",
+        "entry_hash": "113d60dc18a5b3c2893bbd29edad98a0da3a27ebb5a502b7f00bbbec389ba6e9"
       },
       {
         "sequence": 11,
-        "timestamp": "2026-08-27T10:18:31.305613+00:00",
+        "timestamp": "2026-08-27T10:33:43.790672+00:00",
         "txn_id": "pay_urbanthread_0668",
         "proposed_action": {
           "action_type": "retry_soft_decline",
           "txn_id": "pay_urbanthread_0668",
           "amount_paise": 247367,
           "target_bank": "India Post Payments Bank Limited",
-          "scheduled_time": "2026-08-27T10:18:31.286155+00:00",
-          "reason": "Enable automatic soft-decline retry for retriable failure codes on UrbanThread's payment flows. (payment_pending), unretried -- retry at +42.3h, the plateau: long enough for the balance to have changed",
+          "scheduled_time": "2026-08-27T10:33:43.765591+00:00",
+          "reason": "Enable automatic soft-decline retry for retriable failure codes on UrbanThread's payment flows. (payment_pending), unretried -- retry at +42.6h, the plateau: long enough for the balance to have changed",
           "requires_merchant_approval": false
         },
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "87d81873f9017f21c72910e13ad169d956bb74e110ffc4e050e4959f7cf9fe8c",
-        "entry_hash": "ad844ceb4e3cbf123e511df90f0ba045591e6cec196d349753b6c6b11182fa69"
+        "prev_hash": "113d60dc18a5b3c2893bbd29edad98a0da3a27ebb5a502b7f00bbbec389ba6e9",
+        "entry_hash": "b0411eaebadf1d861b3dba9195dfc6e6693e1834ac8881985532f8f28db24eb8"
       },
       {
         "sequence": 12,
-        "timestamp": "2026-08-27T10:18:31.306579+00:00",
+        "timestamp": "2026-08-27T10:33:43.790672+00:00",
         "txn_id": "pay_urbanthread_0807",
         "proposed_action": {
           "action_type": "retry_soft_decline",
           "txn_id": "pay_urbanthread_0807",
           "amount_paise": 177058,
           "target_bank": "India Post Payments Bank Limited",
-          "scheduled_time": "2026-08-27T10:18:31.286155+00:00",
-          "reason": "Enable automatic soft-decline retry for retriable failure codes on UrbanThread's payment flows. (payment_pending_approval), unretried -- retry at +119.3h, past the plateau; intent goes stale",
+          "scheduled_time": "2026-08-27T10:33:43.765591+00:00",
+          "reason": "Enable automatic soft-decline retry for retriable failure codes on UrbanThread's payment flows. (payment_pending_approval), unretried -- retry at +119.6h, past the plateau; intent goes stale",
           "requires_merchant_approval": false
         },
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "ad844ceb4e3cbf123e511df90f0ba045591e6cec196d349753b6c6b11182fa69",
-        "entry_hash": "e98c60009ac3e5829248abb3edc8129a249fc0fafcb559e0dbfebcac6cbd18ab"
+        "prev_hash": "b0411eaebadf1d861b3dba9195dfc6e6693e1834ac8881985532f8f28db24eb8",
+        "entry_hash": "4bb13d64fe697773021d3cfbea3efc0c40196abb0c24cb7b38368833d85c692e"
       },
       {
         "sequence": 13,
-        "timestamp": "2026-08-27T10:18:31.306579+00:00",
+        "timestamp": "2026-08-27T10:33:43.791662+00:00",
         "txn_id": "pay_urbanthread_0203",
         "proposed_action": {
           "action_type": "retry_soft_decline",
           "txn_id": "pay_urbanthread_0203",
           "amount_paise": 172065,
           "target_bank": "Bank of Baroda",
-          "scheduled_time": "2026-08-27T10:18:31.286155+00:00",
-          "reason": "Enable automatic soft-decline retry for retriable failure codes on UrbanThread's payment flows. (card_declined), unretried -- retry at +108.3h, past the plateau; intent goes stale",
+          "scheduled_time": "2026-08-27T10:33:43.765591+00:00",
+          "reason": "Enable automatic soft-decline retry for retriable failure codes on UrbanThread's payment flows. (card_declined), unretried -- retry at +108.6h, past the plateau; intent goes stale",
           "requires_merchant_approval": false
         },
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "e98c60009ac3e5829248abb3edc8129a249fc0fafcb559e0dbfebcac6cbd18ab",
-        "entry_hash": "c0236750127a1f534d9f58641045d2d786b4dbbfe2ff0709215e5343859cf6b9"
+        "prev_hash": "4bb13d64fe697773021d3cfbea3efc0c40196abb0c24cb7b38368833d85c692e",
+        "entry_hash": "dee520bc1e8d9ca0870189f4e7f26fbe71d449dcdc04e0e785f2048cec8806fc"
       },
       {
         "sequence": 14,
-        "timestamp": "2026-08-27T10:18:31.306579+00:00",
+        "timestamp": "2026-08-27T10:33:43.791662+00:00",
         "txn_id": "pay_urbanthread_0278",
         "proposed_action": {
           "action_type": "retry_soft_decline",
           "txn_id": "pay_urbanthread_0278",
           "amount_paise": 158767,
           "target_bank": "Kotak Mahindra Bank",
-          "scheduled_time": "2026-08-27T10:18:31.286155+00:00",
-          "reason": "Enable automatic soft-decline retry for retriable failure codes on UrbanThread's payment flows. (payment_pending_approval), unretried -- retry at +58.3h, the plateau: long enough for the balance to have changed",
+          "scheduled_time": "2026-08-27T10:33:43.765591+00:00",
+          "reason": "Enable automatic soft-decline retry for retriable failure codes on UrbanThread's payment flows. (payment_pending_approval), unretried -- retry at +58.6h, the plateau: long enough for the balance to have changed",
           "requires_merchant_approval": false
         },
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "c0236750127a1f534d9f58641045d2d786b4dbbfe2ff0709215e5343859cf6b9",
-        "entry_hash": "df420e192ce7d1925d829765e9613d149b12ac99b7275a2b5a55b261bc517d1e"
+        "prev_hash": "dee520bc1e8d9ca0870189f4e7f26fbe71d449dcdc04e0e785f2048cec8806fc",
+        "entry_hash": "bf1cbd1a05dbbd6e6b130161f2102a1acdcd5e5c3c3833014e7f5db8bd36717b"
       },
       {
         "sequence": 15,
-        "timestamp": "2026-08-27T10:18:31.306579+00:00",
+        "timestamp": "2026-08-27T10:33:43.791662+00:00",
         "txn_id": "pay_urbanthread_0756",
         "proposed_action": {
           "action_type": "retry_soft_decline",
           "txn_id": "pay_urbanthread_0756",
           "amount_paise": 113342,
           "target_bank": "State Bank of India",
-          "scheduled_time": "2026-08-27T10:18:31.286155+00:00",
-          "reason": "Enable automatic soft-decline retry for retriable failure codes on UrbanThread's payment flows. (transaction_daily_count_exceeded), unretried -- retry at +39.3h, the plateau: long enough for the balance to have changed",
+          "scheduled_time": "2026-08-27T10:33:43.765591+00:00",
+          "reason": "Enable automatic soft-decline retry for retriable failure codes on UrbanThread's payment flows. (transaction_daily_count_exceeded), unretried -- retry at +39.6h, the plateau: long enough for the balance to have changed",
           "requires_merchant_approval": false
         },
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "df420e192ce7d1925d829765e9613d149b12ac99b7275a2b5a55b261bc517d1e",
-        "entry_hash": "46d56e9f2f28602c405dadc7fba45537f652ad61eecaf1479b721403982c5775"
+        "prev_hash": "bf1cbd1a05dbbd6e6b130161f2102a1acdcd5e5c3c3833014e7f5db8bd36717b",
+        "entry_hash": "3d5a93741834a30c9f3c1a4ac27cadb5042f1998ecfa7ce82a8596d606e6dac6"
       },
       {
         "sequence": 16,
-        "timestamp": "2026-08-27T10:18:31.306579+00:00",
+        "timestamp": "2026-08-27T10:33:43.791662+00:00",
         "txn_id": "pay_urbanthread_0275",
         "proposed_action": {
           "action_type": "retry_soft_decline",
           "txn_id": "pay_urbanthread_0275",
           "amount_paise": 92810,
           "target_bank": "Punjab National Bank",
-          "scheduled_time": "2026-08-27T10:18:31.286155+00:00",
-          "reason": "Enable automatic soft-decline retry for retriable failure codes on UrbanThread's payment flows. (transaction_limit_exceeded), unretried -- retry at +74.3h, past the plateau; intent goes stale",
+          "scheduled_time": "2026-08-27T10:33:43.765591+00:00",
+          "reason": "Enable automatic soft-decline retry for retriable failure codes on UrbanThread's payment flows. (transaction_limit_exceeded), unretried -- retry at +74.6h, past the plateau; intent goes stale",
           "requires_merchant_approval": false
         },
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "46d56e9f2f28602c405dadc7fba45537f652ad61eecaf1479b721403982c5775",
-        "entry_hash": "02b91f737b1ad34870f467b656e8b69fb0d060f044fe5d7a4f52e421e1c88929"
+        "prev_hash": "3d5a93741834a30c9f3c1a4ac27cadb5042f1998ecfa7ce82a8596d606e6dac6",
+        "entry_hash": "a9ef37c150c6c05ea2b5f4e8c2e86e961d415dc79c2eab0705b411426762fa77"
       },
       {
         "sequence": 17,
-        "timestamp": "2026-08-27T10:18:31.306579+00:00",
+        "timestamp": "2026-08-27T10:33:43.791662+00:00",
         "txn_id": "pay_urbanthread_0558",
         "proposed_action": {
           "action_type": "retry_soft_decline",
           "txn_id": "pay_urbanthread_0558",
           "amount_paise": 77299,
           "target_bank": "State Bank of India",
-          "scheduled_time": "2026-08-27T10:18:31.287188+00:00",
-          "reason": "Enable automatic soft-decline retry for retriable failure codes on UrbanThread's payment flows. (card_declined), unretried -- retry at +123.3h, past the plateau; intent goes stale",
+          "scheduled_time": "2026-08-27T10:33:43.765591+00:00",
+          "reason": "Enable automatic soft-decline retry for retriable failure codes on UrbanThread's payment flows. (card_declined), unretried -- retry at +123.6h, past the plateau; intent goes stale",
           "requires_merchant_approval": false
         },
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "02b91f737b1ad34870f467b656e8b69fb0d060f044fe5d7a4f52e421e1c88929",
-        "entry_hash": "e91ed4803d4355dcdac34bb952599e2f911189b9c2b75b27a18735345eb20d97"
+        "prev_hash": "a9ef37c150c6c05ea2b5f4e8c2e86e961d415dc79c2eab0705b411426762fa77",
+        "entry_hash": "00593bf9e047533008696f7b7d06380f12793e3fdfe11508a4149a3ad2453c14"
       },
       {
         "sequence": 18,
-        "timestamp": "2026-08-27T10:18:31.306579+00:00",
+        "timestamp": "2026-08-27T10:33:43.791662+00:00",
         "txn_id": "pay_urbanthread_0437",
         "proposed_action": {
           "action_type": "retry_soft_decline",
           "txn_id": "pay_urbanthread_0437",
           "amount_paise": 59296,
           "target_bank": "Bank of Baroda",
-          "scheduled_time": "2026-08-27T10:18:31.287188+00:00",
-          "reason": "Enable automatic soft-decline retry for retriable failure codes on UrbanThread's payment flows. (insufficient_funds), unretried -- retry at +39.3h, the plateau: long enough for the balance to have changed",
+          "scheduled_time": "2026-08-27T10:33:43.765591+00:00",
+          "reason": "Enable automatic soft-decline retry for retriable failure codes on UrbanThread's payment flows. (insufficient_funds), unretried -- retry at +39.6h, the plateau: long enough for the balance to have changed",
           "requires_merchant_approval": false
         },
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "e91ed4803d4355dcdac34bb952599e2f911189b9c2b75b27a18735345eb20d97",
-        "entry_hash": "1af88e1303688232242006e7da6ad72114d5d70330a0a5d6a0fb39d493ba1a39"
+        "prev_hash": "00593bf9e047533008696f7b7d06380f12793e3fdfe11508a4149a3ad2453c14",
+        "entry_hash": "c69de4d43b427cdcda391291126dca10b2ee080d1e261a2183c521284924ff22"
       },
       {
         "sequence": 19,
-        "timestamp": "2026-08-27T10:18:31.306579+00:00",
+        "timestamp": "2026-08-27T10:33:43.791662+00:00",
         "txn_id": "pay_urbanthread_0810",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1856,46 +1858,312 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "1af88e1303688232242006e7da6ad72114d5d70330a0a5d6a0fb39d493ba1a39",
-        "entry_hash": "5db87b3f2061cb1efc8cb3a4b0192e7f82b51a4832b34fe1cfe2a34f2624de4f"
+        "prev_hash": "c69de4d43b427cdcda391291126dca10b2ee080d1e261a2183c521284924ff22",
+        "entry_hash": "ee8ab383264e560bb689017946c8a24c40b76670cd74aa86d95bd6648520b11b"
       },
       {
         "sequence": 20,
-        "timestamp": "2026-08-27T10:18:31.306579+00:00",
+        "timestamp": "2026-08-27T10:33:43.791662+00:00",
         "txn_id": "pay_urbanthread_0068",
         "proposed_action": {
           "action_type": "retry_soft_decline",
           "txn_id": "pay_urbanthread_0068",
           "amount_paise": 52417,
           "target_bank": "India Post Payments Bank Limited",
-          "scheduled_time": "2026-08-27T10:18:31.287188+00:00",
-          "reason": "Enable automatic soft-decline retry for retriable failure codes on UrbanThread's payment flows. (payment_declined), unretried -- retry at +91.3h, past the plateau; intent goes stale",
+          "scheduled_time": "2026-08-27T10:33:43.766591+00:00",
+          "reason": "Enable automatic soft-decline retry for retriable failure codes on UrbanThread's payment flows. (payment_declined), unretried -- retry at +91.6h, past the plateau; intent goes stale",
           "requires_merchant_approval": false
         },
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "5db87b3f2061cb1efc8cb3a4b0192e7f82b51a4832b34fe1cfe2a34f2624de4f",
-        "entry_hash": "a8799b8de1e4556e30b130f944abe391b4153cec4ce22d95fb1c0cae03c16cd0"
+        "prev_hash": "ee8ab383264e560bb689017946c8a24c40b76670cd74aa86d95bd6648520b11b",
+        "entry_hash": "d91a2278ac5b2fcc350a1418d5bb34f227b8739bfa8f076b7e0ba7ee8874181a"
       },
       {
         "sequence": 21,
-        "timestamp": "2026-08-27T10:18:31.306579+00:00",
+        "timestamp": "2026-08-27T10:33:43.791662+00:00",
         "txn_id": "pay_urbanthread_0175",
         "proposed_action": {
           "action_type": "retry_soft_decline",
           "txn_id": "pay_urbanthread_0175",
           "amount_paise": 46171,
           "target_bank": "HDFC Bank Ltd.",
-          "scheduled_time": "2026-08-27T10:18:31.287188+00:00",
-          "reason": "Enable automatic soft-decline retry for retriable failure codes on UrbanThread's payment flows. (payment_declined), unretried -- retry at +101.3h, past the plateau; intent goes stale",
+          "scheduled_time": "2026-08-27T10:33:43.766591+00:00",
+          "reason": "Enable automatic soft-decline retry for retriable failure codes on UrbanThread's payment flows. (payment_declined), unretried -- retry at +101.6h, past the plateau; intent goes stale",
           "requires_merchant_approval": false
         },
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "a8799b8de1e4556e30b130f944abe391b4153cec4ce22d95fb1c0cae03c16cd0",
-        "entry_hash": "5bbb833657b5f9120429122cc6fd2a4892bce240c786da78c410674e9738589b"
+        "prev_hash": "d91a2278ac5b2fcc350a1418d5bb34f227b8739bfa8f076b7e0ba7ee8874181a",
+        "entry_hash": "74da64a011923d9ac5e0d58c9b23d23fbf76d667c8765e5bd64929ddd6b6d323"
+      },
+      {
+        "sequence": 22,
+        "timestamp": "2026-08-27T10:33:43.791662+00:00",
+        "txn_id": "pay_urbanthread_0342",
+        "proposed_action": {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_urbanthread_0342",
+          "amount_paise": 2289823,
+          "target_bank": "Federal Bank Ltd.",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (incorrect_cardholder_name). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        "gate_decision": "deny",
+        "gate_reason": "DENY_AMOUNT_ABOVE_CEILING",
+        "outcome": "denied",
+        "prev_hash": "74da64a011923d9ac5e0d58c9b23d23fbf76d667c8765e5bd64929ddd6b6d323",
+        "entry_hash": "017e67bf330cd2e6210e176ea804c7422b28af9cf5b745f54820af64e85c22e8"
+      },
+      {
+        "sequence": 23,
+        "timestamp": "2026-08-27T10:33:43.792662+00:00",
+        "txn_id": "pay_urbanthread_0650",
+        "proposed_action": {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_urbanthread_0650",
+          "amount_paise": 2077248,
+          "target_bank": "Union Bank of India",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (incorrect_pin). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        "gate_decision": "deny",
+        "gate_reason": "DENY_AMOUNT_ABOVE_CEILING",
+        "outcome": "denied",
+        "prev_hash": "017e67bf330cd2e6210e176ea804c7422b28af9cf5b745f54820af64e85c22e8",
+        "entry_hash": "1ab0c85260e55e436cfde41c37729afd7a1f21bad0c3acca74cf438717636eee"
+      },
+      {
+        "sequence": 24,
+        "timestamp": "2026-08-27T10:33:43.792662+00:00",
+        "txn_id": "pay_urbanthread_0331",
+        "proposed_action": {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_urbanthread_0331",
+          "amount_paise": 1725096,
+          "target_bank": "Central Bank of India",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (incorrect_cardholder_name). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        "gate_decision": "deny",
+        "gate_reason": "DENY_AMOUNT_ABOVE_CEILING",
+        "outcome": "denied",
+        "prev_hash": "1ab0c85260e55e436cfde41c37729afd7a1f21bad0c3acca74cf438717636eee",
+        "entry_hash": "5ee707bbd3ca0b2fae8c909609a93928d308aced2f5cc83d0d99c2eb3fa74a1a"
+      },
+      {
+        "sequence": 25,
+        "timestamp": "2026-08-27T10:33:43.792662+00:00",
+        "txn_id": "pay_urbanthread_0679",
+        "proposed_action": {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_urbanthread_0679",
+          "amount_paise": 645012,
+          "target_bank": "Fino Payments Bank Ltd.",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (incorrect_cvv). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        "gate_decision": "step_up",
+        "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
+        "outcome": "merchant_action",
+        "prev_hash": "5ee707bbd3ca0b2fae8c909609a93928d308aced2f5cc83d0d99c2eb3fa74a1a",
+        "entry_hash": "d7d0d95ae5b3d7b5adbd970d035e8fff3504a15e7dbf2ba38229a3cf6905a242"
+      },
+      {
+        "sequence": 26,
+        "timestamp": "2026-08-27T10:33:43.792662+00:00",
+        "txn_id": "pay_urbanthread_0612",
+        "proposed_action": {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_urbanthread_0612",
+          "amount_paise": 558892,
+          "target_bank": "State Bank of India",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (incorrect_cardholder_name). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        "gate_decision": "step_up",
+        "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
+        "outcome": "merchant_action",
+        "prev_hash": "d7d0d95ae5b3d7b5adbd970d035e8fff3504a15e7dbf2ba38229a3cf6905a242",
+        "entry_hash": "660f56783ee9f52468a022f620162ad67a90a690b614958e5a1010f9f88479f5"
+      },
+      {
+        "sequence": 27,
+        "timestamp": "2026-08-27T10:33:43.792662+00:00",
+        "txn_id": "pay_urbanthread_0223",
+        "proposed_action": {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_urbanthread_0223",
+          "amount_paise": 553853,
+          "target_bank": "Punjab National Bank",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (pin_not_set). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        "gate_decision": "step_up",
+        "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
+        "outcome": "merchant_action",
+        "prev_hash": "660f56783ee9f52468a022f620162ad67a90a690b614958e5a1010f9f88479f5",
+        "entry_hash": "23453288144e148a24fdfb3204e280732b20c75276588023857866a4c3f7141c"
+      },
+      {
+        "sequence": 28,
+        "timestamp": "2026-08-27T10:33:43.792662+00:00",
+        "txn_id": "pay_urbanthread_0400",
+        "proposed_action": {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_urbanthread_0400",
+          "amount_paise": 455166,
+          "target_bank": "HDFC Bank Ltd.",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (incorrect_card_expiry_date). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        "gate_decision": "step_up",
+        "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
+        "outcome": "merchant_action",
+        "prev_hash": "23453288144e148a24fdfb3204e280732b20c75276588023857866a4c3f7141c",
+        "entry_hash": "3c4f8c212f7fc55dfc9a46c8e51c8c57d819b70cfe9c2c4856dfa80c69f71b84"
+      },
+      {
+        "sequence": 29,
+        "timestamp": "2026-08-27T10:33:43.792662+00:00",
+        "txn_id": "pay_urbanthread_0822",
+        "proposed_action": {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_urbanthread_0822",
+          "amount_paise": 319381,
+          "target_bank": "Airtel Payments Bank Limited",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (authentication_failed). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        "gate_decision": "step_up",
+        "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
+        "outcome": "merchant_action",
+        "prev_hash": "3c4f8c212f7fc55dfc9a46c8e51c8c57d819b70cfe9c2c4856dfa80c69f71b84",
+        "entry_hash": "7ec2b94a2c421286b9f892b22c12a4acfdf8114ca78b7bf71d32a795d2e8e236"
+      },
+      {
+        "sequence": 30,
+        "timestamp": "2026-08-27T10:33:43.792662+00:00",
+        "txn_id": "pay_urbanthread_0540",
+        "proposed_action": {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_urbanthread_0540",
+          "amount_paise": 113483,
+          "target_bank": "Indusind Bank Ltd.",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (authentication_failed). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        "gate_decision": "step_up",
+        "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
+        "outcome": "merchant_action",
+        "prev_hash": "7ec2b94a2c421286b9f892b22c12a4acfdf8114ca78b7bf71d32a795d2e8e236",
+        "entry_hash": "28f6c340e1e3720a8b2d2e80c65279a511e2ed83fbfc0ad90ab65aa0b8a76bab"
+      },
+      {
+        "sequence": 31,
+        "timestamp": "2026-08-27T10:33:43.792662+00:00",
+        "txn_id": "pay_urbanthread_0504",
+        "proposed_action": {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_urbanthread_0504",
+          "amount_paise": 95278,
+          "target_bank": "India Post Payments Bank Limited",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (incorrect_cvv). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        "gate_decision": "step_up",
+        "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
+        "outcome": "merchant_action",
+        "prev_hash": "28f6c340e1e3720a8b2d2e80c65279a511e2ed83fbfc0ad90ab65aa0b8a76bab",
+        "entry_hash": "30008d13ea8a0072673adaf4c470d1b4378859145fb99a02adb513b1b1adec35"
+      },
+      {
+        "sequence": 32,
+        "timestamp": "2026-08-27T10:33:43.792662+00:00",
+        "txn_id": "pay_urbanthread_0067",
+        "proposed_action": {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_urbanthread_0067",
+          "amount_paise": 92883,
+          "target_bank": "Canara Bank",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (payment_cancelled). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        "gate_decision": "step_up",
+        "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
+        "outcome": "merchant_action",
+        "prev_hash": "30008d13ea8a0072673adaf4c470d1b4378859145fb99a02adb513b1b1adec35",
+        "entry_hash": "272b9f654d975a9cfb05ddb13044ee383181cfb9f1dd09dfec3472599b715073"
+      },
+      {
+        "sequence": 33,
+        "timestamp": "2026-08-27T10:33:43.792662+00:00",
+        "txn_id": "pay_urbanthread_0429",
+        "proposed_action": {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_urbanthread_0429",
+          "amount_paise": 78564,
+          "target_bank": "Bank of Baroda",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (incorrect_otp). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        "gate_decision": "step_up",
+        "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
+        "outcome": "merchant_action",
+        "prev_hash": "272b9f654d975a9cfb05ddb13044ee383181cfb9f1dd09dfec3472599b715073",
+        "entry_hash": "3940ff6f8f50b185ecb608c10bf17d1d6cfce92ac5d638c919613e9d9a60510f"
+      },
+      {
+        "sequence": 34,
+        "timestamp": "2026-08-27T10:33:43.792662+00:00",
+        "txn_id": "pay_urbanthread_0018",
+        "proposed_action": {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_urbanthread_0018",
+          "amount_paise": 72502,
+          "target_bank": "Indian Bank",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (incorrect_otp). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        "gate_decision": "step_up",
+        "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
+        "outcome": "merchant_action",
+        "prev_hash": "3940ff6f8f50b185ecb608c10bf17d1d6cfce92ac5d638c919613e9d9a60510f",
+        "entry_hash": "aad86b98cd33e22822050c83e3ca4f4054b81e92c704e1468779696429a22f7b"
+      },
+      {
+        "sequence": 35,
+        "timestamp": "2026-08-27T10:33:43.793688+00:00",
+        "txn_id": "pay_urbanthread_0294",
+        "proposed_action": {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_urbanthread_0294",
+          "amount_paise": 34014,
+          "target_bank": "State Bank of India",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (incorrect_atm_pin). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        "gate_decision": "step_up",
+        "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
+        "outcome": "merchant_action",
+        "prev_hash": "aad86b98cd33e22822050c83e3ca4f4054b81e92c704e1468779696429a22f7b",
+        "entry_hash": "1b74be824514a82ff548f65294c9c22446a86ad664f922ae67f75f6c0c314cb9"
       }
     ],
     "exceptions": {
@@ -2493,6 +2761,143 @@
   },
   "pending_actions": [
     {
+      "group_id": "reissue_payment_link",
+      "action_type": "reissue_payment_link",
+      "title": "Send 14 customers a fresh payment link",
+      "why": "Rs 91,111 where the customer never finished authenticating -- wrong OTP, wrong PIN, or they walked away. Retrying the same payment does nothing; a new link gives them another go. No conversion rate is claimed.",
+      "count": 14,
+      "total_paise": 9111195,
+      "auto": false,
+      "actions": [
+        {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_urbanthread_0342",
+          "amount_paise": 2289823,
+          "target_bank": "Federal Bank Ltd.",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (incorrect_cardholder_name). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_urbanthread_0650",
+          "amount_paise": 2077248,
+          "target_bank": "Union Bank of India",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (incorrect_pin). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_urbanthread_0331",
+          "amount_paise": 1725096,
+          "target_bank": "Central Bank of India",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (incorrect_cardholder_name). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_urbanthread_0679",
+          "amount_paise": 645012,
+          "target_bank": "Fino Payments Bank Ltd.",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (incorrect_cvv). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_urbanthread_0612",
+          "amount_paise": 558892,
+          "target_bank": "State Bank of India",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (incorrect_cardholder_name). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_urbanthread_0223",
+          "amount_paise": 553853,
+          "target_bank": "Punjab National Bank",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (pin_not_set). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_urbanthread_0400",
+          "amount_paise": 455166,
+          "target_bank": "HDFC Bank Ltd.",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (incorrect_card_expiry_date). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_urbanthread_0822",
+          "amount_paise": 319381,
+          "target_bank": "Airtel Payments Bank Limited",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (authentication_failed). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_urbanthread_0540",
+          "amount_paise": 113483,
+          "target_bank": "Indusind Bank Ltd.",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (authentication_failed). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_urbanthread_0504",
+          "amount_paise": 95278,
+          "target_bank": "India Post Payments Bank Limited",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (incorrect_cvv). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_urbanthread_0067",
+          "amount_paise": 92883,
+          "target_bank": "Canara Bank",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (payment_cancelled). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_urbanthread_0429",
+          "amount_paise": 78564,
+          "target_bank": "Bank of Baroda",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (incorrect_otp). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_urbanthread_0018",
+          "amount_paise": 72502,
+          "target_bank": "Indian Bank",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (incorrect_otp). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_urbanthread_0294",
+          "amount_paise": 34014,
+          "target_bank": "State Bank of India",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (incorrect_atm_pin). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        }
+      ]
+    },
+    {
       "group_id": "retry_soft_decline",
       "action_type": "retry_soft_decline",
       "title": "Retry 18 unretried soft declines",
@@ -2515,8 +2920,8 @@
           "txn_id": "pay_urbanthread_0245",
           "amount_paise": 1814752,
           "target_bank": "Central Bank of India",
-          "scheduled_time": "2026-08-27T10:18:31.286155+00:00",
-          "reason": "Enable automatic soft-decline retry for retriable failure codes on UrbanThread's payment flows. (duplicate_rrn_found), unretried -- retry at +119.3h, last look before the odds fall away",
+          "scheduled_time": "2026-08-27T10:33:43.764640+00:00",
+          "reason": "Enable automatic soft-decline retry for retriable failure codes on UrbanThread's payment flows. (duplicate_rrn_found), unretried -- retry at +119.6h, last look before the odds fall away",
           "requires_merchant_approval": false
         },
         {
@@ -2542,8 +2947,8 @@
           "txn_id": "pay_urbanthread_0187",
           "amount_paise": 397289,
           "target_bank": "Central Bank of India",
-          "scheduled_time": "2026-08-27T10:18:31.286155+00:00",
-          "reason": "Enable automatic soft-decline retry for retriable failure codes on UrbanThread's payment flows. (card_declined), unretried -- retry at +48.3h, the plateau: long enough for the balance to have changed",
+          "scheduled_time": "2026-08-27T10:33:43.765591+00:00",
+          "reason": "Enable automatic soft-decline retry for retriable failure codes on UrbanThread's payment flows. (card_declined), unretried -- retry at +48.6h, the plateau: long enough for the balance to have changed",
           "requires_merchant_approval": false
         },
         {
@@ -2551,8 +2956,8 @@
           "txn_id": "pay_urbanthread_0250",
           "amount_paise": 378837,
           "target_bank": "Canara Bank",
-          "scheduled_time": "2026-08-27T10:18:31.286155+00:00",
-          "reason": "Enable automatic soft-decline retry for retriable failure codes on UrbanThread's payment flows. (transaction_daily_limit_exceeded), unretried -- retry at +110.3h, past the plateau; intent goes stale",
+          "scheduled_time": "2026-08-27T10:33:43.765591+00:00",
+          "reason": "Enable automatic soft-decline retry for retriable failure codes on UrbanThread's payment flows. (transaction_daily_limit_exceeded), unretried -- retry at +110.6h, past the plateau; intent goes stale",
           "requires_merchant_approval": false
         },
         {
@@ -2560,8 +2965,8 @@
           "txn_id": "pay_urbanthread_0813",
           "amount_paise": 287533,
           "target_bank": "State Bank of India",
-          "scheduled_time": "2026-08-27T10:18:31.286155+00:00",
-          "reason": "Enable automatic soft-decline retry for retriable failure codes on UrbanThread's payment flows. (transaction_daily_count_exceeded), unretried -- retry at +115.3h, past the plateau; intent goes stale",
+          "scheduled_time": "2026-08-27T10:33:43.765591+00:00",
+          "reason": "Enable automatic soft-decline retry for retriable failure codes on UrbanThread's payment flows. (transaction_daily_count_exceeded), unretried -- retry at +115.6h, past the plateau; intent goes stale",
           "requires_merchant_approval": false
         },
         {
@@ -2569,8 +2974,8 @@
           "txn_id": "pay_urbanthread_0668",
           "amount_paise": 247367,
           "target_bank": "India Post Payments Bank Limited",
-          "scheduled_time": "2026-08-27T10:18:31.286155+00:00",
-          "reason": "Enable automatic soft-decline retry for retriable failure codes on UrbanThread's payment flows. (payment_pending), unretried -- retry at +42.3h, the plateau: long enough for the balance to have changed",
+          "scheduled_time": "2026-08-27T10:33:43.765591+00:00",
+          "reason": "Enable automatic soft-decline retry for retriable failure codes on UrbanThread's payment flows. (payment_pending), unretried -- retry at +42.6h, the plateau: long enough for the balance to have changed",
           "requires_merchant_approval": false
         },
         {
@@ -2578,8 +2983,8 @@
           "txn_id": "pay_urbanthread_0807",
           "amount_paise": 177058,
           "target_bank": "India Post Payments Bank Limited",
-          "scheduled_time": "2026-08-27T10:18:31.286155+00:00",
-          "reason": "Enable automatic soft-decline retry for retriable failure codes on UrbanThread's payment flows. (payment_pending_approval), unretried -- retry at +119.3h, past the plateau; intent goes stale",
+          "scheduled_time": "2026-08-27T10:33:43.765591+00:00",
+          "reason": "Enable automatic soft-decline retry for retriable failure codes on UrbanThread's payment flows. (payment_pending_approval), unretried -- retry at +119.6h, past the plateau; intent goes stale",
           "requires_merchant_approval": false
         },
         {
@@ -2587,8 +2992,8 @@
           "txn_id": "pay_urbanthread_0203",
           "amount_paise": 172065,
           "target_bank": "Bank of Baroda",
-          "scheduled_time": "2026-08-27T10:18:31.286155+00:00",
-          "reason": "Enable automatic soft-decline retry for retriable failure codes on UrbanThread's payment flows. (card_declined), unretried -- retry at +108.3h, past the plateau; intent goes stale",
+          "scheduled_time": "2026-08-27T10:33:43.765591+00:00",
+          "reason": "Enable automatic soft-decline retry for retriable failure codes on UrbanThread's payment flows. (card_declined), unretried -- retry at +108.6h, past the plateau; intent goes stale",
           "requires_merchant_approval": false
         },
         {
@@ -2596,8 +3001,8 @@
           "txn_id": "pay_urbanthread_0278",
           "amount_paise": 158767,
           "target_bank": "Kotak Mahindra Bank",
-          "scheduled_time": "2026-08-27T10:18:31.286155+00:00",
-          "reason": "Enable automatic soft-decline retry for retriable failure codes on UrbanThread's payment flows. (payment_pending_approval), unretried -- retry at +58.3h, the plateau: long enough for the balance to have changed",
+          "scheduled_time": "2026-08-27T10:33:43.765591+00:00",
+          "reason": "Enable automatic soft-decline retry for retriable failure codes on UrbanThread's payment flows. (payment_pending_approval), unretried -- retry at +58.6h, the plateau: long enough for the balance to have changed",
           "requires_merchant_approval": false
         },
         {
@@ -2605,8 +3010,8 @@
           "txn_id": "pay_urbanthread_0756",
           "amount_paise": 113342,
           "target_bank": "State Bank of India",
-          "scheduled_time": "2026-08-27T10:18:31.286155+00:00",
-          "reason": "Enable automatic soft-decline retry for retriable failure codes on UrbanThread's payment flows. (transaction_daily_count_exceeded), unretried -- retry at +39.3h, the plateau: long enough for the balance to have changed",
+          "scheduled_time": "2026-08-27T10:33:43.765591+00:00",
+          "reason": "Enable automatic soft-decline retry for retriable failure codes on UrbanThread's payment flows. (transaction_daily_count_exceeded), unretried -- retry at +39.6h, the plateau: long enough for the balance to have changed",
           "requires_merchant_approval": false
         },
         {
@@ -2614,8 +3019,8 @@
           "txn_id": "pay_urbanthread_0275",
           "amount_paise": 92810,
           "target_bank": "Punjab National Bank",
-          "scheduled_time": "2026-08-27T10:18:31.286155+00:00",
-          "reason": "Enable automatic soft-decline retry for retriable failure codes on UrbanThread's payment flows. (transaction_limit_exceeded), unretried -- retry at +74.3h, past the plateau; intent goes stale",
+          "scheduled_time": "2026-08-27T10:33:43.765591+00:00",
+          "reason": "Enable automatic soft-decline retry for retriable failure codes on UrbanThread's payment flows. (transaction_limit_exceeded), unretried -- retry at +74.6h, past the plateau; intent goes stale",
           "requires_merchant_approval": false
         },
         {
@@ -2623,8 +3028,8 @@
           "txn_id": "pay_urbanthread_0558",
           "amount_paise": 77299,
           "target_bank": "State Bank of India",
-          "scheduled_time": "2026-08-27T10:18:31.287188+00:00",
-          "reason": "Enable automatic soft-decline retry for retriable failure codes on UrbanThread's payment flows. (card_declined), unretried -- retry at +123.3h, past the plateau; intent goes stale",
+          "scheduled_time": "2026-08-27T10:33:43.765591+00:00",
+          "reason": "Enable automatic soft-decline retry for retriable failure codes on UrbanThread's payment flows. (card_declined), unretried -- retry at +123.6h, past the plateau; intent goes stale",
           "requires_merchant_approval": false
         },
         {
@@ -2632,8 +3037,8 @@
           "txn_id": "pay_urbanthread_0437",
           "amount_paise": 59296,
           "target_bank": "Bank of Baroda",
-          "scheduled_time": "2026-08-27T10:18:31.287188+00:00",
-          "reason": "Enable automatic soft-decline retry for retriable failure codes on UrbanThread's payment flows. (insufficient_funds), unretried -- retry at +39.3h, the plateau: long enough for the balance to have changed",
+          "scheduled_time": "2026-08-27T10:33:43.765591+00:00",
+          "reason": "Enable automatic soft-decline retry for retriable failure codes on UrbanThread's payment flows. (insufficient_funds), unretried -- retry at +39.6h, the plateau: long enough for the balance to have changed",
           "requires_merchant_approval": false
         },
         {
@@ -2650,8 +3055,8 @@
           "txn_id": "pay_urbanthread_0068",
           "amount_paise": 52417,
           "target_bank": "India Post Payments Bank Limited",
-          "scheduled_time": "2026-08-27T10:18:31.287188+00:00",
-          "reason": "Enable automatic soft-decline retry for retriable failure codes on UrbanThread's payment flows. (payment_declined), unretried -- retry at +91.3h, past the plateau; intent goes stale",
+          "scheduled_time": "2026-08-27T10:33:43.766591+00:00",
+          "reason": "Enable automatic soft-decline retry for retriable failure codes on UrbanThread's payment flows. (payment_declined), unretried -- retry at +91.6h, past the plateau; intent goes stale",
           "requires_merchant_approval": false
         },
         {
@@ -2659,8 +3064,8 @@
           "txn_id": "pay_urbanthread_0175",
           "amount_paise": 46171,
           "target_bank": "HDFC Bank Ltd.",
-          "scheduled_time": "2026-08-27T10:18:31.287188+00:00",
-          "reason": "Enable automatic soft-decline retry for retriable failure codes on UrbanThread's payment flows. (payment_declined), unretried -- retry at +101.3h, past the plateau; intent goes stale",
+          "scheduled_time": "2026-08-27T10:33:43.766591+00:00",
+          "reason": "Enable automatic soft-decline retry for retriable failure codes on UrbanThread's payment flows. (payment_declined), unretried -- retry at +101.6h, past the plateau; intent goes stale",
           "requires_merchant_approval": false
         }
       ]

@@ -1,12 +1,12 @@
 {
-  "run_id": "run_1e7b0fa3",
+  "run_id": "run_6e40c34d",
   "merchant_id": "fuelstop",
   "merchant_name": "FuelStop Network",
   "mcc": "5541",
   "seed": 20260824,
-  "started_at": 1787825912.519499,
-  "duration_ms": 3373,
-  "commit": "2526381",
+  "started_at": 1787826825.006678,
+  "duration_ms": 3540,
+  "commit": "6ca2278",
   "models": {
     "fast": "claude-haiku-4.5",
     "reasoning": "claude-sonnet-4.6",
@@ -18,13 +18,13 @@
   "used_stubs": false,
   "traces": [
     {
-      "run_id": "run_1e7b0fa3",
+      "run_id": "run_6e40c34d",
       "seq": 0,
       "node": "ingest",
       "kind": "deterministic",
       "status": "ok",
-      "started_at": 1787825914.6385376,
-      "duration_ms": 23,
+      "started_at": 1787826827.2899795,
+      "duration_ms": 22,
       "input_summary": {
         "merchant": "fuelstop",
         "mcc": "5541"
@@ -50,13 +50,13 @@
       }
     },
     {
-      "run_id": "run_1e7b0fa3",
+      "run_id": "run_6e40c34d",
       "seq": 1,
       "node": "classify",
       "kind": "llm",
       "status": "ok",
-      "started_at": 1787825914.6635005,
-      "duration_ms": 2,
+      "started_at": 1787826827.313984,
+      "duration_ms": 3,
       "input_summary": {
         "distinct_codes": 70,
         "failures": 312
@@ -85,12 +85,12 @@
       "intermediates": {}
     },
     {
-      "run_id": "run_1e7b0fa3",
+      "run_id": "run_6e40c34d",
       "seq": 2,
       "node": "human_review",
       "kind": "deterministic",
       "status": "skipped",
-      "started_at": 1787825914.6655006,
+      "started_at": 1787826827.317063,
       "duration_ms": 0,
       "input_summary": {},
       "output_summary": {
@@ -109,13 +109,13 @@
       "intermediates": {}
     },
     {
-      "run_id": "run_1e7b0fa3",
+      "run_id": "run_6e40c34d",
       "seq": 3,
       "node": "bank_health",
       "kind": "deterministic",
       "status": "ok",
-      "started_at": 1787825914.666505,
-      "duration_ms": 11,
+      "started_at": 1787826827.318128,
+      "duration_ms": 12,
       "input_summary": {},
       "output_summary": {
         "banks_examined": 10,
@@ -233,13 +233,13 @@
       }
     },
     {
-      "run_id": "run_1e7b0fa3",
+      "run_id": "run_6e40c34d",
       "seq": 4,
       "node": "decompose",
       "kind": "deterministic",
       "status": "ok",
-      "started_at": 1787825914.677541,
-      "duration_ms": 1187,
+      "started_at": 1787826827.331015,
+      "duration_ms": 1174,
       "input_summary": {},
       "output_summary": {
         "gap_pts": 0.572,
@@ -304,13 +304,13 @@
       }
     },
     {
-      "run_id": "run_1e7b0fa3",
+      "run_id": "run_6e40c34d",
       "seq": 5,
       "node": "hypothesise",
       "kind": "llm",
       "status": "ok",
-      "started_at": 1787825915.865025,
-      "duration_ms": 2,
+      "started_at": 1787826828.5055015,
+      "duration_ms": 3,
       "input_summary": {},
       "output_summary": {
         "primary_label": "midnight_billing_penalty",
@@ -361,16 +361,16 @@
       "intermediates": {}
     },
     {
-      "run_id": "run_1e7b0fa3",
+      "run_id": "run_6e40c34d",
       "seq": 6,
       "node": "plan",
       "kind": "deterministic",
       "status": "ok",
-      "started_at": 1787825915.8690326,
-      "duration_ms": 0,
+      "started_at": 1787826828.510422,
+      "duration_ms": 1,
       "input_summary": {},
       "output_summary": {
-        "actions": 5,
+        "actions": 54,
         "withheld": 4,
         "headline": "5 fixes proposed, 4 withheld because the attribution is inside its own error bar.",
         "withheld_detail": [
@@ -434,21 +434,21 @@
       }
     },
     {
-      "run_id": "run_1e7b0fa3",
+      "run_id": "run_6e40c34d",
       "seq": 7,
       "node": "gate",
       "kind": "deterministic",
       "status": "ok",
-      "started_at": 1787825915.8709178,
-      "duration_ms": 15,
+      "started_at": 1787826828.5124965,
+      "duration_ms": 22,
       "input_summary": {},
       "output_summary": {
         "decisions": {
           "allow": 5,
-          "step_up": 0,
-          "deny": 0
+          "step_up": 47,
+          "deny": 2
         },
-        "total": 5
+        "total": 54
       },
       "branch_taken": "execute",
       "model": null,
@@ -460,24 +460,26 @@
       "stub": null,
       "confidence": null,
       "reason_codes": [
-        "OK_ESCALATION"
+        "DENY_AMOUNT_ABOVE_CEILING",
+        "OK_ESCALATION",
+        "STEP_UP_MERCHANT_APPROVAL_REQUESTED"
       ],
       "intermediates": {}
     },
     {
-      "run_id": "run_1e7b0fa3",
+      "run_id": "run_6e40c34d",
       "seq": 8,
       "node": "execute",
       "kind": "deterministic",
       "status": "ok",
-      "started_at": 1787825915.8870323,
-      "duration_ms": 1,
+      "started_at": 1787826828.5363998,
+      "duration_ms": 4,
       "input_summary": {},
       "output_summary": {
         "executed": 0,
         "recovered_paise": 0,
         "recovered_inr": 0.0,
-        "ledger_entries": 5,
+        "ledger_entries": 54,
         "chain_verified": true,
         "calibration": "central"
       },
@@ -496,13 +498,13 @@
       "intermediates": {}
     },
     {
-      "run_id": "run_1e7b0fa3",
+      "run_id": "run_6e40c34d",
       "seq": 9,
       "node": "report",
       "kind": "deterministic",
       "status": "ok",
-      "started_at": 1787825915.88903,
-      "duration_ms": 4,
+      "started_at": 1787826828.5419297,
+      "duration_ms": 5,
       "input_summary": {},
       "output_summary": {
         "measured_keys": [
@@ -1142,7 +1144,7 @@
         ]
       },
       "mandate_violations": 0,
-      "ledger_entries": 5,
+      "ledger_entries": 54,
       "chain_verified": true,
       "chain_detail": "chain verified from genesis to head",
       "efficiency_check": {
@@ -1214,7 +1216,7 @@
         "method+hour": 0.5793539944772719,
         "method+amount_band": 0.5467823881619371,
         "hour+amount_band": 0.5618647746589045,
-        "bank+method+hour": 0.5755876559098483,
+        "bank+method+hour": 0.5755876559098372,
         "bank+method+amount_band": 0.5427478460585777,
         "bank+hour+amount_band": 0.5580572097882763,
         "method+hour+amount_band": 0.566658192919911,
@@ -1458,22 +1460,24 @@
           "reason": "attribution 0.13 pts is inside its own measured error of +/-0.58 pts -- the engine cannot tell this from zero"
         }
       ],
-      "actions": 5
+      "actions": 54
     },
     "gate": {
       "decisions": {
         "allow": 5,
-        "step_up": 0,
-        "deny": 0
+        "step_up": 47,
+        "deny": 2
       },
       "reason_codes": [
-        "OK_ESCALATION"
+        "DENY_AMOUNT_ABOVE_CEILING",
+        "OK_ESCALATION",
+        "STEP_UP_MERCHANT_APPROVAL_REQUESTED"
       ]
     },
     "ledger": [
       {
         "sequence": 0,
-        "timestamp": "2026-08-27T10:18:35.888034+00:00",
+        "timestamp": "2026-08-27T10:33:48.536909+00:00",
         "txn_id": "merchant:fuelstop",
         "proposed_action": {
           "action_type": "flag_for_investigation",
@@ -1488,11 +1492,11 @@
         "gate_reason": "OK_ESCALATION",
         "outcome": "escalated",
         "prev_hash": "0000000000000000000000000000000000000000000000000000000000000000",
-        "entry_hash": "001744dc03abf9dae60b73bfa1e578bce2c1a8b75e2e79cb925b7c42a0375029"
+        "entry_hash": "a488a9ff1fd47e514e497d664b21033e9c4dc9c55c936fd705b22fd342ba26f9"
       },
       {
         "sequence": 1,
-        "timestamp": "2026-08-27T10:18:35.888034+00:00",
+        "timestamp": "2026-08-27T10:33:48.536909+00:00",
         "txn_id": "merchant:fuelstop",
         "proposed_action": {
           "action_type": "flag_for_investigation",
@@ -1506,12 +1510,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_ESCALATION",
         "outcome": "escalated",
-        "prev_hash": "001744dc03abf9dae60b73bfa1e578bce2c1a8b75e2e79cb925b7c42a0375029",
-        "entry_hash": "d7211e7f1167dd1666df8fbd04de8aed397b9414d4d7e01c4f680c73e3402b5a"
+        "prev_hash": "a488a9ff1fd47e514e497d664b21033e9c4dc9c55c936fd705b22fd342ba26f9",
+        "entry_hash": "e93e7713374f6fae3fdb367e945908c43aef99301e5f65f88b15e054f48dad6e"
       },
       {
         "sequence": 2,
-        "timestamp": "2026-08-27T10:18:35.888034+00:00",
+        "timestamp": "2026-08-27T10:33:48.536909+00:00",
         "txn_id": "merchant:fuelstop",
         "proposed_action": {
           "action_type": "flag_for_investigation",
@@ -1525,12 +1529,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_ESCALATION",
         "outcome": "escalated",
-        "prev_hash": "d7211e7f1167dd1666df8fbd04de8aed397b9414d4d7e01c4f680c73e3402b5a",
-        "entry_hash": "50b513af919b91d4b0bee3096d95fe8c5d7d844dbbe063ba129bf097950c20f5"
+        "prev_hash": "e93e7713374f6fae3fdb367e945908c43aef99301e5f65f88b15e054f48dad6e",
+        "entry_hash": "d78ea620e67fc8a941470af6e8fed19a66ccd0e660ce62739268500cdfbbde76"
       },
       {
         "sequence": 3,
-        "timestamp": "2026-08-27T10:18:35.888034+00:00",
+        "timestamp": "2026-08-27T10:33:48.536909+00:00",
         "txn_id": "merchant:fuelstop",
         "proposed_action": {
           "action_type": "flag_for_investigation",
@@ -1544,12 +1548,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_ESCALATION",
         "outcome": "escalated",
-        "prev_hash": "50b513af919b91d4b0bee3096d95fe8c5d7d844dbbe063ba129bf097950c20f5",
-        "entry_hash": "559086411c4c900bbdef815215b0ed0956ce92e6ff43851aecc1dba169d0c9b9"
+        "prev_hash": "d78ea620e67fc8a941470af6e8fed19a66ccd0e660ce62739268500cdfbbde76",
+        "entry_hash": "5d6e635648948469a03bcef1db1422c3b0e13b804c31bb45826ec2e3bbdb92c9"
       },
       {
         "sequence": 4,
-        "timestamp": "2026-08-27T10:18:35.888034+00:00",
+        "timestamp": "2026-08-27T10:33:48.536909+00:00",
         "txn_id": "merchant:fuelstop",
         "proposed_action": {
           "action_type": "flag_for_investigation",
@@ -1563,8 +1567,939 @@
         "gate_decision": "allow",
         "gate_reason": "OK_ESCALATION",
         "outcome": "escalated",
-        "prev_hash": "559086411c4c900bbdef815215b0ed0956ce92e6ff43851aecc1dba169d0c9b9",
-        "entry_hash": "5b0013556e5c99eeb592481c557d417933d209fe986cdd1d37bf17b546b06df5"
+        "prev_hash": "5d6e635648948469a03bcef1db1422c3b0e13b804c31bb45826ec2e3bbdb92c9",
+        "entry_hash": "903455323d6862ee32e13eeef0fad27ac99cdd286ee9cca58dd5cb8570af3203"
+      },
+      {
+        "sequence": 5,
+        "timestamp": "2026-08-27T10:33:48.536909+00:00",
+        "txn_id": "pay_fuelstop_2395",
+        "proposed_action": {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_fuelstop_2395",
+          "amount_paise": 613304,
+          "target_bank": "Federal Bank Ltd.",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (incorrect_atm_pin). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        "gate_decision": "deny",
+        "gate_reason": "DENY_AMOUNT_ABOVE_CEILING",
+        "outcome": "denied",
+        "prev_hash": "903455323d6862ee32e13eeef0fad27ac99cdd286ee9cca58dd5cb8570af3203",
+        "entry_hash": "c8fc457c3bfeb5014c02147a23fc1e62c113bb54cfbd42ef9407c0722e5e4a31"
+      },
+      {
+        "sequence": 6,
+        "timestamp": "2026-08-27T10:33:48.536909+00:00",
+        "txn_id": "pay_fuelstop_2062",
+        "proposed_action": {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_fuelstop_2062",
+          "amount_paise": 590554,
+          "target_bank": "Indian Overseas Bank",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (pin_not_set). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        "gate_decision": "deny",
+        "gate_reason": "DENY_AMOUNT_ABOVE_CEILING",
+        "outcome": "denied",
+        "prev_hash": "c8fc457c3bfeb5014c02147a23fc1e62c113bb54cfbd42ef9407c0722e5e4a31",
+        "entry_hash": "dc5ab5b85c503d7172008760e2e6c149351084349a9ec1f3f85a185dad6f239e"
+      },
+      {
+        "sequence": 7,
+        "timestamp": "2026-08-27T10:33:48.536909+00:00",
+        "txn_id": "pay_fuelstop_0832",
+        "proposed_action": {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_fuelstop_0832",
+          "amount_paise": 499098,
+          "target_bank": "HDFC Bank Ltd.",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (otp_attempts_exceeded). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        "gate_decision": "step_up",
+        "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
+        "outcome": "merchant_action",
+        "prev_hash": "dc5ab5b85c503d7172008760e2e6c149351084349a9ec1f3f85a185dad6f239e",
+        "entry_hash": "ed1315262ae7c0f94df6aa7af28eb94e868a00593b210b00ec4f9389a62e8961"
+      },
+      {
+        "sequence": 8,
+        "timestamp": "2026-08-27T10:33:48.537915+00:00",
+        "txn_id": "pay_fuelstop_1507",
+        "proposed_action": {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_fuelstop_1507",
+          "amount_paise": 477440,
+          "target_bank": "Union Bank of India",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (otp_attempts_exceeded). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        "gate_decision": "step_up",
+        "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
+        "outcome": "merchant_action",
+        "prev_hash": "ed1315262ae7c0f94df6aa7af28eb94e868a00593b210b00ec4f9389a62e8961",
+        "entry_hash": "1c9100b07c8636fc1452407e1ae9228c8efe2edfaa9190766e15804ae3e765bf"
+      },
+      {
+        "sequence": 9,
+        "timestamp": "2026-08-27T10:33:48.537915+00:00",
+        "txn_id": "pay_fuelstop_0093",
+        "proposed_action": {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_fuelstop_0093",
+          "amount_paise": 415825,
+          "target_bank": "Union Bank of India",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (incorrect_pin). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        "gate_decision": "step_up",
+        "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
+        "outcome": "merchant_action",
+        "prev_hash": "1c9100b07c8636fc1452407e1ae9228c8efe2edfaa9190766e15804ae3e765bf",
+        "entry_hash": "ed5ea1aeacc9c7d71c3004f8fa8acb99d873418acbc3e3b69b81a3665f6d1036"
+      },
+      {
+        "sequence": 10,
+        "timestamp": "2026-08-27T10:33:48.537915+00:00",
+        "txn_id": "pay_fuelstop_2175",
+        "proposed_action": {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_fuelstop_2175",
+          "amount_paise": 375791,
+          "target_bank": "Kotak Mahindra Bank",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (otp_expired). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        "gate_decision": "step_up",
+        "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
+        "outcome": "merchant_action",
+        "prev_hash": "ed5ea1aeacc9c7d71c3004f8fa8acb99d873418acbc3e3b69b81a3665f6d1036",
+        "entry_hash": "c07610305709d8dec2492c7cf4f8284c827d6adb48712059e1d70ec8d1091b9b"
+      },
+      {
+        "sequence": 11,
+        "timestamp": "2026-08-27T10:33:48.537915+00:00",
+        "txn_id": "pay_fuelstop_0690",
+        "proposed_action": {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_fuelstop_0690",
+          "amount_paise": 372118,
+          "target_bank": "Punjab National Bank",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (pin_attempts_exceeded). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        "gate_decision": "step_up",
+        "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
+        "outcome": "merchant_action",
+        "prev_hash": "c07610305709d8dec2492c7cf4f8284c827d6adb48712059e1d70ec8d1091b9b",
+        "entry_hash": "3e6ca1cb332f7630011fa40bbb362adad3ccca67cfc986a0650c4ad0dc46abf9"
+      },
+      {
+        "sequence": 12,
+        "timestamp": "2026-08-27T10:33:48.537915+00:00",
+        "txn_id": "pay_fuelstop_3236",
+        "proposed_action": {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_fuelstop_3236",
+          "amount_paise": 348800,
+          "target_bank": "State Bank of India",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (otp_attempts_exceeded). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        "gate_decision": "step_up",
+        "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
+        "outcome": "merchant_action",
+        "prev_hash": "3e6ca1cb332f7630011fa40bbb362adad3ccca67cfc986a0650c4ad0dc46abf9",
+        "entry_hash": "3ef31f162a433260c9af7d25f3b237856574a093464ffb51c12c4aa31f6d8643"
+      },
+      {
+        "sequence": 13,
+        "timestamp": "2026-08-27T10:33:48.537915+00:00",
+        "txn_id": "pay_fuelstop_3086",
+        "proposed_action": {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_fuelstop_3086",
+          "amount_paise": 336499,
+          "target_bank": "Indian Bank",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (incorrect_otp). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        "gate_decision": "step_up",
+        "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
+        "outcome": "merchant_action",
+        "prev_hash": "3ef31f162a433260c9af7d25f3b237856574a093464ffb51c12c4aa31f6d8643",
+        "entry_hash": "af4406b8ce95014d3749dda9a7c4c1b3d90a85b1539efe8ab7ab24d97911b1e6"
+      },
+      {
+        "sequence": 14,
+        "timestamp": "2026-08-27T10:33:48.537915+00:00",
+        "txn_id": "pay_fuelstop_1179",
+        "proposed_action": {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_fuelstop_1179",
+          "amount_paise": 233590,
+          "target_bank": "Indian Bank",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (pin_not_set). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        "gate_decision": "step_up",
+        "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
+        "outcome": "merchant_action",
+        "prev_hash": "af4406b8ce95014d3749dda9a7c4c1b3d90a85b1539efe8ab7ab24d97911b1e6",
+        "entry_hash": "92efc6c2b55b00a9bd33874ffe88d10cfaa1b8b33320243c7d74d69d47c7574c"
+      },
+      {
+        "sequence": 15,
+        "timestamp": "2026-08-27T10:33:48.537915+00:00",
+        "txn_id": "pay_fuelstop_1786",
+        "proposed_action": {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_fuelstop_1786",
+          "amount_paise": 223484,
+          "target_bank": "Kotak Mahindra Bank",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (authentication_failed). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        "gate_decision": "step_up",
+        "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
+        "outcome": "merchant_action",
+        "prev_hash": "92efc6c2b55b00a9bd33874ffe88d10cfaa1b8b33320243c7d74d69d47c7574c",
+        "entry_hash": "91a801cbf13c133f169ee9c40b18533d7cb1341c6158d97c4381c4b4dc3039f5"
+      },
+      {
+        "sequence": 16,
+        "timestamp": "2026-08-27T10:33:48.537915+00:00",
+        "txn_id": "pay_fuelstop_0887",
+        "proposed_action": {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_fuelstop_0887",
+          "amount_paise": 177526,
+          "target_bank": "Bank of Baroda",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (payment_cancelled). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        "gate_decision": "step_up",
+        "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
+        "outcome": "merchant_action",
+        "prev_hash": "91a801cbf13c133f169ee9c40b18533d7cb1341c6158d97c4381c4b4dc3039f5",
+        "entry_hash": "43e4551c7ffb624178952c3dff41154d811df87526e01b21ddd77d879fa65a55"
+      },
+      {
+        "sequence": 17,
+        "timestamp": "2026-08-27T10:33:48.537915+00:00",
+        "txn_id": "pay_fuelstop_1881",
+        "proposed_action": {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_fuelstop_1881",
+          "amount_paise": 159092,
+          "target_bank": "Bank of Baroda",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (payment_cancelled). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        "gate_decision": "step_up",
+        "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
+        "outcome": "merchant_action",
+        "prev_hash": "43e4551c7ffb624178952c3dff41154d811df87526e01b21ddd77d879fa65a55",
+        "entry_hash": "6bfe4897133ce48f4425e4062633020183e401257152bf3ff8998d73652703fa"
+      },
+      {
+        "sequence": 18,
+        "timestamp": "2026-08-27T10:33:48.537915+00:00",
+        "txn_id": "pay_fuelstop_2019",
+        "proposed_action": {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_fuelstop_2019",
+          "amount_paise": 158015,
+          "target_bank": "Union Bank of India",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (otp_attempts_exceeded). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        "gate_decision": "step_up",
+        "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
+        "outcome": "merchant_action",
+        "prev_hash": "6bfe4897133ce48f4425e4062633020183e401257152bf3ff8998d73652703fa",
+        "entry_hash": "06d87a85a03b1880377d3513cd6c82ff678fa25151d8858692fa797b1e9a30d7"
+      },
+      {
+        "sequence": 19,
+        "timestamp": "2026-08-27T10:33:48.537915+00:00",
+        "txn_id": "pay_fuelstop_3023",
+        "proposed_action": {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_fuelstop_3023",
+          "amount_paise": 149209,
+          "target_bank": "Bank of Baroda",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (otp_expired). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        "gate_decision": "step_up",
+        "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
+        "outcome": "merchant_action",
+        "prev_hash": "06d87a85a03b1880377d3513cd6c82ff678fa25151d8858692fa797b1e9a30d7",
+        "entry_hash": "1af228a76f30ed99fbb69be8bba4917d70da208f5a6548053b7accd557d7dd78"
+      },
+      {
+        "sequence": 20,
+        "timestamp": "2026-08-27T10:33:48.537915+00:00",
+        "txn_id": "pay_fuelstop_1832",
+        "proposed_action": {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_fuelstop_1832",
+          "amount_paise": 137098,
+          "target_bank": "State Bank of India",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (incorrect_pin). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        "gate_decision": "step_up",
+        "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
+        "outcome": "merchant_action",
+        "prev_hash": "1af228a76f30ed99fbb69be8bba4917d70da208f5a6548053b7accd557d7dd78",
+        "entry_hash": "864b6ddfd5633801fcf2c3bf7ecad58290dc8c7296bb76bdc4b2e28abf493da0"
+      },
+      {
+        "sequence": 21,
+        "timestamp": "2026-08-27T10:33:48.537915+00:00",
+        "txn_id": "pay_fuelstop_1267",
+        "proposed_action": {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_fuelstop_1267",
+          "amount_paise": 135442,
+          "target_bank": "India Post Payments Bank Limited",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (pin_attempts_exceeded). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        "gate_decision": "step_up",
+        "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
+        "outcome": "merchant_action",
+        "prev_hash": "864b6ddfd5633801fcf2c3bf7ecad58290dc8c7296bb76bdc4b2e28abf493da0",
+        "entry_hash": "5b6e9aed504460b050c7af74ba99acb27321f53bcac32cf3402a3944809d1cb5"
+      },
+      {
+        "sequence": 22,
+        "timestamp": "2026-08-27T10:33:48.537915+00:00",
+        "txn_id": "pay_fuelstop_2642",
+        "proposed_action": {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_fuelstop_2642",
+          "amount_paise": 124675,
+          "target_bank": "Airtel Payments Bank Limited",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (incorrect_pin). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        "gate_decision": "step_up",
+        "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
+        "outcome": "merchant_action",
+        "prev_hash": "5b6e9aed504460b050c7af74ba99acb27321f53bcac32cf3402a3944809d1cb5",
+        "entry_hash": "8a02fdfb2dbd5302dbf1e8ee14e4b6d1a31b26913f300d25933baff42e276ba6"
+      },
+      {
+        "sequence": 23,
+        "timestamp": "2026-08-27T10:33:48.537915+00:00",
+        "txn_id": "pay_fuelstop_1167",
+        "proposed_action": {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_fuelstop_1167",
+          "amount_paise": 95651,
+          "target_bank": "Kotak Mahindra Bank",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (authentication_failed). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        "gate_decision": "step_up",
+        "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
+        "outcome": "merchant_action",
+        "prev_hash": "8a02fdfb2dbd5302dbf1e8ee14e4b6d1a31b26913f300d25933baff42e276ba6",
+        "entry_hash": "184e340dc807c8d15b90b6b1a80f02ed68b5d8d9493352f32db201417a32aef2"
+      },
+      {
+        "sequence": 24,
+        "timestamp": "2026-08-27T10:33:48.537915+00:00",
+        "txn_id": "pay_fuelstop_2260",
+        "proposed_action": {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_fuelstop_2260",
+          "amount_paise": 95289,
+          "target_bank": "Airtel Payments Bank Limited",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (pin_not_set). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        "gate_decision": "step_up",
+        "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
+        "outcome": "merchant_action",
+        "prev_hash": "184e340dc807c8d15b90b6b1a80f02ed68b5d8d9493352f32db201417a32aef2",
+        "entry_hash": "aa2819365146e8be28196efd4074df0408c9a640eec2026298817ccb4cd86b27"
+      },
+      {
+        "sequence": 25,
+        "timestamp": "2026-08-27T10:33:48.537915+00:00",
+        "txn_id": "pay_fuelstop_1925",
+        "proposed_action": {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_fuelstop_1925",
+          "amount_paise": 94554,
+          "target_bank": "Fino Payments Bank Ltd.",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (invalid_device). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        "gate_decision": "step_up",
+        "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
+        "outcome": "merchant_action",
+        "prev_hash": "aa2819365146e8be28196efd4074df0408c9a640eec2026298817ccb4cd86b27",
+        "entry_hash": "6ca1929a5f11ae83c4c7b854af707ff842e97f793b6cbddf9ec1af3f5e14fb75"
+      },
+      {
+        "sequence": 26,
+        "timestamp": "2026-08-27T10:33:48.537915+00:00",
+        "txn_id": "pay_fuelstop_0222",
+        "proposed_action": {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_fuelstop_0222",
+          "amount_paise": 90145,
+          "target_bank": "Indusind Bank Ltd.",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (otp_attempts_exceeded). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        "gate_decision": "step_up",
+        "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
+        "outcome": "merchant_action",
+        "prev_hash": "6ca1929a5f11ae83c4c7b854af707ff842e97f793b6cbddf9ec1af3f5e14fb75",
+        "entry_hash": "e17bf93bf377ab83b4b707cdf864c15c1e97c29d6a273d58636bbe95b390c672"
+      },
+      {
+        "sequence": 27,
+        "timestamp": "2026-08-27T10:33:48.537915+00:00",
+        "txn_id": "pay_fuelstop_3268",
+        "proposed_action": {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_fuelstop_3268",
+          "amount_paise": 89681,
+          "target_bank": "State Bank of India",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (authentication_failed). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        "gate_decision": "step_up",
+        "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
+        "outcome": "merchant_action",
+        "prev_hash": "e17bf93bf377ab83b4b707cdf864c15c1e97c29d6a273d58636bbe95b390c672",
+        "entry_hash": "ce8ca72f7c56b4c3fa529250a0adfb28e6d8788e06f70db642f86efd04ed80aa"
+      },
+      {
+        "sequence": 28,
+        "timestamp": "2026-08-27T10:33:48.537915+00:00",
+        "txn_id": "pay_fuelstop_2471",
+        "proposed_action": {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_fuelstop_2471",
+          "amount_paise": 89093,
+          "target_bank": "State Bank of India",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (incorrect_pin). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        "gate_decision": "step_up",
+        "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
+        "outcome": "merchant_action",
+        "prev_hash": "ce8ca72f7c56b4c3fa529250a0adfb28e6d8788e06f70db642f86efd04ed80aa",
+        "entry_hash": "5a2ceca1dc8ca156691a3a822fbeb29d95b2fcbbef7790338322a982d5d5780c"
+      },
+      {
+        "sequence": 29,
+        "timestamp": "2026-08-27T10:33:48.537915+00:00",
+        "txn_id": "pay_fuelstop_1728",
+        "proposed_action": {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_fuelstop_1728",
+          "amount_paise": 84518,
+          "target_bank": "State Bank of India",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (pin_attempts_exceeded). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        "gate_decision": "step_up",
+        "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
+        "outcome": "merchant_action",
+        "prev_hash": "5a2ceca1dc8ca156691a3a822fbeb29d95b2fcbbef7790338322a982d5d5780c",
+        "entry_hash": "af07b05d32da7fea514e33f3155db714390702dc5716d0d5f9f49593e94a9cac"
+      },
+      {
+        "sequence": 30,
+        "timestamp": "2026-08-27T10:33:48.537915+00:00",
+        "txn_id": "pay_fuelstop_2118",
+        "proposed_action": {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_fuelstop_2118",
+          "amount_paise": 79464,
+          "target_bank": "HDFC Bank Ltd.",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (pin_not_set). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        "gate_decision": "step_up",
+        "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
+        "outcome": "merchant_action",
+        "prev_hash": "af07b05d32da7fea514e33f3155db714390702dc5716d0d5f9f49593e94a9cac",
+        "entry_hash": "6e3bf863c0f3fe9a8f7e38ee282268d0b24035dccda0ea10921c7f70ed84b920"
+      },
+      {
+        "sequence": 31,
+        "timestamp": "2026-08-27T10:33:48.537915+00:00",
+        "txn_id": "pay_fuelstop_0139",
+        "proposed_action": {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_fuelstop_0139",
+          "amount_paise": 78031,
+          "target_bank": "India Post Payments Bank Limited",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (otp_expired). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        "gate_decision": "step_up",
+        "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
+        "outcome": "merchant_action",
+        "prev_hash": "6e3bf863c0f3fe9a8f7e38ee282268d0b24035dccda0ea10921c7f70ed84b920",
+        "entry_hash": "4dee99db75cd67c85e44c726f714c1b79b3eb52dd48fae6a10aa071d9d75a39f"
+      },
+      {
+        "sequence": 32,
+        "timestamp": "2026-08-27T10:33:48.537915+00:00",
+        "txn_id": "pay_fuelstop_0983",
+        "proposed_action": {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_fuelstop_0983",
+          "amount_paise": 76692,
+          "target_bank": "Union Bank of India",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (otp_attempts_exceeded). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        "gate_decision": "step_up",
+        "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
+        "outcome": "merchant_action",
+        "prev_hash": "4dee99db75cd67c85e44c726f714c1b79b3eb52dd48fae6a10aa071d9d75a39f",
+        "entry_hash": "e0be96829e0cee684246ebe20b8b4e8652959bc2c973d46586e40e24ebe4ab46"
+      },
+      {
+        "sequence": 33,
+        "timestamp": "2026-08-27T10:33:48.537915+00:00",
+        "txn_id": "pay_fuelstop_1825",
+        "proposed_action": {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_fuelstop_1825",
+          "amount_paise": 74039,
+          "target_bank": "Axis Bank Ltd.",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (incorrect_cvv). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        "gate_decision": "step_up",
+        "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
+        "outcome": "merchant_action",
+        "prev_hash": "e0be96829e0cee684246ebe20b8b4e8652959bc2c973d46586e40e24ebe4ab46",
+        "entry_hash": "9d8f37a98f4582243e50300595e8c9b0d8a456de5c048714ff3d1c86f4f52b11"
+      },
+      {
+        "sequence": 34,
+        "timestamp": "2026-08-27T10:33:48.538923+00:00",
+        "txn_id": "pay_fuelstop_1503",
+        "proposed_action": {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_fuelstop_1503",
+          "amount_paise": 72631,
+          "target_bank": "Axis Bank Ltd.",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (payment_cancelled). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        "gate_decision": "step_up",
+        "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
+        "outcome": "merchant_action",
+        "prev_hash": "9d8f37a98f4582243e50300595e8c9b0d8a456de5c048714ff3d1c86f4f52b11",
+        "entry_hash": "3ccb1d49136637fcd72ec4013a5ac77b2fca3bef08046387bed298970ca3521b"
+      },
+      {
+        "sequence": 35,
+        "timestamp": "2026-08-27T10:33:48.538923+00:00",
+        "txn_id": "pay_fuelstop_0212",
+        "proposed_action": {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_fuelstop_0212",
+          "amount_paise": 71946,
+          "target_bank": "Bank of Baroda",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (incorrect_pin). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        "gate_decision": "step_up",
+        "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
+        "outcome": "merchant_action",
+        "prev_hash": "3ccb1d49136637fcd72ec4013a5ac77b2fca3bef08046387bed298970ca3521b",
+        "entry_hash": "79064cda5cf4480464f9d592d9a002810c1d32d11ea325418e846852b10e418e"
+      },
+      {
+        "sequence": 36,
+        "timestamp": "2026-08-27T10:33:48.538923+00:00",
+        "txn_id": "pay_fuelstop_0331",
+        "proposed_action": {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_fuelstop_0331",
+          "amount_paise": 66433,
+          "target_bank": "Central Bank of India",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (incorrect_otp). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        "gate_decision": "step_up",
+        "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
+        "outcome": "merchant_action",
+        "prev_hash": "79064cda5cf4480464f9d592d9a002810c1d32d11ea325418e846852b10e418e",
+        "entry_hash": "de6bd990f9f1fd654b15311daeb5c67fd7dfc4e7fd1c99f286dbde8eb4c81203"
+      },
+      {
+        "sequence": 37,
+        "timestamp": "2026-08-27T10:33:48.538923+00:00",
+        "txn_id": "pay_fuelstop_2569",
+        "proposed_action": {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_fuelstop_2569",
+          "amount_paise": 62619,
+          "target_bank": "State Bank of India",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (incorrect_otp). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        "gate_decision": "step_up",
+        "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
+        "outcome": "merchant_action",
+        "prev_hash": "de6bd990f9f1fd654b15311daeb5c67fd7dfc4e7fd1c99f286dbde8eb4c81203",
+        "entry_hash": "2d0fbe8cc57c008de7dbe7e7aef7eb0393ff1ab4b1b2456ce3c73ed91ab28756"
+      },
+      {
+        "sequence": 38,
+        "timestamp": "2026-08-27T10:33:48.538923+00:00",
+        "txn_id": "pay_fuelstop_0585",
+        "proposed_action": {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_fuelstop_0585",
+          "amount_paise": 61428,
+          "target_bank": "Bank of Baroda",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (incorrect_pin). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        "gate_decision": "step_up",
+        "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
+        "outcome": "merchant_action",
+        "prev_hash": "2d0fbe8cc57c008de7dbe7e7aef7eb0393ff1ab4b1b2456ce3c73ed91ab28756",
+        "entry_hash": "119603521e535af47282eeff1f480bcae03fa4537ed133c910ee183fe2898781"
+      },
+      {
+        "sequence": 39,
+        "timestamp": "2026-08-27T10:33:48.538923+00:00",
+        "txn_id": "pay_fuelstop_1230",
+        "proposed_action": {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_fuelstop_1230",
+          "amount_paise": 57961,
+          "target_bank": "Union Bank of India",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (incorrect_atm_pin). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        "gate_decision": "step_up",
+        "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
+        "outcome": "merchant_action",
+        "prev_hash": "119603521e535af47282eeff1f480bcae03fa4537ed133c910ee183fe2898781",
+        "entry_hash": "865ca1c29aa2907e6432557ce6f16ea6417fd1d46bb44e77dfeb90085b2e758b"
+      },
+      {
+        "sequence": 40,
+        "timestamp": "2026-08-27T10:33:48.538923+00:00",
+        "txn_id": "pay_fuelstop_0327",
+        "proposed_action": {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_fuelstop_0327",
+          "amount_paise": 53705,
+          "target_bank": "Indian Overseas Bank",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (pin_attempts_exceeded). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        "gate_decision": "step_up",
+        "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
+        "outcome": "merchant_action",
+        "prev_hash": "865ca1c29aa2907e6432557ce6f16ea6417fd1d46bb44e77dfeb90085b2e758b",
+        "entry_hash": "9ee9701961bafffaa7ccf3bfde074e38a686a4ff912064e61689e215ed3117e5"
+      },
+      {
+        "sequence": 41,
+        "timestamp": "2026-08-27T10:33:48.538923+00:00",
+        "txn_id": "pay_fuelstop_2267",
+        "proposed_action": {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_fuelstop_2267",
+          "amount_paise": 47127,
+          "target_bank": "Kotak Mahindra Bank",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (incorrect_otp). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        "gate_decision": "step_up",
+        "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
+        "outcome": "merchant_action",
+        "prev_hash": "9ee9701961bafffaa7ccf3bfde074e38a686a4ff912064e61689e215ed3117e5",
+        "entry_hash": "12848d082f04a1dc9564fa9a77a777b7904544df2908a42c7e2aadfd0f83a91a"
+      },
+      {
+        "sequence": 42,
+        "timestamp": "2026-08-27T10:33:48.538923+00:00",
+        "txn_id": "pay_fuelstop_2942",
+        "proposed_action": {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_fuelstop_2942",
+          "amount_paise": 44772,
+          "target_bank": "ICICI Bank Ltd.",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (pin_not_set). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        "gate_decision": "step_up",
+        "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
+        "outcome": "merchant_action",
+        "prev_hash": "12848d082f04a1dc9564fa9a77a777b7904544df2908a42c7e2aadfd0f83a91a",
+        "entry_hash": "7e6a2947129d14a9824a76bced7ae2244895610ae5628a278d1da53b552aae8d"
+      },
+      {
+        "sequence": 43,
+        "timestamp": "2026-08-27T10:33:48.538923+00:00",
+        "txn_id": "pay_fuelstop_0433",
+        "proposed_action": {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_fuelstop_0433",
+          "amount_paise": 39951,
+          "target_bank": "Punjab National Bank",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (otp_expired). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        "gate_decision": "step_up",
+        "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
+        "outcome": "merchant_action",
+        "prev_hash": "7e6a2947129d14a9824a76bced7ae2244895610ae5628a278d1da53b552aae8d",
+        "entry_hash": "866b7248d764c4fe1ce1b43d1a4b1bfec9111cc09821e9f8bf42142e7d535e3b"
+      },
+      {
+        "sequence": 44,
+        "timestamp": "2026-08-27T10:33:48.538923+00:00",
+        "txn_id": "pay_fuelstop_1696",
+        "proposed_action": {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_fuelstop_1696",
+          "amount_paise": 37392,
+          "target_bank": "Bank of Baroda",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (incorrect_otp). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        "gate_decision": "step_up",
+        "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
+        "outcome": "merchant_action",
+        "prev_hash": "866b7248d764c4fe1ce1b43d1a4b1bfec9111cc09821e9f8bf42142e7d535e3b",
+        "entry_hash": "af4164b6cdb092040e94dfab126cccf7e637d7192a0540c86c97d6e312457579"
+      },
+      {
+        "sequence": 45,
+        "timestamp": "2026-08-27T10:33:48.538923+00:00",
+        "txn_id": "pay_fuelstop_0174",
+        "proposed_action": {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_fuelstop_0174",
+          "amount_paise": 36566,
+          "target_bank": "Axis Bank Ltd.",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (incorrect_otp). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        "gate_decision": "step_up",
+        "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
+        "outcome": "merchant_action",
+        "prev_hash": "af4164b6cdb092040e94dfab126cccf7e637d7192a0540c86c97d6e312457579",
+        "entry_hash": "499d6600a662ded9df519425be15ea044da3774042208b45f0eee407cfe3347e"
+      },
+      {
+        "sequence": 46,
+        "timestamp": "2026-08-27T10:33:48.538923+00:00",
+        "txn_id": "pay_fuelstop_1105",
+        "proposed_action": {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_fuelstop_1105",
+          "amount_paise": 35369,
+          "target_bank": "Kotak Mahindra Bank",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (pin_not_set). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        "gate_decision": "step_up",
+        "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
+        "outcome": "merchant_action",
+        "prev_hash": "499d6600a662ded9df519425be15ea044da3774042208b45f0eee407cfe3347e",
+        "entry_hash": "b0e1f9f681909dcdece19102d2154ec0269a35e62faf8aa23100e0760c9dc962"
+      },
+      {
+        "sequence": 47,
+        "timestamp": "2026-08-27T10:33:48.538923+00:00",
+        "txn_id": "pay_fuelstop_2982",
+        "proposed_action": {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_fuelstop_2982",
+          "amount_paise": 32433,
+          "target_bank": "Fino Payments Bank Ltd.",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (otp_expired). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        "gate_decision": "step_up",
+        "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
+        "outcome": "merchant_action",
+        "prev_hash": "b0e1f9f681909dcdece19102d2154ec0269a35e62faf8aa23100e0760c9dc962",
+        "entry_hash": "e87c476aee94528f8c34eff5bea1fdcdd0fdb4e13b4aa77a9799e9cb3ae65e89"
+      },
+      {
+        "sequence": 48,
+        "timestamp": "2026-08-27T10:33:48.538923+00:00",
+        "txn_id": "pay_fuelstop_2865",
+        "proposed_action": {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_fuelstop_2865",
+          "amount_paise": 28159,
+          "target_bank": "Canara Bank",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (incorrect_pin). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        "gate_decision": "step_up",
+        "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
+        "outcome": "merchant_action",
+        "prev_hash": "e87c476aee94528f8c34eff5bea1fdcdd0fdb4e13b4aa77a9799e9cb3ae65e89",
+        "entry_hash": "c5db8e216ad3423f6ca880bb79da2f8aea13c21973c61e14338a17bcead36a23"
+      },
+      {
+        "sequence": 49,
+        "timestamp": "2026-08-27T10:33:48.538923+00:00",
+        "txn_id": "pay_fuelstop_2443",
+        "proposed_action": {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_fuelstop_2443",
+          "amount_paise": 27207,
+          "target_bank": "State Bank of India",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (pin_not_set). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        "gate_decision": "step_up",
+        "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
+        "outcome": "merchant_action",
+        "prev_hash": "c5db8e216ad3423f6ca880bb79da2f8aea13c21973c61e14338a17bcead36a23",
+        "entry_hash": "867f8025a2ee43af87a4f83cc5d8ad9d03de9d2d337b1cdf15989592fdf47aea"
+      },
+      {
+        "sequence": 50,
+        "timestamp": "2026-08-27T10:33:48.538923+00:00",
+        "txn_id": "pay_fuelstop_1326",
+        "proposed_action": {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_fuelstop_1326",
+          "amount_paise": 23172,
+          "target_bank": "Bank Of India",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (invalid_device). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        "gate_decision": "step_up",
+        "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
+        "outcome": "merchant_action",
+        "prev_hash": "867f8025a2ee43af87a4f83cc5d8ad9d03de9d2d337b1cdf15989592fdf47aea",
+        "entry_hash": "edc9e61c16d1ab613cc9a978c82877e239383bc87adc8a2969bfc3f09fc89912"
+      },
+      {
+        "sequence": 51,
+        "timestamp": "2026-08-27T10:33:48.538923+00:00",
+        "txn_id": "pay_fuelstop_2442",
+        "proposed_action": {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_fuelstop_2442",
+          "amount_paise": 20597,
+          "target_bank": "State Bank of India",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (pin_attempts_exceeded). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        "gate_decision": "step_up",
+        "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
+        "outcome": "merchant_action",
+        "prev_hash": "edc9e61c16d1ab613cc9a978c82877e239383bc87adc8a2969bfc3f09fc89912",
+        "entry_hash": "6f9f226498ffffa97eff248cf7af1a8d60445630a200be24044eeaf6a9538a8d"
+      },
+      {
+        "sequence": 52,
+        "timestamp": "2026-08-27T10:33:48.538923+00:00",
+        "txn_id": "pay_fuelstop_2840",
+        "proposed_action": {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_fuelstop_2840",
+          "amount_paise": 14972,
+          "target_bank": "Bank of Baroda",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (pin_attempts_exceeded). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        "gate_decision": "step_up",
+        "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
+        "outcome": "merchant_action",
+        "prev_hash": "6f9f226498ffffa97eff248cf7af1a8d60445630a200be24044eeaf6a9538a8d",
+        "entry_hash": "6e48e718d7b237fda047beb66de9ebb2b147092fa123f0530658bbeb7807ebbd"
+      },
+      {
+        "sequence": 53,
+        "timestamp": "2026-08-27T10:33:48.538923+00:00",
+        "txn_id": "pay_fuelstop_1320",
+        "proposed_action": {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_fuelstop_1320",
+          "amount_paise": 10995,
+          "target_bank": "State Bank of India",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (authentication_failed). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        "gate_decision": "step_up",
+        "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
+        "outcome": "merchant_action",
+        "prev_hash": "6e48e718d7b237fda047beb66de9ebb2b147092fa123f0530658bbeb7807ebbd",
+        "entry_hash": "ab043b97b9f7e19145ccc627f7d89ae8448c07dce0734894a57f75223d931077"
       }
     ],
     "exceptions": {
@@ -2441,6 +3376,458 @@
     "needs_review": []
   },
   "pending_actions": [
+    {
+      "group_id": "reissue_payment_link",
+      "action_type": "reissue_payment_link",
+      "title": "Send 49 customers a fresh payment link",
+      "why": "Rs 73,201 where the customer never finished authenticating -- wrong OTP, wrong PIN, or they walked away. Retrying the same payment does nothing; a new link gives them another go. No conversion rate is claimed.",
+      "count": 49,
+      "total_paise": 7320152,
+      "auto": false,
+      "actions": [
+        {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_fuelstop_2395",
+          "amount_paise": 613304,
+          "target_bank": "Federal Bank Ltd.",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (incorrect_atm_pin). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_fuelstop_2062",
+          "amount_paise": 590554,
+          "target_bank": "Indian Overseas Bank",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (pin_not_set). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_fuelstop_0832",
+          "amount_paise": 499098,
+          "target_bank": "HDFC Bank Ltd.",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (otp_attempts_exceeded). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_fuelstop_1507",
+          "amount_paise": 477440,
+          "target_bank": "Union Bank of India",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (otp_attempts_exceeded). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_fuelstop_0093",
+          "amount_paise": 415825,
+          "target_bank": "Union Bank of India",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (incorrect_pin). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_fuelstop_2175",
+          "amount_paise": 375791,
+          "target_bank": "Kotak Mahindra Bank",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (otp_expired). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_fuelstop_0690",
+          "amount_paise": 372118,
+          "target_bank": "Punjab National Bank",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (pin_attempts_exceeded). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_fuelstop_3236",
+          "amount_paise": 348800,
+          "target_bank": "State Bank of India",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (otp_attempts_exceeded). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_fuelstop_3086",
+          "amount_paise": 336499,
+          "target_bank": "Indian Bank",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (incorrect_otp). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_fuelstop_1179",
+          "amount_paise": 233590,
+          "target_bank": "Indian Bank",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (pin_not_set). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_fuelstop_1786",
+          "amount_paise": 223484,
+          "target_bank": "Kotak Mahindra Bank",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (authentication_failed). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_fuelstop_0887",
+          "amount_paise": 177526,
+          "target_bank": "Bank of Baroda",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (payment_cancelled). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_fuelstop_1881",
+          "amount_paise": 159092,
+          "target_bank": "Bank of Baroda",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (payment_cancelled). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_fuelstop_2019",
+          "amount_paise": 158015,
+          "target_bank": "Union Bank of India",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (otp_attempts_exceeded). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_fuelstop_3023",
+          "amount_paise": 149209,
+          "target_bank": "Bank of Baroda",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (otp_expired). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_fuelstop_1832",
+          "amount_paise": 137098,
+          "target_bank": "State Bank of India",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (incorrect_pin). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_fuelstop_1267",
+          "amount_paise": 135442,
+          "target_bank": "India Post Payments Bank Limited",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (pin_attempts_exceeded). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_fuelstop_2642",
+          "amount_paise": 124675,
+          "target_bank": "Airtel Payments Bank Limited",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (incorrect_pin). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_fuelstop_1167",
+          "amount_paise": 95651,
+          "target_bank": "Kotak Mahindra Bank",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (authentication_failed). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_fuelstop_2260",
+          "amount_paise": 95289,
+          "target_bank": "Airtel Payments Bank Limited",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (pin_not_set). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_fuelstop_1925",
+          "amount_paise": 94554,
+          "target_bank": "Fino Payments Bank Ltd.",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (invalid_device). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_fuelstop_0222",
+          "amount_paise": 90145,
+          "target_bank": "Indusind Bank Ltd.",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (otp_attempts_exceeded). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_fuelstop_3268",
+          "amount_paise": 89681,
+          "target_bank": "State Bank of India",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (authentication_failed). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_fuelstop_2471",
+          "amount_paise": 89093,
+          "target_bank": "State Bank of India",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (incorrect_pin). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_fuelstop_1728",
+          "amount_paise": 84518,
+          "target_bank": "State Bank of India",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (pin_attempts_exceeded). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_fuelstop_2118",
+          "amount_paise": 79464,
+          "target_bank": "HDFC Bank Ltd.",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (pin_not_set). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_fuelstop_0139",
+          "amount_paise": 78031,
+          "target_bank": "India Post Payments Bank Limited",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (otp_expired). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_fuelstop_0983",
+          "amount_paise": 76692,
+          "target_bank": "Union Bank of India",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (otp_attempts_exceeded). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_fuelstop_1825",
+          "amount_paise": 74039,
+          "target_bank": "Axis Bank Ltd.",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (incorrect_cvv). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_fuelstop_1503",
+          "amount_paise": 72631,
+          "target_bank": "Axis Bank Ltd.",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (payment_cancelled). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_fuelstop_0212",
+          "amount_paise": 71946,
+          "target_bank": "Bank of Baroda",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (incorrect_pin). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_fuelstop_0331",
+          "amount_paise": 66433,
+          "target_bank": "Central Bank of India",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (incorrect_otp). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_fuelstop_2569",
+          "amount_paise": 62619,
+          "target_bank": "State Bank of India",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (incorrect_otp). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_fuelstop_0585",
+          "amount_paise": 61428,
+          "target_bank": "Bank of Baroda",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (incorrect_pin). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_fuelstop_1230",
+          "amount_paise": 57961,
+          "target_bank": "Union Bank of India",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (incorrect_atm_pin). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_fuelstop_0327",
+          "amount_paise": 53705,
+          "target_bank": "Indian Overseas Bank",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (pin_attempts_exceeded). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_fuelstop_2267",
+          "amount_paise": 47127,
+          "target_bank": "Kotak Mahindra Bank",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (incorrect_otp). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_fuelstop_2942",
+          "amount_paise": 44772,
+          "target_bank": "ICICI Bank Ltd.",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (pin_not_set). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_fuelstop_0433",
+          "amount_paise": 39951,
+          "target_bank": "Punjab National Bank",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (otp_expired). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_fuelstop_1696",
+          "amount_paise": 37392,
+          "target_bank": "Bank of Baroda",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (incorrect_otp). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_fuelstop_0174",
+          "amount_paise": 36566,
+          "target_bank": "Axis Bank Ltd.",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (incorrect_otp). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_fuelstop_1105",
+          "amount_paise": 35369,
+          "target_bank": "Kotak Mahindra Bank",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (pin_not_set). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_fuelstop_2982",
+          "amount_paise": 32433,
+          "target_bank": "Fino Payments Bank Ltd.",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (otp_expired). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_fuelstop_2865",
+          "amount_paise": 28159,
+          "target_bank": "Canara Bank",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (incorrect_pin). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_fuelstop_2443",
+          "amount_paise": 27207,
+          "target_bank": "State Bank of India",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (pin_not_set). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_fuelstop_1326",
+          "amount_paise": 23172,
+          "target_bank": "Bank Of India",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (invalid_device). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_fuelstop_2442",
+          "amount_paise": 20597,
+          "target_bank": "State Bank of India",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (pin_attempts_exceeded). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_fuelstop_2840",
+          "amount_paise": 14972,
+          "target_bank": "Bank of Baroda",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (pin_attempts_exceeded). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        },
+        {
+          "action_type": "reissue_payment_link",
+          "txn_id": "pay_fuelstop_1320",
+          "amount_paise": 10995,
+          "target_bank": "State Bank of India",
+          "scheduled_time": null,
+          "reason": "Authentication was not completed (authentication_failed). A fresh link gives the customer another attempt. No conversion rate is claimed -- this is value at stake, not projected recovery.",
+          "requires_merchant_approval": true
+        }
+      ]
+    },
     {
       "group_id": "flag_for_investigation",
       "action_type": "flag_for_investigation",
