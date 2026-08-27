@@ -34,15 +34,59 @@ export default function AuditPage({ params }: { params: { runId: string } }) {
   const [busy, setBusy] = useState(false);
   const [filter, setFilter] = useState<string>("all");
   const [openRow, setOpenRow] = useState<number | null>(null);
+  const [confirming, setConfirming] = useState(false);
+  const [confirmed, setConfirmed] = useState<any>(null);
 
-  useEffect(() => {
-    fetch(`/api/run/${params.runId}`)
+  function load() {
+    return fetch(`/api/run/${params.runId}`)
       .then((r) => r.json())
       .then((d: RunRecord) => {
         setRec(d);
         setEntries(d.report.ledger ?? []);
       });
+  }
+
+  useEffect(() => {
+    load();
   }, [params.runId]);
+
+  /**
+   * Release everything the kernel held for the merchant.
+   *
+   * The ledger showed dozens of step_up rows sitting at "merchant_action"
+   * with no way to act on them from this page. The whole point of a step-up
+   * is that a person decides, and there was nobody here to ask.
+   *
+   * Every group is re-gated individually on the way through, so this approves
+   * the queue rather than widening the mandate -- anything above the hard
+   * ceiling stays denied however many times it is confirmed.
+   */
+  async function confirmAll() {
+    if (!rec || confirming) return;
+    setConfirming(true);
+    const totals = {
+      executed: 0,
+      denied: 0,
+      ledger_added: 0,
+      chain_verified: true,
+      headline: "",
+    };
+    for (let i = 0; i < (rec.pending_actions?.length ?? 0); i++) {
+      const r = await fetch(
+        `/api/run/${params.runId}/apply?group_index=${i}&confirmed=true`,
+        { method: "POST" }
+      );
+      const d = await r.json();
+      totals.executed += d.executed ?? 0;
+      totals.denied += d.denied ?? 0;
+      totals.ledger_added += d.ledger_added ?? 0;
+      totals.chain_verified = totals.chain_verified && (d.chain_verified ?? true);
+      if (d.headline) totals.headline = d.headline;
+    }
+    setConfirmed(totals);
+    setConfirming(false);
+    await load();
+  }
 
   async function verify(list = entries) {
     setBusy(true);
@@ -91,6 +135,9 @@ export default function AuditPage({ params }: { params: { runId: string } }) {
   if (!rec) return <Loading label="loading ledger" />;
 
   const r = rec.report;
+  const pendingStepUps = entries.filter(
+    (e: any) => e.gate_decision === "step_up" && e.outcome === "merchant_action"
+  ).length;
   const m = r.measured;
   const shown = entries.filter(
     (e) => filter === "all" || e.gate_decision === filter
@@ -233,6 +280,53 @@ export default function AuditPage({ params }: { params: { runId: string } }) {
       </Stagger>
 
       {/* ─────────────────────────────── the chain */}
+      {pendingStepUps > 0 && (
+        <Stagger i={3}>
+          <Card className="border-l-2 border-l-amber">
+            <div className="flex items-center gap-4 flex-wrap">
+              <div className="min-w-0 flex-1">
+                <Eyebrow>Waiting on you</Eyebrow>
+                <h2 className="text-lg font-semibold mt-1">
+                  {pendingStepUps} actions the kernel held for your approval
+                </h2>
+                <p className="text-sm text-muted mt-1.5 max-w-2xl leading-relaxed">
+                  Each is above the auto-execute limit in your signed mandate.
+                  Confirming re-gates every one individually — anything over the
+                  hard ceiling stays denied however many times you confirm it.
+                </p>
+              </div>
+              <button
+                onClick={confirmAll}
+                disabled={confirming}
+                className="btn-primary shrink-0"
+              >
+                {confirming ? "gating…" : `Confirm all ${pendingStepUps} →`}
+              </button>
+            </div>
+
+            {confirmed && (
+              <div className="card-raised p-3 mt-4 animate-rise">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span className={confirmed.executed ? "chip-measured" : "chip-neutral"}>
+                    {confirmed.executed} executed
+                  </span>
+                  {confirmed.denied > 0 && (
+                    <span className="chip-warn">{confirmed.denied} still denied</span>
+                  )}
+                  <span className={confirmed.chain_verified ? "chip-measured" : "chip-warn"}>
+                    chain {confirmed.chain_verified ? "verified" : "BROKEN"}
+                  </span>
+                  <span className="num text-[11px] text-faint ml-auto">
+                    +{confirmed.ledger_added} rows
+                  </span>
+                </div>
+                <p className="text-sm text-muted mt-2">{confirmed.headline}</p>
+              </div>
+            )}
+          </Card>
+        </Stagger>
+      )}
+
       <Stagger i={4}>
         <Card className="!p-0 overflow-hidden">
           <div className="px-5 py-3 border-b border-line flex items-center gap-3 flex-wrap">
