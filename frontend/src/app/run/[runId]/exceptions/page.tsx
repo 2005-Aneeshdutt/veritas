@@ -18,7 +18,10 @@ const CLASS_META: Record<
   auth_failure: {
     label: "Customer did not authenticate",
     why: "Wrong OTP or PIN, or the payment was abandoned partway.",
-    fix: "Recoverable by the customer, never by the agent. Send them back to checkout.",
+    fix:
+      "Not written off. A fresh payment link is proposed for each of these on " +
+      "the Fixes panel — the agent cannot send them unattended, because " +
+      "messaging a merchant's customer is theirs to authorise.",
     tone: "amber",
   },
   soft_decline: {

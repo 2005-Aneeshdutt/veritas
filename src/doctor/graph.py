@@ -540,8 +540,10 @@ FIX_TITLES = {
         "Shift the recurring charge into business hours, where banks decline less.",
     ),
     "reissue_payment_link": (
-        "Reissue {n} expired payment links",
-        "Sessions that timed out before the customer finished.",
+        "Send {n} customers a fresh payment link",
+        "{money} where the customer never finished authenticating -- wrong OTP, "
+        "wrong PIN, or they walked away. Retrying the same payment does nothing; "
+        "a new link gives them another go. No conversion rate is claimed.",
     ),
     "enable_multi_bank_routing": (
         "Enable multi-bank routing",
@@ -587,7 +589,16 @@ def _pending(s: State) -> list:
                 "why": why_t.format(n=len(actions), money=money),
                 "count": len(actions),
                 "total_paise": total,
-                "auto": kind in {a.value for a in AUTO_EXECUTABLE},
+                # An action type being auto-executable in principle is not
+                # enough. A reissued payment link is a message to the
+                # merchant's customer, so it is proposed with
+                # requires_merchant_approval and the badge has to say so --
+                # the kernel already steps these up, and a UI claiming "agent
+                # can run this" would contradict what actually happens.
+                "auto": (
+                    kind in {a.value for a in AUTO_EXECUTABLE}
+                    and not any(x.requires_merchant_approval for x in actions)
+                ),
                 "actions": [a.model_dump(mode="json") for a in actions],
             }
         )
