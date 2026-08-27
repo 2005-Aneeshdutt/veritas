@@ -127,6 +127,29 @@ export default function Overview({ params }: { params: { runId: string } }) {
                   </span>
                   <span className="chip-projected">projected</span>
                 </div>
+
+                {m.recovery_vs_truth?.scored && (
+                  <div className="flex items-baseline gap-3 mt-3">
+                    <span className="text-3xl font-display font-bold text-mint leading-none">
+                      <Ticker
+                        value={m.recovery_vs_truth.measured_paise / 100}
+                        prefix="₹"
+                        decimals={0}
+                      />
+                    </span>
+                    <span className="chip-measured">measured</span>
+                    <span className="text-xs text-muted">
+                      {m.recovery_vs_truth.truly_converted} of{" "}
+                      {m.recovery_vs_truth.attempted} retries would truly have
+                      converted
+                    </span>
+                  </div>
+                )}
+                {m.recovery_vs_truth?.scored && (
+                  <div className="text-xs text-muted mt-2 max-w-xl leading-relaxed">
+                    {m.recovery_vs_truth.detail}
+                  </div>
+                )}
                 {recov?.by_calibration?.central && (
                   <div className="text-xs text-muted mt-2 max-w-xl leading-relaxed">
                     <span className="chip-measured mr-1.5">measured</span>

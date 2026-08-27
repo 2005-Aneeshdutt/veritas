@@ -18,6 +18,7 @@ A linear pipeline would be a script. The branches are what make this an agent.
 
 from __future__ import annotations
 
+import json
 import os
 import subprocess
 import time
@@ -674,6 +675,19 @@ def run_diagnosis(
         # rows. The kernel still re-checks each one on apply.
         pending_actions=_pending(state),
     )
+    # Mark the run against ground truth, AFTER the fact.
+    #
+    # The engine never saw the counterfactual -- it received a profile and a
+    # list of transactions, and that blindness is what makes the score mean
+    # anything. This scores a decision that was already made.
+    from .scoring import score_recovery
+
+    payload = json.loads(rec.model_dump_json())
+    payload["report"]["measured"]["recovery_vs_truth"] = json.loads(
+        score_recovery(payload).model_dump_json()
+    )
+    rec = RunRecord.model_validate(payload)
+
     RUNS_DIR.mkdir(parents=True, exist_ok=True)
     (RUNS_DIR / (run_id + ".json")).write_text(
         rec.model_dump_json(indent=2), encoding="utf-8", newline="\n"

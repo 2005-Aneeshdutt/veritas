@@ -1,12 +1,12 @@
 {
-  "run_id": "run_a0b3c759",
+  "run_id": "run_da3714d2",
   "merchant_id": "cloudsync",
   "merchant_name": "CloudSync Pro",
   "mcc": "5734",
   "seed": 20260824,
-  "started_at": 1787823841.116542,
-  "duration_ms": 3132,
-  "commit": "620fad9",
+  "started_at": 1787825885.2494242,
+  "duration_ms": 2554,
+  "commit": "2526381",
   "models": {
     "fast": "claude-haiku-4.5",
     "reasoning": "claude-sonnet-4.6",
@@ -18,13 +18,13 @@
   "used_stubs": false,
   "traces": [
     {
-      "run_id": "run_a0b3c759",
+      "run_id": "run_da3714d2",
       "seq": 0,
       "node": "ingest",
       "kind": "deterministic",
       "status": "ok",
-      "started_at": 1787823843.542938,
-      "duration_ms": 71,
+      "started_at": 1787825887.2989898,
+      "duration_ms": 34,
       "input_summary": {
         "merchant": "cloudsync",
         "mcc": "5734"
@@ -50,12 +50,12 @@
       }
     },
     {
-      "run_id": "run_a0b3c759",
+      "run_id": "run_da3714d2",
       "seq": 1,
       "node": "classify",
       "kind": "llm",
       "status": "ok",
-      "started_at": 1787823843.6167686,
+      "started_at": 1787825887.3329997,
       "duration_ms": 1,
       "input_summary": {
         "distinct_codes": 61,
@@ -85,12 +85,12 @@
       "intermediates": {}
     },
     {
-      "run_id": "run_a0b3c759",
+      "run_id": "run_da3714d2",
       "seq": 2,
       "node": "human_review",
       "kind": "deterministic",
       "status": "skipped",
-      "started_at": 1787823843.6197662,
+      "started_at": 1787825887.3349977,
       "duration_ms": 0,
       "input_summary": {},
       "output_summary": {
@@ -109,13 +109,13 @@
       "intermediates": {}
     },
     {
-      "run_id": "run_a0b3c759",
+      "run_id": "run_da3714d2",
       "seq": 3,
       "node": "bank_health",
       "kind": "deterministic",
       "status": "ok",
-      "started_at": 1787823843.6207592,
-      "duration_ms": 5,
+      "started_at": 1787825887.3360052,
+      "duration_ms": 2,
       "input_summary": {},
       "output_summary": {
         "banks_examined": 10,
@@ -241,13 +241,13 @@
       }
     },
     {
-      "run_id": "run_a0b3c759",
+      "run_id": "run_da3714d2",
       "seq": 4,
       "node": "decompose",
       "kind": "deterministic",
       "status": "ok",
-      "started_at": 1787823843.6267643,
-      "duration_ms": 554,
+      "started_at": 1787825887.3400052,
+      "duration_ms": 398,
       "input_summary": {},
       "output_summary": {
         "gap_pts": 6.592,
@@ -308,13 +308,13 @@
       }
     },
     {
-      "run_id": "run_a0b3c759",
+      "run_id": "run_da3714d2",
       "seq": 5,
       "node": "hypothesise",
       "kind": "llm",
       "status": "ok",
-      "started_at": 1787823844.1827993,
-      "duration_ms": 3,
+      "started_at": 1787825887.739523,
+      "duration_ms": 1,
       "input_summary": {},
       "output_summary": {
         "primary_label": "midnight_billing_penalty",
@@ -365,13 +365,13 @@
       "intermediates": {}
     },
     {
-      "run_id": "run_a0b3c759",
+      "run_id": "run_da3714d2",
       "seq": 6,
       "node": "plan",
       "kind": "deterministic",
       "status": "ok",
-      "started_at": 1787823844.1877956,
-      "duration_ms": 6,
+      "started_at": 1787825887.7415237,
+      "duration_ms": 4,
       "input_summary": {},
       "output_summary": {
         "actions": 41,
@@ -420,13 +420,13 @@
       }
     },
     {
-      "run_id": "run_a0b3c759",
+      "run_id": "run_da3714d2",
       "seq": 7,
       "node": "gate",
       "kind": "deterministic",
       "status": "ok",
-      "started_at": 1787823844.1948462,
-      "duration_ms": 33,
+      "started_at": 1787825887.7455382,
+      "duration_ms": 45,
       "input_summary": {},
       "output_summary": {
         "decisions": {
@@ -455,13 +455,13 @@
       "intermediates": {}
     },
     {
-      "run_id": "run_a0b3c759",
+      "run_id": "run_da3714d2",
       "seq": 8,
       "node": "execute",
       "kind": "deterministic",
       "status": "ok",
-      "started_at": 1787823844.2303972,
-      "duration_ms": 8,
+      "started_at": 1787825887.7919726,
+      "duration_ms": 4,
       "input_summary": {},
       "output_summary": {
         "executed": 12,
@@ -486,13 +486,13 @@
       "intermediates": {}
     },
     {
-      "run_id": "run_a0b3c759",
+      "run_id": "run_da3714d2",
       "seq": 9,
       "node": "report",
       "kind": "deterministic",
       "status": "ok",
-      "started_at": 1787823844.2393994,
-      "duration_ms": 8,
+      "started_at": 1787825887.7979684,
+      "duration_ms": 4,
       "input_summary": {},
       "output_summary": {
         "measured_keys": [
@@ -1138,6 +1138,16 @@
       "efficiency_check": {
         "sum_of_attributions_pts": 6.642798,
         "v_of_grand_coalition_pts": 6.642798
+      },
+      "recovery_vs_truth": {
+        "scored": true,
+        "attempted": 11,
+        "truly_converted": 3,
+        "measured_paise": 474164,
+        "projected_paise": 216845,
+        "ratio": 0.457,
+        "wasted_attempts": 8,
+        "detail": "Of 11 payments this agent retried, 3 would truly have converted, worth Rs 4,741. The rail forecast Rs 2,168 -- 2.19x conservative. Measured against the generating distribution, the same standard as the attribution error, not against a live rail."
       }
     },
     "projected": {
@@ -1442,7 +1452,7 @@
     "ledger": [
       {
         "sequence": 0,
-        "timestamp": "2026-08-27T09:44:04.230397+00:00",
+        "timestamp": "2026-08-27T10:18:07.791972+00:00",
         "txn_id": "merchant:cloudsync",
         "proposed_action": {
           "action_type": "flag_for_investigation",
@@ -1457,11 +1467,11 @@
         "gate_reason": "OK_ESCALATION",
         "outcome": "escalated",
         "prev_hash": "0000000000000000000000000000000000000000000000000000000000000000",
-        "entry_hash": "e57535a105e38e4b9fddb090a3296e35d9d018209c70b840cc6386e7a6e4f3e0"
+        "entry_hash": "cdb09537bf54537c8dd2f152035c3e8aae7f604e1004ad3cddcdbd332c66f552"
       },
       {
         "sequence": 1,
-        "timestamp": "2026-08-27T09:44:04.231398+00:00",
+        "timestamp": "2026-08-27T10:18:07.791972+00:00",
         "txn_id": "merchant:cloudsync",
         "proposed_action": {
           "action_type": "flag_for_investigation",
@@ -1475,12 +1485,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_ESCALATION",
         "outcome": "escalated",
-        "prev_hash": "e57535a105e38e4b9fddb090a3296e35d9d018209c70b840cc6386e7a6e4f3e0",
-        "entry_hash": "97145851b8a8c2fdb0a4a47f68235b647e6538af66fbf3bf760d70acbc5a41fa"
+        "prev_hash": "cdb09537bf54537c8dd2f152035c3e8aae7f604e1004ad3cddcdbd332c66f552",
+        "entry_hash": "bc4c1b3b1d23cd4927cba583cc9d86bd476ea2b661d756f0a46337ce778773ca"
       },
       {
         "sequence": 2,
-        "timestamp": "2026-08-27T09:44:04.231398+00:00",
+        "timestamp": "2026-08-27T10:18:07.791972+00:00",
         "txn_id": "merchant:cloudsync",
         "proposed_action": {
           "action_type": "reschedule_billing_window",
@@ -1494,12 +1504,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "97145851b8a8c2fdb0a4a47f68235b647e6538af66fbf3bf760d70acbc5a41fa",
-        "entry_hash": "b4e04a77b57f9d9403868e24071c4404683753336f9b6ee29ccac0f84890a642"
+        "prev_hash": "bc4c1b3b1d23cd4927cba583cc9d86bd476ea2b661d756f0a46337ce778773ca",
+        "entry_hash": "535a17b217c26005fecb67b1b5a9bba0de08c8ca9f92b60b4f1c03cf5064d868"
       },
       {
         "sequence": 3,
-        "timestamp": "2026-08-27T09:44:04.231398+00:00",
+        "timestamp": "2026-08-27T10:18:07.791972+00:00",
         "txn_id": "merchant:cloudsync",
         "proposed_action": {
           "action_type": "enable_multi_bank_routing",
@@ -1513,12 +1523,12 @@
         "gate_decision": "step_up",
         "gate_reason": "OK_MERCHANT_ACTION",
         "outcome": "merchant_action",
-        "prev_hash": "b4e04a77b57f9d9403868e24071c4404683753336f9b6ee29ccac0f84890a642",
-        "entry_hash": "6f75f597245365310560100c1e57625202f9fa141ee8ce76cabcf49269cda0df"
+        "prev_hash": "535a17b217c26005fecb67b1b5a9bba0de08c8ca9f92b60b4f1c03cf5064d868",
+        "entry_hash": "451eedb74b083ac5322a642be674322eed05ee863f187e7970dd9d1e79c1007e"
       },
       {
         "sequence": 4,
-        "timestamp": "2026-08-27T09:44:04.232397+00:00",
+        "timestamp": "2026-08-27T10:18:07.791972+00:00",
         "txn_id": "pay_cloudsync_0060",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1532,31 +1542,31 @@
         "gate_decision": "deny",
         "gate_reason": "DENY_AMOUNT_ABOVE_CEILING",
         "outcome": "denied",
-        "prev_hash": "6f75f597245365310560100c1e57625202f9fa141ee8ce76cabcf49269cda0df",
-        "entry_hash": "492cedd3dfdc28e64779df77520c796a955a8178ca51bf5ca24319036ef4488e"
+        "prev_hash": "451eedb74b083ac5322a642be674322eed05ee863f187e7970dd9d1e79c1007e",
+        "entry_hash": "31007934fcf7ec73eb38c695c4dfbaca774d2a0e6b97f029f84808ab65980494"
       },
       {
         "sequence": 5,
-        "timestamp": "2026-08-27T09:44:04.232397+00:00",
+        "timestamp": "2026-08-27T10:18:07.791972+00:00",
         "txn_id": "pay_cloudsync_0792",
         "proposed_action": {
           "action_type": "retry_soft_decline",
           "txn_id": "pay_cloudsync_0792",
           "amount_paise": 2455690,
           "target_bank": "India Post Payments Bank Limited",
-          "scheduled_time": "2026-08-27T09:44:04.188795+00:00",
-          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (payment_session_expired), unretried -- retry at +120.7h, past the plateau; intent goes stale",
+          "scheduled_time": "2026-08-27T10:18:07.742533+00:00",
+          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (payment_session_expired), unretried -- retry at +121.3h, past the plateau; intent goes stale",
           "requires_merchant_approval": false
         },
         "gate_decision": "deny",
         "gate_reason": "DENY_AMOUNT_ABOVE_CEILING",
         "outcome": "denied",
-        "prev_hash": "492cedd3dfdc28e64779df77520c796a955a8178ca51bf5ca24319036ef4488e",
-        "entry_hash": "ce3dfce896b3e00c7a0f4613d65a053ca7d2b43bbb84764dcc7b9d2920228249"
+        "prev_hash": "31007934fcf7ec73eb38c695c4dfbaca774d2a0e6b97f029f84808ab65980494",
+        "entry_hash": "11375234328ffffc5082f451a0218a686a89a742ffc7f171862086f37dab8753"
       },
       {
         "sequence": 6,
-        "timestamp": "2026-08-27T09:44:04.232397+00:00",
+        "timestamp": "2026-08-27T10:18:07.791972+00:00",
         "txn_id": "pay_cloudsync_0043",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1570,50 +1580,50 @@
         "gate_decision": "deny",
         "gate_reason": "DENY_AMOUNT_ABOVE_CEILING",
         "outcome": "denied",
-        "prev_hash": "ce3dfce896b3e00c7a0f4613d65a053ca7d2b43bbb84764dcc7b9d2920228249",
-        "entry_hash": "c05bb0b0479f968895530346d9bae8f3e7c9d2d9336d6118a9247005cb18e403"
+        "prev_hash": "11375234328ffffc5082f451a0218a686a89a742ffc7f171862086f37dab8753",
+        "entry_hash": "e5ddfe959939eb2815391cc82d0c00b833a617c96279bccd21be2379b4b9d62d"
       },
       {
         "sequence": 7,
-        "timestamp": "2026-08-27T09:44:04.232397+00:00",
+        "timestamp": "2026-08-27T10:18:07.792971+00:00",
         "txn_id": "pay_cloudsync_0310",
         "proposed_action": {
           "action_type": "retry_soft_decline",
           "txn_id": "pay_cloudsync_0310",
           "amount_paise": 2132228,
           "target_bank": "India Post Payments Bank Limited",
-          "scheduled_time": "2026-08-27T09:44:04.188795+00:00",
-          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (credit_limit_exceeded), unretried -- retry at +33.7h, the plateau: long enough for the balance to have changed",
+          "scheduled_time": "2026-08-27T10:18:07.742533+00:00",
+          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (credit_limit_exceeded), unretried -- retry at +34.3h, the plateau: long enough for the balance to have changed",
           "requires_merchant_approval": false
         },
         "gate_decision": "deny",
         "gate_reason": "DENY_AMOUNT_ABOVE_CEILING",
         "outcome": "denied",
-        "prev_hash": "c05bb0b0479f968895530346d9bae8f3e7c9d2d9336d6118a9247005cb18e403",
-        "entry_hash": "45a9926c1b8da3fd01eabb613a9df4068c0b9776d9cd2c8b1bbdbcbc46403966"
+        "prev_hash": "e5ddfe959939eb2815391cc82d0c00b833a617c96279bccd21be2379b4b9d62d",
+        "entry_hash": "c429fe5fd488a1d7752659f3904335c116407dfbc57a80022216ae744211bb65"
       },
       {
         "sequence": 8,
-        "timestamp": "2026-08-27T09:44:04.232397+00:00",
+        "timestamp": "2026-08-27T10:18:07.792971+00:00",
         "txn_id": "pay_cloudsync_0180",
         "proposed_action": {
           "action_type": "retry_soft_decline",
           "txn_id": "pay_cloudsync_0180",
           "amount_paise": 1932553,
           "target_bank": "Union Bank of India",
-          "scheduled_time": "2026-08-27T09:44:04.188795+00:00",
-          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (transaction_limit_exceeded), unretried -- retry at +67.7h, the plateau: long enough for the balance to have changed",
+          "scheduled_time": "2026-08-27T10:18:07.742533+00:00",
+          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (transaction_limit_exceeded), unretried -- retry at +68.3h, the plateau: long enough for the balance to have changed",
           "requires_merchant_approval": false
         },
         "gate_decision": "deny",
         "gate_reason": "DENY_AMOUNT_ABOVE_CEILING",
         "outcome": "denied",
-        "prev_hash": "45a9926c1b8da3fd01eabb613a9df4068c0b9776d9cd2c8b1bbdbcbc46403966",
-        "entry_hash": "8886ba025be3000527286d5aa952f4ec4ed54d9b5cd388afea29066aebe89c72"
+        "prev_hash": "c429fe5fd488a1d7752659f3904335c116407dfbc57a80022216ae744211bb65",
+        "entry_hash": "ab4ba0e91ce3085550c59ee3e9eb195bf6ca1fb7ced431be115a5108237de837"
       },
       {
         "sequence": 9,
-        "timestamp": "2026-08-27T09:44:04.233397+00:00",
+        "timestamp": "2026-08-27T10:18:07.792971+00:00",
         "txn_id": "pay_cloudsync_0893",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1627,126 +1637,126 @@
         "gate_decision": "deny",
         "gate_reason": "DENY_AMOUNT_ABOVE_CEILING",
         "outcome": "denied",
-        "prev_hash": "8886ba025be3000527286d5aa952f4ec4ed54d9b5cd388afea29066aebe89c72",
-        "entry_hash": "cadd520263589ac5926091dc89bded098e1c3bb6335ba04f14facfc3039faa7a"
+        "prev_hash": "ab4ba0e91ce3085550c59ee3e9eb195bf6ca1fb7ced431be115a5108237de837",
+        "entry_hash": "f70d084d7140a56ebf1db272bd813fa3f1e9a73154272f0cb08449fc13efab60"
       },
       {
         "sequence": 10,
-        "timestamp": "2026-08-27T09:44:04.233397+00:00",
+        "timestamp": "2026-08-27T10:18:07.792971+00:00",
         "txn_id": "pay_cloudsync_0381",
         "proposed_action": {
           "action_type": "retry_soft_decline",
           "txn_id": "pay_cloudsync_0381",
           "amount_paise": 1690135,
           "target_bank": "Kotak Mahindra Bank",
-          "scheduled_time": "2026-08-27T10:00:00+00:00",
-          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (payment_declined), unretried -- retry at +30h, the plateau: long enough for the balance to have changed",
+          "scheduled_time": "2026-08-27T10:18:07.742533+00:00",
+          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (payment_declined), unretried -- retry at +30.3h, the plateau: long enough for the balance to have changed",
           "requires_merchant_approval": false
         },
         "gate_decision": "deny",
         "gate_reason": "DENY_AMOUNT_ABOVE_CEILING",
         "outcome": "denied",
-        "prev_hash": "cadd520263589ac5926091dc89bded098e1c3bb6335ba04f14facfc3039faa7a",
-        "entry_hash": "b72228a0e2fc984ed20f86a14cf2780806fa0ceb29093ab418f7db396879c20d"
+        "prev_hash": "f70d084d7140a56ebf1db272bd813fa3f1e9a73154272f0cb08449fc13efab60",
+        "entry_hash": "60db6f061c0ea17b46f3c059621dd0eea21ae665358a6a69dac6ffc7826f8958"
       },
       {
         "sequence": 11,
-        "timestamp": "2026-08-27T09:44:04.233397+00:00",
+        "timestamp": "2026-08-27T10:18:07.792971+00:00",
         "txn_id": "pay_cloudsync_0092",
         "proposed_action": {
           "action_type": "retry_soft_decline",
           "txn_id": "pay_cloudsync_0092",
           "amount_paise": 1689159,
           "target_bank": "State Bank of India",
-          "scheduled_time": "2026-08-27T09:44:04.189792+00:00",
-          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (card_declined), unretried -- retry at +35.7h, the plateau: long enough for the balance to have changed",
+          "scheduled_time": "2026-08-27T10:18:07.742533+00:00",
+          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (card_declined), unretried -- retry at +36.3h, the plateau: long enough for the balance to have changed",
           "requires_merchant_approval": false
         },
         "gate_decision": "deny",
         "gate_reason": "DENY_AMOUNT_ABOVE_CEILING",
         "outcome": "denied",
-        "prev_hash": "b72228a0e2fc984ed20f86a14cf2780806fa0ceb29093ab418f7db396879c20d",
-        "entry_hash": "2aec24c3fa6792a2405e7f8685960eb3f91ed50b5f4d3ab957cfc7804fdd1797"
+        "prev_hash": "60db6f061c0ea17b46f3c059621dd0eea21ae665358a6a69dac6ffc7826f8958",
+        "entry_hash": "1132b1cfdd7e26793ea73ea93a731f1c76984be5f02dcb61521796412a6cf21c"
       },
       {
         "sequence": 12,
-        "timestamp": "2026-08-27T09:44:04.233397+00:00",
+        "timestamp": "2026-08-27T10:18:07.792971+00:00",
         "txn_id": "pay_cloudsync_0529",
         "proposed_action": {
           "action_type": "retry_soft_decline",
           "txn_id": "pay_cloudsync_0529",
           "amount_paise": 1556452,
           "target_bank": "Bank Of India",
-          "scheduled_time": "2026-08-27T09:44:04.189792+00:00",
-          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (credit_not_permitted), unretried -- retry at +67.7h, last look before the odds fall away",
+          "scheduled_time": "2026-08-27T10:18:07.742533+00:00",
+          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (credit_not_permitted), unretried -- retry at +68.3h, last look before the odds fall away",
           "requires_merchant_approval": false
         },
         "gate_decision": "deny",
         "gate_reason": "DENY_AMOUNT_ABOVE_CEILING",
         "outcome": "denied",
-        "prev_hash": "2aec24c3fa6792a2405e7f8685960eb3f91ed50b5f4d3ab957cfc7804fdd1797",
-        "entry_hash": "950b38d370ccb78a5dc55397ed243984c1be2a3b17678d163a5ff345c226bb24"
+        "prev_hash": "1132b1cfdd7e26793ea73ea93a731f1c76984be5f02dcb61521796412a6cf21c",
+        "entry_hash": "97f35c629ff667d9318d015780b38aa011a308ffcf012e64d08041456f147e85"
       },
       {
         "sequence": 13,
-        "timestamp": "2026-08-27T09:44:04.233397+00:00",
+        "timestamp": "2026-08-27T10:18:07.792971+00:00",
         "txn_id": "pay_cloudsync_0167",
         "proposed_action": {
           "action_type": "retry_soft_decline",
           "txn_id": "pay_cloudsync_0167",
           "amount_paise": 1474527,
           "target_bank": "Punjab National Bank",
-          "scheduled_time": "2026-08-27T09:44:04.189792+00:00",
-          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (transaction_daily_count_exceeded), unretried -- retry at +32.7h, the plateau: long enough for the balance to have changed",
+          "scheduled_time": "2026-08-27T10:18:07.743535+00:00",
+          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (transaction_daily_count_exceeded), unretried -- retry at +33.3h, the plateau: long enough for the balance to have changed",
           "requires_merchant_approval": false
         },
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "950b38d370ccb78a5dc55397ed243984c1be2a3b17678d163a5ff345c226bb24",
-        "entry_hash": "289976eec579796dca86d627cb32e46339a91efb2f84a47387e53a26943ca45b"
+        "prev_hash": "97f35c629ff667d9318d015780b38aa011a308ffcf012e64d08041456f147e85",
+        "entry_hash": "5b4ea7429e221673f103b7d24e58fa14687a0bf753bb59d62d0e91898bcdf373"
       },
       {
         "sequence": 14,
-        "timestamp": "2026-08-27T09:44:04.233397+00:00",
+        "timestamp": "2026-08-27T10:18:07.792971+00:00",
         "txn_id": "pay_cloudsync_0572",
         "proposed_action": {
           "action_type": "retry_soft_decline",
           "txn_id": "pay_cloudsync_0572",
           "amount_paise": 1271054,
           "target_bank": "State Bank of India",
-          "scheduled_time": "2026-08-27T09:44:04.189792+00:00",
-          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (transaction_daily_count_exceeded), unretried -- retry at +80.7h, past the plateau; intent goes stale",
+          "scheduled_time": "2026-08-27T10:18:07.743535+00:00",
+          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (transaction_daily_count_exceeded), unretried -- retry at +81.3h, past the plateau; intent goes stale",
           "requires_merchant_approval": false
         },
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "289976eec579796dca86d627cb32e46339a91efb2f84a47387e53a26943ca45b",
-        "entry_hash": "ae2dab4b4b5c9051c3525cb4e78fb039d9c3b6852f8218d39a0473b888b2b5c3"
+        "prev_hash": "5b4ea7429e221673f103b7d24e58fa14687a0bf753bb59d62d0e91898bcdf373",
+        "entry_hash": "5fc1c2c4de3462c9c8118af24b56a5295c44b66fc7f94983e0cd90bcba3c7715"
       },
       {
         "sequence": 15,
-        "timestamp": "2026-08-27T09:44:04.233397+00:00",
+        "timestamp": "2026-08-27T10:18:07.792971+00:00",
         "txn_id": "pay_cloudsync_1051",
         "proposed_action": {
           "action_type": "retry_soft_decline",
           "txn_id": "pay_cloudsync_1051",
           "amount_paise": 1114962,
           "target_bank": "Bank Of India",
-          "scheduled_time": "2026-08-27T09:44:04.189792+00:00",
-          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (transaction_daily_limit_exceeded), unretried -- retry at +52.7h, the plateau: long enough for the balance to have changed",
+          "scheduled_time": "2026-08-27T10:18:07.743535+00:00",
+          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (transaction_daily_limit_exceeded), unretried -- retry at +53.3h, the plateau: long enough for the balance to have changed",
           "requires_merchant_approval": false
         },
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "ae2dab4b4b5c9051c3525cb4e78fb039d9c3b6852f8218d39a0473b888b2b5c3",
-        "entry_hash": "d0e116e1658835993b6641a8ebd9f689eea92f6886978e33490a54e0a2fcc794"
+        "prev_hash": "5fc1c2c4de3462c9c8118af24b56a5295c44b66fc7f94983e0cd90bcba3c7715",
+        "entry_hash": "e3b4a490c06843d47e421931ce5626e1d0b38dd4200318cd9001c146b369f4f2"
       },
       {
         "sequence": 16,
-        "timestamp": "2026-08-27T09:44:04.233397+00:00",
+        "timestamp": "2026-08-27T10:18:07.792971+00:00",
         "txn_id": "pay_cloudsync_0217",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1760,12 +1770,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "d0e116e1658835993b6641a8ebd9f689eea92f6886978e33490a54e0a2fcc794",
-        "entry_hash": "a5897b08bc47402cb8e8dfdc61963faff0384cebfd432516d506aaef538e0f0e"
+        "prev_hash": "e3b4a490c06843d47e421931ce5626e1d0b38dd4200318cd9001c146b369f4f2",
+        "entry_hash": "303bc09663250dad7f80894617ddf3ce639706d6f89e6d0d5e5e0e7e71aaed7f"
       },
       {
         "sequence": 17,
-        "timestamp": "2026-08-27T09:44:04.233397+00:00",
+        "timestamp": "2026-08-27T10:18:07.792971+00:00",
         "txn_id": "pay_cloudsync_1177",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1779,145 +1789,145 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "a5897b08bc47402cb8e8dfdc61963faff0384cebfd432516d506aaef538e0f0e",
-        "entry_hash": "af0757506a293cc8847a3e97e6a38181edad58c63be0d4a0f6de2a3a01f5987b"
+        "prev_hash": "303bc09663250dad7f80894617ddf3ce639706d6f89e6d0d5e5e0e7e71aaed7f",
+        "entry_hash": "310c96029b0f6d71f6f075b384743eea8fed03f56f22b6a0cd0cadc6c184e672"
       },
       {
         "sequence": 18,
-        "timestamp": "2026-08-27T09:44:04.233397+00:00",
+        "timestamp": "2026-08-27T10:18:07.792971+00:00",
         "txn_id": "pay_cloudsync_0027",
         "proposed_action": {
           "action_type": "retry_soft_decline",
           "txn_id": "pay_cloudsync_0027",
           "amount_paise": 984263,
           "target_bank": "India Post Payments Bank Limited",
-          "scheduled_time": "2026-08-27T09:44:04.189792+00:00",
-          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (credit_limit_exceeded), unretried -- retry at +78.7h, past the plateau; intent goes stale",
+          "scheduled_time": "2026-08-27T10:18:07.743535+00:00",
+          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (credit_limit_exceeded), unretried -- retry at +79.3h, past the plateau; intent goes stale",
           "requires_merchant_approval": false
         },
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "af0757506a293cc8847a3e97e6a38181edad58c63be0d4a0f6de2a3a01f5987b",
-        "entry_hash": "cc4e9df5375a0f2f0af8c7791fe75d8f434459cfb42cb31dad430d4a9f694eb4"
+        "prev_hash": "310c96029b0f6d71f6f075b384743eea8fed03f56f22b6a0cd0cadc6c184e672",
+        "entry_hash": "55b964b02eade4c70353eac3ad4149ac61ee03c56c0ee98e2b1e9adbcc6c79f0"
       },
       {
         "sequence": 19,
-        "timestamp": "2026-08-27T09:44:04.233397+00:00",
+        "timestamp": "2026-08-27T10:18:07.792971+00:00",
         "txn_id": "pay_cloudsync_0000",
         "proposed_action": {
           "action_type": "retry_soft_decline",
           "txn_id": "pay_cloudsync_0000",
           "amount_paise": 941987,
           "target_bank": "Indian Bank",
-          "scheduled_time": "2026-08-27T09:44:04.189792+00:00",
-          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (payment_pending), unretried -- retry at +112.7h, past the plateau; intent goes stale",
+          "scheduled_time": "2026-08-27T10:18:07.743535+00:00",
+          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (payment_pending), unretried -- retry at +113.3h, past the plateau; intent goes stale",
           "requires_merchant_approval": false
         },
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "cc4e9df5375a0f2f0af8c7791fe75d8f434459cfb42cb31dad430d4a9f694eb4",
-        "entry_hash": "cc1d549d38e60b25660a0c62f04dac04e5df3348dd751a72d5fc9d663aa87242"
+        "prev_hash": "55b964b02eade4c70353eac3ad4149ac61ee03c56c0ee98e2b1e9adbcc6c79f0",
+        "entry_hash": "e99239f9e9dd5fba343ec70394e29f0e86762384a59b3ab4cd54eb08dd9c0ca9"
       },
       {
         "sequence": 20,
-        "timestamp": "2026-08-27T09:44:04.233397+00:00",
+        "timestamp": "2026-08-27T10:18:07.792971+00:00",
         "txn_id": "pay_cloudsync_0708",
         "proposed_action": {
           "action_type": "retry_soft_decline",
           "txn_id": "pay_cloudsync_0708",
           "amount_paise": 808232,
           "target_bank": "State Bank of India",
-          "scheduled_time": "2026-08-27T09:44:04.189792+00:00",
-          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (payment_pending), unretried -- retry at +125.7h, past the plateau; intent goes stale",
+          "scheduled_time": "2026-08-27T10:18:07.743535+00:00",
+          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (payment_pending), unretried -- retry at +126.3h, past the plateau; intent goes stale",
           "requires_merchant_approval": false
         },
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "cc1d549d38e60b25660a0c62f04dac04e5df3348dd751a72d5fc9d663aa87242",
-        "entry_hash": "cac690af03ddfa1ed009b29a3c765a2d6cd2b7bb949c3c51af5b2967a81427b8"
+        "prev_hash": "e99239f9e9dd5fba343ec70394e29f0e86762384a59b3ab4cd54eb08dd9c0ca9",
+        "entry_hash": "f0cc34c27dbe8dba7a13691d89daf41b25fc8e848f108c7f13395f8187bebb29"
       },
       {
         "sequence": 21,
-        "timestamp": "2026-08-27T09:44:04.233397+00:00",
+        "timestamp": "2026-08-27T10:18:07.792971+00:00",
         "txn_id": "pay_cloudsync_0932",
         "proposed_action": {
           "action_type": "retry_soft_decline",
           "txn_id": "pay_cloudsync_0932",
           "amount_paise": 589022,
           "target_bank": "Bank of Baroda",
-          "scheduled_time": "2026-08-27T09:44:04.189792+00:00",
-          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (debit_declined), unretried -- retry at +128.7h, past the plateau; intent goes stale",
+          "scheduled_time": "2026-08-27T10:18:07.743535+00:00",
+          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (debit_declined), unretried -- retry at +129.3h, past the plateau; intent goes stale",
           "requires_merchant_approval": false
         },
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "cac690af03ddfa1ed009b29a3c765a2d6cd2b7bb949c3c51af5b2967a81427b8",
-        "entry_hash": "b55ddcf7203d0f5eec75987b515d636a4d2a4b5b391d4583050cb00a0228a2c1"
+        "prev_hash": "f0cc34c27dbe8dba7a13691d89daf41b25fc8e848f108c7f13395f8187bebb29",
+        "entry_hash": "c7479cab58da91cb88ed24e494c767ddf521b3c8101782ce6e2e1df53821f353"
       },
       {
         "sequence": 22,
-        "timestamp": "2026-08-27T09:44:04.233397+00:00",
+        "timestamp": "2026-08-27T10:18:07.792971+00:00",
         "txn_id": "pay_cloudsync_0848",
         "proposed_action": {
           "action_type": "retry_soft_decline",
           "txn_id": "pay_cloudsync_0848",
           "amount_paise": 497014,
           "target_bank": "State Bank of India",
-          "scheduled_time": "2026-08-27T09:44:04.190796+00:00",
-          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (card_declined), unretried -- retry at +58.7h, the plateau: long enough for the balance to have changed",
+          "scheduled_time": "2026-08-27T10:18:07.743535+00:00",
+          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (card_declined), unretried -- retry at +59.3h, the plateau: long enough for the balance to have changed",
           "requires_merchant_approval": false
         },
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "b55ddcf7203d0f5eec75987b515d636a4d2a4b5b391d4583050cb00a0228a2c1",
-        "entry_hash": "8f3ee04a6baf1fbdb6c62045e702c0aaec921ed33204fc16b8efcde06499d72e"
+        "prev_hash": "c7479cab58da91cb88ed24e494c767ddf521b3c8101782ce6e2e1df53821f353",
+        "entry_hash": "046e5e16711554cf7cafb049ee94aa5bb94d29ea711b15ce4b5d0705a7dd1794"
       },
       {
         "sequence": 23,
-        "timestamp": "2026-08-27T09:44:04.234398+00:00",
+        "timestamp": "2026-08-27T10:18:07.793967+00:00",
         "txn_id": "pay_cloudsync_0380",
         "proposed_action": {
           "action_type": "retry_soft_decline",
           "txn_id": "pay_cloudsync_0380",
           "amount_paise": 481603,
           "target_bank": "State Bank of India",
-          "scheduled_time": "2026-08-27T09:44:04.190796+00:00",
-          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (payment_session_expired), unretried -- retry at +79.7h, past the plateau; intent goes stale",
+          "scheduled_time": "2026-08-27T10:18:07.743535+00:00",
+          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (payment_session_expired), unretried -- retry at +80.3h, past the plateau; intent goes stale",
           "requires_merchant_approval": false
         },
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "8f3ee04a6baf1fbdb6c62045e702c0aaec921ed33204fc16b8efcde06499d72e",
-        "entry_hash": "69852158c6eeb8e253e905090dce61c79ade5bec83a5d79e52b71e7712b98558"
+        "prev_hash": "046e5e16711554cf7cafb049ee94aa5bb94d29ea711b15ce4b5d0705a7dd1794",
+        "entry_hash": "a1663a96fc4100031049cc3d11709fe9387e95f33464e944173dd961df6020b0"
       },
       {
         "sequence": 24,
-        "timestamp": "2026-08-27T09:44:04.234398+00:00",
+        "timestamp": "2026-08-27T10:18:07.793967+00:00",
         "txn_id": "pay_cloudsync_0369",
         "proposed_action": {
           "action_type": "retry_soft_decline",
           "txn_id": "pay_cloudsync_0369",
           "amount_paise": 458947,
           "target_bank": "State Bank of India",
-          "scheduled_time": "2026-08-27T10:00:00+00:00",
-          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (card_declined), unretried -- retry at +30h, the plateau: long enough for the balance to have changed",
+          "scheduled_time": "2026-08-27T10:18:07.743535+00:00",
+          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (card_declined), unretried -- retry at +30.3h, the plateau: long enough for the balance to have changed",
           "requires_merchant_approval": false
         },
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "69852158c6eeb8e253e905090dce61c79ade5bec83a5d79e52b71e7712b98558",
-        "entry_hash": "c621c267448cf103cbbcb5f1ea91aad71156c04f292aa639921b9551f9e809ca"
+        "prev_hash": "a1663a96fc4100031049cc3d11709fe9387e95f33464e944173dd961df6020b0",
+        "entry_hash": "ac136d7fe21251f0b6fbbe7931e5d050f873268c1e6e215e685c2e2958ab34e2"
       },
       {
         "sequence": 25,
-        "timestamp": "2026-08-27T09:44:04.235394+00:00",
+        "timestamp": "2026-08-27T10:18:07.793967+00:00",
         "txn_id": "pay_cloudsync_0045",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1931,50 +1941,50 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "c621c267448cf103cbbcb5f1ea91aad71156c04f292aa639921b9551f9e809ca",
-        "entry_hash": "9c643b5b6938b1b81a8d076bcfac8c2a903a52c27e2be4125b4fa3ed7372af4e"
+        "prev_hash": "ac136d7fe21251f0b6fbbe7931e5d050f873268c1e6e215e685c2e2958ab34e2",
+        "entry_hash": "cdb2af5d7ef92736a4d79578b1629d6c97fc8db58d3791dbb2ad941805feab22"
       },
       {
         "sequence": 26,
-        "timestamp": "2026-08-27T09:44:04.235394+00:00",
+        "timestamp": "2026-08-27T10:18:07.793967+00:00",
         "txn_id": "pay_cloudsync_0429",
         "proposed_action": {
           "action_type": "retry_soft_decline",
           "txn_id": "pay_cloudsync_0429",
           "amount_paise": 411255,
           "target_bank": "Bank of Baroda",
-          "scheduled_time": "2026-08-27T09:44:04.190796+00:00",
-          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (credit_limit_exceeded), unretried -- retry at +56.7h, the plateau: long enough for the balance to have changed",
+          "scheduled_time": "2026-08-27T10:18:07.743535+00:00",
+          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (credit_limit_exceeded), unretried -- retry at +57.3h, the plateau: long enough for the balance to have changed",
           "requires_merchant_approval": false
         },
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "9c643b5b6938b1b81a8d076bcfac8c2a903a52c27e2be4125b4fa3ed7372af4e",
-        "entry_hash": "3b6c485998ed454b079ba1f0270bdcd03d0df8ef1ed714e9d51a181e380f8216"
+        "prev_hash": "cdb2af5d7ef92736a4d79578b1629d6c97fc8db58d3791dbb2ad941805feab22",
+        "entry_hash": "c1a9c37c66c623afa43f93cd410734ffbb06790a633ad77ccf53fc09a45b7945"
       },
       {
         "sequence": 27,
-        "timestamp": "2026-08-27T09:44:04.235394+00:00",
+        "timestamp": "2026-08-27T10:18:07.793967+00:00",
         "txn_id": "pay_cloudsync_0573",
         "proposed_action": {
           "action_type": "retry_soft_decline",
           "txn_id": "pay_cloudsync_0573",
           "amount_paise": 389747,
           "target_bank": "Axis Bank Ltd.",
-          "scheduled_time": "2026-08-27T09:44:04.190796+00:00",
-          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (payment_declined), unretried -- retry at +77.7h, past the plateau; intent goes stale",
+          "scheduled_time": "2026-08-27T10:18:07.743535+00:00",
+          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (payment_declined), unretried -- retry at +78.3h, past the plateau; intent goes stale",
           "requires_merchant_approval": false
         },
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "3b6c485998ed454b079ba1f0270bdcd03d0df8ef1ed714e9d51a181e380f8216",
-        "entry_hash": "4086a578cbf5e8df19a543b867a334389d9727747432baad9934745400645119"
+        "prev_hash": "c1a9c37c66c623afa43f93cd410734ffbb06790a633ad77ccf53fc09a45b7945",
+        "entry_hash": "d0f9844e5b874fb8f8c8df591786de8e933c91dffea6ce2ff3c58e0fb6b581de"
       },
       {
         "sequence": 28,
-        "timestamp": "2026-08-27T09:44:04.235394+00:00",
+        "timestamp": "2026-08-27T10:18:07.793967+00:00",
         "txn_id": "pay_cloudsync_1072",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1988,12 +1998,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "4086a578cbf5e8df19a543b867a334389d9727747432baad9934745400645119",
-        "entry_hash": "afbd1e005baa7746b1c725eb77ca01a98ddfe525bf4e1b5c9f2d577dab9613be"
+        "prev_hash": "d0f9844e5b874fb8f8c8df591786de8e933c91dffea6ce2ff3c58e0fb6b581de",
+        "entry_hash": "b868dd132431de55b1dbb97c8a2ad2f2c509aa6493844844643a5dbbeaaee5fa"
       },
       {
         "sequence": 29,
-        "timestamp": "2026-08-27T09:44:04.235394+00:00",
+        "timestamp": "2026-08-27T10:18:07.793967+00:00",
         "txn_id": "pay_cloudsync_0426",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -2007,12 +2017,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "afbd1e005baa7746b1c725eb77ca01a98ddfe525bf4e1b5c9f2d577dab9613be",
-        "entry_hash": "2ac6041b3a164d64175cb0345a7f119d7c9e411b2200e4a8f12faced080315c9"
+        "prev_hash": "b868dd132431de55b1dbb97c8a2ad2f2c509aa6493844844643a5dbbeaaee5fa",
+        "entry_hash": "78cdb6991e6b3fa0a2f7a83475eeae481f0ebcf8ebd5bf037a7e00224677a302"
       },
       {
         "sequence": 30,
-        "timestamp": "2026-08-27T09:44:04.235394+00:00",
+        "timestamp": "2026-08-27T10:18:07.793967+00:00",
         "txn_id": "pay_cloudsync_1133",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -2026,12 +2036,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "2ac6041b3a164d64175cb0345a7f119d7c9e411b2200e4a8f12faced080315c9",
-        "entry_hash": "1b8cc6aae39c1a0c3d73e3eb1521bafe50abec10dfac09f3ddf22070287fdee5"
+        "prev_hash": "78cdb6991e6b3fa0a2f7a83475eeae481f0ebcf8ebd5bf037a7e00224677a302",
+        "entry_hash": "786450f987c4778ee2515797c86512a0e5c038d451fc14f94b9e84eebeb79ea9"
       },
       {
         "sequence": 31,
-        "timestamp": "2026-08-27T09:44:04.235394+00:00",
+        "timestamp": "2026-08-27T10:18:07.793967+00:00",
         "txn_id": "pay_cloudsync_0245",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -2045,31 +2055,31 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "1b8cc6aae39c1a0c3d73e3eb1521bafe50abec10dfac09f3ddf22070287fdee5",
-        "entry_hash": "b7ee407f63cfc8f08767a22def037cc42a949684bb2e3fad30e2bf6f839f6609"
+        "prev_hash": "786450f987c4778ee2515797c86512a0e5c038d451fc14f94b9e84eebeb79ea9",
+        "entry_hash": "dd68a54040c5ab59d4a1a7b21459cb90f35a5837478c7a0faf4410f303c07a05"
       },
       {
         "sequence": 32,
-        "timestamp": "2026-08-27T09:44:04.235394+00:00",
+        "timestamp": "2026-08-27T10:18:07.793967+00:00",
         "txn_id": "pay_cloudsync_0502",
         "proposed_action": {
           "action_type": "retry_soft_decline",
           "txn_id": "pay_cloudsync_0502",
           "amount_paise": 170674,
           "target_bank": "Central Bank of India",
-          "scheduled_time": "2026-08-27T09:44:04.191831+00:00",
-          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (request_timed_out), unretried -- retry at +92.7h, last look before the odds fall away",
+          "scheduled_time": "2026-08-27T10:18:07.743535+00:00",
+          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (request_timed_out), unretried -- retry at +93.3h, last look before the odds fall away",
           "requires_merchant_approval": false
         },
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "b7ee407f63cfc8f08767a22def037cc42a949684bb2e3fad30e2bf6f839f6609",
-        "entry_hash": "eb6cbc9de960589f9ede20961c9c59cd2b9c6c1608a858ccedd3b98113c6d74f"
+        "prev_hash": "dd68a54040c5ab59d4a1a7b21459cb90f35a5837478c7a0faf4410f303c07a05",
+        "entry_hash": "40f6cdb27316e6d7d3ea560a9b3d6db2dddc603a21a5fd30744016db2009d4a8"
       },
       {
         "sequence": 33,
-        "timestamp": "2026-08-27T09:44:04.235394+00:00",
+        "timestamp": "2026-08-27T10:18:07.794967+00:00",
         "txn_id": "pay_cloudsync_0150",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -2083,107 +2093,107 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "eb6cbc9de960589f9ede20961c9c59cd2b9c6c1608a858ccedd3b98113c6d74f",
-        "entry_hash": "c9f49d275179634309fadd0dbb72fa05da093445da07c67337bacd5b862f95b3"
+        "prev_hash": "40f6cdb27316e6d7d3ea560a9b3d6db2dddc603a21a5fd30744016db2009d4a8",
+        "entry_hash": "278e058374c74a2b35783bfb572be3cac99940e354fb06c14300965c4ed2cca5"
       },
       {
         "sequence": 34,
-        "timestamp": "2026-08-27T09:44:04.236395+00:00",
+        "timestamp": "2026-08-27T10:18:07.794967+00:00",
         "txn_id": "pay_cloudsync_0233",
         "proposed_action": {
           "action_type": "retry_soft_decline",
           "txn_id": "pay_cloudsync_0233",
           "amount_paise": 141910,
           "target_bank": "Indian Overseas Bank",
-          "scheduled_time": "2026-08-27T09:44:04.191831+00:00",
-          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (payment_pending_approval), unretried -- retry at +54.7h, the plateau: long enough for the balance to have changed",
+          "scheduled_time": "2026-08-27T10:18:07.743535+00:00",
+          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (payment_pending_approval), unretried -- retry at +55.3h, the plateau: long enough for the balance to have changed",
           "requires_merchant_approval": false
         },
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "c9f49d275179634309fadd0dbb72fa05da093445da07c67337bacd5b862f95b3",
-        "entry_hash": "679121bb51061655d863ae53d06453687a458f705539f9dfd469d450a5ff4b91"
+        "prev_hash": "278e058374c74a2b35783bfb572be3cac99940e354fb06c14300965c4ed2cca5",
+        "entry_hash": "9a3b287c897ee480a81ee241016cec8555c8143fadcdec09c70a94a2ed615244"
       },
       {
         "sequence": 35,
-        "timestamp": "2026-08-27T09:44:04.236395+00:00",
+        "timestamp": "2026-08-27T10:18:07.794967+00:00",
         "txn_id": "pay_cloudsync_0929",
         "proposed_action": {
           "action_type": "retry_soft_decline",
           "txn_id": "pay_cloudsync_0929",
           "amount_paise": 71387,
           "target_bank": "Airtel Payments Bank Limited",
-          "scheduled_time": "2026-08-27T09:44:04.191831+00:00",
-          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (payment_pending), unretried -- retry at +61.7h, the plateau: long enough for the balance to have changed",
+          "scheduled_time": "2026-08-27T10:18:07.744529+00:00",
+          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (payment_pending), unretried -- retry at +62.3h, the plateau: long enough for the balance to have changed",
           "requires_merchant_approval": false
         },
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "679121bb51061655d863ae53d06453687a458f705539f9dfd469d450a5ff4b91",
-        "entry_hash": "535f185618d8411dd8271f03bc52707e78316e1357b691d897c3638609cad4be"
+        "prev_hash": "9a3b287c897ee480a81ee241016cec8555c8143fadcdec09c70a94a2ed615244",
+        "entry_hash": "c1c5439fd12d2cbd9d4809c7bf0a9f6c23f9a134a37d2d8e4ae09b0dda8f7d09"
       },
       {
         "sequence": 36,
-        "timestamp": "2026-08-27T09:44:04.236395+00:00",
+        "timestamp": "2026-08-27T10:18:07.794967+00:00",
         "txn_id": "pay_cloudsync_0459",
         "proposed_action": {
           "action_type": "retry_soft_decline",
           "txn_id": "pay_cloudsync_0459",
           "amount_paise": 60964,
           "target_bank": "Airtel Payments Bank Limited",
-          "scheduled_time": "2026-08-27T09:44:04.191831+00:00",
-          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (debit_declined), unretried -- retry at +105.7h, past the plateau; intent goes stale",
+          "scheduled_time": "2026-08-27T10:18:07.744529+00:00",
+          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (debit_declined), unretried -- retry at +106.3h, past the plateau; intent goes stale",
           "requires_merchant_approval": false
         },
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "535f185618d8411dd8271f03bc52707e78316e1357b691d897c3638609cad4be",
-        "entry_hash": "98be4f06c969977a5e00461d70f6a611a51fbac15ab86045d73624455aface22"
+        "prev_hash": "c1c5439fd12d2cbd9d4809c7bf0a9f6c23f9a134a37d2d8e4ae09b0dda8f7d09",
+        "entry_hash": "176c09dc033ad6582ccc447e712efba50fe7d7ee60857759ca483188b105b00b"
       },
       {
         "sequence": 37,
-        "timestamp": "2026-08-27T09:44:04.236395+00:00",
+        "timestamp": "2026-08-27T10:18:07.795964+00:00",
         "txn_id": "pay_cloudsync_0811",
         "proposed_action": {
           "action_type": "retry_soft_decline",
           "txn_id": "pay_cloudsync_0811",
           "amount_paise": 59348,
           "target_bank": "State Bank of India",
-          "scheduled_time": "2026-08-27T10:00:00+00:00",
-          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (payment_pending_approval), unretried -- retry at +30h, the plateau: long enough for the balance to have changed",
+          "scheduled_time": "2026-08-27T10:18:07.744529+00:00",
+          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (payment_pending_approval), unretried -- retry at +30.3h, the plateau: long enough for the balance to have changed",
           "requires_merchant_approval": false
         },
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "98be4f06c969977a5e00461d70f6a611a51fbac15ab86045d73624455aface22",
-        "entry_hash": "c4c7eb7542cb3e8e6f20ae1fe33a963e79df3ffc8832c529d4adf24c7b241fb9"
+        "prev_hash": "176c09dc033ad6582ccc447e712efba50fe7d7ee60857759ca483188b105b00b",
+        "entry_hash": "c9ca2ff0738e1e3ad3be57fdd725b1d0cb746a91016cc01b65b84d722a4c5e14"
       },
       {
         "sequence": 38,
-        "timestamp": "2026-08-27T09:44:04.236395+00:00",
+        "timestamp": "2026-08-27T10:18:07.795964+00:00",
         "txn_id": "pay_cloudsync_0528",
         "proposed_action": {
           "action_type": "retry_soft_decline",
           "txn_id": "pay_cloudsync_0528",
           "amount_paise": 53113,
           "target_bank": "Canara Bank",
-          "scheduled_time": "2026-08-27T09:44:04.191831+00:00",
-          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (insufficient_funds), unretried -- retry at +104.7h, past the plateau; intent goes stale",
+          "scheduled_time": "2026-08-27T10:18:07.744529+00:00",
+          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (insufficient_funds), unretried -- retry at +105.3h, past the plateau; intent goes stale",
           "requires_merchant_approval": false
         },
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "c4c7eb7542cb3e8e6f20ae1fe33a963e79df3ffc8832c529d4adf24c7b241fb9",
-        "entry_hash": "ebbd4fa4cd0ab4dc2e28506813521e125005c0eefc8421c8bb0a6e560ea5843b"
+        "prev_hash": "c9ca2ff0738e1e3ad3be57fdd725b1d0cb746a91016cc01b65b84d722a4c5e14",
+        "entry_hash": "c11371a7839415010e1b6d69bc4b705ea05ba935c29b7bb4b2977e03ee519225"
       },
       {
         "sequence": 39,
-        "timestamp": "2026-08-27T09:44:04.236395+00:00",
+        "timestamp": "2026-08-27T10:18:07.795964+00:00",
         "txn_id": "pay_cloudsync_0087",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -2197,27 +2207,27 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "ebbd4fa4cd0ab4dc2e28506813521e125005c0eefc8421c8bb0a6e560ea5843b",
-        "entry_hash": "a3119817fc40d35f01286df98ca081f670146dd0bc1ccd32968affb4015cc616"
+        "prev_hash": "c11371a7839415010e1b6d69bc4b705ea05ba935c29b7bb4b2977e03ee519225",
+        "entry_hash": "9dfb6fc5570cd3e84bdefedefd108f56daa167dd45ad06d4cb9bc54aff964c86"
       },
       {
         "sequence": 40,
-        "timestamp": "2026-08-27T09:44:04.236395+00:00",
+        "timestamp": "2026-08-27T10:18:07.795964+00:00",
         "txn_id": "pay_cloudsync_0082",
         "proposed_action": {
           "action_type": "retry_soft_decline",
           "txn_id": "pay_cloudsync_0082",
           "amount_paise": 46171,
           "target_bank": "State Bank of India",
-          "scheduled_time": "2026-08-27T09:44:04.192877+00:00",
-          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (payment_declined), unretried -- retry at +100.7h, past the plateau; intent goes stale",
+          "scheduled_time": "2026-08-27T10:18:07.744529+00:00",
+          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (payment_declined), unretried -- retry at +101.3h, past the plateau; intent goes stale",
           "requires_merchant_approval": false
         },
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "a3119817fc40d35f01286df98ca081f670146dd0bc1ccd32968affb4015cc616",
-        "entry_hash": "50eb52358bd939c5cd960bc469dc34cd567dc076db5254efb30d724a5239fd02"
+        "prev_hash": "9dfb6fc5570cd3e84bdefedefd108f56daa167dd45ad06d4cb9bc54aff964c86",
+        "entry_hash": "c24d608f2493ea3fcaf27cd696d8b3af50904eb19bc24a486c2530683ec84427"
       }
     ],
     "exceptions": {
@@ -3043,8 +3053,8 @@
           "txn_id": "pay_cloudsync_0792",
           "amount_paise": 2455690,
           "target_bank": "India Post Payments Bank Limited",
-          "scheduled_time": "2026-08-27T09:44:04.188795+00:00",
-          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (payment_session_expired), unretried -- retry at +120.7h, past the plateau; intent goes stale",
+          "scheduled_time": "2026-08-27T10:18:07.742533+00:00",
+          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (payment_session_expired), unretried -- retry at +121.3h, past the plateau; intent goes stale",
           "requires_merchant_approval": false
         },
         {
@@ -3061,8 +3071,8 @@
           "txn_id": "pay_cloudsync_0310",
           "amount_paise": 2132228,
           "target_bank": "India Post Payments Bank Limited",
-          "scheduled_time": "2026-08-27T09:44:04.188795+00:00",
-          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (credit_limit_exceeded), unretried -- retry at +33.7h, the plateau: long enough for the balance to have changed",
+          "scheduled_time": "2026-08-27T10:18:07.742533+00:00",
+          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (credit_limit_exceeded), unretried -- retry at +34.3h, the plateau: long enough for the balance to have changed",
           "requires_merchant_approval": false
         },
         {
@@ -3070,8 +3080,8 @@
           "txn_id": "pay_cloudsync_0180",
           "amount_paise": 1932553,
           "target_bank": "Union Bank of India",
-          "scheduled_time": "2026-08-27T09:44:04.188795+00:00",
-          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (transaction_limit_exceeded), unretried -- retry at +67.7h, the plateau: long enough for the balance to have changed",
+          "scheduled_time": "2026-08-27T10:18:07.742533+00:00",
+          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (transaction_limit_exceeded), unretried -- retry at +68.3h, the plateau: long enough for the balance to have changed",
           "requires_merchant_approval": false
         },
         {
@@ -3088,8 +3098,8 @@
           "txn_id": "pay_cloudsync_0381",
           "amount_paise": 1690135,
           "target_bank": "Kotak Mahindra Bank",
-          "scheduled_time": "2026-08-27T10:00:00+00:00",
-          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (payment_declined), unretried -- retry at +30h, the plateau: long enough for the balance to have changed",
+          "scheduled_time": "2026-08-27T10:18:07.742533+00:00",
+          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (payment_declined), unretried -- retry at +30.3h, the plateau: long enough for the balance to have changed",
           "requires_merchant_approval": false
         },
         {
@@ -3097,8 +3107,8 @@
           "txn_id": "pay_cloudsync_0092",
           "amount_paise": 1689159,
           "target_bank": "State Bank of India",
-          "scheduled_time": "2026-08-27T09:44:04.189792+00:00",
-          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (card_declined), unretried -- retry at +35.7h, the plateau: long enough for the balance to have changed",
+          "scheduled_time": "2026-08-27T10:18:07.742533+00:00",
+          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (card_declined), unretried -- retry at +36.3h, the plateau: long enough for the balance to have changed",
           "requires_merchant_approval": false
         },
         {
@@ -3106,8 +3116,8 @@
           "txn_id": "pay_cloudsync_0529",
           "amount_paise": 1556452,
           "target_bank": "Bank Of India",
-          "scheduled_time": "2026-08-27T09:44:04.189792+00:00",
-          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (credit_not_permitted), unretried -- retry at +67.7h, last look before the odds fall away",
+          "scheduled_time": "2026-08-27T10:18:07.742533+00:00",
+          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (credit_not_permitted), unretried -- retry at +68.3h, last look before the odds fall away",
           "requires_merchant_approval": false
         },
         {
@@ -3115,8 +3125,8 @@
           "txn_id": "pay_cloudsync_0167",
           "amount_paise": 1474527,
           "target_bank": "Punjab National Bank",
-          "scheduled_time": "2026-08-27T09:44:04.189792+00:00",
-          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (transaction_daily_count_exceeded), unretried -- retry at +32.7h, the plateau: long enough for the balance to have changed",
+          "scheduled_time": "2026-08-27T10:18:07.743535+00:00",
+          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (transaction_daily_count_exceeded), unretried -- retry at +33.3h, the plateau: long enough for the balance to have changed",
           "requires_merchant_approval": false
         },
         {
@@ -3124,8 +3134,8 @@
           "txn_id": "pay_cloudsync_0572",
           "amount_paise": 1271054,
           "target_bank": "State Bank of India",
-          "scheduled_time": "2026-08-27T09:44:04.189792+00:00",
-          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (transaction_daily_count_exceeded), unretried -- retry at +80.7h, past the plateau; intent goes stale",
+          "scheduled_time": "2026-08-27T10:18:07.743535+00:00",
+          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (transaction_daily_count_exceeded), unretried -- retry at +81.3h, past the plateau; intent goes stale",
           "requires_merchant_approval": false
         },
         {
@@ -3133,8 +3143,8 @@
           "txn_id": "pay_cloudsync_1051",
           "amount_paise": 1114962,
           "target_bank": "Bank Of India",
-          "scheduled_time": "2026-08-27T09:44:04.189792+00:00",
-          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (transaction_daily_limit_exceeded), unretried -- retry at +52.7h, the plateau: long enough for the balance to have changed",
+          "scheduled_time": "2026-08-27T10:18:07.743535+00:00",
+          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (transaction_daily_limit_exceeded), unretried -- retry at +53.3h, the plateau: long enough for the balance to have changed",
           "requires_merchant_approval": false
         },
         {
@@ -3160,8 +3170,8 @@
           "txn_id": "pay_cloudsync_0027",
           "amount_paise": 984263,
           "target_bank": "India Post Payments Bank Limited",
-          "scheduled_time": "2026-08-27T09:44:04.189792+00:00",
-          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (credit_limit_exceeded), unretried -- retry at +78.7h, past the plateau; intent goes stale",
+          "scheduled_time": "2026-08-27T10:18:07.743535+00:00",
+          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (credit_limit_exceeded), unretried -- retry at +79.3h, past the plateau; intent goes stale",
           "requires_merchant_approval": false
         },
         {
@@ -3169,8 +3179,8 @@
           "txn_id": "pay_cloudsync_0000",
           "amount_paise": 941987,
           "target_bank": "Indian Bank",
-          "scheduled_time": "2026-08-27T09:44:04.189792+00:00",
-          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (payment_pending), unretried -- retry at +112.7h, past the plateau; intent goes stale",
+          "scheduled_time": "2026-08-27T10:18:07.743535+00:00",
+          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (payment_pending), unretried -- retry at +113.3h, past the plateau; intent goes stale",
           "requires_merchant_approval": false
         },
         {
@@ -3178,8 +3188,8 @@
           "txn_id": "pay_cloudsync_0708",
           "amount_paise": 808232,
           "target_bank": "State Bank of India",
-          "scheduled_time": "2026-08-27T09:44:04.189792+00:00",
-          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (payment_pending), unretried -- retry at +125.7h, past the plateau; intent goes stale",
+          "scheduled_time": "2026-08-27T10:18:07.743535+00:00",
+          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (payment_pending), unretried -- retry at +126.3h, past the plateau; intent goes stale",
           "requires_merchant_approval": false
         },
         {
@@ -3187,8 +3197,8 @@
           "txn_id": "pay_cloudsync_0932",
           "amount_paise": 589022,
           "target_bank": "Bank of Baroda",
-          "scheduled_time": "2026-08-27T09:44:04.189792+00:00",
-          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (debit_declined), unretried -- retry at +128.7h, past the plateau; intent goes stale",
+          "scheduled_time": "2026-08-27T10:18:07.743535+00:00",
+          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (debit_declined), unretried -- retry at +129.3h, past the plateau; intent goes stale",
           "requires_merchant_approval": false
         },
         {
@@ -3196,8 +3206,8 @@
           "txn_id": "pay_cloudsync_0848",
           "amount_paise": 497014,
           "target_bank": "State Bank of India",
-          "scheduled_time": "2026-08-27T09:44:04.190796+00:00",
-          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (card_declined), unretried -- retry at +58.7h, the plateau: long enough for the balance to have changed",
+          "scheduled_time": "2026-08-27T10:18:07.743535+00:00",
+          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (card_declined), unretried -- retry at +59.3h, the plateau: long enough for the balance to have changed",
           "requires_merchant_approval": false
         },
         {
@@ -3205,8 +3215,8 @@
           "txn_id": "pay_cloudsync_0380",
           "amount_paise": 481603,
           "target_bank": "State Bank of India",
-          "scheduled_time": "2026-08-27T09:44:04.190796+00:00",
-          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (payment_session_expired), unretried -- retry at +79.7h, past the plateau; intent goes stale",
+          "scheduled_time": "2026-08-27T10:18:07.743535+00:00",
+          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (payment_session_expired), unretried -- retry at +80.3h, past the plateau; intent goes stale",
           "requires_merchant_approval": false
         },
         {
@@ -3214,8 +3224,8 @@
           "txn_id": "pay_cloudsync_0369",
           "amount_paise": 458947,
           "target_bank": "State Bank of India",
-          "scheduled_time": "2026-08-27T10:00:00+00:00",
-          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (card_declined), unretried -- retry at +30h, the plateau: long enough for the balance to have changed",
+          "scheduled_time": "2026-08-27T10:18:07.743535+00:00",
+          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (card_declined), unretried -- retry at +30.3h, the plateau: long enough for the balance to have changed",
           "requires_merchant_approval": false
         },
         {
@@ -3232,8 +3242,8 @@
           "txn_id": "pay_cloudsync_0429",
           "amount_paise": 411255,
           "target_bank": "Bank of Baroda",
-          "scheduled_time": "2026-08-27T09:44:04.190796+00:00",
-          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (credit_limit_exceeded), unretried -- retry at +56.7h, the plateau: long enough for the balance to have changed",
+          "scheduled_time": "2026-08-27T10:18:07.743535+00:00",
+          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (credit_limit_exceeded), unretried -- retry at +57.3h, the plateau: long enough for the balance to have changed",
           "requires_merchant_approval": false
         },
         {
@@ -3241,8 +3251,8 @@
           "txn_id": "pay_cloudsync_0573",
           "amount_paise": 389747,
           "target_bank": "Axis Bank Ltd.",
-          "scheduled_time": "2026-08-27T09:44:04.190796+00:00",
-          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (payment_declined), unretried -- retry at +77.7h, past the plateau; intent goes stale",
+          "scheduled_time": "2026-08-27T10:18:07.743535+00:00",
+          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (payment_declined), unretried -- retry at +78.3h, past the plateau; intent goes stale",
           "requires_merchant_approval": false
         },
         {
@@ -3286,8 +3296,8 @@
           "txn_id": "pay_cloudsync_0502",
           "amount_paise": 170674,
           "target_bank": "Central Bank of India",
-          "scheduled_time": "2026-08-27T09:44:04.191831+00:00",
-          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (request_timed_out), unretried -- retry at +92.7h, last look before the odds fall away",
+          "scheduled_time": "2026-08-27T10:18:07.743535+00:00",
+          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (request_timed_out), unretried -- retry at +93.3h, last look before the odds fall away",
           "requires_merchant_approval": false
         },
         {
@@ -3304,8 +3314,8 @@
           "txn_id": "pay_cloudsync_0233",
           "amount_paise": 141910,
           "target_bank": "Indian Overseas Bank",
-          "scheduled_time": "2026-08-27T09:44:04.191831+00:00",
-          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (payment_pending_approval), unretried -- retry at +54.7h, the plateau: long enough for the balance to have changed",
+          "scheduled_time": "2026-08-27T10:18:07.743535+00:00",
+          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (payment_pending_approval), unretried -- retry at +55.3h, the plateau: long enough for the balance to have changed",
           "requires_merchant_approval": false
         },
         {
@@ -3313,8 +3323,8 @@
           "txn_id": "pay_cloudsync_0929",
           "amount_paise": 71387,
           "target_bank": "Airtel Payments Bank Limited",
-          "scheduled_time": "2026-08-27T09:44:04.191831+00:00",
-          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (payment_pending), unretried -- retry at +61.7h, the plateau: long enough for the balance to have changed",
+          "scheduled_time": "2026-08-27T10:18:07.744529+00:00",
+          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (payment_pending), unretried -- retry at +62.3h, the plateau: long enough for the balance to have changed",
           "requires_merchant_approval": false
         },
         {
@@ -3322,8 +3332,8 @@
           "txn_id": "pay_cloudsync_0459",
           "amount_paise": 60964,
           "target_bank": "Airtel Payments Bank Limited",
-          "scheduled_time": "2026-08-27T09:44:04.191831+00:00",
-          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (debit_declined), unretried -- retry at +105.7h, past the plateau; intent goes stale",
+          "scheduled_time": "2026-08-27T10:18:07.744529+00:00",
+          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (debit_declined), unretried -- retry at +106.3h, past the plateau; intent goes stale",
           "requires_merchant_approval": false
         },
         {
@@ -3331,8 +3341,8 @@
           "txn_id": "pay_cloudsync_0811",
           "amount_paise": 59348,
           "target_bank": "State Bank of India",
-          "scheduled_time": "2026-08-27T10:00:00+00:00",
-          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (payment_pending_approval), unretried -- retry at +30h, the plateau: long enough for the balance to have changed",
+          "scheduled_time": "2026-08-27T10:18:07.744529+00:00",
+          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (payment_pending_approval), unretried -- retry at +30.3h, the plateau: long enough for the balance to have changed",
           "requires_merchant_approval": false
         },
         {
@@ -3340,8 +3350,8 @@
           "txn_id": "pay_cloudsync_0528",
           "amount_paise": 53113,
           "target_bank": "Canara Bank",
-          "scheduled_time": "2026-08-27T09:44:04.191831+00:00",
-          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (insufficient_funds), unretried -- retry at +104.7h, past the plateau; intent goes stale",
+          "scheduled_time": "2026-08-27T10:18:07.744529+00:00",
+          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (insufficient_funds), unretried -- retry at +105.3h, past the plateau; intent goes stale",
           "requires_merchant_approval": false
         },
         {
@@ -3358,8 +3368,8 @@
           "txn_id": "pay_cloudsync_0082",
           "amount_paise": 46171,
           "target_bank": "State Bank of India",
-          "scheduled_time": "2026-08-27T09:44:04.192877+00:00",
-          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (payment_declined), unretried -- retry at +100.7h, past the plateau; intent goes stale",
+          "scheduled_time": "2026-08-27T10:18:07.744529+00:00",
+          "reason": "Configure automatic retry for soft decline response codes (e.g., insufficient funds, do-not-honour retryable) with an appropriate retry interval. (payment_declined), unretried -- retry at +101.3h, past the plateau; intent goes stale",
           "requires_merchant_approval": false
         }
       ]
