@@ -73,15 +73,24 @@ second implementation to keep in sync.
 
 ## 2. Where the LLM is, and where it deliberately isn't
 
-| Step | Engine | Why |
+| Where a model runs | Engine | Why nothing else would do |
 |---|---|---|
-| `classify` | Haiku 4.5 | ~200-code taxonomies with inconsistent free text; the real job is **generalising to codes not in the taxonomy** |
-| `hypothesise` | Sonnet 4.6 | Shapley says *which* factor. Only reasoning over MCC, method mix, ticket profile and NPCI context says *why* |
-| `plan` | Haiku 4.5 | mapping a cause to a typed action from a closed enum |
-| **`decompose`** | **none** | it's arithmetic with a checkable answer |
-| **`gate`** | **none** | a model must never decide what it is allowed to do |
-| **retry list** | **none** | the process gap is *measured* from the batch; making it depend on the model noticing would leave money on the table |
-| **stopping rules** | **none** | six hard rules, enforced in `policy.py` |
+| `classify` | Haiku 4.5 | 110-code taxonomy of inconsistent free text; the real job is **generalising to codes not in it** |
+| `hypothesise` | Sonnet 4.6 | Shapley says *which* factor. Saying *why* is judgement over the merchant's profile and NPCI context |
+| ↳ its **investigation** | Sonnet 4.6 | It chooses its own evidence — a closed, read-only toolset and a six-call budget (`tools.py`). It decides what to look up, in what order, and when it has enough; on three of the eight demo merchants it asks nothing |
+| `claims` | Haiku 4.5 | Turning a merchant's free-text theory into a typed claim. **The one job no lookup table does**, and the only unstructured input in the system |
+| `assistant` | Haiku 4.5 | Answering questions about a run. Every figure is checked against the record; an unsupported one is refused rather than captioned |
+| `prove` adversary | Sonnet 4.6 | Asked to design an exam that breaks the engine — attacking the system, not describing it |
+
+| Where one deliberately does not | Why a model would make it worse |
+|---|---|
+| **`decompose`** | arithmetic with a checkable answer |
+| **`plan`** | it maps a label the model already produced onto a typed action. It made no call, so it is no longer badged as though it did |
+| **`gate`** | a model must never decide what it is allowed to do |
+| **`verify`** | not an LLM judging an LLM — every rule is a string or arithmetic check, so a violation is a fact rather than an opinion |
+| **claim adjudication** | the model extracts; the decomposition decides who is right |
+| **retry schedule** | a curve, applied. `sequence.py` reads the error class and the issuer's technical share — nothing to reason about |
+| **stopping rules** | six hard rules, enforced in `policy.py` |
 
 Every LLM call runs `temperature=0` and is cached on disk under a hash of
 exactly what was sent. A clone with a warm cache needs **no API key**.
@@ -241,16 +250,32 @@ a panellist can watch a real recorded run with no key.
 
 ```
 src/chitragupta/          types · canonical · mandate · ledger · policy
-        rails/            mock_rail (3 calibrations) · razorpay_test_rail (stretch)
-src/doctor/               features · priors · baseline · cohort · shapley · stats
-                          generator · classify · hypothesise · plan
-                          graph · trace · report · llm · api · run
-evals/                    run_validation_sweep · run_s_star_sensitivity
-                          run_npci_finding · run_classification_eval
-                          run_root_cause_eval · results/ (committed)
-frontend/src/app/         landing + /run/[runId]/{,flow,diagnosis,
-                          validation,audit,exceptions}
-tests/                    shapley (efficiency) · ledger (tamper) · policy
-                          canonical
-docs/                     what_broke.md · npci_finding.md
+        rails/            mock_rail (3 calibrations)
+
+src/doctor/
+  measurement             features · priors · baseline · cohort · shapley · stats
+  generation              generator (analytic ground truth)
+  the agent               graph · classify · hypothesise · tools (its toolset)
+                          verify · plan · sequence (when to retry)
+  acting                  apply · scoring (marks itself against truth)
+  reading text            claims (merchant's theory) · assistant (grounded Q&A)
+  surfaces                report · portfolio · drift · live · fault · outreach
+                          outcome · prove (sealed envelope) · trace · llm · api · run
+
+evals/                    validation_sweep · s_star_sensitivity · baseline_ladder
+                          stress_test · npci_finding · backtest · outcome
+                          recovery · classification · root_cause · verifier_ablation
+                          scale_benchmark · results/ (17 files, committed)
+
+frontend/src/app/         sign-in · portfolio · live · drift · prove
+                          run/[runId]/{,flow,diagnosis,validation,audit,exceptions}
+
+tests/                    17 files, 209 tests. shapley (efficiency) · ledger
+                          (tamper) · policy · canonical · types · apply
+                          (stranded step-ups) · live (inverted bound) · prove
+                          (the seal) · tools (containment) · sequence (the
+                          ladder the eval scores) · claims · fault · scoring
+                          · assistant · reissue · drift_action · recovery_truth
+
+docs/                     what_broke.md · npci_finding.md · pitch_script.md
 ```
