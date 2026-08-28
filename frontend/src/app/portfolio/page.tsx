@@ -55,7 +55,17 @@ export default function PortfolioPage() {
   }, []);
 
   function load() {
-    fetch("/api/portfolio").then((r) => r.json()).then(setPf).catch(() => setPf({}));
+    // Distinguish "the API said there are no runs" from "the API is not
+    // there". Both used to render "No runs yet — diagnose a merchant", which
+    // is false when the backend is down and sends the reader to a button that
+    // cannot work either.
+    fetch("/api/portfolio")
+      .then((r) => {
+        if (!r.ok) throw new Error(String(r.status));
+        return r.json();
+      })
+      .then(setPf)
+      .catch(() => setPf({ unreachable: true }));
   }
 
   async function refreshAll() {
@@ -89,6 +99,18 @@ export default function PortfolioPage() {
   );
 
   if (!pf) return shell(<Loading label="scanning the book" />);
+  if (pf.unreachable)
+    return shell(
+      <Card className="border-l-2 border-l-rose">
+        <div className="text-sm font-medium">Cannot reach the API</div>
+        <p className="text-sm text-muted mt-1.5 leading-relaxed">
+          The book could not be loaded because the backend did not respond.
+          Nothing here is missing — start it with{" "}
+          <span className="num">make demo</span> and reload.
+        </p>
+      </Card>
+    );
+
   if (!pf.merchants?.length)
     return shell(
       <Card>

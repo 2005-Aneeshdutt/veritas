@@ -16,10 +16,28 @@ export default function DriftPage() {
   const [d, setD] = useState<any>(null);
 
   useEffect(() => {
-    fetch("/api/drift").then((r) => r.json()).then(setD).catch(() => setD({}));
+    fetch("/api/drift")
+      .then((r) => {
+        if (!r.ok) throw new Error(String(r.status));
+        return r.json();
+      })
+      .then(setD)
+      .catch(() => setD({ unreachable: true }));
   }, []);
 
   if (!d) return <Shell><Loading label="reading 32 months of NPCI data" /></Shell>;
+  if (d.unreachable)
+    return (
+      <Shell>
+        <Card className="border-l-2 border-l-rose">
+          <div className="text-sm font-medium">Cannot reach the API</div>
+          <p className="text-sm text-muted mt-1.5">
+            Start the backend with <span className="num">make demo</span> and
+            reload. The NPCI data is committed and is not missing.
+          </p>
+        </Card>
+      </Shell>
+    );
   if (!d.deteriorating) return <Shell><Card>No drift data.</Card></Shell>;
 
   const maxDelta = Math.max(
