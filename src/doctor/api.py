@@ -16,6 +16,7 @@ reconnects for free.
 from __future__ import annotations
 
 import asyncio
+import hashlib
 import json
 import queue
 import sys
@@ -36,6 +37,7 @@ from fastapi.responses import PlainTextResponse
 
 from doctor.apply import apply_group
 from doctor.assistant import ask as assistant_ask
+from doctor.authority import draft as authority_draft, review as authority_review
 from doctor.claims import read_note
 from doctor.baseline import Baseline
 from doctor.drift import build_drift_report, simulate_exposure
@@ -309,6 +311,40 @@ def get_run(run_id: str) -> dict:
     if not p.exists():
         raise HTTPException(404, "no such run: %s" % run_id)
     return json.loads(p.read_text(encoding="utf-8"))
+
+
+@app.get("/api/run/{run_id}/authority")
+def run_authority(run_id: str) -> dict:
+    """What this merchant's own limits cost them, and a revised mandate.
+
+    The draft comes back UNSIGNED and that is the point. Signing needs the
+    merchant's private key, which this process has never held; an agent that
+    could widen its own authority would make the policy kernel decorative.
+    The response therefore carries a proposal and the canonical bytes a
+    merchant would sign, never a signature.
+    """
+    p = RUNS / (run_id + ".json")
+    if not p.exists():
+        raise HTTPException(404, "no such run: %s" % run_id)
+    rec = json.loads(p.read_text(encoding="utf-8"))
+
+    try:
+        signed = load_mandate(rec["merchant_id"])
+    except (SystemExit, FileNotFoundError):
+        raise HTTPException(404, "no mandate on file for this merchant")
+
+    rv = authority_review(rec, signed)
+    out = json.loads(rv.model_dump_json())
+    out["current_mandate"] = json.loads(signed.mandate.model_dump_json())
+    if rv.proposals:
+        d = authority_draft(signed, rv.proposals)
+        out["draft_mandate"] = json.loads(d.model_dump_json())
+        # The exact bytes the merchant's key would sign, so the diff they
+        # approve on screen is the diff that gets signed.
+        out["signing_payload_sha256"] = hashlib.sha256(
+            d.signing_payload()
+        ).hexdigest()
+    return out
 
 
 @app.post("/api/run")

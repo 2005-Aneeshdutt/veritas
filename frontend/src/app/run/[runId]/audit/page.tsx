@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { AuthorityPanel } from "@/components/AuthorityPanel";
 import { Card, Eyebrow, Info, Loading, SectionHeader, Stagger } from "@/components/ui";
 import { GLOSSARY } from "@/lib/explain";
 import { RunRecord, inr } from "@/lib/types";
@@ -279,6 +280,11 @@ export default function AuditPage({ params }: { params: { runId: string } }) {
         </Card>
       </Stagger>
 
+      {/* ──────────────────── what that authority cost them */}
+      <Stagger i={3}>
+        <AuthorityPanel runId={params.runId} />
+      </Stagger>
+
       {/* ─────────────────────────────── the chain */}
       {pendingStepUps > 0 && (
         <Stagger i={3}>
@@ -290,9 +296,11 @@ export default function AuditPage({ params }: { params: { runId: string } }) {
                   {pendingStepUps} actions the kernel held for your approval
                 </h2>
                 <p className="text-sm text-muted mt-1.5 max-w-2xl leading-relaxed">
-                  Each is above the auto-execute limit in your signed mandate.
-                  Confirming re-gates every one individually — anything over the
-                  hard ceiling stays denied however many times you confirm it.
+                  Some are above your auto-execute limit; the rest are actions
+                  the planner marked as needing your sign-off, which wait for you
+                  at any limit. Confirming re-gates every one individually —
+                  anything over the hard ceiling stays denied however many times
+                  you confirm it.
                 </p>
               </div>
               <button
