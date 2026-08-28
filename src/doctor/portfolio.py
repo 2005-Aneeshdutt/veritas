@@ -58,7 +58,15 @@ class MerchantRow(BaseModel):
     fixes_available: int
     fixes_auto: int
     fixes_applied: int
+    #: What the rail forecast for the retries this run actually executed.
     recovered_paise: int
+    #: What those same retries were truly worth, marked after the fact against
+    #: the generating distribution. This is the only figure on the row that is
+    #: an outcome rather than a forecast.
+    measured_paise: int
+    attempted: int
+    converted: int
+    scored: bool
     underpowered: bool
     unreliable_factors: list[str]
 
@@ -70,6 +78,20 @@ class Portfolio(BaseModel):
     total_recoverable_low_paise: int
     total_recoverable_high_paise: int
     total_recovered_paise: int
+    #: The number the track actually asks for: measured money recovered across
+    #: the batch. Kept separate from the projection everywhere, because the
+    #: whole point is that they differ and by how much.
+    total_measured_paise: int
+    total_attempted: int
+    total_converted: int
+    merchants_scored: int
+    #: What the kernel would not let the agent touch, so the funnel from
+    #: "identified" to "won" does not have an unexplained gap in the middle.
+    total_held_paise: int
+    total_denied_paise: int
+    gate_allow: int
+    gate_step_up: int
+    gate_deny: int
     total_transactions: int
     total_failures: int
     #: band -> count
@@ -120,9 +142,37 @@ def _triage(gap_pts: float, recoverable_paise: int, dec: dict) -> tuple[str, str
 
 def build_portfolio() -> Portfolio:
     rows: list[MerchantRow] = []
+    gate_allow = gate_step_up = gate_deny = 0
+    held_paise = denied_paise = 0
     for rec in _latest_run_per_merchant().values():
         r = rec["report"]
         m, p, d = r["measured"], r["projected"], r["decomposition"]
+        sc = m.get("recovery_vs_truth", {}) or {}
+
+        # The gate's own tally, so the batch can say what it was not permitted
+        # to attempt rather than quietly reporting only what it was.
+        #
+        # Counted per ACTION, not per ledger row. The ledger is append-only, so
+        # an action that was held and later confirmed leaves two rows behind --
+        # counting rows made the funnel read 610 permitted out of 1,932 the
+        # moment a merchant approved their queue, roughly doubling every figure
+        # in it. The last decision on an action is the one that stands.
+        final: dict[tuple, dict] = {}
+        for e in r.get("ledger", []):
+            a = e.get("proposed_action") or {}
+            final[(e.get("txn_id"), a.get("action_type"))] = e
+
+        for e in final.values():
+            g = e.get("gate_decision")
+            amt = (e.get("proposed_action") or {}).get("amount_paise", 0)
+            if g == "allow":
+                gate_allow += 1
+            elif g == "step_up":
+                gate_step_up += 1
+                held_paise += amt
+            elif g == "deny":
+                gate_deny += 1
+                denied_paise += amt
 
         # The strongest identified factor. A factor the overlap check rejected
         # is never allowed to be the headline cause.
@@ -169,6 +219,10 @@ def build_portfolio() -> Portfolio:
                 fixes_auto=sum(1 for g in pending if g.get("auto")),
                 fixes_applied=len(rec.get("applied") or []),
                 recovered_paise=p.get("recovered_this_run_paise", 0),
+                measured_paise=sc.get("measured_paise", 0),
+                attempted=sc.get("attempted", 0),
+                converted=sc.get("truly_converted", 0),
+                scored=bool(sc.get("scored")),
                 underpowered=bool(d.get("underpowered")),
                 unreliable_factors=d.get("degenerate_factors") or [],
             )
@@ -205,6 +259,15 @@ def build_portfolio() -> Portfolio:
         total_recoverable_low_paise=sum(r.recoverable_low_paise for r in rows),
         total_recoverable_high_paise=sum(r.recoverable_high_paise for r in rows),
         total_recovered_paise=sum(r.recovered_paise for r in rows),
+        total_measured_paise=sum(r.measured_paise for r in rows),
+        total_attempted=sum(r.attempted for r in rows),
+        total_converted=sum(r.converted for r in rows),
+        merchants_scored=sum(1 for r in rows if r.scored),
+        total_held_paise=held_paise,
+        total_denied_paise=denied_paise,
+        gate_allow=gate_allow,
+        gate_step_up=gate_step_up,
+        gate_deny=gate_deny,
         total_transactions=sum(r.transactions for r in rows),
         total_failures=sum(r.failures for r in rows),
         bands=bands,

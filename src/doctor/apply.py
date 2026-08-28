@@ -369,6 +369,24 @@ def apply_group(
     rec["report"]["projected"]["recovered_this_run_paise"] = (
         rec["report"]["projected"].get("recovered_this_run_paise", 0) + recovered
     )
+
+    # Mark the retries that just ran.
+    #
+    # Scoring used to happen once, at diagnosis, which meant the largest
+    # recovery event in the product was invisible to it: a merchant confirming
+    # a queue of held actions executed real retries and the measured figure sat
+    # at whatever it was before. ChaiPoint ran 164 retries worth Rs 28,051 and
+    # went on reporting Rs 0 -- the exact number this whole system exists to
+    # produce, unreported at the moment it was earned.
+    #
+    # Re-scoring here is still honest: score_recovery reads the merchant file
+    # rather than the run, and it runs strictly after the gate has decided, so
+    # nothing it sees can influence what was attempted.
+    from .scoring import score_recovery
+
+    rec["report"]["measured"]["recovery_vs_truth"] = json.loads(
+        score_recovery(rec).model_dump_json()
+    )
     if resuming:
         # These are no longer waiting on anyone; whatever happened to them just
         # happened, and is recorded in the entry appended below.

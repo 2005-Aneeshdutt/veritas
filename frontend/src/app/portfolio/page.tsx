@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { RecoveryFunnel } from "@/components/RecoveryFunnel";
 import { TopBar } from "@/components/Chrome";
 import { Card, Eyebrow, Loading, Stagger, Ticker } from "@/components/ui";
 import { inr } from "@/lib/types";
@@ -129,6 +130,11 @@ export default function PortfolioPage() {
 
   return shell(
     <>
+        {/* ─────────────────── what the batch actually won back */}
+        <Stagger>
+          <RecoveryFunnel pf={pf} />
+        </Stagger>
+
         {/* ───────────────────────────────────── headline */}
         <Stagger>
           <Card className="!p-0 overflow-hidden">
