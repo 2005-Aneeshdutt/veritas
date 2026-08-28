@@ -146,8 +146,8 @@ RECOVERY  (2,840 payments, 315 failed)
                   29 of 108 retries would truly have converted; 79 would not
   still on table  ₹34,999 – ₹72,799      [PROJECTED range, 3 calibrations]
   unrecoverable   ₹88,113 across 117 payments — listed, not dropped
-  escalation      111 auto / 91 to merchant / 0 denied by mandate
-  audit           202 ledger entries, chain VERIFIED, 0 mandate violations
+  escalation      111 auto / 147 to merchant / 1 denied by mandate
+  audit           259 ledger entries, chain VERIFIED, 0 mandate violations
 ```
 
 Both figures are there on purpose.
