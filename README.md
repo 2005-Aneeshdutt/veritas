@@ -174,6 +174,40 @@ stated rather than blurred.
 The most useful number in that block is the one nobody advertises: **79 of 108
 retries went to payments that were never going to convert.**
 
+### The forecast a person can settle
+
+Across the book the agent acts on 277 of 1,037 proposed actions on its own.
+661 sit in merchant queues — inside the agent's authority, waiting only for
+someone to say yes — and 91 are refused outright for sitting above a hard
+ceiling.
+
+So the portfolio carries two figures of different kinds, and says which is
+which. **₹39,833 won** is a mark: retries that ran, scored afterwards against
+the generating distribution. **₹1.83L – ₹3.82L** is the rail's forecast for
+the 339 retries still queued. Quoting a marked figure for work nobody has
+authorised yet would mean reading the answer key to write the pitch, so that
+band is a projection and is labelled one.
+
+`Approve across the book` settles it. Every action is re-gated individually,
+so what the mandate denied stays denied however many times it is approved:
+
+```
+before   ₹39,833 won · 277 acted on · 661 awaiting · 91 denied
+after    ₹2,34,343 won · 934 acted on ·   0 awaiting · 91 denied
+```
+
+The uplift is **₹1,94,510** against a forecast band of ₹1.83L – ₹3.82L — the
+prediction was falsifiable and it held. The optimism ratio moves from 1.36x to
+2.25x in the process, because the rail is more wrong about the larger payments
+that were being held back than about the small ones it was trusted to retry
+unattended. That is worth knowing and is not smoothed over.
+
+Approving writes to `data/runs/`. To put the demo back:
+
+```bash
+git checkout -- data/runs/
+```
+
 ---
 
 ## What is measured

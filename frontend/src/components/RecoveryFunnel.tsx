@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { Card, Eyebrow, SectionHeader } from "@/components/ui";
 import { inr } from "@/lib/types";
 
@@ -13,18 +14,36 @@ import { inr } from "@/lib/types";
  * had to survive being checked.
  *
  * The funnel is here because the honest version of "we recovered ₹39,833"
- * needs the sentence that follows it — the agent was permitted to attempt 305
- * of 1,057 actions, and the rest is sitting behind a mandate. Showing the won
- * figure without showing what the kernel refused would make the agent look
- * weak; showing what it refused without the won figure would make it look
+ * needs the sentence that follows it — the agent was permitted to attempt 285
+ * of 1,037 proposed actions, and the rest is sitting behind a mandate. Showing
+ * the won figure without showing what the kernel refused would make the agent
+ * look weak; showing what it refused without the won figure would make it look
  * theoretical.
+ *
+ * The pending band is a forecast and is labelled one. Quoting the marked
+ * figure for work nobody has authorised yet would mean reading the answer key
+ * to write the pitch — so the rail forecasts it, a person approves it, and the
+ * measurement lands beside the forecast whether or not it agrees.
  */
-export function RecoveryFunnel({ pf }: { pf: any }) {
+export function RecoveryFunnel({ pf, onApproved }: { pf: any; onApproved?: () => void }) {
+  const [busy, setBusy] = useState(false);
+
+  async function approveBook() {
+    if (busy) return;
+    setBusy(true);
+    try {
+      await fetch("/api/portfolio/approve?confirm=true", { method: "POST" });
+      onApproved?.();
+    } finally {
+      setBusy(false);
+    }
+  }
+
   const won = pf.total_measured_paise ?? 0;
-  const forecast = pf.total_recovered_paise ?? 0;
+  const forecast = pf.total_projected_for_attempted_paise ?? 0;
   const attempted = pf.total_attempted ?? 0;
   const converted = pf.total_converted ?? 0;
-  const proposed = pf.gate_allow + pf.gate_step_up + pf.gate_deny;
+  const proposed = pf.acted_on + pf.awaiting + pf.refused + pf.escalated;
   const rate = attempted ? (100 * converted) / attempted : 0;
 
   // How far the rail sat from the marked outcome on these very retries. A
@@ -94,9 +113,9 @@ export function RecoveryFunnel({ pf }: { pf: any }) {
           sub={`actions across ${pf.merchants.length} merchants`}
         />
         <Step
-          k="permitted"
-          v={String(pf.gate_allow)}
-          sub={`${pf.gate_step_up} held · ${pf.gate_deny} denied`}
+          k="acted on"
+          v={String(pf.acted_on)}
+          sub={`${pf.awaiting} awaiting you · ${pf.refused} denied`}
           tone="text-amber"
         />
         <Step
@@ -107,15 +126,51 @@ export function RecoveryFunnel({ pf }: { pf: any }) {
         />
       </div>
 
+      {/* ── the forecast that approval would settle ─────────────────── */}
+      {pf.pending_retry_actions > 0 && (
+        <div className="px-6 py-5 border-t border-line bg-brand-soft/40">
+          <div className="flex items-start gap-5 flex-wrap">
+            <div className="min-w-0 flex-1">
+              <Eyebrow>waiting on a person</Eyebrow>
+              <div className="text-2xl font-display font-bold mt-1">
+                {inr(pf.pending_projected_low_paise, { compact: true })} –{" "}
+                {inr(pf.pending_projected_high_paise, { compact: true })}
+                <span className="chip-projected ml-2 align-middle">projected</span>
+              </div>
+              <p className="text-sm text-muted mt-2 max-w-2xl leading-relaxed">
+                {pf.pending_retry_actions} retries are sitting in merchant
+                queues, already inside the agent&rsquo;s authority and waiting
+                only for someone to say yes. This is the rail&rsquo;s forecast
+                for them, not a measurement — approving turns it into one, and
+                the marked figure lands beside it whether or not it agrees.
+              </p>
+            </div>
+            <button
+              onClick={approveBook}
+              disabled={busy}
+              className="btn-primary h-9 px-4 text-sm shrink-0"
+            >
+              {busy ? "gating…" : "Approve across the book →"}
+            </button>
+          </div>
+        </div>
+      )}
+
       <div className="px-6 py-4 border-t border-line">
         <Eyebrow>why won is smaller than identified</Eyebrow>
         <p className="text-sm text-muted mt-1.5 leading-relaxed">
-          The mandate let the agent execute {pf.gate_allow} of {proposed}{" "}
-          proposed actions. {inr(pf.total_held_paise, { compact: true })} is
-          queued for merchant approval and{" "}
+          The agent acted on {pf.acted_on} of {proposed} proposed actions.{" "}
+          {pf.awaiting > 0 ? (
+            <>
+              {inr(pf.total_held_paise, { compact: true })} is queued for
+              merchant approval and{" "}
+            </>
+          ) : (
+            <>Every queued action has now been approved, and{" "}</>
+          )}
           {inr(pf.total_denied_paise, { compact: true })} was refused outright
-          for sitting above the hard ceiling. That money is reachable, but only
-          by a person widening the agent's authority — never by the agent.
+          for sitting above the hard ceiling. That last figure is reachable only
+          by a person widening the agent&rsquo;s authority — never by the agent.
         </p>
         <p className="text-[11px] text-faint mt-2 leading-relaxed">
           Measured against the generating distribution, the same standard as the

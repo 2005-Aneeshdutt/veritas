@@ -149,6 +149,66 @@ def portfolio() -> dict:
     return json.loads(build_portfolio().model_dump_json())
 
 
+@app.post("/api/portfolio/approve")
+def portfolio_approve(confirm: bool = False) -> dict:
+    """Approve every queued action across the whole book.
+
+    This is the step that makes the forecast falsifiable. Before it runs, the
+    portfolio carries a projection for the retries sitting in merchants'
+    queues; afterwards it carries a marked figure for the same retries, and
+    the two can be read side by side.
+
+    It does not widen anything. Every action is re-gated individually against
+    the mandate it was proposed under, so what the kernel denied stays denied
+    however many times it is approved -- confirming a queue is a person saying
+    yes to work already inside the agent's authority, not granting more.
+    """
+    if not confirm:
+        raise HTTPException(400, "pass confirm=true to approve the book")
+
+    out = {"merchants": [], "executed": 0, "denied": 0, "groups": 0}
+    for p in sorted(RUNS.glob("*.json")):
+        rec = _read_json(p)
+        rid, mid = rec.get("run_id"), rec.get("merchant_id")
+        if not rid or mid not in MERCHANTS:
+            continue
+        try:
+            signed = load_mandate(mid)
+        except (SystemExit, FileNotFoundError):
+            continue
+
+        ex = dn = 0
+        for i in range(len(rec.get("pending_actions") or [])):
+            try:
+                res = apply_group(rid, i, signed, confirmed=True)
+            except (IndexError, FileNotFoundError, ValueError):
+                continue
+            out["groups"] += 1
+            ex += getattr(res, "executed", 0) or 0
+            dn += getattr(res, "denied", 0) or 0
+
+        after = _read_json(p)
+        sc = after["report"]["measured"].get("recovery_vs_truth", {}) or {}
+        out["merchants"].append(
+            {
+                "merchant_id": mid,
+                "run_id": rid,
+                "executed": ex,
+                "denied": dn,
+                "measured_paise": sc.get("measured_paise", 0),
+                "attempted": sc.get("attempted", 0),
+                "converted": sc.get("truly_converted", 0),
+            }
+        )
+        out["executed"] += ex
+        out["denied"] += dn
+
+    out["total_measured_paise"] = sum(
+        m["measured_paise"] for m in out["merchants"]
+    )
+    return out
+
+
 @app.get("/api/portfolio.csv")
 def portfolio_export() -> PlainTextResponse:
     csv_text = portfolio_csv(build_portfolio())

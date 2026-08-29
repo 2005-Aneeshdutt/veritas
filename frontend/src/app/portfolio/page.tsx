@@ -132,7 +132,7 @@ export default function PortfolioPage() {
     <>
         {/* ─────────────────── what the batch actually won back */}
         <Stagger>
-          <RecoveryFunnel pf={pf} />
+          <RecoveryFunnel pf={pf} onApproved={load} />
         </Stagger>
 
         {/* ───────────────────────────────────── headline */}

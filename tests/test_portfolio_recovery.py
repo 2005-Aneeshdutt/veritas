@@ -67,7 +67,7 @@ def test_the_gate_tally_counts_actions_not_ledger_rows(pf):
             a = e.get("proposed_action") or {}
             actions.add((f, e.get("txn_id"), a.get("action_type")))
 
-    tally = pf.gate_allow + pf.gate_step_up + pf.gate_deny
+    tally = pf.acted_on + pf.awaiting + pf.refused + pf.escalated
     assert tally == len(actions)
     assert tally < rows, "this book has re-gated actions; the test is live"
 
@@ -75,7 +75,7 @@ def test_the_gate_tally_counts_actions_not_ledger_rows(pf):
 def test_the_funnel_explains_the_gap_rather_than_hiding_it(pf):
     """A won figure far below the identified figure needs the middle of the
     funnel, or it reads as the agent having failed."""
-    assert pf.gate_step_up > 0 or pf.gate_deny > 0
+    assert pf.awaiting > 0 or pf.refused > 0
     assert pf.total_held_paise + pf.total_denied_paise > 0
 
 
@@ -157,3 +157,99 @@ def test_scoring_after_apply_still_cannot_see_the_future():
     src = inspect.getsource(apply.apply_group)
     assert "score_recovery" in src
     assert "SYNTH" in inspect.getsource(scoring._ground_truth)
+
+
+def test_the_pending_forecast_is_a_forecast_not_the_answer_key():
+    """The pitch for approving a queue must come from the rail.
+
+    A marked figure for work nobody has authorised yet would mean reading the
+    ground truth to write the sales line -- the same self-marking the whole
+    measurement design exists to avoid.
+    """
+    import inspect
+
+    from doctor import portfolio
+
+    src = inspect.getsource(portfolio._pending_forecast)
+    assert "p_retry_success" in src
+    for banned in ("SYNTH", "retry_conversions", "ground_truth", "score_recovery"):
+        assert banned not in src, "the forecast must not read truth: %s" % banned
+
+
+def test_only_retries_are_credited_to_the_pending_forecast():
+    """A payment-link reissue recovers money through a human paying a link,
+    which this rail does not model and must not be credited with."""
+    import inspect
+
+    from doctor import portfolio
+
+    assert 'startswith("retry")' in inspect.getsource(portfolio._pending_forecast)
+
+
+def test_the_forecast_band_brackets_its_own_centre(pf):
+    lo = pf.pending_projected_low_paise
+    mid = pf.pending_projected_central_paise
+    hi = pf.pending_projected_high_paise
+    assert lo <= mid <= hi
+    if pf.pending_retry_actions:
+        assert lo > 0
+
+
+def test_the_funnel_is_keyed_on_outcome_not_on_the_gates_ruling():
+    """Confirming a step-up appends another step_up row -- the mandate still
+    required approval and the ledger says so. A funnel reading gate decisions
+    showed 661 actions still waiting after every one had been approved."""
+    import inspect
+
+    from doctor import portfolio
+
+    src = inspect.getsource(portfolio.build_portfolio)
+    assert '"merchant_action"' in src
+    assert '"executed", "exception"' in src
+
+
+def test_approving_the_book_moves_measured_and_empties_the_queue(tmp_path):
+    """The whole arc, end to end: a forecast, a person, then a measurement."""
+    import shutil
+
+    from doctor.apply import apply_group
+    from doctor.portfolio import build_portfolio
+    from doctor.run import load_mandate
+
+    files = sorted(glob.glob("data/runs/*.json"))
+    if not files:
+        pytest.skip("no runs")
+    for f in files:
+        shutil.copy(f, tmp_path / f.replace("/", "_").replace("\\", "_"))
+
+    try:
+        before = build_portfolio()
+        if not before.awaiting:
+            pytest.skip("nothing queued")
+
+        for f in files:
+            rec = json.load(open(f, encoding="utf-8"))
+            try:
+                signed = load_mandate(rec["merchant_id"])
+            except (SystemExit, FileNotFoundError):
+                continue
+            for i in range(len(rec.get("pending_actions") or [])):
+                try:
+                    apply_group(rec["run_id"], i, signed, confirmed=True)
+                except (IndexError, FileNotFoundError, ValueError):
+                    pass
+
+        after = build_portfolio()
+        assert after.total_measured_paise > before.total_measured_paise
+        assert after.awaiting < before.awaiting
+        assert after.acted_on > before.acted_on
+        # the action count is a property of the book, not of who approved what
+        assert (
+            after.acted_on + after.awaiting + after.refused + after.escalated
+            == before.acted_on + before.awaiting + before.refused + before.escalated
+        )
+        # what the mandate refused stays refused however often it is approved
+        assert after.refused == before.refused
+    finally:
+        for f in files:
+            shutil.copy(tmp_path / f.replace("/", "_").replace("\\", "_"), f)

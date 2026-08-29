@@ -23,6 +23,10 @@ from typing import Any
 
 from pydantic import BaseModel
 
+from chitragupta.rails.mock_rail import Calibration, p_retry_success
+
+from .sequence import first_slot_hours
+
 ROOT = Path(__file__).resolve().parents[2]
 RUNS = ROOT / "data" / "runs"
 
@@ -66,6 +70,7 @@ class MerchantRow(BaseModel):
     measured_paise: int
     attempted: int
     converted: int
+    projected_for_attempted_paise: int
     scored: bool
     underpowered: bool
     unreliable_factors: list[str]
@@ -84,14 +89,36 @@ class Portfolio(BaseModel):
     total_measured_paise: int
     total_attempted: int
     total_converted: int
+    #: The rail's forecast for the retries that were ACTUALLY attempted, which
+    #: is the only forecast the measured figure can fairly be read against.
+    #: Not recovered_this_run_paise -- that accumulates across applies and
+    #: comparing it to the mark produced a made-up optimism ratio.
+    total_projected_for_attempted_paise: int
     merchants_scored: int
     #: What the kernel would not let the agent touch, so the funnel from
     #: "identified" to "won" does not have an unexplained gap in the middle.
     total_held_paise: int
     total_denied_paise: int
-    gate_allow: int
-    gate_step_up: int
-    gate_deny: int
+    #: The funnel is keyed on what HAPPENED to each action, not on how the
+    #: kernel ruled on it. Confirming a step-up appends another step_up row --
+    #: the mandate still required approval and the ledger says so honestly --
+    #: so a funnel reading gate decisions showed 661 actions still waiting
+    #: after a merchant had approved every one of them.
+    acted_on: int
+    awaiting: int
+    refused: int
+    escalated: int
+    #: What the rail forecasts for the retries sitting in merchants' queues.
+    #:
+    #: A FORECAST, and it has to be. The measured figure comes from marking
+    #: retries that actually ran; quoting a marked number for work nobody has
+    #: authorised yet would mean reading the answer key to write the pitch.
+    #: So this is the rail's own projection, carrying the rail's known
+    #: optimism, and it becomes falsifiable the moment a merchant approves.
+    pending_retry_actions: int
+    pending_projected_low_paise: int
+    pending_projected_central_paise: int
+    pending_projected_high_paise: int
     total_transactions: int
     total_failures: int
     #: band -> count
@@ -140,39 +167,77 @@ def _triage(gap_pts: float, recoverable_paise: int, dec: dict) -> tuple[str, str
     return BAND_REVIEW, "a real gap, but smaller than the urgent band"
 
 
+def _pending_forecast(report: dict, final: dict) -> tuple[int, dict[str, float]]:
+    """What the rail expects from the retries still waiting on a person.
+
+    Only retries. A payment-link reissue held for approval recovers money
+    through a human paying a link, which this rail does not model and must not
+    be credited with.
+    """
+    error_class = {
+        t["txn_id"]: t.get("error_class")
+        for t in report.get("exceptions", {}).get("unrecoverable_transactions", [])
+    }
+    out = {c.value: 0.0 for c in Calibration}
+    n = 0
+    for e in final.values():
+        if e.get("outcome") != "merchant_action":
+            continue
+        a = e.get("proposed_action") or {}
+        if not a.get("action_type", "").startswith("retry"):
+            continue
+        n += 1
+        ecls = error_class.get(e.get("txn_id")) or "soft_decline"
+        for c in Calibration:
+            out[c.value] += (
+                p_retry_success(ecls, first_slot_hours(ecls), c) * a["amount_paise"]
+            )
+    return n, out
+
+
 def build_portfolio() -> Portfolio:
     rows: list[MerchantRow] = []
-    gate_allow = gate_step_up = gate_deny = 0
+    acted_on = awaiting = refused = escalated = 0
     held_paise = denied_paise = 0
+    pending_n = 0
+    # Not `pending` -- that name is already a local for this merchant's fix
+    # groups further down, and shadowing it silently rebinds a list.
+    pending_value: dict[str, float] = {c.value: 0.0 for c in Calibration}
     for rec in _latest_run_per_merchant().values():
         r = rec["report"]
         m, p, d = r["measured"], r["projected"], r["decomposition"]
         sc = m.get("recovery_vs_truth", {}) or {}
 
-        # The gate's own tally, so the batch can say what it was not permitted
-        # to attempt rather than quietly reporting only what it was.
+        # What became of every action, so the batch can say what it was not
+        # permitted to attempt rather than quietly reporting only what it was.
         #
         # Counted per ACTION, not per ledger row. The ledger is append-only, so
-        # an action that was held and later confirmed leaves two rows behind --
-        # counting rows made the funnel read 610 permitted out of 1,932 the
-        # moment a merchant approved their queue, roughly doubling every figure
-        # in it. The last decision on an action is the one that stands.
+        # an action held and later confirmed leaves two rows behind, and
+        # counting rows doubled every figure in the funnel the moment a
+        # merchant approved their queue. The last word on an action stands.
         final: dict[tuple, dict] = {}
         for e in r.get("ledger", []):
             a = e.get("proposed_action") or {}
             final[(e.get("txn_id"), a.get("action_type"))] = e
 
+        n, fc = _pending_forecast(r, final)
+        pending_n += n
+        for k, v in fc.items():
+            pending_value[k] += v
+
         for e in final.values():
-            g = e.get("gate_decision")
+            o = e.get("outcome")
             amt = (e.get("proposed_action") or {}).get("amount_paise", 0)
-            if g == "allow":
-                gate_allow += 1
-            elif g == "step_up":
-                gate_step_up += 1
+            if o in ("executed", "exception"):
+                acted_on += 1
+            elif o == "merchant_action":
+                awaiting += 1
                 held_paise += amt
-            elif g == "deny":
-                gate_deny += 1
+            elif o == "denied":
+                refused += 1
                 denied_paise += amt
+            elif o == "escalated":
+                escalated += 1
 
         # The strongest identified factor. A factor the overlap check rejected
         # is never allowed to be the headline cause.
@@ -222,6 +287,7 @@ def build_portfolio() -> Portfolio:
                 measured_paise=sc.get("measured_paise", 0),
                 attempted=sc.get("attempted", 0),
                 converted=sc.get("truly_converted", 0),
+                projected_for_attempted_paise=sc.get("projected_paise", 0),
                 scored=bool(sc.get("scored")),
                 underpowered=bool(d.get("underpowered")),
                 unreliable_factors=d.get("degenerate_factors") or [],
@@ -262,12 +328,20 @@ def build_portfolio() -> Portfolio:
         total_measured_paise=sum(r.measured_paise for r in rows),
         total_attempted=sum(r.attempted for r in rows),
         total_converted=sum(r.converted for r in rows),
+        total_projected_for_attempted_paise=sum(
+            r.projected_for_attempted_paise for r in rows
+        ),
         merchants_scored=sum(1 for r in rows if r.scored),
         total_held_paise=held_paise,
         total_denied_paise=denied_paise,
-        gate_allow=gate_allow,
-        gate_step_up=gate_step_up,
-        gate_deny=gate_deny,
+        acted_on=acted_on,
+        awaiting=awaiting,
+        refused=refused,
+        escalated=escalated,
+        pending_retry_actions=pending_n,
+        pending_projected_low_paise=int(pending_value[Calibration.CONSERVATIVE.value]),
+        pending_projected_central_paise=int(pending_value[Calibration.CENTRAL.value]),
+        pending_projected_high_paise=int(pending_value[Calibration.OPTIMISTIC.value]),
         total_transactions=sum(r.transactions for r in rows),
         total_failures=sum(r.failures for r in rows),
         bands=bands,
