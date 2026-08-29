@@ -335,3 +335,60 @@ def test_a_lone_auto_proposal_still_says_the_ceiling_holds(book):
         auto = r.proposals[0]
         assert "untouched" in auto.exposure
         assert format(sg.mandate.max_amount_paise // 100, ",d") in auto.exposure
+
+
+def test_the_review_is_stable_across_an_approval(tmp_path):
+    """The ledger is append-only, so a re-gated action leaves two rows.
+
+    Reading them all doubled every money figure in this review the moment a
+    merchant approved their queue -- and the copy went on telling them 446
+    actions were waiting for an approval they had already given.
+
+    What the review reports is a property of the MANDATE on this run: it
+    required approval for N actions. Approving them does not change that, so
+    the figures must not move.
+    """
+    import shutil
+
+    from doctor.apply import apply_group
+
+    target = None
+    for f in sorted(glob.glob("data/runs/*.json")):
+        rec = json.load(open(f, encoding="utf-8"))
+        if rec.get("pending_actions") and not rec.get("applied"):
+            target = (f, rec)
+            break
+    if not target:
+        pytest.skip("no run with an unapplied queue")
+
+    path, rec = target
+    backup = tmp_path / "b.json"
+    shutil.copy(path, backup)
+    try:
+        signed = load_mandate(rec["merchant_id"])
+        before = review(rec, signed)
+
+        for i in range(len(rec["pending_actions"])):
+            try:
+                apply_group(rec["run_id"], i, signed, confirmed=True)
+            except (IndexError, FileNotFoundError, ValueError):
+                pass
+
+        after = review(json.load(open(path, encoding="utf-8")), signed)
+        assert after.held_count == before.held_count
+        assert after.blocked_total_paise == before.blocked_total_paise
+        assert after.held_total_paise == before.held_total_paise
+        assert [p.field for p in after.proposals] == [
+            p.field for p in before.proposals
+        ]
+    finally:
+        shutil.copy(backup, path)
+
+
+def test_the_review_counts_actions_not_ledger_rows():
+    import inspect
+
+    from doctor import authority
+
+    src = inspect.getsource(authority.review)
+    assert "final[" in src and "for e in final.values()" in src

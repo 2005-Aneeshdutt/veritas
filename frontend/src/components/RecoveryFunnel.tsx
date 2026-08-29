@@ -144,6 +144,14 @@ export function RecoveryFunnel({ pf, onApproved }: { pf: any; onApproved?: () =>
                 for them, not a measurement — approving turns it into one, and
                 the marked figure lands beside it whether or not it agrees.
               </p>
+              {optimism > 1 && (
+                <p className="text-[11px] text-faint mt-2 leading-relaxed">
+                  Read the band low. On the retries this agent has already run,
+                  the same rail forecast {optimism.toFixed(2)}× what was truly
+                  recovered — so the bottom of this range is the optimistic
+                  reading of it, not the pessimistic one.
+                </p>
+              )}
             </div>
             <button
               onClick={approveBook}

@@ -225,6 +225,22 @@ def apply_group(
         )
 
     actions = [ProposedAction.model_validate(a) for a in group["actions"]]
+
+    # What the run has already done with each action. `pending_actions` groups
+    # the WHOLE plan, including the actions the diagnosis itself executed, so
+    # without this a first apply re-runs them: 396 of the 1,057 actions on this
+    # book were settled at diagnosis and were being retried a second time the
+    # moment anyone approved a group. That inflated the recovered figure, and
+    # worse, it spent a real attempt against the mandate's per-payment cap on a
+    # payment nobody had asked about again.
+    #
+    # The resume path below has always reasoned this way about held actions.
+    # The same reasoning applies to everything the gate already settled.
+    settled: dict[tuple, str] = {}
+    for e in rec["report"].get("ledger", []):
+        pa = e.get("proposed_action") or {}
+        settled[(e.get("txn_id"), pa.get("action_type"))] = e.get("outcome")
+
     if resuming:
         # Only the held actions. Everything else in the group already settled,
         # and re-gating it would double-count the attempt.
@@ -234,6 +250,36 @@ def apply_group(
         )
         if not actions:
             raise IndexError("nothing left to confirm in %s" % group["group_id"])
+    else:
+        actions = [
+            a
+            for a in actions
+            if settled.get((a.txn_id, a.action_type.value))
+            in (None, "merchant_action")
+        ]
+        if not actions:
+            return ApplyResult(
+                ok=False,
+                group_id=group["group_id"],
+                title=group["title"],
+                steps=[
+                    CheckStep(
+                        key="settled",
+                        label="Already settled",
+                        detail=(
+                            "Every action in this fix was already decided when "
+                            "the run was diagnosed. Running it again would "
+                            "retry payments that were never waiting on you and "
+                            "burn attempts the mandate caps."
+                        ),
+                        status="info",
+                    )
+                ],
+                headline="Nothing left to approve in this fix",
+                already_applied=True,
+                ledger_len=len(rec["report"].get("ledger", [])),
+                chain_verified=rec["report"]["measured"].get("chain_verified", False),
+            )
 
     # Attempt history from what actually reached the rail, so the cap counts
     # real attempts. An action held for confirmation was never sent and must

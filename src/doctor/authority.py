@@ -172,9 +172,19 @@ def review(rec: dict, signed: SignedMandate) -> AuthorityReview:
         .get("unrecoverable_transactions", [])
     }
 
+    # One row per ACTION, not per ledger entry. The ledger is append-only, so
+    # an action the gate ruled on twice leaves two rows behind -- and every
+    # money figure in this review doubled the moment a merchant approved their
+    # queue, while the copy went on telling them 446 actions were waiting for
+    # an approval they had already given.
+    final: dict[tuple, dict] = {}
+    for e in ledger:
+        pa = e.get("proposed_action") or {}
+        final[(e.get("txn_id"), pa.get("action_type"))] = e
+
     denied: dict[str, list[dict]] = {}
     held: list[dict] = []
-    for e in ledger:
+    for e in final.values():
         a = dict(e.get("proposed_action") or {})
         a["error_class"] = ecls.get(e.get("txn_id"))
         if e.get("gate_decision") == "deny":
@@ -263,7 +273,7 @@ def review(rec: dict, signed: SignedMandate) -> AuthorityReview:
     by_amount = [a for a in held if a["gate_reason"] == "STEP_UP_ABOVE_AUTO_LIMIT"]
     by_design = [a for a in held if a["gate_reason"] != "STEP_UP_ABOVE_AUTO_LIMIT"]
 
-    allowed = sum(1 for e in ledger if e.get("gate_decision") == "allow")
+    allowed = sum(1 for e in final.values() if e.get("gate_decision") == "allow")
     permitted = allowed + len(held)
     click_share = len(held) / permitted if permitted else 0.0
 

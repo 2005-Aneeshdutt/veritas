@@ -193,14 +193,23 @@ so what the mandate denied stays denied however many times it is approved:
 
 ```
 before   ₹39,833 won · 277 acted on · 661 awaiting · 91 denied
-after    ₹2,34,343 won · 934 acted on ·   0 awaiting · 91 denied
+after    ₹1,94,509 won · 934 acted on ·   0 awaiting · 91 denied
 ```
 
-The uplift is **₹1,94,510** against a forecast band of ₹1.83L – ₹3.82L — the
-prediction was falsifiable and it held. The optimism ratio moves from 1.36x to
-2.25x in the process, because the rail is more wrong about the larger payments
-that were being held back than about the small ones it was trusted to retry
-unattended. That is worth knowing and is not smoothed over.
+The uplift is **₹1,54,676** against a forecast band of ₹1.83L – ₹3.82L.
+
+**The forecast was wrong, and it was wrong in the direction that costs
+credibility.** The outcome landed *below* the conservative end of a three-point
+band — 1.18× over at the most pessimistic calibration and 1.82× over at the
+central one. The band did not contain the answer.
+
+That is reported here rather than quietly rescaled, because a forecast nobody
+can fail is not a forecast. It is also consistent: `recovery_accuracy.json`
+independently measures this rail at 1.43× optimistic across 200 merchants, and
+the retries queued behind an auto-execute limit are the larger ones, where it
+is more wrong still. The honest reading of the projected band on any page of
+this app is *the top of it is fiction and the bottom of it is optimistic*, and
+the app says so beside the number.
 
 Approving writes to `data/runs/`. To put the demo back:
 

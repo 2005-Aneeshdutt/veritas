@@ -172,3 +172,103 @@ def _ledger(path):
         LedgerEntry.model_validate(e)
         for e in _stored(path)["report"]["ledger"]
     ]
+
+
+def test_applying_a_group_does_not_rerun_what_diagnosis_already_settled(tmp_path):
+    """`pending_actions` groups the WHOLE plan, including the actions the
+    diagnosis itself executed.
+
+    Without a filter, a first apply re-ran them: 396 of the 1,057 actions on
+    this book were settled at diagnosis and were retried a second time the
+    moment anyone approved a group. That inflated the recovered figure by the
+    whole of the auto-executed run, and spent a real attempt against the
+    mandate's per-payment cap on a payment nobody had asked about again.
+    """
+    import glob
+    import json
+    import shutil
+    from collections import Counter
+
+    from doctor.apply import apply_group
+    from doctor.run import load_mandate
+
+    def double_run(rec):
+        c = Counter()
+        for e in rec["report"]["ledger"]:
+            if e.get("outcome") not in ("executed", "exception"):
+                continue
+            a = e.get("proposed_action") or {}
+            if a.get("action_type") != "retry_soft_decline":
+                continue
+            c[e["txn_id"]] += 1
+        return {k: v for k, v in c.items() if v > 1}
+
+    target = None
+    for f in sorted(glob.glob("data/runs/*.json")):
+        rec = json.load(open(f, encoding="utf-8"))
+        executed = sum(
+            1 for e in rec["report"]["ledger"] if e.get("outcome") == "executed"
+        )
+        if rec.get("pending_actions") and executed > 5 and not rec.get("applied"):
+            target = (f, rec)
+            break
+    if not target:
+        pytest.skip("no run with auto-executed actions and a queue")
+
+    path, rec = target
+    backup = tmp_path / "b.json"
+    shutil.copy(path, backup)
+    try:
+        assert not double_run(rec), "fixture must start clean"
+        signed = load_mandate(rec["merchant_id"])
+        for i in range(len(rec["pending_actions"])):
+            try:
+                apply_group(rec["run_id"], i, signed, confirmed=True)
+            except (IndexError, FileNotFoundError, ValueError):
+                pass
+
+        after = json.load(open(path, encoding="utf-8"))
+        dup = double_run(after)
+        assert not dup, "%d payments were retried twice: %s" % (
+            len(dup),
+            list(dup)[:3],
+        )
+    finally:
+        shutil.copy(backup, path)
+
+
+def test_a_group_with_nothing_left_reports_rather_than_raising(tmp_path):
+    """Confirming a fully settled group must not blow up a book-wide approve."""
+    import glob
+    import json
+    import shutil
+
+    from doctor.apply import apply_group
+    from doctor.run import load_mandate
+
+    files = sorted(glob.glob("data/runs/*.json"))
+    if not files:
+        pytest.skip("no runs")
+    path = files[0]
+    rec = json.load(open(path, encoding="utf-8"))
+    if not rec.get("pending_actions"):
+        pytest.skip("no groups")
+
+    backup = tmp_path / "b.json"
+    shutil.copy(path, backup)
+    try:
+        signed = load_mandate(rec["merchant_id"])
+        for i in range(len(rec["pending_actions"])):
+            try:
+                apply_group(rec["run_id"], i, signed, confirmed=True)
+            except (IndexError, ValueError):
+                pass
+        # second pass: everything is settled now
+        for i in range(len(rec["pending_actions"])):
+            try:
+                res = apply_group(rec["run_id"], i, signed, confirmed=True)
+                assert res.already_applied or not res.ok
+            except IndexError:
+                pass  # the resume path raises this by design
+    finally:
+        shutil.copy(backup, path)
