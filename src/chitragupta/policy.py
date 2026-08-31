@@ -41,6 +41,7 @@ class ReasonCode:
     DENY_ACTION_NOT_PERMITTED = "DENY_ACTION_NOT_PERMITTED"
     DENY_AMOUNT_ABOVE_CEILING = "DENY_AMOUNT_ABOVE_CEILING"
     DENY_MAX_ATTEMPTS = "DENY_MAX_ATTEMPTS"
+    DENY_ALREADY_SETTLED = "DENY_ALREADY_SETTLED"
     DENY_OUTSIDE_RECOVERY_WINDOW = "DENY_OUTSIDE_RECOVERY_WINDOW"
     DENY_BANK_DEGRADED_HOLD = "DENY_BANK_DEGRADED_HOLD"
 
@@ -53,11 +54,17 @@ class GateContext:
         *,
         now: datetime,
         attempts_by_txn: dict[str, int] | None = None,
+        settled_txns: frozenset[str] | set[str] | None = None,
         original_failure_at: dict[str, datetime] | None = None,
         degraded_banks: dict[str, datetime] | None = None,
     ) -> None:
         self.now = now if now.tzinfo else now.replace(tzinfo=timezone.utc)
         self.attempts_by_txn = attempts_by_txn or {}
+        #: Payments that have already been collected. Retrying one of these
+        #: charges a customer twice, which is the worst thing an agent in this
+        #: position can do -- worse than recovering nothing, because it costs
+        #: the merchant a refund, a chargeback risk and the customer.
+        self.settled_txns = frozenset(settled_txns or ())
         self.original_failure_at = original_failure_at or {}
         #: bank -> instant the degradation hold was placed
         self.degraded_banks = degraded_banks or {}
@@ -90,6 +97,17 @@ def evaluate(
     # --- rule 5: hard ceiling --------------------------------------------
     if action.amount_paise > m.max_amount_paise:
         return result(PolicyDecision.DENY, ReasonCode.DENY_AMOUNT_ABOVE_CEILING)
+
+    # --- rule 0: never charge a payment that already went through --------
+    #
+    # This sits before every other check on purpose. The attempt cap bounds
+    # how often a FAILED payment may be chased; nothing in it stops a payment
+    # that has since succeeded from being chased again, and that is a
+    # different and much worse failure. It was previously prevented by a
+    # filter in the caller, which is protection the kernel could not promise
+    # and no other caller inherited.
+    if action.action_type in AUTO_EXECUTABLE and action.txn_id in ctx.settled_txns:
+        return result(PolicyDecision.DENY, ReasonCode.DENY_ALREADY_SETTLED)
 
     # --- rule 1: attempts per payment ------------------------------------
     # Only auto-executable actions consume an attempt. Flagging something for

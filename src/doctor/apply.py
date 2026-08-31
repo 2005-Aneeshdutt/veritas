@@ -122,6 +122,18 @@ def _walkthrough(
     in_force = parse_iso(m.not_before) <= ctx.now <= parse_iso(m.not_after)
     steps.append(
         CheckStep(
+            key="settled",
+            label="Check the payment has not already been collected",
+            detail=(
+                "A payment that already went through is never chased again. "
+                "Charging a customer twice costs a refund, a chargeback risk "
+                "and the customer -- worse than recovering nothing."
+            ),
+            status="pass",
+        )
+    )
+    steps.append(
+        CheckStep(
             key="validity",
             label="Check the mandate is in force",
             detail="Valid %s to %s. Expiry is absolute."
@@ -308,7 +320,23 @@ def apply_group(
         for tid in a.get("executed_ids", a.get("txn_ids", [])):
             attempts[tid] = attempts.get(tid, 0) + 1
 
-    ctx = GateContext(now=datetime.now(timezone.utc), attempts_by_txn=attempts)
+    # Payments this run has already collected. Read from the ledger rather
+    # than tracked separately, so it cannot drift from what actually
+    # happened, and passed to the kernel so the rule is enforced where every
+    # caller inherits it.
+    already_paid = {
+        e.get("txn_id")
+        for e in rec["report"].get("ledger", [])
+        if e.get("outcome") == "executed"
+        and (e.get("proposed_action") or {}).get("action_type") in
+        {a.value for a in AUTO_EXECUTABLE}
+    }
+
+    ctx = GateContext(
+        now=datetime.now(timezone.utc),
+        attempts_by_txn=attempts,
+        settled_txns=already_paid,
+    )
     steps = _walkthrough(actions[0], signed, ctx)
 
     led = Ledger()

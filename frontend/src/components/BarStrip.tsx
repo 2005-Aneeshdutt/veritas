@@ -20,6 +20,7 @@ import { RunRecord } from "@/lib/types";
 
 const REASON_LABEL: Record<string, string> = {
   DENY_AMOUNT_ABOVE_CEILING: "above the hard ceiling",
+  DENY_ALREADY_SETTLED: "the payment had already been collected",
   DENY_ACTION_NOT_PERMITTED: "action type not in the mandate",
   DENY_ATTEMPT_CAP: "already attempted the maximum times",
   DENY_OUTSIDE_WINDOW: "outside the 7-day recovery window",
@@ -98,9 +99,14 @@ export function BarStrip({ rec }: { rec: RunRecord }) {
               action.
             </p>
           )}
-          <Detail summary="the six rules, always on">
+          <Detail summary="the seven rules, always on">
             <ul className="list-disc pl-4 space-y-1">
               <li>the mandate signature must verify, before anything else</li>
+              <li>
+                a payment that has already been collected is never chased
+                again — charging a customer twice is worse than recovering
+                nothing
+              </li>
               <li>the mandate must be in force at the moment of the action</li>
               <li>the action type must be one the merchant authorised</li>
               <li>no payment may be attempted more than the cap allows</li>
