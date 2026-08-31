@@ -15,6 +15,10 @@ dependencies = [
     "sse-starlette>=2.1",
     "cryptography>=42.0",
     "httpx>=0.27",
+    # FastAPI needs this to accept the uploaded NPCI table. It was installed
+    # locally and absent from here, so the API imported fine on this machine
+    # and raised at route registration in CI the moment a test imported it.
+    "python-multipart>=0.0.9",
 ]
 
 [project.optional-dependencies]
