@@ -61,3 +61,42 @@ def test_sending_never_invents_a_success():
     src = inspect.getsource(outreach.send)
     assert "sent=True" in src
     assert src.count("sent=True") == 1, "only the success path may claim it sent"
+
+
+def test_googles_own_spacing_is_accepted():
+    """Google displays an App Password as four groups of four and the server
+    refuses it that way, so copying exactly what is on the screen produces a
+    credential that fails -- and fails identically to a wrong one."""
+    import os
+
+    from doctor.outreach import _password
+
+    saved = os.environ.get("SMTP_PASSWORD")
+    try:
+        os.environ["SMTP_PASSWORD"] = "abcd efgh ijkl mnop"
+        assert _password() == "abcdefghijklmnop"
+    finally:
+        if saved is None:
+            os.environ.pop("SMTP_PASSWORD", None)
+        else:
+            os.environ["SMTP_PASSWORD"] = saved
+
+
+def test_a_real_password_containing_spaces_is_left_alone():
+    """Whitespace is not stripped from passwords in general. Quietly altering
+    one would be a way to fail that is very hard to see, so it happens only
+    when what remains is unambiguously Google's format."""
+    import os
+
+    from doctor.outreach import _password
+
+    saved = os.environ.get("SMTP_PASSWORD")
+    try:
+        for raw in ("my real pass word", "Abcd Efgh Ijkl Mnop", "s3cret with space"):
+            os.environ["SMTP_PASSWORD"] = raw
+            assert _password() == raw, raw
+    finally:
+        if saved is None:
+            os.environ.pop("SMTP_PASSWORD", None)
+        else:
+            os.environ["SMTP_PASSWORD"] = saved

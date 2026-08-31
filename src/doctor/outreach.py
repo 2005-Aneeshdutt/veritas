@@ -17,6 +17,9 @@ Two safeguards worth naming:
 
 from __future__ import annotations
 
+import os
+import re
+
 from pydantic import BaseModel
 
 FACTOR_LABEL = {
@@ -163,6 +166,28 @@ class SendResult(BaseModel):
     configured: bool
 
 
+#: A Gmail App Password as Google displays it: sixteen lowercase letters
+#: shown in four groups of four. It is presented WITH spaces and accepted
+#: WITHOUT them, so copying what is on the screen produces a credential the
+#: server refuses -- and the refusal it produces is identical to the one a
+#: genuinely wrong password gives.
+_APP_PASSWORD = re.compile(r"^[a-z]{16}$")
+
+
+def _password() -> str:
+    """The configured password, de-spaced only when that is unambiguous.
+
+    Whitespace is not stripped from passwords in general -- a password may
+    legitimately contain a space, and quietly altering one would be a way to
+    fail that is very hard to see. It is stripped only when what remains is
+    exactly Google's App Password shape, which is a format their own UI hands
+    you with spaces in it.
+    """
+    raw = os.environ.get("SMTP_PASSWORD", "")
+    squashed = "".join(raw.split())
+    return squashed if _APP_PASSWORD.match(squashed) else raw
+
+
 def smtp_configured() -> bool:
     import os
 
@@ -223,7 +248,7 @@ def verify() -> SendResult:
     try:
         with smtplib.SMTP(host, port, timeout=20) as srv:
             srv.starttls()
-            srv.login(os.environ["SMTP_USER"], os.environ["SMTP_PASSWORD"])
+            srv.login(os.environ["SMTP_USER"], _password())
     except Exception as e:
         return SendResult(sent=False, configured=True, detail=_explain(e))
     return SendResult(
@@ -271,7 +296,7 @@ def send(email: Email, to_addr: str) -> SendResult:
     try:
         with smtplib.SMTP(host, port, timeout=20) as srv:
             srv.starttls()
-            srv.login(os.environ["SMTP_USER"], os.environ["SMTP_PASSWORD"])
+            srv.login(os.environ["SMTP_USER"], _password())
             srv.send_message(msg)
     except Exception as e:  # surface the real reason, do not swallow it
         return SendResult(sent=False, configured=True, detail=_explain(e))
