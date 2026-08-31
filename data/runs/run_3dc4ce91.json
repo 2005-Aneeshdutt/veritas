@@ -4,9 +4,9 @@
   "merchant_name": "VoltBill Utilities",
   "mcc": "4900",
   "seed": 20260824,
-  "started_at": 1787857275.4717083,
-  "duration_ms": 4072,
-  "commit": "c89d107",
+  "started_at": 1788165335.237431,
+  "duration_ms": 2685,
+  "commit": "54134ec",
   "models": {
     "fast": "claude-haiku-4.5",
     "reasoning": "claude-sonnet-4.6",
@@ -15,6 +15,11 @@
   "cache_hit_rate": 1.0,
   "llm_calls": 8,
   "llm_cost_inr": 0.0,
+  "tokens_in": 0,
+  "tokens_out": 0,
+  "tokens_in_saved": 10383,
+  "tokens_out_saved": 3726,
+  "llm_cost_inr_saved": 7.6594,
   "used_stubs": false,
   "traces": [
     {
@@ -23,8 +28,8 @@
       "node": "ingest",
       "kind": "deterministic",
       "status": "ok",
-      "started_at": 1787857278.1750622,
-      "duration_ms": 43,
+      "started_at": 1788165335.2597659,
+      "duration_ms": 133,
       "input_summary": {
         "merchant": "voltbill",
         "mcc": "4900"
@@ -55,8 +60,8 @@
       "node": "classify",
       "kind": "llm",
       "status": "ok",
-      "started_at": 1787857278.2198887,
-      "duration_ms": 3,
+      "started_at": 1788165335.394714,
+      "duration_ms": 5,
       "input_summary": {
         "distinct_codes": 74,
         "failures": 296
@@ -90,7 +95,7 @@
       "node": "human_review",
       "kind": "deterministic",
       "status": "skipped",
-      "started_at": 1787857278.2228935,
+      "started_at": 1788165335.4007661,
       "duration_ms": 0,
       "input_summary": {},
       "output_summary": {
@@ -114,8 +119,8 @@
       "node": "bank_health",
       "kind": "deterministic",
       "status": "ok",
-      "started_at": 1787857278.2238977,
-      "duration_ms": 10,
+      "started_at": 1788165335.4017756,
+      "duration_ms": 19,
       "input_summary": {},
       "output_summary": {
         "banks_examined": 10,
@@ -245,8 +250,8 @@
       "node": "decompose",
       "kind": "deterministic",
       "status": "ok",
-      "started_at": 1787857278.2348907,
-      "duration_ms": 1073,
+      "started_at": 1788165335.4228876,
+      "duration_ms": 2101,
       "input_summary": {},
       "output_summary": {
         "gap_pts": 4.044,
@@ -315,8 +320,8 @@
       "node": "hypothesise",
       "kind": "llm",
       "status": "ok",
-      "started_at": 1787857279.309252,
-      "duration_ms": 37,
+      "started_at": 1788165337.5255685,
+      "duration_ms": 70,
       "input_summary": {},
       "output_summary": {
         "tool_calls": [
@@ -423,8 +428,8 @@
       "node": "plan",
       "kind": "deterministic",
       "status": "ok",
-      "started_at": 1787857279.3467681,
-      "duration_ms": 20,
+      "started_at": 1788165337.5990136,
+      "duration_ms": 33,
       "input_summary": {},
       "output_summary": {
         "actions": 246,
@@ -496,8 +501,8 @@
       "node": "gate",
       "kind": "deterministic",
       "status": "ok",
-      "started_at": 1787857279.3677704,
-      "duration_ms": 113,
+      "started_at": 1788165337.633681,
+      "duration_ms": 166,
       "input_summary": {},
       "output_summary": {
         "decisions": {
@@ -531,8 +536,8 @@
       "node": "execute",
       "kind": "deterministic",
       "status": "ok",
-      "started_at": 1787857279.4818547,
-      "duration_ms": 35,
+      "started_at": 1788165337.8019688,
+      "duration_ms": 80,
       "input_summary": {},
       "output_summary": {
         "executed": 125,
@@ -562,8 +567,8 @@
       "node": "report",
       "kind": "deterministic",
       "status": "ok",
-      "started_at": 1787857279.5189476,
-      "duration_ms": 23,
+      "started_at": 1788165337.884904,
+      "duration_ms": 37,
       "input_summary": {},
       "output_summary": {
         "measured_keys": [
@@ -1408,21 +1413,21 @@
       },
       "coalition_values": {
         "{}": 0.0,
-        "bank": 0.016194049482509687,
-        "method": 0.009885966993883333,
-        "hour": 4.263385165471211,
-        "amount_band": -0.06698378722053144,
-        "bank+method": 0.04291316004402246,
-        "bank+hour": 4.25144284820661,
-        "bank+amount_band": -0.03393754899010393,
-        "method+hour": 4.284745198848505,
-        "method+amount_band": -0.039603556350464864,
-        "hour+amount_band": 4.2425258679976485,
-        "bank+method+hour": 4.271613230637438,
-        "bank+method+amount_band": -0.006857682668037768,
-        "bank+hour+amount_band": 4.229276502242929,
-        "method+hour+amount_band": 4.264012385540605,
-        "bank+method+hour+amount_band": 4.249557439675378
+        "bank": 0.016194049,
+        "method": 0.009885967,
+        "hour": 4.263385165,
+        "amount_band": -0.066983787,
+        "bank+method": 0.04291316,
+        "bank+hour": 4.251442848,
+        "bank+amount_band": -0.033937549,
+        "method+hour": 4.284745199,
+        "method+amount_band": -0.039603556,
+        "hour+amount_band": 4.242525868,
+        "bank+method+hour": 4.271613231,
+        "bank+method+amount_band": -0.006857683,
+        "bank+hour+amount_band": 4.229276502,
+        "method+hour+amount_band": 4.264012386,
+        "bank+method+hour+amount_band": 4.24955744
       },
       "factors": [
         {
@@ -1685,7 +1690,7 @@
     "ledger": [
       {
         "sequence": 0,
-        "timestamp": "2026-08-27T19:01:19.482867+00:00",
+        "timestamp": "2026-08-31T08:35:37.802971+00:00",
         "txn_id": "pay_voltbill_0691",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1700,11 +1705,11 @@
         "gate_reason": "DENY_AMOUNT_ABOVE_CEILING",
         "outcome": "denied",
         "prev_hash": "0000000000000000000000000000000000000000000000000000000000000000",
-        "entry_hash": "4fa1395356ab6032499f99a4406f710139376e3033572bd55472dfabf9586856"
+        "entry_hash": "96db2097fccd3e1a1760ae84bc84b4aebe87f9edf7ab75602aa8ac0cce73bed0"
       },
       {
         "sequence": 1,
-        "timestamp": "2026-08-27T19:01:19.482867+00:00",
+        "timestamp": "2026-08-31T08:35:37.802971+00:00",
         "txn_id": "pay_voltbill_0850",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1718,12 +1723,12 @@
         "gate_decision": "deny",
         "gate_reason": "DENY_AMOUNT_ABOVE_CEILING",
         "outcome": "denied",
-        "prev_hash": "4fa1395356ab6032499f99a4406f710139376e3033572bd55472dfabf9586856",
-        "entry_hash": "cd8fe06e058f5f195470f523748f07568aecb7d25af50cb0d3d0bdb2fdc8a26f"
+        "prev_hash": "96db2097fccd3e1a1760ae84bc84b4aebe87f9edf7ab75602aa8ac0cce73bed0",
+        "entry_hash": "06adacdc5ac00bf69a2f61d3ac1298c6558814fd2c6842574dc55c6000036a07"
       },
       {
         "sequence": 2,
-        "timestamp": "2026-08-27T19:01:19.482867+00:00",
+        "timestamp": "2026-08-31T08:35:37.802971+00:00",
         "txn_id": "pay_voltbill_1416",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1737,12 +1742,12 @@
         "gate_decision": "deny",
         "gate_reason": "DENY_AMOUNT_ABOVE_CEILING",
         "outcome": "denied",
-        "prev_hash": "cd8fe06e058f5f195470f523748f07568aecb7d25af50cb0d3d0bdb2fdc8a26f",
-        "entry_hash": "4005dec34406773c3947109a41202ff463015589d5d59af82c2e3e16f40735ad"
+        "prev_hash": "06adacdc5ac00bf69a2f61d3ac1298c6558814fd2c6842574dc55c6000036a07",
+        "entry_hash": "5c2de3264a0619335d6122865e913afffa3c6408fc8c151b71fe0766b7233dea"
       },
       {
         "sequence": 3,
-        "timestamp": "2026-08-27T19:01:19.482867+00:00",
+        "timestamp": "2026-08-31T08:35:37.802971+00:00",
         "txn_id": "pay_voltbill_1425",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1756,12 +1761,12 @@
         "gate_decision": "deny",
         "gate_reason": "DENY_AMOUNT_ABOVE_CEILING",
         "outcome": "denied",
-        "prev_hash": "4005dec34406773c3947109a41202ff463015589d5d59af82c2e3e16f40735ad",
-        "entry_hash": "58677c23210c748c019f32eb761b10f17637740043d16d37e3c490e8461b3472"
+        "prev_hash": "5c2de3264a0619335d6122865e913afffa3c6408fc8c151b71fe0766b7233dea",
+        "entry_hash": "f250ef1581d304eaa41af0af8457441271a08120d1d80cea58382a91765004af"
       },
       {
         "sequence": 4,
-        "timestamp": "2026-08-27T19:01:19.482867+00:00",
+        "timestamp": "2026-08-31T08:35:37.802971+00:00",
         "txn_id": "pay_voltbill_1525",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1775,12 +1780,12 @@
         "gate_decision": "deny",
         "gate_reason": "DENY_AMOUNT_ABOVE_CEILING",
         "outcome": "denied",
-        "prev_hash": "58677c23210c748c019f32eb761b10f17637740043d16d37e3c490e8461b3472",
-        "entry_hash": "7d653323bfde81ab721a18ea5af27f90ee39ae8013d88b29a2f8646116ed533d"
+        "prev_hash": "f250ef1581d304eaa41af0af8457441271a08120d1d80cea58382a91765004af",
+        "entry_hash": "a5d90501f16af6f69db9df5fad5498a5d8e0abadbe9cecb79412471ba0c7e572"
       },
       {
         "sequence": 5,
-        "timestamp": "2026-08-27T19:01:19.482867+00:00",
+        "timestamp": "2026-08-31T08:35:37.802971+00:00",
         "txn_id": "pay_voltbill_0782",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1794,12 +1799,12 @@
         "gate_decision": "deny",
         "gate_reason": "DENY_AMOUNT_ABOVE_CEILING",
         "outcome": "denied",
-        "prev_hash": "7d653323bfde81ab721a18ea5af27f90ee39ae8013d88b29a2f8646116ed533d",
-        "entry_hash": "d359255b2ccb348079f538b92815c2123001f0ea3a0cd3d5cb99ccc1dcc52e24"
+        "prev_hash": "a5d90501f16af6f69db9df5fad5498a5d8e0abadbe9cecb79412471ba0c7e572",
+        "entry_hash": "4928c0204a10c2f2b2eb6c1262cceecf6bc770fd00eb8174cdc4bd38af46efbc"
       },
       {
         "sequence": 6,
-        "timestamp": "2026-08-27T19:01:19.482867+00:00",
+        "timestamp": "2026-08-31T08:35:37.802971+00:00",
         "txn_id": "pay_voltbill_1625",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1813,12 +1818,12 @@
         "gate_decision": "deny",
         "gate_reason": "DENY_AMOUNT_ABOVE_CEILING",
         "outcome": "denied",
-        "prev_hash": "d359255b2ccb348079f538b92815c2123001f0ea3a0cd3d5cb99ccc1dcc52e24",
-        "entry_hash": "48d249d73fb01da53d57f3b983b392148b6a530f66f867523624294ec2a79f66"
+        "prev_hash": "4928c0204a10c2f2b2eb6c1262cceecf6bc770fd00eb8174cdc4bd38af46efbc",
+        "entry_hash": "57853aee64e2e250bd3390113bfd79d71fb6796fee3af2f74e0e87bde5c3b43c"
       },
       {
         "sequence": 7,
-        "timestamp": "2026-08-27T19:01:19.482867+00:00",
+        "timestamp": "2026-08-31T08:35:37.804489+00:00",
         "txn_id": "pay_voltbill_1796",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1832,12 +1837,12 @@
         "gate_decision": "deny",
         "gate_reason": "DENY_AMOUNT_ABOVE_CEILING",
         "outcome": "denied",
-        "prev_hash": "48d249d73fb01da53d57f3b983b392148b6a530f66f867523624294ec2a79f66",
-        "entry_hash": "aa436d6f5e2d41198ee81ff3725bac610902d7f7cec05d3fda379b584d5add63"
+        "prev_hash": "57853aee64e2e250bd3390113bfd79d71fb6796fee3af2f74e0e87bde5c3b43c",
+        "entry_hash": "1eac873f295aca86886ab10e79e768ad1d9529e6f4a4c1af4f270d9f5cb0b06b"
       },
       {
         "sequence": 8,
-        "timestamp": "2026-08-27T19:01:19.482867+00:00",
+        "timestamp": "2026-08-31T08:35:37.804489+00:00",
         "txn_id": "pay_voltbill_0265",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1851,12 +1856,12 @@
         "gate_decision": "deny",
         "gate_reason": "DENY_AMOUNT_ABOVE_CEILING",
         "outcome": "denied",
-        "prev_hash": "aa436d6f5e2d41198ee81ff3725bac610902d7f7cec05d3fda379b584d5add63",
-        "entry_hash": "5abdafb47734c7c5df4e69bb4e880c7d5f99195ba9c97aeb70148d6365a9dcbf"
+        "prev_hash": "1eac873f295aca86886ab10e79e768ad1d9529e6f4a4c1af4f270d9f5cb0b06b",
+        "entry_hash": "2a2f1677999f09d4c156dd5dc00470135ce9267ac07efb0656da7988200bc766"
       },
       {
         "sequence": 9,
-        "timestamp": "2026-08-27T19:01:19.482867+00:00",
+        "timestamp": "2026-08-31T08:35:37.804489+00:00",
         "txn_id": "pay_voltbill_0070",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1870,12 +1875,12 @@
         "gate_decision": "deny",
         "gate_reason": "DENY_AMOUNT_ABOVE_CEILING",
         "outcome": "denied",
-        "prev_hash": "5abdafb47734c7c5df4e69bb4e880c7d5f99195ba9c97aeb70148d6365a9dcbf",
-        "entry_hash": "26c53617a669d4b3a8c61c6e412ce711751000e6ac5f543beb295f8e1d2f02e9"
+        "prev_hash": "2a2f1677999f09d4c156dd5dc00470135ce9267ac07efb0656da7988200bc766",
+        "entry_hash": "c358c01d345c2d817ec8bedf7233aa1b127de14451270da3cc5080b5edd24483"
       },
       {
         "sequence": 10,
-        "timestamp": "2026-08-27T19:01:19.482867+00:00",
+        "timestamp": "2026-08-31T08:35:37.804489+00:00",
         "txn_id": "pay_voltbill_1892",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1889,12 +1894,12 @@
         "gate_decision": "deny",
         "gate_reason": "DENY_AMOUNT_ABOVE_CEILING",
         "outcome": "denied",
-        "prev_hash": "26c53617a669d4b3a8c61c6e412ce711751000e6ac5f543beb295f8e1d2f02e9",
-        "entry_hash": "18c585491f47fdb0aaf548cad4fe56f14987c76290945dcd4957266278f3a3ed"
+        "prev_hash": "c358c01d345c2d817ec8bedf7233aa1b127de14451270da3cc5080b5edd24483",
+        "entry_hash": "2efec5eccc5b5f57a1ca96ecce1a44a23a7a0db0bff8778ff3737e4f3791bd7d"
       },
       {
         "sequence": 11,
-        "timestamp": "2026-08-27T19:01:19.483872+00:00",
+        "timestamp": "2026-08-31T08:35:37.804489+00:00",
         "txn_id": "pay_voltbill_1466",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1908,12 +1913,12 @@
         "gate_decision": "deny",
         "gate_reason": "DENY_AMOUNT_ABOVE_CEILING",
         "outcome": "denied",
-        "prev_hash": "18c585491f47fdb0aaf548cad4fe56f14987c76290945dcd4957266278f3a3ed",
-        "entry_hash": "87d1e83a1cd033e46624d826003c5e39cd2b2a1883ffba1db669e2ae3a238ca8"
+        "prev_hash": "2efec5eccc5b5f57a1ca96ecce1a44a23a7a0db0bff8778ff3737e4f3791bd7d",
+        "entry_hash": "abdd251d4f13a936a731f5cc0a02c6021f7fe48bfd099690e51e3439976505f9"
       },
       {
         "sequence": 12,
-        "timestamp": "2026-08-27T19:01:19.483872+00:00",
+        "timestamp": "2026-08-31T08:35:37.804489+00:00",
         "txn_id": "pay_voltbill_1101",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1927,12 +1932,12 @@
         "gate_decision": "deny",
         "gate_reason": "DENY_AMOUNT_ABOVE_CEILING",
         "outcome": "denied",
-        "prev_hash": "87d1e83a1cd033e46624d826003c5e39cd2b2a1883ffba1db669e2ae3a238ca8",
-        "entry_hash": "745c5ebd64163a7b2672c1fa28d0b8591c569220a91ed473e2bc9246fd72ce1e"
+        "prev_hash": "abdd251d4f13a936a731f5cc0a02c6021f7fe48bfd099690e51e3439976505f9",
+        "entry_hash": "4d2595c883497fa16fb33f399426713725e23ab93524c2bee4cdc59472809ebd"
       },
       {
         "sequence": 13,
-        "timestamp": "2026-08-27T19:01:19.483872+00:00",
+        "timestamp": "2026-08-31T08:35:37.805513+00:00",
         "txn_id": "pay_voltbill_0890",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1946,12 +1951,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "745c5ebd64163a7b2672c1fa28d0b8591c569220a91ed473e2bc9246fd72ce1e",
-        "entry_hash": "72f6fdc528d44ea0f667d78e9d94b6d5bbb597a3de359b95bf2edac80fb81db7"
+        "prev_hash": "4d2595c883497fa16fb33f399426713725e23ab93524c2bee4cdc59472809ebd",
+        "entry_hash": "93f4cec99f8d013cc78bc6f4a4088e27414397cb7a6b3281970176d21c9cc12d"
       },
       {
         "sequence": 14,
-        "timestamp": "2026-08-27T19:01:19.483872+00:00",
+        "timestamp": "2026-08-31T08:35:37.805513+00:00",
         "txn_id": "pay_voltbill_0456",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1965,12 +1970,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "72f6fdc528d44ea0f667d78e9d94b6d5bbb597a3de359b95bf2edac80fb81db7",
-        "entry_hash": "83359ab13b8f3aaab51458aa0e956e542f6a174ac75ae1d8b4dbee72a0f1bf9a"
+        "prev_hash": "93f4cec99f8d013cc78bc6f4a4088e27414397cb7a6b3281970176d21c9cc12d",
+        "entry_hash": "8209f52b3e31b8cde946a51a9c52afd44ac1c4cf778b22a43845b06d5c7253d3"
       },
       {
         "sequence": 15,
-        "timestamp": "2026-08-27T19:01:19.483872+00:00",
+        "timestamp": "2026-08-31T08:35:37.805513+00:00",
         "txn_id": "pay_voltbill_1648",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1984,12 +1989,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "83359ab13b8f3aaab51458aa0e956e542f6a174ac75ae1d8b4dbee72a0f1bf9a",
-        "entry_hash": "b2c82da671c187c9283578923e3752a97b482b7165a61b44ad520823e5a02393"
+        "prev_hash": "8209f52b3e31b8cde946a51a9c52afd44ac1c4cf778b22a43845b06d5c7253d3",
+        "entry_hash": "b6baebe152c261974eccdf24e6a01b8e3292722361d193ba0e4296d1d256c8f9"
       },
       {
         "sequence": 16,
-        "timestamp": "2026-08-27T19:01:19.483872+00:00",
+        "timestamp": "2026-08-31T08:35:37.805513+00:00",
         "txn_id": "pay_voltbill_1553",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -2003,12 +2008,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "b2c82da671c187c9283578923e3752a97b482b7165a61b44ad520823e5a02393",
-        "entry_hash": "6356b306a8730f5d558ad1a4fe0236ed4f7c31aca58287e9f91a36fd85f3138e"
+        "prev_hash": "b6baebe152c261974eccdf24e6a01b8e3292722361d193ba0e4296d1d256c8f9",
+        "entry_hash": "20b324d9e4656c86545bbbc78200c1b612f3973b02674c319985ce3436dee197"
       },
       {
         "sequence": 17,
-        "timestamp": "2026-08-27T19:01:19.483872+00:00",
+        "timestamp": "2026-08-31T08:35:37.805513+00:00",
         "txn_id": "pay_voltbill_0907",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -2022,12 +2027,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "6356b306a8730f5d558ad1a4fe0236ed4f7c31aca58287e9f91a36fd85f3138e",
-        "entry_hash": "49baf51af1c5c5750e1111e9adc94e1023a4b1fada353a48c7def898a2c058e1"
+        "prev_hash": "20b324d9e4656c86545bbbc78200c1b612f3973b02674c319985ce3436dee197",
+        "entry_hash": "06a877684684b4418df4f64f9346bcca857fb1c0c0e3d17f9a473d37658bc12e"
       },
       {
         "sequence": 18,
-        "timestamp": "2026-08-27T19:01:19.483872+00:00",
+        "timestamp": "2026-08-31T08:35:37.805513+00:00",
         "txn_id": "pay_voltbill_1251",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -2041,12 +2046,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "49baf51af1c5c5750e1111e9adc94e1023a4b1fada353a48c7def898a2c058e1",
-        "entry_hash": "60129768c89462551bc7a1892386271f072d6bf9fdafc163bf6476564e392399"
+        "prev_hash": "06a877684684b4418df4f64f9346bcca857fb1c0c0e3d17f9a473d37658bc12e",
+        "entry_hash": "48af22e957242e0c001c78ec7a405f78b92d97c8393775fc887df02c01964a00"
       },
       {
         "sequence": 19,
-        "timestamp": "2026-08-27T19:01:19.483872+00:00",
+        "timestamp": "2026-08-31T08:35:37.805513+00:00",
         "txn_id": "pay_voltbill_0664",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -2060,12 +2065,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "60129768c89462551bc7a1892386271f072d6bf9fdafc163bf6476564e392399",
-        "entry_hash": "08bd4650a8bf053f9d0d490690a74719bcb23d11337b5d7df2df74b138d8b48f"
+        "prev_hash": "48af22e957242e0c001c78ec7a405f78b92d97c8393775fc887df02c01964a00",
+        "entry_hash": "455b15c0099b5dee9e7fb09592fd0dde4618621cc6da16835bbae9294a7b2300"
       },
       {
         "sequence": 20,
-        "timestamp": "2026-08-27T19:01:19.483872+00:00",
+        "timestamp": "2026-08-31T08:35:37.805513+00:00",
         "txn_id": "pay_voltbill_0957",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -2079,12 +2084,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "08bd4650a8bf053f9d0d490690a74719bcb23d11337b5d7df2df74b138d8b48f",
-        "entry_hash": "4d671534d00b8918ea5febd1bcd53bf17d6919f512a27059dc58e0a7592c3817"
+        "prev_hash": "455b15c0099b5dee9e7fb09592fd0dde4618621cc6da16835bbae9294a7b2300",
+        "entry_hash": "6ebfed1152a12fed4c7790ea70d0dc9bef8271291ec57681d132e5d606007bce"
       },
       {
         "sequence": 21,
-        "timestamp": "2026-08-27T19:01:19.483872+00:00",
+        "timestamp": "2026-08-31T08:35:37.805513+00:00",
         "txn_id": "pay_voltbill_0515",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -2098,12 +2103,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "4d671534d00b8918ea5febd1bcd53bf17d6919f512a27059dc58e0a7592c3817",
-        "entry_hash": "57e64ffbab3d4dd2e78a7f88cdf9fe2a75fabe5b9977ab813427c38bbd6575c5"
+        "prev_hash": "6ebfed1152a12fed4c7790ea70d0dc9bef8271291ec57681d132e5d606007bce",
+        "entry_hash": "499c505511b1614a1b53f0f92ce9e62cc51d6d02b655d25dae42021137998684"
       },
       {
         "sequence": 22,
-        "timestamp": "2026-08-27T19:01:19.483872+00:00",
+        "timestamp": "2026-08-31T08:35:37.805513+00:00",
         "txn_id": "pay_voltbill_0686",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -2117,12 +2122,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "57e64ffbab3d4dd2e78a7f88cdf9fe2a75fabe5b9977ab813427c38bbd6575c5",
-        "entry_hash": "5ef9f5f98d3616221de45f5ec7dabdb0b0a947183d3d2bba1d7c098d2d82d959"
+        "prev_hash": "499c505511b1614a1b53f0f92ce9e62cc51d6d02b655d25dae42021137998684",
+        "entry_hash": "9462bf3d3420cfdb6d8a5a5e8c0fb3a2e7640f127c9dd3425adbd3e3d6065067"
       },
       {
         "sequence": 23,
-        "timestamp": "2026-08-27T19:01:19.484944+00:00",
+        "timestamp": "2026-08-31T08:35:37.806511+00:00",
         "txn_id": "pay_voltbill_1868",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -2136,12 +2141,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "5ef9f5f98d3616221de45f5ec7dabdb0b0a947183d3d2bba1d7c098d2d82d959",
-        "entry_hash": "57e050aab9e054555686b9dc37c06dca62a0b8f65509996627704a34c394bffd"
+        "prev_hash": "9462bf3d3420cfdb6d8a5a5e8c0fb3a2e7640f127c9dd3425adbd3e3d6065067",
+        "entry_hash": "476507d2de9154e6266a7b6a1faa8bc9c695fd993431966c33900205fd4d1bed"
       },
       {
         "sequence": 24,
-        "timestamp": "2026-08-27T19:01:19.484944+00:00",
+        "timestamp": "2026-08-31T08:35:37.806511+00:00",
         "txn_id": "pay_voltbill_0267",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -2155,12 +2160,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "57e050aab9e054555686b9dc37c06dca62a0b8f65509996627704a34c394bffd",
-        "entry_hash": "f389a6f3d7f1186e7570f97d0c6baad02de8fba3ed96e7f3119fe7ca12ab87af"
+        "prev_hash": "476507d2de9154e6266a7b6a1faa8bc9c695fd993431966c33900205fd4d1bed",
+        "entry_hash": "5a0b99f09fc5af591a1da98a3e2f8d5ff58e1cd4994e96dc3e6e46ab5e29baa7"
       },
       {
         "sequence": 25,
-        "timestamp": "2026-08-27T19:01:19.484944+00:00",
+        "timestamp": "2026-08-31T08:35:37.806511+00:00",
         "txn_id": "pay_voltbill_0675",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -2174,12 +2179,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "f389a6f3d7f1186e7570f97d0c6baad02de8fba3ed96e7f3119fe7ca12ab87af",
-        "entry_hash": "a8ea97c780b30e76b084663327d46faaa68425efabde338e904715b92553762c"
+        "prev_hash": "5a0b99f09fc5af591a1da98a3e2f8d5ff58e1cd4994e96dc3e6e46ab5e29baa7",
+        "entry_hash": "76ae7c97727cd9ced0d798d2ca952963daef5daee8332867a8ece93d2c82ae81"
       },
       {
         "sequence": 26,
-        "timestamp": "2026-08-27T19:01:19.484944+00:00",
+        "timestamp": "2026-08-31T08:35:37.806511+00:00",
         "txn_id": "pay_voltbill_0819",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -2193,12 +2198,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "a8ea97c780b30e76b084663327d46faaa68425efabde338e904715b92553762c",
-        "entry_hash": "268de6086565d324e87d3acad7b07c5b8c57643a14b61b69ca4d18bc66a0b3b6"
+        "prev_hash": "76ae7c97727cd9ced0d798d2ca952963daef5daee8332867a8ece93d2c82ae81",
+        "entry_hash": "9d62219dc643b5c827bd7e1a376d0175f1295c054808aef0bd03374e9be77166"
       },
       {
         "sequence": 27,
-        "timestamp": "2026-08-27T19:01:19.484944+00:00",
+        "timestamp": "2026-08-31T08:35:37.806511+00:00",
         "txn_id": "pay_voltbill_0284",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -2212,12 +2217,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "268de6086565d324e87d3acad7b07c5b8c57643a14b61b69ca4d18bc66a0b3b6",
-        "entry_hash": "15ae2de8a14f011af8ea1c86157c28b6569aa897fa6c6f189ed36f3063a35547"
+        "prev_hash": "9d62219dc643b5c827bd7e1a376d0175f1295c054808aef0bd03374e9be77166",
+        "entry_hash": "40c68dbce56a270e4aa0892b847c6dffe58e7f92a228de713a0ce08d908e8fec"
       },
       {
         "sequence": 28,
-        "timestamp": "2026-08-27T19:01:19.484944+00:00",
+        "timestamp": "2026-08-31T08:35:37.806511+00:00",
         "txn_id": "pay_voltbill_2095",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -2231,12 +2236,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "15ae2de8a14f011af8ea1c86157c28b6569aa897fa6c6f189ed36f3063a35547",
-        "entry_hash": "cd666d08fcb520d076d203dfaeb15f77aec98270541e1acc91483337569d4658"
+        "prev_hash": "40c68dbce56a270e4aa0892b847c6dffe58e7f92a228de713a0ce08d908e8fec",
+        "entry_hash": "b4d9aedc3283785d4c68bac4286b2b13dd261e7b0e3feb7033ad9bca58860d58"
       },
       {
         "sequence": 29,
-        "timestamp": "2026-08-27T19:01:19.484944+00:00",
+        "timestamp": "2026-08-31T08:35:37.814617+00:00",
         "txn_id": "pay_voltbill_0479",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -2250,12 +2255,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "cd666d08fcb520d076d203dfaeb15f77aec98270541e1acc91483337569d4658",
-        "entry_hash": "1bdecab4cac0dbe6d149bd86c2035b8518da0ad6a64d28bd892f5fbc282a765c"
+        "prev_hash": "b4d9aedc3283785d4c68bac4286b2b13dd261e7b0e3feb7033ad9bca58860d58",
+        "entry_hash": "d5751cc3e72af357842b6cefa900eca3f4c39cfa2523c1c0ad71cd3e5f35fe3b"
       },
       {
         "sequence": 30,
-        "timestamp": "2026-08-27T19:01:19.484944+00:00",
+        "timestamp": "2026-08-31T08:35:37.814617+00:00",
         "txn_id": "pay_voltbill_0898",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -2269,12 +2274,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "1bdecab4cac0dbe6d149bd86c2035b8518da0ad6a64d28bd892f5fbc282a765c",
-        "entry_hash": "c06bc5e62cc4f02f8f95025b824122ccc6d2b608211b02a06f8b0eff15d0a8db"
+        "prev_hash": "d5751cc3e72af357842b6cefa900eca3f4c39cfa2523c1c0ad71cd3e5f35fe3b",
+        "entry_hash": "40cc4735a43f15bd7eb445594b40a9e0ada4cfc1a8650451650f79471add85e8"
       },
       {
         "sequence": 31,
-        "timestamp": "2026-08-27T19:01:19.484944+00:00",
+        "timestamp": "2026-08-31T08:35:37.815440+00:00",
         "txn_id": "pay_voltbill_0987",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -2288,12 +2293,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "c06bc5e62cc4f02f8f95025b824122ccc6d2b608211b02a06f8b0eff15d0a8db",
-        "entry_hash": "2bfb85db43980699591278896d83bf9a9f65b938b80fd0e681a8c9193b9ad0e3"
+        "prev_hash": "40cc4735a43f15bd7eb445594b40a9e0ada4cfc1a8650451650f79471add85e8",
+        "entry_hash": "37b4c67b4b38ccbc23c7e0a1229caec37040af0ed678f09042505060ed07e298"
       },
       {
         "sequence": 32,
-        "timestamp": "2026-08-27T19:01:19.484944+00:00",
+        "timestamp": "2026-08-31T08:35:37.815440+00:00",
         "txn_id": "pay_voltbill_0528",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -2307,12 +2312,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "2bfb85db43980699591278896d83bf9a9f65b938b80fd0e681a8c9193b9ad0e3",
-        "entry_hash": "6cc67a268210cf018d71f08cab61435e241b4024edfd6bc042a30c1dd5898559"
+        "prev_hash": "37b4c67b4b38ccbc23c7e0a1229caec37040af0ed678f09042505060ed07e298",
+        "entry_hash": "cc3fe0b1e048ba4584bb9c2bb44d6579f94715d6fa54457f6722291e84615c38"
       },
       {
         "sequence": 33,
-        "timestamp": "2026-08-27T19:01:19.484944+00:00",
+        "timestamp": "2026-08-31T08:35:37.815440+00:00",
         "txn_id": "pay_voltbill_0935",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -2326,12 +2331,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "6cc67a268210cf018d71f08cab61435e241b4024edfd6bc042a30c1dd5898559",
-        "entry_hash": "847413bbb92faa88ebef0bd3ee2a2e14b7f954b70627d7bf2dda6bc12512db40"
+        "prev_hash": "cc3fe0b1e048ba4584bb9c2bb44d6579f94715d6fa54457f6722291e84615c38",
+        "entry_hash": "b4067efca7ac2ecaa86d65cefbdf359d69eef12551c54346870e8c09af699304"
       },
       {
         "sequence": 34,
-        "timestamp": "2026-08-27T19:01:19.484944+00:00",
+        "timestamp": "2026-08-31T08:35:37.815440+00:00",
         "txn_id": "pay_voltbill_1313",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -2345,12 +2350,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "847413bbb92faa88ebef0bd3ee2a2e14b7f954b70627d7bf2dda6bc12512db40",
-        "entry_hash": "dff39f38a7a8920883b3ad7b99e4a8ab0c819e25c45a7d1f417bac73a7959125"
+        "prev_hash": "b4067efca7ac2ecaa86d65cefbdf359d69eef12551c54346870e8c09af699304",
+        "entry_hash": "f5d346d4f0efb7bfba6a9987ee5ae034e364782e26a0060d1fbb95ee31760fdd"
       },
       {
         "sequence": 35,
-        "timestamp": "2026-08-27T19:01:19.485957+00:00",
+        "timestamp": "2026-08-31T08:35:37.815440+00:00",
         "txn_id": "pay_voltbill_0543",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -2364,12 +2369,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "dff39f38a7a8920883b3ad7b99e4a8ab0c819e25c45a7d1f417bac73a7959125",
-        "entry_hash": "29fdbcb2fbdd38668545cbe91417f9b56125b0b06a976cfc4e5b7ad98a90d3de"
+        "prev_hash": "f5d346d4f0efb7bfba6a9987ee5ae034e364782e26a0060d1fbb95ee31760fdd",
+        "entry_hash": "56c70b9ec3dbbc8b726923436638e1bef46517ca374544346c41b59cbe9c3ab7"
       },
       {
         "sequence": 36,
-        "timestamp": "2026-08-27T19:01:19.485957+00:00",
+        "timestamp": "2026-08-31T08:35:37.815440+00:00",
         "txn_id": "pay_voltbill_0315",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -2383,12 +2388,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "29fdbcb2fbdd38668545cbe91417f9b56125b0b06a976cfc4e5b7ad98a90d3de",
-        "entry_hash": "1b9b48bb8a67b3a4b0a8edb66ade70b23d6ce70bd6ffd6de9bb1126407b7b956"
+        "prev_hash": "56c70b9ec3dbbc8b726923436638e1bef46517ca374544346c41b59cbe9c3ab7",
+        "entry_hash": "4b72e304cc14df36e082f47a20f1fac6901d9396d0088bd3a7336369b1b92f5b"
       },
       {
         "sequence": 37,
-        "timestamp": "2026-08-27T19:01:19.485957+00:00",
+        "timestamp": "2026-08-31T08:35:37.815440+00:00",
         "txn_id": "pay_voltbill_2048",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -2402,12 +2407,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "1b9b48bb8a67b3a4b0a8edb66ade70b23d6ce70bd6ffd6de9bb1126407b7b956",
-        "entry_hash": "2ae8b9210121b1a61c64481c6c29ffd0496ba8ec360f4087f2087a99aaccc6e2"
+        "prev_hash": "4b72e304cc14df36e082f47a20f1fac6901d9396d0088bd3a7336369b1b92f5b",
+        "entry_hash": "402b8b8268b2397f50e4a309472f71198582788101c3533d8f224117ca08470d"
       },
       {
         "sequence": 38,
-        "timestamp": "2026-08-27T19:01:19.485957+00:00",
+        "timestamp": "2026-08-31T08:35:37.815440+00:00",
         "txn_id": "pay_voltbill_0866",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -2421,12 +2426,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "2ae8b9210121b1a61c64481c6c29ffd0496ba8ec360f4087f2087a99aaccc6e2",
-        "entry_hash": "efcdd27fcdec2b47570f05b2edd8dd350129d4995c463141b6433f1c53e2c45e"
+        "prev_hash": "402b8b8268b2397f50e4a309472f71198582788101c3533d8f224117ca08470d",
+        "entry_hash": "9db30e8e26d167916c88cecf72597ac6b1d09b4b5fdd8a88cf673f46b3976f16"
       },
       {
         "sequence": 39,
-        "timestamp": "2026-08-27T19:01:19.485957+00:00",
+        "timestamp": "2026-08-31T08:35:37.815440+00:00",
         "txn_id": "pay_voltbill_1225",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -2440,12 +2445,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "efcdd27fcdec2b47570f05b2edd8dd350129d4995c463141b6433f1c53e2c45e",
-        "entry_hash": "bbe028ee3b850258cbf26e27d8869a0601465e540adaef494ae74e99cc0eb4d9"
+        "prev_hash": "9db30e8e26d167916c88cecf72597ac6b1d09b4b5fdd8a88cf673f46b3976f16",
+        "entry_hash": "1561c6b3c65285a15aeaa7b42db2bfbeb38a6e3123ec301aa46d1af8ead39a55"
       },
       {
         "sequence": 40,
-        "timestamp": "2026-08-27T19:01:19.485957+00:00",
+        "timestamp": "2026-08-31T08:35:37.815440+00:00",
         "txn_id": "pay_voltbill_1395",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -2459,12 +2464,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "bbe028ee3b850258cbf26e27d8869a0601465e540adaef494ae74e99cc0eb4d9",
-        "entry_hash": "172227953e87f07ec4150646c24bf65158e3f0773ab50796b94965b5872deadb"
+        "prev_hash": "1561c6b3c65285a15aeaa7b42db2bfbeb38a6e3123ec301aa46d1af8ead39a55",
+        "entry_hash": "0f708998d15b38f49dfdf1c066ae686be2fff71e5f2d3cd2a9b8522a4d468882"
       },
       {
         "sequence": 41,
-        "timestamp": "2026-08-27T19:01:19.485957+00:00",
+        "timestamp": "2026-08-31T08:35:37.816455+00:00",
         "txn_id": "pay_voltbill_1405",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -2478,12 +2483,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "172227953e87f07ec4150646c24bf65158e3f0773ab50796b94965b5872deadb",
-        "entry_hash": "d5a8583c43a4f7e2c1f5c532f9521af6d79a5367cada4f8760565c47b45f31f9"
+        "prev_hash": "0f708998d15b38f49dfdf1c066ae686be2fff71e5f2d3cd2a9b8522a4d468882",
+        "entry_hash": "cc9fc04eba21411194879b2e6e9e21d57fabba4525baba97dd569acf8e900f1f"
       },
       {
         "sequence": 42,
-        "timestamp": "2026-08-27T19:01:19.485957+00:00",
+        "timestamp": "2026-08-31T08:35:37.816455+00:00",
         "txn_id": "pay_voltbill_1683",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -2497,12 +2502,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "d5a8583c43a4f7e2c1f5c532f9521af6d79a5367cada4f8760565c47b45f31f9",
-        "entry_hash": "cec9287c44639966f24ff3ab179f24bc85a0b1c38ea65e2c368614ae54974d72"
+        "prev_hash": "cc9fc04eba21411194879b2e6e9e21d57fabba4525baba97dd569acf8e900f1f",
+        "entry_hash": "f00f75a6c8c05d828155311ee7ea0c0a8704df5ff80f72c68c5fae8df1175bb3"
       },
       {
         "sequence": 43,
-        "timestamp": "2026-08-27T19:01:19.485957+00:00",
+        "timestamp": "2026-08-31T08:35:37.816455+00:00",
         "txn_id": "pay_voltbill_0402",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -2516,12 +2521,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "cec9287c44639966f24ff3ab179f24bc85a0b1c38ea65e2c368614ae54974d72",
-        "entry_hash": "7995b2918115a55955a1b1e67765d34b2aeda1c90171c0c3e952f8f717238a83"
+        "prev_hash": "f00f75a6c8c05d828155311ee7ea0c0a8704df5ff80f72c68c5fae8df1175bb3",
+        "entry_hash": "57209dc01ecb2774acf391201729a0cb4a02a556638e442e6d585aa0e9d5d410"
       },
       {
         "sequence": 44,
-        "timestamp": "2026-08-27T19:01:19.485957+00:00",
+        "timestamp": "2026-08-31T08:35:37.816455+00:00",
         "txn_id": "pay_voltbill_1669",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -2535,12 +2540,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "7995b2918115a55955a1b1e67765d34b2aeda1c90171c0c3e952f8f717238a83",
-        "entry_hash": "14570d992a95a02def65233c486d82c7f9e0fc5d5bb9c197ef1c35072aea2965"
+        "prev_hash": "57209dc01ecb2774acf391201729a0cb4a02a556638e442e6d585aa0e9d5d410",
+        "entry_hash": "dd6c7de84ebeb8eb1dfe191ed37b5391f625277774193b2f829d4fbd91441be5"
       },
       {
         "sequence": 45,
-        "timestamp": "2026-08-27T19:01:19.485957+00:00",
+        "timestamp": "2026-08-31T08:35:37.816455+00:00",
         "txn_id": "pay_voltbill_0124",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -2554,12 +2559,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "14570d992a95a02def65233c486d82c7f9e0fc5d5bb9c197ef1c35072aea2965",
-        "entry_hash": "66598b3594f21f1e1d245d3b871a744324facad12823400791bfc1bd9ecee8bc"
+        "prev_hash": "dd6c7de84ebeb8eb1dfe191ed37b5391f625277774193b2f829d4fbd91441be5",
+        "entry_hash": "62dd5932ddc5d90fdd11e7a394108c0074790a41f22ac4b050e96c32de708889"
       },
       {
         "sequence": 46,
-        "timestamp": "2026-08-27T19:01:19.486958+00:00",
+        "timestamp": "2026-08-31T08:35:37.816455+00:00",
         "txn_id": "pay_voltbill_0358",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -2573,12 +2578,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "66598b3594f21f1e1d245d3b871a744324facad12823400791bfc1bd9ecee8bc",
-        "entry_hash": "cf8f73731ad4d7ce1b5ee63698e00cc7d0540ac7f868ca778aec189e49ce274d"
+        "prev_hash": "62dd5932ddc5d90fdd11e7a394108c0074790a41f22ac4b050e96c32de708889",
+        "entry_hash": "5cdead8d95c65953bbdc8989b8c0d69a91cc46768d0afff55efa17125e8be510"
       },
       {
         "sequence": 47,
-        "timestamp": "2026-08-27T19:01:19.486958+00:00",
+        "timestamp": "2026-08-31T08:35:37.816455+00:00",
         "txn_id": "pay_voltbill_1385",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -2592,12 +2597,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "cf8f73731ad4d7ce1b5ee63698e00cc7d0540ac7f868ca778aec189e49ce274d",
-        "entry_hash": "1ffcad097622e9d27883d0fc142c3f6b95d60a0bc781f350afd1034b2895824a"
+        "prev_hash": "5cdead8d95c65953bbdc8989b8c0d69a91cc46768d0afff55efa17125e8be510",
+        "entry_hash": "5e90038765d12e020a97b2b7654334aa4cf4f0e168002be3b165a66674b2582d"
       },
       {
         "sequence": 48,
-        "timestamp": "2026-08-27T19:01:19.486958+00:00",
+        "timestamp": "2026-08-31T08:35:37.817481+00:00",
         "txn_id": "pay_voltbill_0760",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -2611,12 +2616,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "1ffcad097622e9d27883d0fc142c3f6b95d60a0bc781f350afd1034b2895824a",
-        "entry_hash": "0d216b770786f80e6cafac648f01c22dc063c71c7eeeedc56ee8509f7a1cb501"
+        "prev_hash": "5e90038765d12e020a97b2b7654334aa4cf4f0e168002be3b165a66674b2582d",
+        "entry_hash": "ff6845dcc798c4f5e7ae2d0f320629abfe076c8a91bf442e77b4e1df26a91d00"
       },
       {
         "sequence": 49,
-        "timestamp": "2026-08-27T19:01:19.486958+00:00",
+        "timestamp": "2026-08-31T08:35:37.819009+00:00",
         "txn_id": "pay_voltbill_1646",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -2630,12 +2635,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "0d216b770786f80e6cafac648f01c22dc063c71c7eeeedc56ee8509f7a1cb501",
-        "entry_hash": "eccaaa99b9891f128b60a707ef22fc840e5b7a92c4ba13baabf529b030d54257"
+        "prev_hash": "ff6845dcc798c4f5e7ae2d0f320629abfe076c8a91bf442e77b4e1df26a91d00",
+        "entry_hash": "6c99f7215d418d8635149285148044acaa43eeaf5e709afba41e28ff6cb8069f"
       },
       {
         "sequence": 50,
-        "timestamp": "2026-08-27T19:01:19.486958+00:00",
+        "timestamp": "2026-08-31T08:35:37.819009+00:00",
         "txn_id": "pay_voltbill_2069",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -2649,12 +2654,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "eccaaa99b9891f128b60a707ef22fc840e5b7a92c4ba13baabf529b030d54257",
-        "entry_hash": "978be2681e4a210db06379666433e676e70a546c6fa84e098d4acb57a8f5a44b"
+        "prev_hash": "6c99f7215d418d8635149285148044acaa43eeaf5e709afba41e28ff6cb8069f",
+        "entry_hash": "64f87ec570e6ab1434af5d4a0a61c08f703f47de21505267ad7265032d0c2d17"
       },
       {
         "sequence": 51,
-        "timestamp": "2026-08-27T19:01:19.486958+00:00",
+        "timestamp": "2026-08-31T08:35:37.819009+00:00",
         "txn_id": "pay_voltbill_1340",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -2668,12 +2673,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "978be2681e4a210db06379666433e676e70a546c6fa84e098d4acb57a8f5a44b",
-        "entry_hash": "40e8ccaa5346e34dc44496e3ebc2a261140eed3e3abc491c62eb6d468572d9b6"
+        "prev_hash": "64f87ec570e6ab1434af5d4a0a61c08f703f47de21505267ad7265032d0c2d17",
+        "entry_hash": "cc2aa48eb7efd36b03518ffb52ca360526c77470c3457277cd01b9869a6137e4"
       },
       {
         "sequence": 52,
-        "timestamp": "2026-08-27T19:01:19.486958+00:00",
+        "timestamp": "2026-08-31T08:35:37.819009+00:00",
         "txn_id": "pay_voltbill_0730",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -2687,12 +2692,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "40e8ccaa5346e34dc44496e3ebc2a261140eed3e3abc491c62eb6d468572d9b6",
-        "entry_hash": "bb9fe9e09a8b68da4060b7a57185297f44d86097526e6eb42aa8c1219ad8a088"
+        "prev_hash": "cc2aa48eb7efd36b03518ffb52ca360526c77470c3457277cd01b9869a6137e4",
+        "entry_hash": "fd429b686abe131147106d9c00d10eab180b5a0e3aab16b4c9f47d93acb8513a"
       },
       {
         "sequence": 53,
-        "timestamp": "2026-08-27T19:01:19.486958+00:00",
+        "timestamp": "2026-08-31T08:35:37.819009+00:00",
         "txn_id": "pay_voltbill_0270",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -2706,12 +2711,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "bb9fe9e09a8b68da4060b7a57185297f44d86097526e6eb42aa8c1219ad8a088",
-        "entry_hash": "b3b250f08f131e042c28227dbc4b3c6b06283c17f7ed7bbdf83e957c4476f7a0"
+        "prev_hash": "fd429b686abe131147106d9c00d10eab180b5a0e3aab16b4c9f47d93acb8513a",
+        "entry_hash": "b1c036c4bf9987785202e5dae073a001d78c73f8982c6a6caa0f89efd9e9a8cd"
       },
       {
         "sequence": 54,
-        "timestamp": "2026-08-27T19:01:19.486958+00:00",
+        "timestamp": "2026-08-31T08:35:37.819009+00:00",
         "txn_id": "pay_voltbill_0152",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -2725,12 +2730,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "b3b250f08f131e042c28227dbc4b3c6b06283c17f7ed7bbdf83e957c4476f7a0",
-        "entry_hash": "0e4ae40afd5d7dd2ab079a418559f721e0e02b1529f9f5e2470cc0b7334b884a"
+        "prev_hash": "b1c036c4bf9987785202e5dae073a001d78c73f8982c6a6caa0f89efd9e9a8cd",
+        "entry_hash": "6b176254b14ad1da74606caa1c4b4e3302ce234c7018764ed59bb2e4f610d56d"
       },
       {
         "sequence": 55,
-        "timestamp": "2026-08-27T19:01:19.486958+00:00",
+        "timestamp": "2026-08-31T08:35:37.819009+00:00",
         "txn_id": "pay_voltbill_1290",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -2744,12 +2749,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "0e4ae40afd5d7dd2ab079a418559f721e0e02b1529f9f5e2470cc0b7334b884a",
-        "entry_hash": "caaf29f3b98c365c5237e52e4c55c0f2b5818bfe2c2ad8f55cfdad5f5253f92c"
+        "prev_hash": "6b176254b14ad1da74606caa1c4b4e3302ce234c7018764ed59bb2e4f610d56d",
+        "entry_hash": "7fe7c8ea7c8949be29e48935e5b94605e16e4c07c4a13454c60f68ed5591d68d"
       },
       {
         "sequence": 56,
-        "timestamp": "2026-08-27T19:01:19.486958+00:00",
+        "timestamp": "2026-08-31T08:35:37.819009+00:00",
         "txn_id": "pay_voltbill_0535",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -2763,12 +2768,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "caaf29f3b98c365c5237e52e4c55c0f2b5818bfe2c2ad8f55cfdad5f5253f92c",
-        "entry_hash": "4a1f6c08cc96ec6b0b353d566a1a61e47b65344b0f0e0f1e59e4e330b18e8a1c"
+        "prev_hash": "7fe7c8ea7c8949be29e48935e5b94605e16e4c07c4a13454c60f68ed5591d68d",
+        "entry_hash": "b76065eb5e3311d3fc411046a25bc186e7e0a5665b7c95b4869bac6d7218220b"
       },
       {
         "sequence": 57,
-        "timestamp": "2026-08-27T19:01:19.486958+00:00",
+        "timestamp": "2026-08-31T08:35:37.820031+00:00",
         "txn_id": "pay_voltbill_0951",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -2782,12 +2787,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
-        "prev_hash": "4a1f6c08cc96ec6b0b353d566a1a61e47b65344b0f0e0f1e59e4e330b18e8a1c",
-        "entry_hash": "610877dcbf8fa3b0a6e6bf1ff0316375d7d9d03f982fea3462c59ee75a972b96"
+        "prev_hash": "b76065eb5e3311d3fc411046a25bc186e7e0a5665b7c95b4869bac6d7218220b",
+        "entry_hash": "a69aeb33b5e7bd3fed0faed2a481f59986145145f3ccf81be83c23386a4b0b2a"
       },
       {
         "sequence": 58,
-        "timestamp": "2026-08-27T19:01:19.486958+00:00",
+        "timestamp": "2026-08-31T08:35:37.821057+00:00",
         "txn_id": "pay_voltbill_0775",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -2801,12 +2806,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "610877dcbf8fa3b0a6e6bf1ff0316375d7d9d03f982fea3462c59ee75a972b96",
-        "entry_hash": "4d13e658fe0829e30f95fec718897e66a8bb946ea76c735e8c7a4fdf707422c9"
+        "prev_hash": "a69aeb33b5e7bd3fed0faed2a481f59986145145f3ccf81be83c23386a4b0b2a",
+        "entry_hash": "2428f9722c43bea90675a3ff68ad18f202596abfb1e2216682f9e6c569dc5815"
       },
       {
         "sequence": 59,
-        "timestamp": "2026-08-27T19:01:19.486958+00:00",
+        "timestamp": "2026-08-31T08:35:37.822058+00:00",
         "txn_id": "pay_voltbill_1241",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -2820,12 +2825,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "4d13e658fe0829e30f95fec718897e66a8bb946ea76c735e8c7a4fdf707422c9",
-        "entry_hash": "2b5c9c44a6b5b62a1a83ae9af3c12f5df0d624449bcdedc82f87140c31aea8da"
+        "prev_hash": "2428f9722c43bea90675a3ff68ad18f202596abfb1e2216682f9e6c569dc5815",
+        "entry_hash": "090f444ed895dd4a8cf5a4c08dd387f6f96fe15ebcce8e734fa5a713937ed8ef"
       },
       {
         "sequence": 60,
-        "timestamp": "2026-08-27T19:01:19.487945+00:00",
+        "timestamp": "2026-08-31T08:35:37.823057+00:00",
         "txn_id": "pay_voltbill_0602",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -2839,12 +2844,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "2b5c9c44a6b5b62a1a83ae9af3c12f5df0d624449bcdedc82f87140c31aea8da",
-        "entry_hash": "fa0752001b5e6a139aadf28f7c850d257c8867477775f3ea813a710874bf9f3c"
+        "prev_hash": "090f444ed895dd4a8cf5a4c08dd387f6f96fe15ebcce8e734fa5a713937ed8ef",
+        "entry_hash": "d1f5eba1411668ed89892193ec57688d17ed031ce79c7578b55b1742615301ea"
       },
       {
         "sequence": 61,
-        "timestamp": "2026-08-27T19:01:19.487945+00:00",
+        "timestamp": "2026-08-31T08:35:37.823057+00:00",
         "txn_id": "pay_voltbill_0524",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -2858,12 +2863,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "fa0752001b5e6a139aadf28f7c850d257c8867477775f3ea813a710874bf9f3c",
-        "entry_hash": "8f051903d529f92825cac7e765fda3e08de8dd15b17222a04b7a75de85ef3eb7"
+        "prev_hash": "d1f5eba1411668ed89892193ec57688d17ed031ce79c7578b55b1742615301ea",
+        "entry_hash": "fe2ab913bef6c884047c97d7d99125b32a5dbb685488c9596e29e6792f9ad0bf"
       },
       {
         "sequence": 62,
-        "timestamp": "2026-08-27T19:01:19.487945+00:00",
+        "timestamp": "2026-08-31T08:35:37.823057+00:00",
         "txn_id": "pay_voltbill_1548",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -2877,12 +2882,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "8f051903d529f92825cac7e765fda3e08de8dd15b17222a04b7a75de85ef3eb7",
-        "entry_hash": "870c135338ea30cbb83b4fa7dca6573620a45e2be173207a6ee90f258a5d03e8"
+        "prev_hash": "fe2ab913bef6c884047c97d7d99125b32a5dbb685488c9596e29e6792f9ad0bf",
+        "entry_hash": "f8b6fb8b85d941439f780226e9625a3e016b43f38f95ae6b47db27072ab99dec"
       },
       {
         "sequence": 63,
-        "timestamp": "2026-08-27T19:01:19.487945+00:00",
+        "timestamp": "2026-08-31T08:35:37.823057+00:00",
         "txn_id": "pay_voltbill_1492",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -2896,12 +2901,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "870c135338ea30cbb83b4fa7dca6573620a45e2be173207a6ee90f258a5d03e8",
-        "entry_hash": "1b467cf0f9f36a43fb70b0c0df14b2e7ff6144997863c13487f97f4fe2114aef"
+        "prev_hash": "f8b6fb8b85d941439f780226e9625a3e016b43f38f95ae6b47db27072ab99dec",
+        "entry_hash": "7fd8e39f54e0cfed23a4d83a6d8a38eca904c96636440ee1718d0ece7da6bcd1"
       },
       {
         "sequence": 64,
-        "timestamp": "2026-08-27T19:01:19.487945+00:00",
+        "timestamp": "2026-08-31T08:35:37.824601+00:00",
         "txn_id": "pay_voltbill_0172",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -2915,12 +2920,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "1b467cf0f9f36a43fb70b0c0df14b2e7ff6144997863c13487f97f4fe2114aef",
-        "entry_hash": "77277355c28652f08c109f54708a2e009f1dd17ffe848dfc75d5a4ce6ae46ded"
+        "prev_hash": "7fd8e39f54e0cfed23a4d83a6d8a38eca904c96636440ee1718d0ece7da6bcd1",
+        "entry_hash": "65361a286923a9b8747bdb02f0a7eaafa999c4e257ce6bab170e97694bdf2740"
       },
       {
         "sequence": 65,
-        "timestamp": "2026-08-27T19:01:19.487945+00:00",
+        "timestamp": "2026-08-31T08:35:37.824601+00:00",
         "txn_id": "pay_voltbill_0917",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -2934,12 +2939,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "77277355c28652f08c109f54708a2e009f1dd17ffe848dfc75d5a4ce6ae46ded",
-        "entry_hash": "3d5d3a2197bfca53dd95bd724c5e4a890b421e0fb9840bf91b4148deb5006c6b"
+        "prev_hash": "65361a286923a9b8747bdb02f0a7eaafa999c4e257ce6bab170e97694bdf2740",
+        "entry_hash": "9d385d6678e2e0036d28d6a0e3fc8dedce510181ba38cb8aa462779ef4750f3f"
       },
       {
         "sequence": 66,
-        "timestamp": "2026-08-27T19:01:19.487945+00:00",
+        "timestamp": "2026-08-31T08:35:37.825628+00:00",
         "txn_id": "pay_voltbill_1725",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -2953,12 +2958,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "3d5d3a2197bfca53dd95bd724c5e4a890b421e0fb9840bf91b4148deb5006c6b",
-        "entry_hash": "1280c06f5d8187582fa47dda7b609cff7f41d2593737f4cf0917799aae639412"
+        "prev_hash": "9d385d6678e2e0036d28d6a0e3fc8dedce510181ba38cb8aa462779ef4750f3f",
+        "entry_hash": "d91c6dc37feaa7c108ba597cbccf2c44ab4cb117f6da4019071794052dccc475"
       },
       {
         "sequence": 67,
-        "timestamp": "2026-08-27T19:01:19.487945+00:00",
+        "timestamp": "2026-08-31T08:35:37.826643+00:00",
         "txn_id": "pay_voltbill_0205",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -2972,12 +2977,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "1280c06f5d8187582fa47dda7b609cff7f41d2593737f4cf0917799aae639412",
-        "entry_hash": "f688291190d2dae5f91352f2c783ccd1e78e06c19cce7bb50e413f2bd1f77a1e"
+        "prev_hash": "d91c6dc37feaa7c108ba597cbccf2c44ab4cb117f6da4019071794052dccc475",
+        "entry_hash": "b6ef95d453141cf7b8f02e234c9bda925f38e2523cdd5cad640a2181c7913de6"
       },
       {
         "sequence": 68,
-        "timestamp": "2026-08-27T19:01:19.487945+00:00",
+        "timestamp": "2026-08-31T08:35:37.827631+00:00",
         "txn_id": "pay_voltbill_0849",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -2991,12 +2996,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "f688291190d2dae5f91352f2c783ccd1e78e06c19cce7bb50e413f2bd1f77a1e",
-        "entry_hash": "3862b4778d027714bc4acb8ca4e19b55b8674cf57df53eb72248540df7f61bc2"
+        "prev_hash": "b6ef95d453141cf7b8f02e234c9bda925f38e2523cdd5cad640a2181c7913de6",
+        "entry_hash": "d8caa769a13b6035f417cd030186074aa4c1698a0a9aec862240b4d8640adfdc"
       },
       {
         "sequence": 69,
-        "timestamp": "2026-08-27T19:01:19.487945+00:00",
+        "timestamp": "2026-08-31T08:35:37.827631+00:00",
         "txn_id": "pay_voltbill_0129",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -3010,12 +3015,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "3862b4778d027714bc4acb8ca4e19b55b8674cf57df53eb72248540df7f61bc2",
-        "entry_hash": "0ef3652d5a36c5d5be9d2b42d1ba310aba45ae1f8f5779582768aa7deabade5a"
+        "prev_hash": "d8caa769a13b6035f417cd030186074aa4c1698a0a9aec862240b4d8640adfdc",
+        "entry_hash": "6c0dbbb83baac7ed48de403dad93e31b6ecd81eb65e295325bf14b608f4bf8d0"
       },
       {
         "sequence": 70,
-        "timestamp": "2026-08-27T19:01:19.487945+00:00",
+        "timestamp": "2026-08-31T08:35:37.827631+00:00",
         "txn_id": "pay_voltbill_0789",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -3029,12 +3034,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "0ef3652d5a36c5d5be9d2b42d1ba310aba45ae1f8f5779582768aa7deabade5a",
-        "entry_hash": "d4f435428a437555833e0f1f9c5dac924d66b245a08c173f0ab190cc7825d9e3"
+        "prev_hash": "6c0dbbb83baac7ed48de403dad93e31b6ecd81eb65e295325bf14b608f4bf8d0",
+        "entry_hash": "c9c8ad85e222c845dfba7f85ea9b70332b3267a598d550442ada33eb21f11c2f"
       },
       {
         "sequence": 71,
-        "timestamp": "2026-08-27T19:01:19.487945+00:00",
+        "timestamp": "2026-08-31T08:35:37.829158+00:00",
         "txn_id": "pay_voltbill_0941",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -3048,12 +3053,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "d4f435428a437555833e0f1f9c5dac924d66b245a08c173f0ab190cc7825d9e3",
-        "entry_hash": "03aa7e37481f6a6168bc0340d0ae174916af1a1c6930187b4ffa127d1b967d9f"
+        "prev_hash": "c9c8ad85e222c845dfba7f85ea9b70332b3267a598d550442ada33eb21f11c2f",
+        "entry_hash": "4c9b2b8838f1698c044539f0199358b6ff06e7d7d9dc70574e98de80abf837b9"
       },
       {
         "sequence": 72,
-        "timestamp": "2026-08-27T19:01:19.488948+00:00",
+        "timestamp": "2026-08-31T08:35:37.829158+00:00",
         "txn_id": "pay_voltbill_1389",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -3067,12 +3072,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "03aa7e37481f6a6168bc0340d0ae174916af1a1c6930187b4ffa127d1b967d9f",
-        "entry_hash": "1d1e87a890a696919461ba854b50fcdab123f349125d912c1f3a2141888b70f3"
+        "prev_hash": "4c9b2b8838f1698c044539f0199358b6ff06e7d7d9dc70574e98de80abf837b9",
+        "entry_hash": "e702a31105da17b5ac655c5769fdbdabeece72e1e797585cc3b065ed19fdc4f4"
       },
       {
         "sequence": 73,
-        "timestamp": "2026-08-27T19:01:19.488948+00:00",
+        "timestamp": "2026-08-31T08:35:37.830183+00:00",
         "txn_id": "pay_voltbill_0568",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -3086,12 +3091,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "1d1e87a890a696919461ba854b50fcdab123f349125d912c1f3a2141888b70f3",
-        "entry_hash": "2915c9559c1a918546302d52b4d3924bd9430ea846be7a8e09caafc1274b6146"
+        "prev_hash": "e702a31105da17b5ac655c5769fdbdabeece72e1e797585cc3b065ed19fdc4f4",
+        "entry_hash": "481ca172f07d38b107eb970d43c57fa26cee778182f98164d7cf3bbd53ec55a5"
       },
       {
         "sequence": 74,
-        "timestamp": "2026-08-27T19:01:19.488948+00:00",
+        "timestamp": "2026-08-31T08:35:37.831212+00:00",
         "txn_id": "pay_voltbill_1821",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -3105,12 +3110,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "2915c9559c1a918546302d52b4d3924bd9430ea846be7a8e09caafc1274b6146",
-        "entry_hash": "0b9cbbbc7c60d3f841171b594b7c5753bd576c81c2d32695bee4be0845ac3662"
+        "prev_hash": "481ca172f07d38b107eb970d43c57fa26cee778182f98164d7cf3bbd53ec55a5",
+        "entry_hash": "d9c78535f0e06ef140399d6afe1d66670252832ce7b4109aece9670c0f8bb566"
       },
       {
         "sequence": 75,
-        "timestamp": "2026-08-27T19:01:19.488948+00:00",
+        "timestamp": "2026-08-31T08:35:37.832231+00:00",
         "txn_id": "pay_voltbill_1427",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -3124,12 +3129,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "0b9cbbbc7c60d3f841171b594b7c5753bd576c81c2d32695bee4be0845ac3662",
-        "entry_hash": "1c8bc071d1481375130523fe0427039cd78bdfdeaec66975bdcf9d63c88b36de"
+        "prev_hash": "d9c78535f0e06ef140399d6afe1d66670252832ce7b4109aece9670c0f8bb566",
+        "entry_hash": "e723fe006b4f6d347b254031c9343b7efbf15368b274b3ba51340980e2dba774"
       },
       {
         "sequence": 76,
-        "timestamp": "2026-08-27T19:01:19.488948+00:00",
+        "timestamp": "2026-08-31T08:35:37.833222+00:00",
         "txn_id": "pay_voltbill_1879",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -3143,12 +3148,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "1c8bc071d1481375130523fe0427039cd78bdfdeaec66975bdcf9d63c88b36de",
-        "entry_hash": "6c3b69ad94f96e916e2d45c1c7840154e0f5ebe2149506d093a24a69f1c2e691"
+        "prev_hash": "e723fe006b4f6d347b254031c9343b7efbf15368b274b3ba51340980e2dba774",
+        "entry_hash": "5adefb479b31dd7fc1121d7c7de2b36ebad64fe3bee2482657f0170adaa16045"
       },
       {
         "sequence": 77,
-        "timestamp": "2026-08-27T19:01:19.488948+00:00",
+        "timestamp": "2026-08-31T08:35:37.833222+00:00",
         "txn_id": "pay_voltbill_0058",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -3162,12 +3167,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "6c3b69ad94f96e916e2d45c1c7840154e0f5ebe2149506d093a24a69f1c2e691",
-        "entry_hash": "8f4119dd2a6d959f1413ed05c9c6d2a5b7a341f47fe5bd9810b1e5078665b903"
+        "prev_hash": "5adefb479b31dd7fc1121d7c7de2b36ebad64fe3bee2482657f0170adaa16045",
+        "entry_hash": "439448e85233d2a391e05857440604b82ec7a94f0edf3fd28f2990a5051d2ecd"
       },
       {
         "sequence": 78,
-        "timestamp": "2026-08-27T19:01:19.488948+00:00",
+        "timestamp": "2026-08-31T08:35:37.833222+00:00",
         "txn_id": "pay_voltbill_1254",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -3181,12 +3186,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "8f4119dd2a6d959f1413ed05c9c6d2a5b7a341f47fe5bd9810b1e5078665b903",
-        "entry_hash": "dfe5f07738e6207d4426b36f6cf4db078ed2a5ed3f1b1d4f1f178c7cf545959c"
+        "prev_hash": "439448e85233d2a391e05857440604b82ec7a94f0edf3fd28f2990a5051d2ecd",
+        "entry_hash": "abcc63e4cc09181285a26fe28f062817205db81b144ff3746aa35e7786be7583"
       },
       {
         "sequence": 79,
-        "timestamp": "2026-08-27T19:01:19.488948+00:00",
+        "timestamp": "2026-08-31T08:35:37.833222+00:00",
         "txn_id": "pay_voltbill_0611",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -3200,12 +3205,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "dfe5f07738e6207d4426b36f6cf4db078ed2a5ed3f1b1d4f1f178c7cf545959c",
-        "entry_hash": "83648ebe2984e8964c4d5c9476460f1ac9711a475c3f75f72c8fcb02d34b56ba"
+        "prev_hash": "abcc63e4cc09181285a26fe28f062817205db81b144ff3746aa35e7786be7583",
+        "entry_hash": "2346c2d52701834233d8c187e2022fc4640efd5706d05db5808fc5e35f43f5a3"
       },
       {
         "sequence": 80,
-        "timestamp": "2026-08-27T19:01:19.488948+00:00",
+        "timestamp": "2026-08-31T08:35:37.833222+00:00",
         "txn_id": "pay_voltbill_0711",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -3219,12 +3224,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "83648ebe2984e8964c4d5c9476460f1ac9711a475c3f75f72c8fcb02d34b56ba",
-        "entry_hash": "42018885a4f5a708741cdaed3a4be5ad2cc44b8ce6ac99ab5aee7bd70c3e8448"
+        "prev_hash": "2346c2d52701834233d8c187e2022fc4640efd5706d05db5808fc5e35f43f5a3",
+        "entry_hash": "76efd8ddafcc36cc2bc68bb746aae77a1b65979af6aaf2f096643cdbd00ad027"
       },
       {
         "sequence": 81,
-        "timestamp": "2026-08-27T19:01:19.488948+00:00",
+        "timestamp": "2026-08-31T08:35:37.833222+00:00",
         "txn_id": "pay_voltbill_0925",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -3238,12 +3243,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "42018885a4f5a708741cdaed3a4be5ad2cc44b8ce6ac99ab5aee7bd70c3e8448",
-        "entry_hash": "528180f733eaa572f7f741a0317f89c64d353427a21d6cf5ccf7d4fe8220b175"
+        "prev_hash": "76efd8ddafcc36cc2bc68bb746aae77a1b65979af6aaf2f096643cdbd00ad027",
+        "entry_hash": "d972bf5bf0487744102a35ac91ea480b1b4caf69ed37cb4b2bcec43d730e78cb"
       },
       {
         "sequence": 82,
-        "timestamp": "2026-08-27T19:01:19.488948+00:00",
+        "timestamp": "2026-08-31T08:35:37.834747+00:00",
         "txn_id": "pay_voltbill_0123",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -3257,12 +3262,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "528180f733eaa572f7f741a0317f89c64d353427a21d6cf5ccf7d4fe8220b175",
-        "entry_hash": "1da2db4837db8a5091ec356dbc54cdd11bc8f0298f838826f73d69d25b657363"
+        "prev_hash": "d972bf5bf0487744102a35ac91ea480b1b4caf69ed37cb4b2bcec43d730e78cb",
+        "entry_hash": "fd2ad631d97c34a2156d58697b74f3a0fc1f8700e7b76c90170ab3c9f998fa36"
       },
       {
         "sequence": 83,
-        "timestamp": "2026-08-27T19:01:19.488948+00:00",
+        "timestamp": "2026-08-31T08:35:37.834747+00:00",
         "txn_id": "pay_voltbill_0576",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -3276,12 +3281,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "1da2db4837db8a5091ec356dbc54cdd11bc8f0298f838826f73d69d25b657363",
-        "entry_hash": "01f8c7af04097fb69c5b522c769b4250965fa51ac9aad9350b34339f2c2053a0"
+        "prev_hash": "fd2ad631d97c34a2156d58697b74f3a0fc1f8700e7b76c90170ab3c9f998fa36",
+        "entry_hash": "24f33dcc4e1606c1980c41636963c0e947b6d58ee53a16e207b27305114f3f79"
       },
       {
         "sequence": 84,
-        "timestamp": "2026-08-27T19:01:19.488948+00:00",
+        "timestamp": "2026-08-31T08:35:37.834747+00:00",
         "txn_id": "pay_voltbill_1330",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -3295,12 +3300,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "01f8c7af04097fb69c5b522c769b4250965fa51ac9aad9350b34339f2c2053a0",
-        "entry_hash": "2e4bb829b6cdb0dc3fad712964bd9308ee10a95c8d04c181da00b9a96bb21a79"
+        "prev_hash": "24f33dcc4e1606c1980c41636963c0e947b6d58ee53a16e207b27305114f3f79",
+        "entry_hash": "b11b723d02e7bf300cbe3c3a6d5fa1d4644ac6d18a29417ea609112dde2b6a7b"
       },
       {
         "sequence": 85,
-        "timestamp": "2026-08-27T19:01:19.488948+00:00",
+        "timestamp": "2026-08-31T08:35:37.834747+00:00",
         "txn_id": "pay_voltbill_0740",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -3314,12 +3319,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "2e4bb829b6cdb0dc3fad712964bd9308ee10a95c8d04c181da00b9a96bb21a79",
-        "entry_hash": "c49090d35066806fc4f48a37f3ea5d8db614872c1e2d46bdeeae92690158300b"
+        "prev_hash": "b11b723d02e7bf300cbe3c3a6d5fa1d4644ac6d18a29417ea609112dde2b6a7b",
+        "entry_hash": "59d3febb017cd5f90133de4f9d077c786d258b5925580b8c971d9159cd37b653"
       },
       {
         "sequence": 86,
-        "timestamp": "2026-08-27T19:01:19.488948+00:00",
+        "timestamp": "2026-08-31T08:35:37.834747+00:00",
         "txn_id": "pay_voltbill_0790",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -3333,12 +3338,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "c49090d35066806fc4f48a37f3ea5d8db614872c1e2d46bdeeae92690158300b",
-        "entry_hash": "a136f235467734826d8fbf00291951dda1c3000fd5cbc1265bdc62405e1d0aac"
+        "prev_hash": "59d3febb017cd5f90133de4f9d077c786d258b5925580b8c971d9159cd37b653",
+        "entry_hash": "5c87c195df16e4ecb406533dd031c79d66d61c7e672ee0b5bcda74d43774d147"
       },
       {
         "sequence": 87,
-        "timestamp": "2026-08-27T19:01:19.488948+00:00",
+        "timestamp": "2026-08-31T08:35:37.834747+00:00",
         "txn_id": "pay_voltbill_0044",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -3352,12 +3357,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "a136f235467734826d8fbf00291951dda1c3000fd5cbc1265bdc62405e1d0aac",
-        "entry_hash": "8e4b42df12de65cbcc64e05c8ccb84ef9693e85cffdd1050b919bcdef8414614"
+        "prev_hash": "5c87c195df16e4ecb406533dd031c79d66d61c7e672ee0b5bcda74d43774d147",
+        "entry_hash": "cc713813423ac4e9f148094902dd82461b54b21a4036d8ac72e160f51496f403"
       },
       {
         "sequence": 88,
-        "timestamp": "2026-08-27T19:01:19.489981+00:00",
+        "timestamp": "2026-08-31T08:35:37.834747+00:00",
         "txn_id": "pay_voltbill_1906",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -3371,12 +3376,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "8e4b42df12de65cbcc64e05c8ccb84ef9693e85cffdd1050b919bcdef8414614",
-        "entry_hash": "779cb9afe42d4494a4e59b004fdf772bb8fedba79537f24cb5ed3ab63bde14f0"
+        "prev_hash": "cc713813423ac4e9f148094902dd82461b54b21a4036d8ac72e160f51496f403",
+        "entry_hash": "c3b57986a92bdc12e6779f4d9f8057823b2b405b6d2eef5964ceb2c50f69a7b5"
       },
       {
         "sequence": 89,
-        "timestamp": "2026-08-27T19:01:19.489981+00:00",
+        "timestamp": "2026-08-31T08:35:37.835768+00:00",
         "txn_id": "pay_voltbill_2072",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -3390,12 +3395,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "779cb9afe42d4494a4e59b004fdf772bb8fedba79537f24cb5ed3ab63bde14f0",
-        "entry_hash": "8a237684c1b65a291c29f3897079c536eb4433ed227df9d70a8f619e597308b9"
+        "prev_hash": "c3b57986a92bdc12e6779f4d9f8057823b2b405b6d2eef5964ceb2c50f69a7b5",
+        "entry_hash": "a348dd2ecd66be622148e50e29609c50448f80467923f43c2c8e565eef32b224"
       },
       {
         "sequence": 90,
-        "timestamp": "2026-08-27T19:01:19.489981+00:00",
+        "timestamp": "2026-08-31T08:35:37.835768+00:00",
         "txn_id": "pay_voltbill_1165",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -3409,12 +3414,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "8a237684c1b65a291c29f3897079c536eb4433ed227df9d70a8f619e597308b9",
-        "entry_hash": "d86bacfe527b3c70801fd95118eba8892abf919d6649074492e578def8592a6a"
+        "prev_hash": "a348dd2ecd66be622148e50e29609c50448f80467923f43c2c8e565eef32b224",
+        "entry_hash": "c22d9d519624ef1a5dab6a53831893e8604b8f5f94ed771dca118cf639e361ec"
       },
       {
         "sequence": 91,
-        "timestamp": "2026-08-27T19:01:19.489981+00:00",
+        "timestamp": "2026-08-31T08:35:37.835768+00:00",
         "txn_id": "pay_voltbill_0724",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -3428,12 +3433,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "d86bacfe527b3c70801fd95118eba8892abf919d6649074492e578def8592a6a",
-        "entry_hash": "6622b29f1427eb1112dc32e7ba8ba8d684757f1035939f14ee0ec9cc8272dc82"
+        "prev_hash": "c22d9d519624ef1a5dab6a53831893e8604b8f5f94ed771dca118cf639e361ec",
+        "entry_hash": "6fc2e2e0cdcce03056e76a8e0eef87028f600a2abaa66a046b25ad09b216d722"
       },
       {
         "sequence": 92,
-        "timestamp": "2026-08-27T19:01:19.489981+00:00",
+        "timestamp": "2026-08-31T08:35:37.835768+00:00",
         "txn_id": "pay_voltbill_1446",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -3447,12 +3452,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "6622b29f1427eb1112dc32e7ba8ba8d684757f1035939f14ee0ec9cc8272dc82",
-        "entry_hash": "da65b49df46741fa1a77469217f65942135dc4c429aeb6b1eee671d6bda886c4"
+        "prev_hash": "6fc2e2e0cdcce03056e76a8e0eef87028f600a2abaa66a046b25ad09b216d722",
+        "entry_hash": "09f6fe3858ed711ff50b1ea76fb945233b1282064d8ce257d89076fd7a6144eb"
       },
       {
         "sequence": 93,
-        "timestamp": "2026-08-27T19:01:19.489981+00:00",
+        "timestamp": "2026-08-31T08:35:37.835768+00:00",
         "txn_id": "pay_voltbill_0974",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -3466,12 +3471,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "da65b49df46741fa1a77469217f65942135dc4c429aeb6b1eee671d6bda886c4",
-        "entry_hash": "dc5e8e42075309cd3f1b7473ee5d5b43601bbca8c454ac4bbbcdcdb395c3efaf"
+        "prev_hash": "09f6fe3858ed711ff50b1ea76fb945233b1282064d8ce257d89076fd7a6144eb",
+        "entry_hash": "cfacfa0c34d4e925643398350c340b26e31facd206971deb8855a7df686552bf"
       },
       {
         "sequence": 94,
-        "timestamp": "2026-08-27T19:01:19.489981+00:00",
+        "timestamp": "2026-08-31T08:35:37.835768+00:00",
         "txn_id": "pay_voltbill_0931",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -3485,12 +3490,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "dc5e8e42075309cd3f1b7473ee5d5b43601bbca8c454ac4bbbcdcdb395c3efaf",
-        "entry_hash": "8af65d5182cae335916733c6c4a5f1027edf5c70645f719a004cdec1cadfe18a"
+        "prev_hash": "cfacfa0c34d4e925643398350c340b26e31facd206971deb8855a7df686552bf",
+        "entry_hash": "ce4432a875b65d764cb226b4992a18d38e9c16917b385287bfd63baadcd23a89"
       },
       {
         "sequence": 95,
-        "timestamp": "2026-08-27T19:01:19.489981+00:00",
+        "timestamp": "2026-08-31T08:35:37.835768+00:00",
         "txn_id": "pay_voltbill_0649",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -3504,12 +3509,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "8af65d5182cae335916733c6c4a5f1027edf5c70645f719a004cdec1cadfe18a",
-        "entry_hash": "b8b3b4326c2bcad1cbb029c9d644017c812ddf28e3841830c25e3cab4b97bd27"
+        "prev_hash": "ce4432a875b65d764cb226b4992a18d38e9c16917b385287bfd63baadcd23a89",
+        "entry_hash": "0311a393d9aaf4951f8702776655e9bb568cc33d361fc16cb80cd298be5674c3"
       },
       {
         "sequence": 96,
-        "timestamp": "2026-08-27T19:01:19.489981+00:00",
+        "timestamp": "2026-08-31T08:35:37.836769+00:00",
         "txn_id": "pay_voltbill_2063",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -3523,12 +3528,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "b8b3b4326c2bcad1cbb029c9d644017c812ddf28e3841830c25e3cab4b97bd27",
-        "entry_hash": "4661f77f051a0ad629207fd51c1c5ce3acc2f7b0fc789fd8ab6671d0d8662635"
+        "prev_hash": "0311a393d9aaf4951f8702776655e9bb568cc33d361fc16cb80cd298be5674c3",
+        "entry_hash": "1822ce77e15b26165ae580e5acac55ab1540648bea086fb4f249a5a6ce4d7a96"
       },
       {
         "sequence": 97,
-        "timestamp": "2026-08-27T19:01:19.489981+00:00",
+        "timestamp": "2026-08-31T08:35:37.836769+00:00",
         "txn_id": "pay_voltbill_0701",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -3542,12 +3547,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "4661f77f051a0ad629207fd51c1c5ce3acc2f7b0fc789fd8ab6671d0d8662635",
-        "entry_hash": "f89574fbc6ecd2483621b6b863f8b1e0055c33026c2bd4fe2430ed110ed10574"
+        "prev_hash": "1822ce77e15b26165ae580e5acac55ab1540648bea086fb4f249a5a6ce4d7a96",
+        "entry_hash": "31ac954e4e84aaac20835aa87b55602dbd9ea164efd0c9c17d662756d4c776b1"
       },
       {
         "sequence": 98,
-        "timestamp": "2026-08-27T19:01:19.489981+00:00",
+        "timestamp": "2026-08-31T08:35:37.836769+00:00",
         "txn_id": "pay_voltbill_1126",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -3561,12 +3566,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "f89574fbc6ecd2483621b6b863f8b1e0055c33026c2bd4fe2430ed110ed10574",
-        "entry_hash": "8b58ecb43b5aa4e1df89c68c77f7b0f1b2d7a302f1c6fe186e43ee5c8c74b1f6"
+        "prev_hash": "31ac954e4e84aaac20835aa87b55602dbd9ea164efd0c9c17d662756d4c776b1",
+        "entry_hash": "633ef59456e9409981728c49ba7281a8a3d2a781e98a15474d56aa7a172e9ef9"
       },
       {
         "sequence": 99,
-        "timestamp": "2026-08-27T19:01:19.489981+00:00",
+        "timestamp": "2026-08-31T08:35:37.836769+00:00",
         "txn_id": "pay_voltbill_1034",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -3580,12 +3585,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "8b58ecb43b5aa4e1df89c68c77f7b0f1b2d7a302f1c6fe186e43ee5c8c74b1f6",
-        "entry_hash": "2e65fa61da831a496e1d926da9c7cd50dfe89e1b4de62d6363c777e3b9e0a2cc"
+        "prev_hash": "633ef59456e9409981728c49ba7281a8a3d2a781e98a15474d56aa7a172e9ef9",
+        "entry_hash": "2f34fcd51ff206e5ffade1a4121ea01995e3d789724f740e6bd4ee93ab461eda"
       },
       {
         "sequence": 100,
-        "timestamp": "2026-08-27T19:01:19.489981+00:00",
+        "timestamp": "2026-08-31T08:35:37.836769+00:00",
         "txn_id": "pay_voltbill_0947",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -3599,12 +3604,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "2e65fa61da831a496e1d926da9c7cd50dfe89e1b4de62d6363c777e3b9e0a2cc",
-        "entry_hash": "238358920ebe229fbdbf80b45d489cfb18745bb72f31e4e91ce3b689cbe91679"
+        "prev_hash": "2f34fcd51ff206e5ffade1a4121ea01995e3d789724f740e6bd4ee93ab461eda",
+        "entry_hash": "aff18eae922c6a16323fbeeb777f2db393e406b6c044eafb098a6f9791c40c30"
       },
       {
         "sequence": 101,
-        "timestamp": "2026-08-27T19:01:19.489981+00:00",
+        "timestamp": "2026-08-31T08:35:37.837767+00:00",
         "txn_id": "pay_voltbill_2099",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -3618,12 +3623,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "238358920ebe229fbdbf80b45d489cfb18745bb72f31e4e91ce3b689cbe91679",
-        "entry_hash": "c2d6b7edc4a2f08c462c7e7092ee0b0003f0ae900cdd16422ec08f2c430f4816"
+        "prev_hash": "aff18eae922c6a16323fbeeb777f2db393e406b6c044eafb098a6f9791c40c30",
+        "entry_hash": "9b3468c8c3d8c28ea74b2b4812bd7816bd9499e781a698f552713aa63b56c46b"
       },
       {
         "sequence": 102,
-        "timestamp": "2026-08-27T19:01:19.489981+00:00",
+        "timestamp": "2026-08-31T08:35:37.837767+00:00",
         "txn_id": "pay_voltbill_1052",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -3637,12 +3642,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "c2d6b7edc4a2f08c462c7e7092ee0b0003f0ae900cdd16422ec08f2c430f4816",
-        "entry_hash": "d02fc25a495d93ff3557f3e26b116f4c1506e2c1844b9a8600d174dddd7ed0a9"
+        "prev_hash": "9b3468c8c3d8c28ea74b2b4812bd7816bd9499e781a698f552713aa63b56c46b",
+        "entry_hash": "a7c2bccc6e0225051f34636f402115d224e7c7ee50d8fc28ddb18bdc0be1c7de"
       },
       {
         "sequence": 103,
-        "timestamp": "2026-08-27T19:01:19.489981+00:00",
+        "timestamp": "2026-08-31T08:35:37.837767+00:00",
         "txn_id": "pay_voltbill_1021",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -3656,12 +3661,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "d02fc25a495d93ff3557f3e26b116f4c1506e2c1844b9a8600d174dddd7ed0a9",
-        "entry_hash": "b266eafefb21f6022763f810b053fa2e3d97cc636c3f049420ac7667fcbf88a6"
+        "prev_hash": "a7c2bccc6e0225051f34636f402115d224e7c7ee50d8fc28ddb18bdc0be1c7de",
+        "entry_hash": "c6bf845ecd65a6d7d89e57b12cd69eae723018143bd6c275c692f6de22f69f1c"
       },
       {
         "sequence": 104,
-        "timestamp": "2026-08-27T19:01:19.490988+00:00",
+        "timestamp": "2026-08-31T08:35:37.837767+00:00",
         "txn_id": "pay_voltbill_0223",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -3675,12 +3680,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "b266eafefb21f6022763f810b053fa2e3d97cc636c3f049420ac7667fcbf88a6",
-        "entry_hash": "208ff2052e54789d787e8ed3d568d44812b43855e9ff3df127a318ddbccf06e3"
+        "prev_hash": "c6bf845ecd65a6d7d89e57b12cd69eae723018143bd6c275c692f6de22f69f1c",
+        "entry_hash": "3d2c6b4f8c655727eb9614a9ff3f09990ab976390c82c63d7381df34e2c1e82b"
       },
       {
         "sequence": 105,
-        "timestamp": "2026-08-27T19:01:19.490988+00:00",
+        "timestamp": "2026-08-31T08:35:37.837767+00:00",
         "txn_id": "pay_voltbill_0201",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -3694,12 +3699,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "208ff2052e54789d787e8ed3d568d44812b43855e9ff3df127a318ddbccf06e3",
-        "entry_hash": "6d71ccf557bb30786ba756c23f752364dc7e9e41be42771dc17823c1b335a7cc"
+        "prev_hash": "3d2c6b4f8c655727eb9614a9ff3f09990ab976390c82c63d7381df34e2c1e82b",
+        "entry_hash": "b5b5fc92494741a6e281d78b974cb2c69519d0cb524204fab1d94459114598d2"
       },
       {
         "sequence": 106,
-        "timestamp": "2026-08-27T19:01:19.490988+00:00",
+        "timestamp": "2026-08-31T08:35:37.837767+00:00",
         "txn_id": "pay_voltbill_0168",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -3713,12 +3718,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "6d71ccf557bb30786ba756c23f752364dc7e9e41be42771dc17823c1b335a7cc",
-        "entry_hash": "7c568828125e0ac606feab9cd5c12eddd36e2cfacdc0049f84d676dca44598c3"
+        "prev_hash": "b5b5fc92494741a6e281d78b974cb2c69519d0cb524204fab1d94459114598d2",
+        "entry_hash": "45204e85e1d42ef42cfe896589018ac4d4b8b6a19fb413e617e954f7b2b2ade0"
       },
       {
         "sequence": 107,
-        "timestamp": "2026-08-27T19:01:19.490988+00:00",
+        "timestamp": "2026-08-31T08:35:37.837767+00:00",
         "txn_id": "pay_voltbill_0911",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -3732,12 +3737,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "7c568828125e0ac606feab9cd5c12eddd36e2cfacdc0049f84d676dca44598c3",
-        "entry_hash": "783bf1acf9a3954f5330a55e5f27213afd9480bbd899c17df6f5e67c2493e056"
+        "prev_hash": "45204e85e1d42ef42cfe896589018ac4d4b8b6a19fb413e617e954f7b2b2ade0",
+        "entry_hash": "df01b36bafba6783050dfbbe055e54252ccdf4cb39ec9e289235af270e8da1b9"
       },
       {
         "sequence": 108,
-        "timestamp": "2026-08-27T19:01:19.490988+00:00",
+        "timestamp": "2026-08-31T08:35:37.838761+00:00",
         "txn_id": "pay_voltbill_1089",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -3751,12 +3756,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "783bf1acf9a3954f5330a55e5f27213afd9480bbd899c17df6f5e67c2493e056",
-        "entry_hash": "8d45b284a6cc8810b283214cd405921dbea1648c048d740e0f120efce901601a"
+        "prev_hash": "df01b36bafba6783050dfbbe055e54252ccdf4cb39ec9e289235af270e8da1b9",
+        "entry_hash": "e6706226bf9ae336d7d559cd903f64e428f0d2904eeb3ff143571c2268549da9"
       },
       {
         "sequence": 109,
-        "timestamp": "2026-08-27T19:01:19.490988+00:00",
+        "timestamp": "2026-08-31T08:35:37.838761+00:00",
         "txn_id": "pay_voltbill_1936",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -3770,12 +3775,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "8d45b284a6cc8810b283214cd405921dbea1648c048d740e0f120efce901601a",
-        "entry_hash": "8946eda0164b0ea28caad6c35f08f92305e1600e544f279fa7109a1cc6830734"
+        "prev_hash": "e6706226bf9ae336d7d559cd903f64e428f0d2904eeb3ff143571c2268549da9",
+        "entry_hash": "e2807c0b48b403f962655aaf0c49d7a4cdf40cc0da47690f0d9b2700ced00f4b"
       },
       {
         "sequence": 110,
-        "timestamp": "2026-08-27T19:01:19.490988+00:00",
+        "timestamp": "2026-08-31T08:35:37.838761+00:00",
         "txn_id": "pay_voltbill_0661",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -3789,12 +3794,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "8946eda0164b0ea28caad6c35f08f92305e1600e544f279fa7109a1cc6830734",
-        "entry_hash": "56c88095ff12c5d9c864844b29a6affae08864968bf19c8d8b122d13e99cbf19"
+        "prev_hash": "e2807c0b48b403f962655aaf0c49d7a4cdf40cc0da47690f0d9b2700ced00f4b",
+        "entry_hash": "e79542f1634818c49eb6b0d963380f93f1c654c0b5c58b08ecca63b6781a9037"
       },
       {
         "sequence": 111,
-        "timestamp": "2026-08-27T19:01:19.490988+00:00",
+        "timestamp": "2026-08-31T08:35:37.838761+00:00",
         "txn_id": "pay_voltbill_0282",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -3808,12 +3813,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "56c88095ff12c5d9c864844b29a6affae08864968bf19c8d8b122d13e99cbf19",
-        "entry_hash": "8c09968fd3af40e69828bd04572b080d597fe16750b6e7eba34d593effb65959"
+        "prev_hash": "e79542f1634818c49eb6b0d963380f93f1c654c0b5c58b08ecca63b6781a9037",
+        "entry_hash": "cc6535fea33f767a6ded06978ab1ce5243c0c5b54bc2afd6dedc5cd999249415"
       },
       {
         "sequence": 112,
-        "timestamp": "2026-08-27T19:01:19.491953+00:00",
+        "timestamp": "2026-08-31T08:35:37.838761+00:00",
         "txn_id": "pay_voltbill_1720",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -3827,12 +3832,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "8c09968fd3af40e69828bd04572b080d597fe16750b6e7eba34d593effb65959",
-        "entry_hash": "434ee78d334819a0c457aceb30e7cf2ab3ea690f1d6f049e1629efce497ee42b"
+        "prev_hash": "cc6535fea33f767a6ded06978ab1ce5243c0c5b54bc2afd6dedc5cd999249415",
+        "entry_hash": "d29dbfa3f094358142b1b7b13fb2728c51aa9e0091c954bdba82671795e7e7bc"
       },
       {
         "sequence": 113,
-        "timestamp": "2026-08-27T19:01:19.491953+00:00",
+        "timestamp": "2026-08-31T08:35:37.838761+00:00",
         "txn_id": "pay_voltbill_1990",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -3846,12 +3851,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "434ee78d334819a0c457aceb30e7cf2ab3ea690f1d6f049e1629efce497ee42b",
-        "entry_hash": "17986fc1345bf0dc2194f14048de91af56a935dd3b99a23cf81be6354a57a318"
+        "prev_hash": "d29dbfa3f094358142b1b7b13fb2728c51aa9e0091c954bdba82671795e7e7bc",
+        "entry_hash": "a0ab84380c0cd596257931de5b1ff46ba8b8326f677470fcad1dc7f94af5ca59"
       },
       {
         "sequence": 114,
-        "timestamp": "2026-08-27T19:01:19.491953+00:00",
+        "timestamp": "2026-08-31T08:35:37.838761+00:00",
         "txn_id": "pay_voltbill_0141",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -3865,12 +3870,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "17986fc1345bf0dc2194f14048de91af56a935dd3b99a23cf81be6354a57a318",
-        "entry_hash": "d19e5a63f77833f87dcf1ec9e89b5452a366581090eb0fccd5a6607d5928c12b"
+        "prev_hash": "a0ab84380c0cd596257931de5b1ff46ba8b8326f677470fcad1dc7f94af5ca59",
+        "entry_hash": "0c6a1d0fced00ad5f22aac4c197773c02b18f9f574bc06367d1648fe87e81ae3"
       },
       {
         "sequence": 115,
-        "timestamp": "2026-08-27T19:01:19.491953+00:00",
+        "timestamp": "2026-08-31T08:35:37.838761+00:00",
         "txn_id": "pay_voltbill_1846",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -3884,12 +3889,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "d19e5a63f77833f87dcf1ec9e89b5452a366581090eb0fccd5a6607d5928c12b",
-        "entry_hash": "fe8d7cad37520b1711c497e9a8065b591febb48679bbf5d396e93fd1615d15ce"
+        "prev_hash": "0c6a1d0fced00ad5f22aac4c197773c02b18f9f574bc06367d1648fe87e81ae3",
+        "entry_hash": "62673f9a61bedf9ce87ce4bfd28655e8cf54e45b259159cf6723449190036c28"
       },
       {
         "sequence": 116,
-        "timestamp": "2026-08-27T19:01:19.491953+00:00",
+        "timestamp": "2026-08-31T08:35:37.838761+00:00",
         "txn_id": "pay_voltbill_0910",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -3903,12 +3908,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "fe8d7cad37520b1711c497e9a8065b591febb48679bbf5d396e93fd1615d15ce",
-        "entry_hash": "c2d1cb7e98ad521fd950baabcb2f073dd2822221b91c41fe8ad45fa3df7f706c"
+        "prev_hash": "62673f9a61bedf9ce87ce4bfd28655e8cf54e45b259159cf6723449190036c28",
+        "entry_hash": "664e7c82966226f99bec0a3afaa7f5e4501d5dab8f8c8a87ca10d069a8fb6326"
       },
       {
         "sequence": 117,
-        "timestamp": "2026-08-27T19:01:19.491953+00:00",
+        "timestamp": "2026-08-31T08:35:37.839766+00:00",
         "txn_id": "pay_voltbill_0024",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -3922,12 +3927,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "c2d1cb7e98ad521fd950baabcb2f073dd2822221b91c41fe8ad45fa3df7f706c",
-        "entry_hash": "ef4e7ef9da3a3c30c91481f88abb655d953765bdcee320e113e7f3b54723ddf4"
+        "prev_hash": "664e7c82966226f99bec0a3afaa7f5e4501d5dab8f8c8a87ca10d069a8fb6326",
+        "entry_hash": "9bc1345f0a18c7033afb1788cb75d6a35ffc09e19f6f048188991ac056be5046"
       },
       {
         "sequence": 118,
-        "timestamp": "2026-08-27T19:01:19.491953+00:00",
+        "timestamp": "2026-08-31T08:35:37.839766+00:00",
         "txn_id": "pay_voltbill_0114",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -3941,12 +3946,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "ef4e7ef9da3a3c30c91481f88abb655d953765bdcee320e113e7f3b54723ddf4",
-        "entry_hash": "4dd55b7c017a9dc6bbd9a4dd1cba1338f3610dd1b833a8cd510983c22f8f52b6"
+        "prev_hash": "9bc1345f0a18c7033afb1788cb75d6a35ffc09e19f6f048188991ac056be5046",
+        "entry_hash": "6846f1dae09792783394bf43f9dd6a90013f9f363191cfca1f604a2acba1055b"
       },
       {
         "sequence": 119,
-        "timestamp": "2026-08-27T19:01:19.491953+00:00",
+        "timestamp": "2026-08-31T08:35:37.839766+00:00",
         "txn_id": "pay_voltbill_0726",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -3960,12 +3965,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "4dd55b7c017a9dc6bbd9a4dd1cba1338f3610dd1b833a8cd510983c22f8f52b6",
-        "entry_hash": "c42b55779ef5a493a8ff922a10f8fc398a5e4d98b3bc5a7515dcb7cd1ec4a879"
+        "prev_hash": "6846f1dae09792783394bf43f9dd6a90013f9f363191cfca1f604a2acba1055b",
+        "entry_hash": "fa8b8c295d1e2685e30c89d9411764fa2d4555cb4b3a797e367217c38aafef95"
       },
       {
         "sequence": 120,
-        "timestamp": "2026-08-27T19:01:19.492945+00:00",
+        "timestamp": "2026-08-31T08:35:37.839766+00:00",
         "txn_id": "pay_voltbill_0309",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -3979,12 +3984,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "c42b55779ef5a493a8ff922a10f8fc398a5e4d98b3bc5a7515dcb7cd1ec4a879",
-        "entry_hash": "b4e2b2b2ba4a543388a5429ad59fe2dda2a1df4ccec34cd340d57fc7a5877eca"
+        "prev_hash": "fa8b8c295d1e2685e30c89d9411764fa2d4555cb4b3a797e367217c38aafef95",
+        "entry_hash": "4865f768e0f96c58eaa1e3b2aea46408341df592859c9f01ad24c8f0f52546c5"
       },
       {
         "sequence": 121,
-        "timestamp": "2026-08-27T19:01:19.492945+00:00",
+        "timestamp": "2026-08-31T08:35:37.839766+00:00",
         "txn_id": "pay_voltbill_0301",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -3998,12 +4003,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "b4e2b2b2ba4a543388a5429ad59fe2dda2a1df4ccec34cd340d57fc7a5877eca",
-        "entry_hash": "ec2b0ed4ab6b81d0097e0c610aa88fe29f1730ad7de38696bbb1a1e759d74c5c"
+        "prev_hash": "4865f768e0f96c58eaa1e3b2aea46408341df592859c9f01ad24c8f0f52546c5",
+        "entry_hash": "6d25900f3f3d2cae1c0192adaffd800a132d6bac20c0455280cb8beefc8fce4a"
       },
       {
         "sequence": 122,
-        "timestamp": "2026-08-27T19:01:19.492945+00:00",
+        "timestamp": "2026-08-31T08:35:37.839766+00:00",
         "txn_id": "pay_voltbill_1092",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -4017,12 +4022,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "ec2b0ed4ab6b81d0097e0c610aa88fe29f1730ad7de38696bbb1a1e759d74c5c",
-        "entry_hash": "4cfa6f80704b84a6b8acd5f836467581973da7af973206fb109aefa080b6495c"
+        "prev_hash": "6d25900f3f3d2cae1c0192adaffd800a132d6bac20c0455280cb8beefc8fce4a",
+        "entry_hash": "f0220a169bf795627607b99b26f9d007e09451c609b8a3f4e8e782abec8b569c"
       },
       {
         "sequence": 123,
-        "timestamp": "2026-08-27T19:01:19.492945+00:00",
+        "timestamp": "2026-08-31T08:35:37.839766+00:00",
         "txn_id": "pay_voltbill_2079",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -4036,12 +4041,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "4cfa6f80704b84a6b8acd5f836467581973da7af973206fb109aefa080b6495c",
-        "entry_hash": "93e1e02ff40b4e3880d075d3a209b29f8a52fcec02d34173a0340236347b0fc9"
+        "prev_hash": "f0220a169bf795627607b99b26f9d007e09451c609b8a3f4e8e782abec8b569c",
+        "entry_hash": "585a82d85e6424e5584d9977db1e3119dab4eadecbc8886eb7111f096c744820"
       },
       {
         "sequence": 124,
-        "timestamp": "2026-08-27T19:01:19.492945+00:00",
+        "timestamp": "2026-08-31T08:35:37.839766+00:00",
         "txn_id": "pay_voltbill_1785",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -4055,12 +4060,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "93e1e02ff40b4e3880d075d3a209b29f8a52fcec02d34173a0340236347b0fc9",
-        "entry_hash": "8e8837457239c9c79ea5e4e739b10a3721b8202c224dee418dc202ecae66b741"
+        "prev_hash": "585a82d85e6424e5584d9977db1e3119dab4eadecbc8886eb7111f096c744820",
+        "entry_hash": "e19a4c2e8d81a2611bb130e65a473af292fd89433b51d098a56ef9f1f978fb7b"
       },
       {
         "sequence": 125,
-        "timestamp": "2026-08-27T19:01:19.493945+00:00",
+        "timestamp": "2026-08-31T08:35:37.841090+00:00",
         "txn_id": "pay_voltbill_1991",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -4074,12 +4079,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "8e8837457239c9c79ea5e4e739b10a3721b8202c224dee418dc202ecae66b741",
-        "entry_hash": "6d8288e0edf32b732ba8e283f0c8336aaa00a372fc4e741863f63baa39ea300e"
+        "prev_hash": "e19a4c2e8d81a2611bb130e65a473af292fd89433b51d098a56ef9f1f978fb7b",
+        "entry_hash": "b99ebb5276455df30fe94ca59b1fcaeb7c0d1186be3a39d1970ddde42b98afc9"
       },
       {
         "sequence": 126,
-        "timestamp": "2026-08-27T19:01:19.493945+00:00",
+        "timestamp": "2026-08-31T08:35:37.842091+00:00",
         "txn_id": "pay_voltbill_0716",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -4093,12 +4098,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "6d8288e0edf32b732ba8e283f0c8336aaa00a372fc4e741863f63baa39ea300e",
-        "entry_hash": "415ca8dfa7b5dadf15d9199ec936c25cc4fe8d7ad7968d013a764240611bb4b1"
+        "prev_hash": "b99ebb5276455df30fe94ca59b1fcaeb7c0d1186be3a39d1970ddde42b98afc9",
+        "entry_hash": "d8e6d3d391a9ff6e18fa10e89a911943cadc72cfe3bba1d40bd5584936f0a9c9"
       },
       {
         "sequence": 127,
-        "timestamp": "2026-08-27T19:01:19.493945+00:00",
+        "timestamp": "2026-08-31T08:35:37.842091+00:00",
         "txn_id": "pay_voltbill_1974",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -4112,12 +4117,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "415ca8dfa7b5dadf15d9199ec936c25cc4fe8d7ad7968d013a764240611bb4b1",
-        "entry_hash": "3d46d2465e3f3f3e0a479343f9fda35d8c41a33226204edb5c8a5555b205131f"
+        "prev_hash": "d8e6d3d391a9ff6e18fa10e89a911943cadc72cfe3bba1d40bd5584936f0a9c9",
+        "entry_hash": "6df9aac34716d72797396da49e54527d2d9b4aafb28fe951ea5e6a51dafb2753"
       },
       {
         "sequence": 128,
-        "timestamp": "2026-08-27T19:01:19.494985+00:00",
+        "timestamp": "2026-08-31T08:35:37.843089+00:00",
         "txn_id": "pay_voltbill_1999",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -4131,12 +4136,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "3d46d2465e3f3f3e0a479343f9fda35d8c41a33226204edb5c8a5555b205131f",
-        "entry_hash": "e1a777086901231fc50ab9bfc6534d21069fd6e768555e75794a2a31b7e3f1c9"
+        "prev_hash": "6df9aac34716d72797396da49e54527d2d9b4aafb28fe951ea5e6a51dafb2753",
+        "entry_hash": "0a146604fd445c0b6c717a10b7acc738ad10f2cde100d73d39bf8e6def6f77c2"
       },
       {
         "sequence": 129,
-        "timestamp": "2026-08-27T19:01:19.494985+00:00",
+        "timestamp": "2026-08-31T08:35:37.843089+00:00",
         "txn_id": "pay_voltbill_1512",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -4150,12 +4155,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "e1a777086901231fc50ab9bfc6534d21069fd6e768555e75794a2a31b7e3f1c9",
-        "entry_hash": "106f94854ae24c4fcd71b279efb1d900bbd8de2b0ea93f467bd8152e08cb184a"
+        "prev_hash": "0a146604fd445c0b6c717a10b7acc738ad10f2cde100d73d39bf8e6def6f77c2",
+        "entry_hash": "9223838747ec8a7b995fac01bea3285bbcd86059dc76e1c9a169c7eb0bfcbef0"
       },
       {
         "sequence": 130,
-        "timestamp": "2026-08-27T19:01:19.494985+00:00",
+        "timestamp": "2026-08-31T08:35:37.843089+00:00",
         "txn_id": "pay_voltbill_0079",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -4169,12 +4174,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "106f94854ae24c4fcd71b279efb1d900bbd8de2b0ea93f467bd8152e08cb184a",
-        "entry_hash": "35c06009ddda246c7e67bc342332f1a2014f21850d7454ab92c28e6e01835f90"
+        "prev_hash": "9223838747ec8a7b995fac01bea3285bbcd86059dc76e1c9a169c7eb0bfcbef0",
+        "entry_hash": "75d4cd36b039331aa3ad884291ffcc671a8e96bd24e607798dc561e01255a8d7"
       },
       {
         "sequence": 131,
-        "timestamp": "2026-08-27T19:01:19.494985+00:00",
+        "timestamp": "2026-08-31T08:35:37.844609+00:00",
         "txn_id": "pay_voltbill_0526",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -4188,12 +4193,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "35c06009ddda246c7e67bc342332f1a2014f21850d7454ab92c28e6e01835f90",
-        "entry_hash": "443c1bd1c283bf14772c51f962791952fd2365af57db33bcde1ac36b7c3e8902"
+        "prev_hash": "75d4cd36b039331aa3ad884291ffcc671a8e96bd24e607798dc561e01255a8d7",
+        "entry_hash": "7aa190a88e9db29b2aa90fec20af7bf4b812825157c18434c7d163ac945dfa30"
       },
       {
         "sequence": 132,
-        "timestamp": "2026-08-27T19:01:19.494985+00:00",
+        "timestamp": "2026-08-31T08:35:37.844609+00:00",
         "txn_id": "pay_voltbill_0836",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -4207,12 +4212,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "443c1bd1c283bf14772c51f962791952fd2365af57db33bcde1ac36b7c3e8902",
-        "entry_hash": "abf46644029fe35ce302e01bc497a9f9c93a64df61a69355d18f9399b4a27229"
+        "prev_hash": "7aa190a88e9db29b2aa90fec20af7bf4b812825157c18434c7d163ac945dfa30",
+        "entry_hash": "3ea2eb541c44777a37a717fea6a110994edbb5196f0866b06f4bccbbe6037371"
       },
       {
         "sequence": 133,
-        "timestamp": "2026-08-27T19:01:19.494985+00:00",
+        "timestamp": "2026-08-31T08:35:37.844609+00:00",
         "txn_id": "pay_voltbill_0033",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -4226,12 +4231,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "abf46644029fe35ce302e01bc497a9f9c93a64df61a69355d18f9399b4a27229",
-        "entry_hash": "7b6f98fffda986d068ef6f95549c90d9da949b34d4754ddce3c8813ce54e9dab"
+        "prev_hash": "3ea2eb541c44777a37a717fea6a110994edbb5196f0866b06f4bccbbe6037371",
+        "entry_hash": "6aceeae32345d5618e300a5026acaa18007b612d84e43065de072bbccfed202e"
       },
       {
         "sequence": 134,
-        "timestamp": "2026-08-27T19:01:19.494985+00:00",
+        "timestamp": "2026-08-31T08:35:37.844609+00:00",
         "txn_id": "pay_voltbill_0835",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -4245,12 +4250,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "7b6f98fffda986d068ef6f95549c90d9da949b34d4754ddce3c8813ce54e9dab",
-        "entry_hash": "7609e0f55d88baffdbdf75fc4b2e093b887c291370c7ef63cd03e2df5000bc27"
+        "prev_hash": "6aceeae32345d5618e300a5026acaa18007b612d84e43065de072bbccfed202e",
+        "entry_hash": "6f63d8a07b6ca7151b39b356ec974756b05ec401b8d04c4403c78f584097a63c"
       },
       {
         "sequence": 135,
-        "timestamp": "2026-08-27T19:01:19.494985+00:00",
+        "timestamp": "2026-08-31T08:35:37.845640+00:00",
         "txn_id": "pay_voltbill_0306",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -4264,12 +4269,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "7609e0f55d88baffdbdf75fc4b2e093b887c291370c7ef63cd03e2df5000bc27",
-        "entry_hash": "0373ef1326b23a5a84d21549284cda8c9d8d3d389b2edeec02b4c5c38f975158"
+        "prev_hash": "6f63d8a07b6ca7151b39b356ec974756b05ec401b8d04c4403c78f584097a63c",
+        "entry_hash": "70e3dc893995fd4bc00838d60f5259ffd077a3b159cdf123d500491b8c54b5ae"
       },
       {
         "sequence": 136,
-        "timestamp": "2026-08-27T19:01:19.494985+00:00",
+        "timestamp": "2026-08-31T08:35:37.845640+00:00",
         "txn_id": "pay_voltbill_1884",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -4283,12 +4288,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "0373ef1326b23a5a84d21549284cda8c9d8d3d389b2edeec02b4c5c38f975158",
-        "entry_hash": "f3cc586b4c1231a77e0d1834b18f4524592671ece54e75736a09d009e5a2e882"
+        "prev_hash": "70e3dc893995fd4bc00838d60f5259ffd077a3b159cdf123d500491b8c54b5ae",
+        "entry_hash": "75d076e3339e733f9228f6d9964139bab7234225f489574b4c3cf814fca236ff"
       },
       {
         "sequence": 137,
-        "timestamp": "2026-08-27T19:01:19.494985+00:00",
+        "timestamp": "2026-08-31T08:35:37.846630+00:00",
         "txn_id": "pay_voltbill_1218",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -4302,12 +4307,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "f3cc586b4c1231a77e0d1834b18f4524592671ece54e75736a09d009e5a2e882",
-        "entry_hash": "cef58433d8139fc888895c20c3c39416d9ed4f1ad134fde1828ef68703698a0c"
+        "prev_hash": "75d076e3339e733f9228f6d9964139bab7234225f489574b4c3cf814fca236ff",
+        "entry_hash": "8cfa89cc85446b5f5e7b822fe4ea6b2b977654bda01671192e582d57b4003c17"
       },
       {
         "sequence": 138,
-        "timestamp": "2026-08-27T19:01:19.494985+00:00",
+        "timestamp": "2026-08-31T08:35:37.846630+00:00",
         "txn_id": "pay_voltbill_1259",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -4321,12 +4326,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "cef58433d8139fc888895c20c3c39416d9ed4f1ad134fde1828ef68703698a0c",
-        "entry_hash": "73d1488ed273fe7516c0364403be76ab5e0e6def2632418c44bc633ac68f9250"
+        "prev_hash": "8cfa89cc85446b5f5e7b822fe4ea6b2b977654bda01671192e582d57b4003c17",
+        "entry_hash": "63e0a29a324ad5638f0818382c2ff079b439f20377cf743a15b6582ae405511b"
       },
       {
         "sequence": 139,
-        "timestamp": "2026-08-27T19:01:19.495944+00:00",
+        "timestamp": "2026-08-31T08:35:37.846630+00:00",
         "txn_id": "pay_voltbill_0889",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -4340,12 +4345,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "73d1488ed273fe7516c0364403be76ab5e0e6def2632418c44bc633ac68f9250",
-        "entry_hash": "d0c8cbbc9fae201622c1e147bbe6302a5f2ed7a6422b64c54e4a7d06f186c1f3"
+        "prev_hash": "63e0a29a324ad5638f0818382c2ff079b439f20377cf743a15b6582ae405511b",
+        "entry_hash": "12cf539dbe9f60a593731e9f509129e0668d9f8287a43b9ce003a3b7ef66c889"
       },
       {
         "sequence": 140,
-        "timestamp": "2026-08-27T19:01:19.495944+00:00",
+        "timestamp": "2026-08-31T08:35:37.846630+00:00",
         "txn_id": "pay_voltbill_1268",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -4359,12 +4364,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "d0c8cbbc9fae201622c1e147bbe6302a5f2ed7a6422b64c54e4a7d06f186c1f3",
-        "entry_hash": "803dbb9bcd1274ea4586d8817f05a78f1438402fe19dded190dbf9cc285dbee1"
+        "prev_hash": "12cf539dbe9f60a593731e9f509129e0668d9f8287a43b9ce003a3b7ef66c889",
+        "entry_hash": "e0cb5fb30fc8e05679d2e74c48b36b123d1c745238551dc5fbd1a68d149a5ca7"
       },
       {
         "sequence": 141,
-        "timestamp": "2026-08-27T19:01:19.495944+00:00",
+        "timestamp": "2026-08-31T08:35:37.846630+00:00",
         "txn_id": "pay_voltbill_1721",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -4378,12 +4383,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "803dbb9bcd1274ea4586d8817f05a78f1438402fe19dded190dbf9cc285dbee1",
-        "entry_hash": "192c50cfa8c7c5dfae4f721a98fc22ccce78f5416bbf565552ea834b068c9926"
+        "prev_hash": "e0cb5fb30fc8e05679d2e74c48b36b123d1c745238551dc5fbd1a68d149a5ca7",
+        "entry_hash": "e99c7bbb8ad5e9232328b09af1c68f729dc0a26dee10803697efcb072e69498d"
       },
       {
         "sequence": 142,
-        "timestamp": "2026-08-27T19:01:19.495944+00:00",
+        "timestamp": "2026-08-31T08:35:37.846630+00:00",
         "txn_id": "pay_voltbill_1909",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -4397,12 +4402,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "192c50cfa8c7c5dfae4f721a98fc22ccce78f5416bbf565552ea834b068c9926",
-        "entry_hash": "ec4d29fcf2f6dba14208a5e292be08876c1b2744661faffa7626045aed12573d"
+        "prev_hash": "e99c7bbb8ad5e9232328b09af1c68f729dc0a26dee10803697efcb072e69498d",
+        "entry_hash": "a63e5eafdcb48c26f44305505fcdd5cd55aee9cade27e18e7b8cbdd6a0e979c4"
       },
       {
         "sequence": 143,
-        "timestamp": "2026-08-27T19:01:19.495944+00:00",
+        "timestamp": "2026-08-31T08:35:37.847634+00:00",
         "txn_id": "pay_voltbill_1284",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -4416,12 +4421,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "ec4d29fcf2f6dba14208a5e292be08876c1b2744661faffa7626045aed12573d",
-        "entry_hash": "c69dd6edb361201d3dd08f79fd29c3100b31bfca7c4e79fba4ca5aa9bf191b64"
+        "prev_hash": "a63e5eafdcb48c26f44305505fcdd5cd55aee9cade27e18e7b8cbdd6a0e979c4",
+        "entry_hash": "713a1b926549faa4ec530df879620c247c9f6e039dcf87ce52528c005967aa8d"
       },
       {
         "sequence": 144,
-        "timestamp": "2026-08-27T19:01:19.495944+00:00",
+        "timestamp": "2026-08-31T08:35:37.847634+00:00",
         "txn_id": "pay_voltbill_1209",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -4435,12 +4440,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "c69dd6edb361201d3dd08f79fd29c3100b31bfca7c4e79fba4ca5aa9bf191b64",
-        "entry_hash": "d8835514f5e048ae78d013644e9d32ffbad894f2eea1f46c8ec67f94694eb7f0"
+        "prev_hash": "713a1b926549faa4ec530df879620c247c9f6e039dcf87ce52528c005967aa8d",
+        "entry_hash": "bc81581ecb61831f40e81ffefb8fda35d05775ce58b9ba57f2c4a0516bb3d66c"
       },
       {
         "sequence": 145,
-        "timestamp": "2026-08-27T19:01:19.495944+00:00",
+        "timestamp": "2026-08-31T08:35:37.847634+00:00",
         "txn_id": "pay_voltbill_1644",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -4454,12 +4459,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "d8835514f5e048ae78d013644e9d32ffbad894f2eea1f46c8ec67f94694eb7f0",
-        "entry_hash": "7405d65dbf45066f32e5f3024a90cf606141fa2d97520d5e0e7de56b6bc4cfd8"
+        "prev_hash": "bc81581ecb61831f40e81ffefb8fda35d05775ce58b9ba57f2c4a0516bb3d66c",
+        "entry_hash": "2c00290d3d2dc59be07453c2c0f5fd3fbed2732d61d1f3856a7601b5dc7aee29"
       },
       {
         "sequence": 146,
-        "timestamp": "2026-08-27T19:01:19.495944+00:00",
+        "timestamp": "2026-08-31T08:35:37.847634+00:00",
         "txn_id": "pay_voltbill_0480",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -4473,12 +4478,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "7405d65dbf45066f32e5f3024a90cf606141fa2d97520d5e0e7de56b6bc4cfd8",
-        "entry_hash": "4339f89bf56c0c07a09d38e53b3cadbbaf494d1ecefabd3f3f4ff3ecae5ff5ca"
+        "prev_hash": "2c00290d3d2dc59be07453c2c0f5fd3fbed2732d61d1f3856a7601b5dc7aee29",
+        "entry_hash": "d76eb5e9b402c712eaf6cec5bd54cad938339fd132804fe4ad9661ce3574cc8a"
       },
       {
         "sequence": 147,
-        "timestamp": "2026-08-27T19:01:19.495944+00:00",
+        "timestamp": "2026-08-31T08:35:37.849158+00:00",
         "txn_id": "pay_voltbill_0585",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -4492,12 +4497,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "4339f89bf56c0c07a09d38e53b3cadbbaf494d1ecefabd3f3f4ff3ecae5ff5ca",
-        "entry_hash": "d75b5c4879f594adcd8150be4ed98a4081e00cdd92afd952ecd85e9f27926ae1"
+        "prev_hash": "d76eb5e9b402c712eaf6cec5bd54cad938339fd132804fe4ad9661ce3574cc8a",
+        "entry_hash": "a3a444706e70b50ae049b15533a54c87ed4eaad057484bb0d6c986a7f9f3583e"
       },
       {
         "sequence": 148,
-        "timestamp": "2026-08-27T19:01:19.495944+00:00",
+        "timestamp": "2026-08-31T08:35:37.849158+00:00",
         "txn_id": "pay_voltbill_1456",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -4511,12 +4516,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "d75b5c4879f594adcd8150be4ed98a4081e00cdd92afd952ecd85e9f27926ae1",
-        "entry_hash": "c161dd4df7e7034ce7667057a093e5429847b88ed4be9fcd23f6736da386c654"
+        "prev_hash": "a3a444706e70b50ae049b15533a54c87ed4eaad057484bb0d6c986a7f9f3583e",
+        "entry_hash": "327d8ef7044e78a6170520cb6adc9adbcf448ead3fba6a496a4845a3602032b8"
       },
       {
         "sequence": 149,
-        "timestamp": "2026-08-27T19:01:19.495944+00:00",
+        "timestamp": "2026-08-31T08:35:37.850186+00:00",
         "txn_id": "pay_voltbill_0517",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -4530,12 +4535,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "c161dd4df7e7034ce7667057a093e5429847b88ed4be9fcd23f6736da386c654",
-        "entry_hash": "79c295971c8eb9c3cf75db6f250c2c5d7771e2024663313e7a3a268301c51006"
+        "prev_hash": "327d8ef7044e78a6170520cb6adc9adbcf448ead3fba6a496a4845a3602032b8",
+        "entry_hash": "3513b050d9f9b681e84e50c45924876da3da1f16d4cf229d9962ea9017015989"
       },
       {
         "sequence": 150,
-        "timestamp": "2026-08-27T19:01:19.495944+00:00",
+        "timestamp": "2026-08-31T08:35:37.850186+00:00",
         "txn_id": "pay_voltbill_1114",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -4549,12 +4554,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "79c295971c8eb9c3cf75db6f250c2c5d7771e2024663313e7a3a268301c51006",
-        "entry_hash": "5f2024076d278023328115b88a4c5e63d910b035bcf9449c52da232914b2d611"
+        "prev_hash": "3513b050d9f9b681e84e50c45924876da3da1f16d4cf229d9962ea9017015989",
+        "entry_hash": "774e1d065cbff26309e20b93270a1c74e4c85723926303c5bf33fa8bfffd6598"
       },
       {
         "sequence": 151,
-        "timestamp": "2026-08-27T19:01:19.495944+00:00",
+        "timestamp": "2026-08-31T08:35:37.851225+00:00",
         "txn_id": "pay_voltbill_0263",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -4568,12 +4573,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "5f2024076d278023328115b88a4c5e63d910b035bcf9449c52da232914b2d611",
-        "entry_hash": "414f50993ce39e13bf1e1a5549ef13ef48d9add0c746c7e50579078a4c423107"
+        "prev_hash": "774e1d065cbff26309e20b93270a1c74e4c85723926303c5bf33fa8bfffd6598",
+        "entry_hash": "67a2defb4987d8602543fac47433ac93f024e65b2857fbaac951423113be5474"
       },
       {
         "sequence": 152,
-        "timestamp": "2026-08-27T19:01:19.495944+00:00",
+        "timestamp": "2026-08-31T08:35:37.851225+00:00",
         "txn_id": "pay_voltbill_0689",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -4587,12 +4592,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "414f50993ce39e13bf1e1a5549ef13ef48d9add0c746c7e50579078a4c423107",
-        "entry_hash": "de78695c09188cae6aad69f9208559358635425218425b735ab1397715f4915f"
+        "prev_hash": "67a2defb4987d8602543fac47433ac93f024e65b2857fbaac951423113be5474",
+        "entry_hash": "ea64bb01bbcd42407ebc51eec5efe03602404ceee468e3c32d566ca20b6e74cd"
       },
       {
         "sequence": 153,
-        "timestamp": "2026-08-27T19:01:19.495944+00:00",
+        "timestamp": "2026-08-31T08:35:37.851951+00:00",
         "txn_id": "pay_voltbill_0020",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -4606,12 +4611,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "de78695c09188cae6aad69f9208559358635425218425b735ab1397715f4915f",
-        "entry_hash": "c0973253e933d96da4a1a2d4d1a0ea5463a90b698f17396506b3b0841631f96b"
+        "prev_hash": "ea64bb01bbcd42407ebc51eec5efe03602404ceee468e3c32d566ca20b6e74cd",
+        "entry_hash": "9bd9831828f8747057cdc167a70626b1dc260fb68582978c3993c37f6f71cba2"
       },
       {
         "sequence": 154,
-        "timestamp": "2026-08-27T19:01:19.495944+00:00",
+        "timestamp": "2026-08-31T08:35:37.851951+00:00",
         "txn_id": "pay_voltbill_1432",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -4625,12 +4630,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "c0973253e933d96da4a1a2d4d1a0ea5463a90b698f17396506b3b0841631f96b",
-        "entry_hash": "9be7e961843d3ac564153d1eaf36259eeb3b186c84dc0d0b16b50d8fd5cf2f38"
+        "prev_hash": "9bd9831828f8747057cdc167a70626b1dc260fb68582978c3993c37f6f71cba2",
+        "entry_hash": "425948fe80027527933eeddee561fc7af4860ddd058d30000991883740fcdc9f"
       },
       {
         "sequence": 155,
-        "timestamp": "2026-08-27T19:01:19.495944+00:00",
+        "timestamp": "2026-08-31T08:35:37.851951+00:00",
         "txn_id": "pay_voltbill_1806",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -4644,12 +4649,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "9be7e961843d3ac564153d1eaf36259eeb3b186c84dc0d0b16b50d8fd5cf2f38",
-        "entry_hash": "87c6248a1ac03f4d928eab5aedf72489c253c2fdda1dc645f300ce308ea60991"
+        "prev_hash": "425948fe80027527933eeddee561fc7af4860ddd058d30000991883740fcdc9f",
+        "entry_hash": "9ff45b2e9d2cb20e701f62140eb1fd080af59c5f378614e33c3e14ab41961e7e"
       },
       {
         "sequence": 156,
-        "timestamp": "2026-08-27T19:01:19.496951+00:00",
+        "timestamp": "2026-08-31T08:35:37.851951+00:00",
         "txn_id": "pay_voltbill_1497",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -4663,12 +4668,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "87c6248a1ac03f4d928eab5aedf72489c253c2fdda1dc645f300ce308ea60991",
-        "entry_hash": "e500c2befa87200bca33d0ad1367d384633ae79cb8cce8827dffb01c0382eef1"
+        "prev_hash": "9ff45b2e9d2cb20e701f62140eb1fd080af59c5f378614e33c3e14ab41961e7e",
+        "entry_hash": "45a27073a2211dffbc2817effe181f4a4af546b19207e6297dc009a151278614"
       },
       {
         "sequence": 157,
-        "timestamp": "2026-08-27T19:01:19.496951+00:00",
+        "timestamp": "2026-08-31T08:35:37.851951+00:00",
         "txn_id": "pay_voltbill_1987",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -4682,12 +4687,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "e500c2befa87200bca33d0ad1367d384633ae79cb8cce8827dffb01c0382eef1",
-        "entry_hash": "9579e28bd0a22a4a8d2b8d6f0862752a6f9924c8a90f79640ad1e34c190e60c9"
+        "prev_hash": "45a27073a2211dffbc2817effe181f4a4af546b19207e6297dc009a151278614",
+        "entry_hash": "1d10dab3b0c7b8ab11a6c80bf2f83c01a05565246aae701e37a84b52cb7ca88d"
       },
       {
         "sequence": 158,
-        "timestamp": "2026-08-27T19:01:19.496951+00:00",
+        "timestamp": "2026-08-31T08:35:37.851951+00:00",
         "txn_id": "pay_voltbill_0156",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -4701,12 +4706,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "9579e28bd0a22a4a8d2b8d6f0862752a6f9924c8a90f79640ad1e34c190e60c9",
-        "entry_hash": "33f85fc0e905265c0c445516e28970db7d8ec59de1c50e859801660a6ff3b794"
+        "prev_hash": "1d10dab3b0c7b8ab11a6c80bf2f83c01a05565246aae701e37a84b52cb7ca88d",
+        "entry_hash": "23949f12ad87155dc12db3d5bbc55e424365a07b9840f43b33ec2961ca6b1f46"
       },
       {
         "sequence": 159,
-        "timestamp": "2026-08-27T19:01:19.496951+00:00",
+        "timestamp": "2026-08-31T08:35:37.851951+00:00",
         "txn_id": "pay_voltbill_0498",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -4720,12 +4725,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "33f85fc0e905265c0c445516e28970db7d8ec59de1c50e859801660a6ff3b794",
-        "entry_hash": "24a1bd47c3f079b08ac1b4a54a5ebb08d2d28d24cabe53b168e2e0be854bc8a6"
+        "prev_hash": "23949f12ad87155dc12db3d5bbc55e424365a07b9840f43b33ec2961ca6b1f46",
+        "entry_hash": "c811b0af9f5b4ebe26a5f2bce9b595bd300d666e9b97e979673fd9b31bc51bc8"
       },
       {
         "sequence": 160,
-        "timestamp": "2026-08-27T19:01:19.496951+00:00",
+        "timestamp": "2026-08-31T08:35:37.851951+00:00",
         "txn_id": "pay_voltbill_1180",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -4739,12 +4744,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "24a1bd47c3f079b08ac1b4a54a5ebb08d2d28d24cabe53b168e2e0be854bc8a6",
-        "entry_hash": "32af15746f02c0b6fd66b0cba94a5581ef4b6d4e70725daedb600b71f7013631"
+        "prev_hash": "c811b0af9f5b4ebe26a5f2bce9b595bd300d666e9b97e979673fd9b31bc51bc8",
+        "entry_hash": "c064bdea768a0ba2b95e19df10a02901bb1b4e9e14de97ccb703091c6191eb99"
       },
       {
         "sequence": 161,
-        "timestamp": "2026-08-27T19:01:19.496951+00:00",
+        "timestamp": "2026-08-31T08:35:37.851951+00:00",
         "txn_id": "pay_voltbill_1590",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -4758,12 +4763,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "32af15746f02c0b6fd66b0cba94a5581ef4b6d4e70725daedb600b71f7013631",
-        "entry_hash": "836ea0dfff95179506084eface776eccb594134cda017eeae739ed092a38e106"
+        "prev_hash": "c064bdea768a0ba2b95e19df10a02901bb1b4e9e14de97ccb703091c6191eb99",
+        "entry_hash": "7ff7356990260f2eb4c1b5f061b2feac4637b7e290d43030e63ae075c52363a5"
       },
       {
         "sequence": 162,
-        "timestamp": "2026-08-27T19:01:19.496951+00:00",
+        "timestamp": "2026-08-31T08:35:37.851951+00:00",
         "txn_id": "pay_voltbill_0157",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -4777,12 +4782,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "836ea0dfff95179506084eface776eccb594134cda017eeae739ed092a38e106",
-        "entry_hash": "33064b624ddb1b777d5c8caaaa170431d82f6d954b97f8dbb6bdbe17ad643532"
+        "prev_hash": "7ff7356990260f2eb4c1b5f061b2feac4637b7e290d43030e63ae075c52363a5",
+        "entry_hash": "287cbdffb4a6c8b03397bdb46696515a3a6d51c3801c0ebc23797ee295829de9"
       },
       {
         "sequence": 163,
-        "timestamp": "2026-08-27T19:01:19.496951+00:00",
+        "timestamp": "2026-08-31T08:35:37.851951+00:00",
         "txn_id": "pay_voltbill_1173",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -4796,12 +4801,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "33064b624ddb1b777d5c8caaaa170431d82f6d954b97f8dbb6bdbe17ad643532",
-        "entry_hash": "a36db47e2fbc5d4645b5a41a987fdd40bb867fd81eae37176fa413e6ddd78888"
+        "prev_hash": "287cbdffb4a6c8b03397bdb46696515a3a6d51c3801c0ebc23797ee295829de9",
+        "entry_hash": "841190901c0b1dce0e5bfa720569fa76fd3e563cb3d66e15ee551f9bfcd2b803"
       },
       {
         "sequence": 164,
-        "timestamp": "2026-08-27T19:01:19.497985+00:00",
+        "timestamp": "2026-08-31T08:35:37.852963+00:00",
         "txn_id": "pay_voltbill_1939",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -4815,12 +4820,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "a36db47e2fbc5d4645b5a41a987fdd40bb867fd81eae37176fa413e6ddd78888",
-        "entry_hash": "eec878fd9420b23a7160d78cd00923738471cee5a22d23feeaa151366dacc88c"
+        "prev_hash": "841190901c0b1dce0e5bfa720569fa76fd3e563cb3d66e15ee551f9bfcd2b803",
+        "entry_hash": "dbc27af2dca8a20a0d587396a81a77bf6e134f630c556365c1286f6eb2487dfb"
       },
       {
         "sequence": 165,
-        "timestamp": "2026-08-27T19:01:19.497985+00:00",
+        "timestamp": "2026-08-31T08:35:37.852963+00:00",
         "txn_id": "pay_voltbill_0370",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -4834,12 +4839,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "eec878fd9420b23a7160d78cd00923738471cee5a22d23feeaa151366dacc88c",
-        "entry_hash": "ae24cef3f8ebadaea4576dedc67d93a4e7d62ca53d166aeb5c3771ccf7ea752e"
+        "prev_hash": "dbc27af2dca8a20a0d587396a81a77bf6e134f630c556365c1286f6eb2487dfb",
+        "entry_hash": "ecccafcc5f3e64f0681c73e64bcac629315edaf0a9dd42eaac8911322ed144f7"
       },
       {
         "sequence": 166,
-        "timestamp": "2026-08-27T19:01:19.497985+00:00",
+        "timestamp": "2026-08-31T08:35:37.852963+00:00",
         "txn_id": "pay_voltbill_0381",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -4853,12 +4858,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "ae24cef3f8ebadaea4576dedc67d93a4e7d62ca53d166aeb5c3771ccf7ea752e",
-        "entry_hash": "30eabeb7db05cea56252057f2d941cca69835133e9462077c4538a0b01991c1e"
+        "prev_hash": "ecccafcc5f3e64f0681c73e64bcac629315edaf0a9dd42eaac8911322ed144f7",
+        "entry_hash": "7b48388fbc04d7460b51ed0e5afd24554e789006f33c052eb45ee42d0cbbd090"
       },
       {
         "sequence": 167,
-        "timestamp": "2026-08-27T19:01:19.497985+00:00",
+        "timestamp": "2026-08-31T08:35:37.852963+00:00",
         "txn_id": "pay_voltbill_1107",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -4872,12 +4877,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "30eabeb7db05cea56252057f2d941cca69835133e9462077c4538a0b01991c1e",
-        "entry_hash": "f3d541d67e5331171fc334fb3ad3ea9fac2633b3cbbc7b23d02e56a08a5155aa"
+        "prev_hash": "7b48388fbc04d7460b51ed0e5afd24554e789006f33c052eb45ee42d0cbbd090",
+        "entry_hash": "c82f86a7893d9adb445e0645ffc26c0312851c59823d2d39fe82f3b6fc60e5e4"
       },
       {
         "sequence": 168,
-        "timestamp": "2026-08-27T19:01:19.497985+00:00",
+        "timestamp": "2026-08-31T08:35:37.852963+00:00",
         "txn_id": "pay_voltbill_1688",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -4891,12 +4896,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "f3d541d67e5331171fc334fb3ad3ea9fac2633b3cbbc7b23d02e56a08a5155aa",
-        "entry_hash": "77fbd954b21b99211cf4c8e6df2620828c97549ab908cd27aa15f8ec876558a4"
+        "prev_hash": "c82f86a7893d9adb445e0645ffc26c0312851c59823d2d39fe82f3b6fc60e5e4",
+        "entry_hash": "c2f9bafbdfbb2226077152237d77811ad1d35fcbba1e2a2beced49e2b5395334"
       },
       {
         "sequence": 169,
-        "timestamp": "2026-08-27T19:01:19.497985+00:00",
+        "timestamp": "2026-08-31T08:35:37.852963+00:00",
         "txn_id": "pay_voltbill_0449",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -4910,12 +4915,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "77fbd954b21b99211cf4c8e6df2620828c97549ab908cd27aa15f8ec876558a4",
-        "entry_hash": "c36f9b83218d5f1dc8dea0ce02ec1ca497c637e02fbbe1358d260b851d3beeba"
+        "prev_hash": "c2f9bafbdfbb2226077152237d77811ad1d35fcbba1e2a2beced49e2b5395334",
+        "entry_hash": "cf5f5cf9f09af576754698940a563d237e4bbb6a8154e8f6c54e13bf150e9281"
       },
       {
         "sequence": 170,
-        "timestamp": "2026-08-27T19:01:19.497985+00:00",
+        "timestamp": "2026-08-31T08:35:37.852963+00:00",
         "txn_id": "pay_voltbill_0720",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -4929,12 +4934,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "c36f9b83218d5f1dc8dea0ce02ec1ca497c637e02fbbe1358d260b851d3beeba",
-        "entry_hash": "557c5f850e0b0ec98827c8a4b0a94bef8d61134b80ea4559477f23463d79f36d"
+        "prev_hash": "cf5f5cf9f09af576754698940a563d237e4bbb6a8154e8f6c54e13bf150e9281",
+        "entry_hash": "7f8dcde1a12b0fdb8d2df2d720335a2bf8b45911a7a83d245c1cd483f99ca4cb"
       },
       {
         "sequence": 171,
-        "timestamp": "2026-08-27T19:01:19.497985+00:00",
+        "timestamp": "2026-08-31T08:35:37.852963+00:00",
         "txn_id": "pay_voltbill_0371",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -4948,12 +4953,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "557c5f850e0b0ec98827c8a4b0a94bef8d61134b80ea4559477f23463d79f36d",
-        "entry_hash": "f9f1b4bf320e9d9acbc50a48eff22f9ec4137d43032d7c1ace3b6420b70c7f5b"
+        "prev_hash": "7f8dcde1a12b0fdb8d2df2d720335a2bf8b45911a7a83d245c1cd483f99ca4cb",
+        "entry_hash": "aa6d45ada46d33e9a4646c8980724aee8c04e489ef3a657d325a2daf90fa312f"
       },
       {
         "sequence": 172,
-        "timestamp": "2026-08-27T19:01:19.497985+00:00",
+        "timestamp": "2026-08-31T08:35:37.852963+00:00",
         "txn_id": "pay_voltbill_1826",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -4967,12 +4972,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "f9f1b4bf320e9d9acbc50a48eff22f9ec4137d43032d7c1ace3b6420b70c7f5b",
-        "entry_hash": "10e72542f9237e0c869797f310f69a6d4472a6b6b535e016445b8769ce930128"
+        "prev_hash": "aa6d45ada46d33e9a4646c8980724aee8c04e489ef3a657d325a2daf90fa312f",
+        "entry_hash": "17be4f0d22377769ed3142ec6a273fc9d698e5f224ce05ef2bbb0fa9497890f5"
       },
       {
         "sequence": 173,
-        "timestamp": "2026-08-27T19:01:19.498978+00:00",
+        "timestamp": "2026-08-31T08:35:37.852963+00:00",
         "txn_id": "pay_voltbill_0198",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -4986,12 +4991,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "10e72542f9237e0c869797f310f69a6d4472a6b6b535e016445b8769ce930128",
-        "entry_hash": "030e335bb732cef4a78b7eb88ed287c57663c8334c71372ce9c9ce4099a1bca8"
+        "prev_hash": "17be4f0d22377769ed3142ec6a273fc9d698e5f224ce05ef2bbb0fa9497890f5",
+        "entry_hash": "4556440265dfe700fd949d118d5c08fd53ca1cd7227dda08c7b7b85ee2529c6a"
       },
       {
         "sequence": 174,
-        "timestamp": "2026-08-27T19:01:19.498978+00:00",
+        "timestamp": "2026-08-31T08:35:37.852963+00:00",
         "txn_id": "pay_voltbill_0897",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -5005,12 +5010,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "030e335bb732cef4a78b7eb88ed287c57663c8334c71372ce9c9ce4099a1bca8",
-        "entry_hash": "78e5ba395aaf0a0f88907469c2b49e7e646aa0a882962908d3dbb3a9fc1d2e15"
+        "prev_hash": "4556440265dfe700fd949d118d5c08fd53ca1cd7227dda08c7b7b85ee2529c6a",
+        "entry_hash": "421b494857ce4743bb4b9f3f41c2560ff5d36bbb61d4e3cc8b8eb0746db9a6a1"
       },
       {
         "sequence": 175,
-        "timestamp": "2026-08-27T19:01:19.498978+00:00",
+        "timestamp": "2026-08-31T08:35:37.852963+00:00",
         "txn_id": "pay_voltbill_0254",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -5024,12 +5029,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "78e5ba395aaf0a0f88907469c2b49e7e646aa0a882962908d3dbb3a9fc1d2e15",
-        "entry_hash": "fa83bf23ff7ca1cc797a8b53f06db589494ffa8c64d874c228cc2e944b9bdb95"
+        "prev_hash": "421b494857ce4743bb4b9f3f41c2560ff5d36bbb61d4e3cc8b8eb0746db9a6a1",
+        "entry_hash": "5ceee06fe67d22cef38e52b5a14a46ff99188cc277426b7e70b43fd5add10ef3"
       },
       {
         "sequence": 176,
-        "timestamp": "2026-08-27T19:01:19.498978+00:00",
+        "timestamp": "2026-08-31T08:35:37.852963+00:00",
         "txn_id": "pay_voltbill_1619",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -5043,12 +5048,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "fa83bf23ff7ca1cc797a8b53f06db589494ffa8c64d874c228cc2e944b9bdb95",
-        "entry_hash": "4406633a12921f053be5d53af0241853926b7e2ff190d72130d25fb62a28a7f3"
+        "prev_hash": "5ceee06fe67d22cef38e52b5a14a46ff99188cc277426b7e70b43fd5add10ef3",
+        "entry_hash": "fc2e10e3fbd11d5d9224dea581e82f930897e25eacafebe36d4fd9e5b552e60f"
       },
       {
         "sequence": 177,
-        "timestamp": "2026-08-27T19:01:19.498978+00:00",
+        "timestamp": "2026-08-31T08:35:37.852963+00:00",
         "txn_id": "pay_voltbill_0613",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -5062,12 +5067,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "4406633a12921f053be5d53af0241853926b7e2ff190d72130d25fb62a28a7f3",
-        "entry_hash": "4409f34556a24f271212f7eb46367c46b5600fee2794239f81ee4e8dba4429c7"
+        "prev_hash": "fc2e10e3fbd11d5d9224dea581e82f930897e25eacafebe36d4fd9e5b552e60f",
+        "entry_hash": "2a70ab9f33c32b44cf00639425c171dfb9a0f0711776688720f26d6a916a48a2"
       },
       {
         "sequence": 178,
-        "timestamp": "2026-08-27T19:01:19.498978+00:00",
+        "timestamp": "2026-08-31T08:35:37.853961+00:00",
         "txn_id": "pay_voltbill_0838",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -5081,12 +5086,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "4409f34556a24f271212f7eb46367c46b5600fee2794239f81ee4e8dba4429c7",
-        "entry_hash": "4204ea3c0201cc0c2ef57bc2d621beaab0ce58921f9ee552f6631bc598c45730"
+        "prev_hash": "2a70ab9f33c32b44cf00639425c171dfb9a0f0711776688720f26d6a916a48a2",
+        "entry_hash": "94d5c0423009684e0cba893d9ac1df21a7b357352fc92900bac38d8eba63cb18"
       },
       {
         "sequence": 179,
-        "timestamp": "2026-08-27T19:01:19.498978+00:00",
+        "timestamp": "2026-08-31T08:35:37.853961+00:00",
         "txn_id": "pay_voltbill_0608",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -5100,12 +5105,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "4204ea3c0201cc0c2ef57bc2d621beaab0ce58921f9ee552f6631bc598c45730",
-        "entry_hash": "435f793a88e08d8644cc9b387ac0bb08ae6bcd1247bad3716c9689e886222f38"
+        "prev_hash": "94d5c0423009684e0cba893d9ac1df21a7b357352fc92900bac38d8eba63cb18",
+        "entry_hash": "bf114fe300834d58f6b5218809a885723e4806d245b1375c35f1b87f2c94320d"
       },
       {
         "sequence": 180,
-        "timestamp": "2026-08-27T19:01:19.498978+00:00",
+        "timestamp": "2026-08-31T08:35:37.853961+00:00",
         "txn_id": "pay_voltbill_0618",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -5119,12 +5124,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "435f793a88e08d8644cc9b387ac0bb08ae6bcd1247bad3716c9689e886222f38",
-        "entry_hash": "692dd8c62cb53dd56243b3f4dc5d19a03fb2e3d68a490d11ad16189d3a643351"
+        "prev_hash": "bf114fe300834d58f6b5218809a885723e4806d245b1375c35f1b87f2c94320d",
+        "entry_hash": "b4530924ad95059ded87091eddeb112bbc4ea1fd0f6474d7fdbeb68e54afdeca"
       },
       {
         "sequence": 181,
-        "timestamp": "2026-08-27T19:01:19.498978+00:00",
+        "timestamp": "2026-08-31T08:35:37.853961+00:00",
         "txn_id": "pay_voltbill_1777",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -5138,12 +5143,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "executed",
-        "prev_hash": "692dd8c62cb53dd56243b3f4dc5d19a03fb2e3d68a490d11ad16189d3a643351",
-        "entry_hash": "a10a017df171d4eff05b6d8311858a5422e3f3b60036c4100338db04f1a82597"
+        "prev_hash": "b4530924ad95059ded87091eddeb112bbc4ea1fd0f6474d7fdbeb68e54afdeca",
+        "entry_hash": "a3fbf9dfd5b7a8a5b4e659f15169415799d3e942e231f792e7358f50e2659e39"
       },
       {
         "sequence": 182,
-        "timestamp": "2026-08-27T19:01:19.499978+00:00",
+        "timestamp": "2026-08-31T08:35:37.853961+00:00",
         "txn_id": "pay_voltbill_0590",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -5157,12 +5162,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
-        "prev_hash": "a10a017df171d4eff05b6d8311858a5422e3f3b60036c4100338db04f1a82597",
-        "entry_hash": "d814bb77b1902c546b731480614e4ed0f65379f54f00062a2156787562fcfced"
+        "prev_hash": "a3fbf9dfd5b7a8a5b4e659f15169415799d3e942e231f792e7358f50e2659e39",
+        "entry_hash": "8600beb689b10e4482f60de0d9175692b3426b27d6717fa7ce19685f36f75ed1"
       },
       {
         "sequence": 183,
-        "timestamp": "2026-08-27T19:01:19.499978+00:00",
+        "timestamp": "2026-08-31T08:35:37.853961+00:00",
         "txn_id": "merchant:voltbill",
         "proposed_action": {
           "action_type": "flag_for_investigation",
@@ -5176,12 +5181,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_ESCALATION",
         "outcome": "escalated",
-        "prev_hash": "d814bb77b1902c546b731480614e4ed0f65379f54f00062a2156787562fcfced",
-        "entry_hash": "2249c2bcb455a04e9219b805942300507280535b0a07dbc1aa371d92154101cc"
+        "prev_hash": "8600beb689b10e4482f60de0d9175692b3426b27d6717fa7ce19685f36f75ed1",
+        "entry_hash": "4c776c945efa8cda059492cbc1ed8c9df7fcb0dc2ef59d7da29d23502ca98928"
       },
       {
         "sequence": 184,
-        "timestamp": "2026-08-27T19:01:19.499978+00:00",
+        "timestamp": "2026-08-31T08:35:37.853961+00:00",
         "txn_id": "merchant:voltbill",
         "proposed_action": {
           "action_type": "flag_for_investigation",
@@ -5195,12 +5200,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_ESCALATION",
         "outcome": "escalated",
-        "prev_hash": "2249c2bcb455a04e9219b805942300507280535b0a07dbc1aa371d92154101cc",
-        "entry_hash": "b43246f4cd4959c96f0539e342d1c19c0e95d22a90ecea05afb9dd872f23fbb4"
+        "prev_hash": "4c776c945efa8cda059492cbc1ed8c9df7fcb0dc2ef59d7da29d23502ca98928",
+        "entry_hash": "f5c2f4c4042a29a9cc201eaef6ab772c40996d92c064302f58c37eb37bd6005e"
       },
       {
         "sequence": 185,
-        "timestamp": "2026-08-27T19:01:19.499978+00:00",
+        "timestamp": "2026-08-31T08:35:37.853961+00:00",
         "txn_id": "merchant:voltbill",
         "proposed_action": {
           "action_type": "flag_for_investigation",
@@ -5214,12 +5219,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_ESCALATION",
         "outcome": "escalated",
-        "prev_hash": "b43246f4cd4959c96f0539e342d1c19c0e95d22a90ecea05afb9dd872f23fbb4",
-        "entry_hash": "3cafe3becd9202d8c732b6cd47c977b3ade6a24afe97d9d4ca398ead59f8cd40"
+        "prev_hash": "f5c2f4c4042a29a9cc201eaef6ab772c40996d92c064302f58c37eb37bd6005e",
+        "entry_hash": "a3755a611b3b80b63298b19cc0a9b14ed253d403d42916ad4b29a9c302f0fa30"
       },
       {
         "sequence": 186,
-        "timestamp": "2026-08-27T19:01:19.499978+00:00",
+        "timestamp": "2026-08-31T08:35:37.854468+00:00",
         "txn_id": "merchant:voltbill",
         "proposed_action": {
           "action_type": "flag_for_investigation",
@@ -5233,12 +5238,12 @@
         "gate_decision": "allow",
         "gate_reason": "OK_ESCALATION",
         "outcome": "escalated",
-        "prev_hash": "3cafe3becd9202d8c732b6cd47c977b3ade6a24afe97d9d4ca398ead59f8cd40",
-        "entry_hash": "3851ddf63873eccdff3455a50af0c72a5826df1745bf3c8d2f27b9de4dc7b59c"
+        "prev_hash": "a3755a611b3b80b63298b19cc0a9b14ed253d403d42916ad4b29a9c302f0fa30",
+        "entry_hash": "999ccdf6171b69e0c1698c88e32d4b52b9803ca65985aba30de67cd517f60270"
       },
       {
         "sequence": 187,
-        "timestamp": "2026-08-27T19:01:19.499978+00:00",
+        "timestamp": "2026-08-31T08:35:37.854468+00:00",
         "txn_id": "pay_voltbill_0064",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -5252,12 +5257,12 @@
         "gate_decision": "deny",
         "gate_reason": "DENY_AMOUNT_ABOVE_CEILING",
         "outcome": "denied",
-        "prev_hash": "3851ddf63873eccdff3455a50af0c72a5826df1745bf3c8d2f27b9de4dc7b59c",
-        "entry_hash": "ac05b50e49a8d1ed1da57b60ceb8facf944357163df3b317fbd4a74437ed3374"
+        "prev_hash": "999ccdf6171b69e0c1698c88e32d4b52b9803ca65985aba30de67cd517f60270",
+        "entry_hash": "1a62d9c6a3dd48734198bd6ac6e12131c0656430e3584862c7b9eecc81b652b2"
       },
       {
         "sequence": 188,
-        "timestamp": "2026-08-27T19:01:19.499978+00:00",
+        "timestamp": "2026-08-31T08:35:37.854468+00:00",
         "txn_id": "pay_voltbill_0550",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -5271,12 +5276,12 @@
         "gate_decision": "deny",
         "gate_reason": "DENY_AMOUNT_ABOVE_CEILING",
         "outcome": "denied",
-        "prev_hash": "ac05b50e49a8d1ed1da57b60ceb8facf944357163df3b317fbd4a74437ed3374",
-        "entry_hash": "05a5d59d73d2a2784f1b3c55d995e5ef52df898d9b3747a5bd05bb045c42b586"
+        "prev_hash": "1a62d9c6a3dd48734198bd6ac6e12131c0656430e3584862c7b9eecc81b652b2",
+        "entry_hash": "fbc646a2f96586574ebab72d6e0778bad4c3db8653183d549b77890497e84646"
       },
       {
         "sequence": 189,
-        "timestamp": "2026-08-27T19:01:19.499978+00:00",
+        "timestamp": "2026-08-31T08:35:37.854468+00:00",
         "txn_id": "pay_voltbill_0964",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -5290,12 +5295,12 @@
         "gate_decision": "deny",
         "gate_reason": "DENY_AMOUNT_ABOVE_CEILING",
         "outcome": "denied",
-        "prev_hash": "05a5d59d73d2a2784f1b3c55d995e5ef52df898d9b3747a5bd05bb045c42b586",
-        "entry_hash": "a478bd2c50f9aac478675c0ee7391839caee5a80f7fa5c827c27ad6c99ee43e2"
+        "prev_hash": "fbc646a2f96586574ebab72d6e0778bad4c3db8653183d549b77890497e84646",
+        "entry_hash": "8a064d5835fd5ac3baf99131daf6bdc2592ca2a4c44add85c5680cf88d8d660a"
       },
       {
         "sequence": 190,
-        "timestamp": "2026-08-27T19:01:19.499978+00:00",
+        "timestamp": "2026-08-31T08:35:37.854468+00:00",
         "txn_id": "pay_voltbill_1412",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -5309,12 +5314,12 @@
         "gate_decision": "deny",
         "gate_reason": "DENY_AMOUNT_ABOVE_CEILING",
         "outcome": "denied",
-        "prev_hash": "a478bd2c50f9aac478675c0ee7391839caee5a80f7fa5c827c27ad6c99ee43e2",
-        "entry_hash": "d5940939cb60d776d10288d65762b0190c1fdbba54c87965cfd0deea5cace3a6"
+        "prev_hash": "8a064d5835fd5ac3baf99131daf6bdc2592ca2a4c44add85c5680cf88d8d660a",
+        "entry_hash": "67ba68014daf705cb57a92174ff95fa7f2b60461dc07a93b9fb48f9b5e02158d"
       },
       {
         "sequence": 191,
-        "timestamp": "2026-08-27T19:01:19.499978+00:00",
+        "timestamp": "2026-08-31T08:35:37.854468+00:00",
         "txn_id": "pay_voltbill_1053",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -5328,12 +5333,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "d5940939cb60d776d10288d65762b0190c1fdbba54c87965cfd0deea5cace3a6",
-        "entry_hash": "1e1c8ccf955a558ba2c284d4b44185251d7d71aa89a4d4d3d89774b2c11da2ac"
+        "prev_hash": "67ba68014daf705cb57a92174ff95fa7f2b60461dc07a93b9fb48f9b5e02158d",
+        "entry_hash": "946d7c36478bb9e56df6a686b995c52d315b1d48f4f38ec466b0552fbad17bd7"
       },
       {
         "sequence": 192,
-        "timestamp": "2026-08-27T19:01:19.499978+00:00",
+        "timestamp": "2026-08-31T08:35:37.854468+00:00",
         "txn_id": "pay_voltbill_1125",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -5347,12 +5352,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "1e1c8ccf955a558ba2c284d4b44185251d7d71aa89a4d4d3d89774b2c11da2ac",
-        "entry_hash": "6fb56a6d2a40c76003aaf71982e0331381c866aca62bd0e873923b3f61102b48"
+        "prev_hash": "946d7c36478bb9e56df6a686b995c52d315b1d48f4f38ec466b0552fbad17bd7",
+        "entry_hash": "dcd4707cec548b8cb60689207fcb793801647f1110c3aa7449dfac26ee98fe2b"
       },
       {
         "sequence": 193,
-        "timestamp": "2026-08-27T19:01:19.499978+00:00",
+        "timestamp": "2026-08-31T08:35:37.854468+00:00",
         "txn_id": "pay_voltbill_0831",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -5366,12 +5371,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "6fb56a6d2a40c76003aaf71982e0331381c866aca62bd0e873923b3f61102b48",
-        "entry_hash": "9a6af55c6c2b6c92f5e9b58dd102f97747bb5683df2d0943cfbcc8e0ff6b9838"
+        "prev_hash": "dcd4707cec548b8cb60689207fcb793801647f1110c3aa7449dfac26ee98fe2b",
+        "entry_hash": "e00c44248268810dc49c824b3cbd46d35558ae7dc6be81d0361325275be97736"
       },
       {
         "sequence": 194,
-        "timestamp": "2026-08-27T19:01:19.499978+00:00",
+        "timestamp": "2026-08-31T08:35:37.854468+00:00",
         "txn_id": "pay_voltbill_1343",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -5385,12 +5390,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "9a6af55c6c2b6c92f5e9b58dd102f97747bb5683df2d0943cfbcc8e0ff6b9838",
-        "entry_hash": "d72077e6ab7f038bc54a97c159ca8db923323fbbedec0646ae7c22f2dea7b26d"
+        "prev_hash": "e00c44248268810dc49c824b3cbd46d35558ae7dc6be81d0361325275be97736",
+        "entry_hash": "f31c9a4a9e4f40b8caef0cd2c93e169fbce352a92a3edf2d1d229b9f296819cc"
       },
       {
         "sequence": 195,
-        "timestamp": "2026-08-27T19:01:19.500981+00:00",
+        "timestamp": "2026-08-31T08:35:37.854468+00:00",
         "txn_id": "pay_voltbill_1934",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -5404,12 +5409,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "d72077e6ab7f038bc54a97c159ca8db923323fbbedec0646ae7c22f2dea7b26d",
-        "entry_hash": "354e25296568e6e957c54ea73da373306cd41d7d87126eebac08f821f501d7a5"
+        "prev_hash": "f31c9a4a9e4f40b8caef0cd2c93e169fbce352a92a3edf2d1d229b9f296819cc",
+        "entry_hash": "d79f41e6b653263f54ef289417b5ead10fabb83ce8225d51edd39e4de7dc77fb"
       },
       {
         "sequence": 196,
-        "timestamp": "2026-08-27T19:01:19.500981+00:00",
+        "timestamp": "2026-08-31T08:35:37.854468+00:00",
         "txn_id": "pay_voltbill_1312",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -5423,12 +5428,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "354e25296568e6e957c54ea73da373306cd41d7d87126eebac08f821f501d7a5",
-        "entry_hash": "2afd0c2009b970556c58191fc0f51c22cb2bb5f5c9b3825bc2bf4184339ad023"
+        "prev_hash": "d79f41e6b653263f54ef289417b5ead10fabb83ce8225d51edd39e4de7dc77fb",
+        "entry_hash": "8fcb0089783e5c5644538264dd6db90cc28eac048a40cfeca8eb19dd9036040c"
       },
       {
         "sequence": 197,
-        "timestamp": "2026-08-27T19:01:19.500981+00:00",
+        "timestamp": "2026-08-31T08:35:37.854468+00:00",
         "txn_id": "pay_voltbill_1847",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -5442,12 +5447,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "2afd0c2009b970556c58191fc0f51c22cb2bb5f5c9b3825bc2bf4184339ad023",
-        "entry_hash": "7701f52f01538af9256d9e08ac13408d438cfdfeee8f70cd853aa932cc63f5e4"
+        "prev_hash": "8fcb0089783e5c5644538264dd6db90cc28eac048a40cfeca8eb19dd9036040c",
+        "entry_hash": "7b9b140d40d125d51bc15686386f9561ce598b2a4ea5bf0011717378e3e05f65"
       },
       {
         "sequence": 198,
-        "timestamp": "2026-08-27T19:01:19.500981+00:00",
+        "timestamp": "2026-08-31T08:35:37.854468+00:00",
         "txn_id": "pay_voltbill_0065",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -5461,12 +5466,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "7701f52f01538af9256d9e08ac13408d438cfdfeee8f70cd853aa932cc63f5e4",
-        "entry_hash": "973829870718f8cd32508c6fe8b0eeeac8cbd292001e576bfb700851c3fae407"
+        "prev_hash": "7b9b140d40d125d51bc15686386f9561ce598b2a4ea5bf0011717378e3e05f65",
+        "entry_hash": "7dc093626c07c488560b126a7a15e116934328c1f065b5785655386e1d701f7b"
       },
       {
         "sequence": 199,
-        "timestamp": "2026-08-27T19:01:19.500981+00:00",
+        "timestamp": "2026-08-31T08:35:37.854468+00:00",
         "txn_id": "pay_voltbill_1319",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -5480,12 +5485,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "973829870718f8cd32508c6fe8b0eeeac8cbd292001e576bfb700851c3fae407",
-        "entry_hash": "7761bf214abf25dbddd88fb39687eee3a93849e18a77bfc82ccb2d182a13a40f"
+        "prev_hash": "7dc093626c07c488560b126a7a15e116934328c1f065b5785655386e1d701f7b",
+        "entry_hash": "b0f9efcd9592bc5c3b0bfcd6553df37f070b69c60f44338fce3efeb85fde409c"
       },
       {
         "sequence": 200,
-        "timestamp": "2026-08-27T19:01:19.500981+00:00",
+        "timestamp": "2026-08-31T08:35:37.854468+00:00",
         "txn_id": "pay_voltbill_1376",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -5499,12 +5504,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "7761bf214abf25dbddd88fb39687eee3a93849e18a77bfc82ccb2d182a13a40f",
-        "entry_hash": "65dacfea472c90ca03f9b86f2a6188f952070eb95769654913ead4fce015bd73"
+        "prev_hash": "b0f9efcd9592bc5c3b0bfcd6553df37f070b69c60f44338fce3efeb85fde409c",
+        "entry_hash": "43e8f20a8c7ddee6ebbf7b7d0c6146949bee6de8f683c84d40c9db2fdfb45c73"
       },
       {
         "sequence": 201,
-        "timestamp": "2026-08-27T19:01:19.500981+00:00",
+        "timestamp": "2026-08-31T08:35:37.854468+00:00",
         "txn_id": "pay_voltbill_0882",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -5518,12 +5523,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "65dacfea472c90ca03f9b86f2a6188f952070eb95769654913ead4fce015bd73",
-        "entry_hash": "46ff39a059245a7daa6cbf21902376a211837e0ad09eafa663c05e78edc627af"
+        "prev_hash": "43e8f20a8c7ddee6ebbf7b7d0c6146949bee6de8f683c84d40c9db2fdfb45c73",
+        "entry_hash": "cb02415c48fe8437553a0d52f69ccf3406609918d4ccf5e79dd7e55f5c17faa1"
       },
       {
         "sequence": 202,
-        "timestamp": "2026-08-27T19:01:19.500981+00:00",
+        "timestamp": "2026-08-31T08:35:37.854468+00:00",
         "txn_id": "pay_voltbill_0485",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -5537,12 +5542,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "46ff39a059245a7daa6cbf21902376a211837e0ad09eafa663c05e78edc627af",
-        "entry_hash": "4044fc9c7769a690fc8d23f8136c3a695bcc8f204171c4aab025070b34d1adb4"
+        "prev_hash": "cb02415c48fe8437553a0d52f69ccf3406609918d4ccf5e79dd7e55f5c17faa1",
+        "entry_hash": "927b065ec5883cdff91bb791a18da0e5ba66c7b07084628eb761a61860476d3a"
       },
       {
         "sequence": 203,
-        "timestamp": "2026-08-27T19:01:19.500981+00:00",
+        "timestamp": "2026-08-31T08:35:37.854468+00:00",
         "txn_id": "pay_voltbill_0610",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -5556,12 +5561,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "4044fc9c7769a690fc8d23f8136c3a695bcc8f204171c4aab025070b34d1adb4",
-        "entry_hash": "4982af29d03520e2415ecf8c4ce20333f5269baf087a7f45c48e6bb008f1cb2c"
+        "prev_hash": "927b065ec5883cdff91bb791a18da0e5ba66c7b07084628eb761a61860476d3a",
+        "entry_hash": "ec4fb711b9d483dd5496733b51c72420b1ed38bf034ef645a31a3d3de5ec461f"
       },
       {
         "sequence": 204,
-        "timestamp": "2026-08-27T19:01:19.500981+00:00",
+        "timestamp": "2026-08-31T08:35:37.854468+00:00",
         "txn_id": "pay_voltbill_0722",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -5575,12 +5580,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "4982af29d03520e2415ecf8c4ce20333f5269baf087a7f45c48e6bb008f1cb2c",
-        "entry_hash": "d748518021ef54df380f7af93442380b6a5b56e471b4480a357c2a8d2d015377"
+        "prev_hash": "ec4fb711b9d483dd5496733b51c72420b1ed38bf034ef645a31a3d3de5ec461f",
+        "entry_hash": "002d5d50dd4589e5a628d3d6194352161ed87fd6cc0736863596d6ecdfead340"
       },
       {
         "sequence": 205,
-        "timestamp": "2026-08-27T19:01:19.500981+00:00",
+        "timestamp": "2026-08-31T08:35:37.854468+00:00",
         "txn_id": "pay_voltbill_1819",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -5594,12 +5599,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "d748518021ef54df380f7af93442380b6a5b56e471b4480a357c2a8d2d015377",
-        "entry_hash": "f37104b0880acc230ae022aedb5f73157b71691a6e6b38d9d4741ce092fe1da5"
+        "prev_hash": "002d5d50dd4589e5a628d3d6194352161ed87fd6cc0736863596d6ecdfead340",
+        "entry_hash": "b136f0ef46b808201e76dcd91161992b8c653b64013d94657d4fb08ae8c1f643"
       },
       {
         "sequence": 206,
-        "timestamp": "2026-08-27T19:01:19.500981+00:00",
+        "timestamp": "2026-08-31T08:35:37.854468+00:00",
         "txn_id": "pay_voltbill_0053",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -5613,12 +5618,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "f37104b0880acc230ae022aedb5f73157b71691a6e6b38d9d4741ce092fe1da5",
-        "entry_hash": "c970a683b4d7e6f132d15f450abd141a5e5a12888711342e075b55766bf22634"
+        "prev_hash": "b136f0ef46b808201e76dcd91161992b8c653b64013d94657d4fb08ae8c1f643",
+        "entry_hash": "23408e8f5a7bcec1cc2a9c7c66fd5dcc6425b3e8b28b2e3525123158a274c41f"
       },
       {
         "sequence": 207,
-        "timestamp": "2026-08-27T19:01:19.500981+00:00",
+        "timestamp": "2026-08-31T08:35:37.854468+00:00",
         "txn_id": "pay_voltbill_1768",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -5632,12 +5637,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "c970a683b4d7e6f132d15f450abd141a5e5a12888711342e075b55766bf22634",
-        "entry_hash": "acb38d6998fca1dbd5d5b16a8ce8b6525b276b00da6afa5a2ec88060c1082e1c"
+        "prev_hash": "23408e8f5a7bcec1cc2a9c7c66fd5dcc6425b3e8b28b2e3525123158a274c41f",
+        "entry_hash": "bc9909ab8875182cee5ac3d16e10cf2995899a9a4ea6fe54a5aafd58f737d4af"
       },
       {
         "sequence": 208,
-        "timestamp": "2026-08-27T19:01:19.501946+00:00",
+        "timestamp": "2026-08-31T08:35:37.854468+00:00",
         "txn_id": "pay_voltbill_1187",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -5651,12 +5656,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "acb38d6998fca1dbd5d5b16a8ce8b6525b276b00da6afa5a2ec88060c1082e1c",
-        "entry_hash": "6f811922cf53791fc527bec5ba0762d9d91e34391a77ae48052ee8204ae2ae28"
+        "prev_hash": "bc9909ab8875182cee5ac3d16e10cf2995899a9a4ea6fe54a5aafd58f737d4af",
+        "entry_hash": "3cf6e0371a1f285026ece9371ad041759ae7e50304652f676f715eb0cbf9ec54"
       },
       {
         "sequence": 209,
-        "timestamp": "2026-08-27T19:01:19.501946+00:00",
+        "timestamp": "2026-08-31T08:35:37.854468+00:00",
         "txn_id": "pay_voltbill_0460",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -5670,12 +5675,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "6f811922cf53791fc527bec5ba0762d9d91e34391a77ae48052ee8204ae2ae28",
-        "entry_hash": "c80ea0be3dfbdd0ed28d55991a21a8672e37c9704e2ee306079ba70ab2e1307a"
+        "prev_hash": "3cf6e0371a1f285026ece9371ad041759ae7e50304652f676f715eb0cbf9ec54",
+        "entry_hash": "329ef2f66cfb0cb764be339aa4966f4cf3e5f4f6d0577622d80c589cd5e79168"
       },
       {
         "sequence": 210,
-        "timestamp": "2026-08-27T19:01:19.501946+00:00",
+        "timestamp": "2026-08-31T08:35:37.854468+00:00",
         "txn_id": "pay_voltbill_1680",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -5689,12 +5694,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "c80ea0be3dfbdd0ed28d55991a21a8672e37c9704e2ee306079ba70ab2e1307a",
-        "entry_hash": "55bfde3eb4aa60f0477bd1823b28aa0379e38ff3a6eeb7c1abc43bffc0cf2b25"
+        "prev_hash": "329ef2f66cfb0cb764be339aa4966f4cf3e5f4f6d0577622d80c589cd5e79168",
+        "entry_hash": "ea59b36fd3fb29d5e011684f6b30fdebb667944dc7f1b53136d8531db3853e63"
       },
       {
         "sequence": 211,
-        "timestamp": "2026-08-27T19:01:19.501946+00:00",
+        "timestamp": "2026-08-31T08:35:37.854468+00:00",
         "txn_id": "pay_voltbill_1348",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -5708,12 +5713,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "55bfde3eb4aa60f0477bd1823b28aa0379e38ff3a6eeb7c1abc43bffc0cf2b25",
-        "entry_hash": "c2f15197ee5425b2069468f42896bfe44d795e4e24dc741512ecf0d526379e8d"
+        "prev_hash": "ea59b36fd3fb29d5e011684f6b30fdebb667944dc7f1b53136d8531db3853e63",
+        "entry_hash": "e83f8e36f5fd7c41d1250dde4c644e900a6480e867ad1f8afcd967683a64370f"
       },
       {
         "sequence": 212,
-        "timestamp": "2026-08-27T19:01:19.501946+00:00",
+        "timestamp": "2026-08-31T08:35:37.855478+00:00",
         "txn_id": "pay_voltbill_0527",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -5727,12 +5732,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "c2f15197ee5425b2069468f42896bfe44d795e4e24dc741512ecf0d526379e8d",
-        "entry_hash": "24ec75f61299aa85fadbd1794b146709d572b9b5bd67a9a78218c0ca06cf445d"
+        "prev_hash": "e83f8e36f5fd7c41d1250dde4c644e900a6480e867ad1f8afcd967683a64370f",
+        "entry_hash": "2002bf76695f2ae5342301721cee2d4194a35fbd781b435801ce7cfe64b1e596"
       },
       {
         "sequence": 213,
-        "timestamp": "2026-08-27T19:01:19.501946+00:00",
+        "timestamp": "2026-08-31T08:35:37.855478+00:00",
         "txn_id": "pay_voltbill_0186",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -5746,12 +5751,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "24ec75f61299aa85fadbd1794b146709d572b9b5bd67a9a78218c0ca06cf445d",
-        "entry_hash": "3bf4ebfea2210662932ccad27dadcfe392fa242a1d8902185e02b72de3003008"
+        "prev_hash": "2002bf76695f2ae5342301721cee2d4194a35fbd781b435801ce7cfe64b1e596",
+        "entry_hash": "f1067ec1b5aee9a019a1539beaa3e5e4af33fcced31d29d7ca8e8344d62f5f70"
       },
       {
         "sequence": 214,
-        "timestamp": "2026-08-27T19:01:19.501946+00:00",
+        "timestamp": "2026-08-31T08:35:37.855478+00:00",
         "txn_id": "pay_voltbill_0071",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -5765,12 +5770,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "3bf4ebfea2210662932ccad27dadcfe392fa242a1d8902185e02b72de3003008",
-        "entry_hash": "1d346c0f90f867f42d9ed22eb49dc9d45824017e33605f11d05afa8995f30310"
+        "prev_hash": "f1067ec1b5aee9a019a1539beaa3e5e4af33fcced31d29d7ca8e8344d62f5f70",
+        "entry_hash": "f011067f7a0d34160b697b0b2b9347620b0b955b1bf45da6944793bfd97f8578"
       },
       {
         "sequence": 215,
-        "timestamp": "2026-08-27T19:01:19.501946+00:00",
+        "timestamp": "2026-08-31T08:35:37.855478+00:00",
         "txn_id": "pay_voltbill_1852",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -5784,12 +5789,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "1d346c0f90f867f42d9ed22eb49dc9d45824017e33605f11d05afa8995f30310",
-        "entry_hash": "54c1375496eb28e88cc9cdf7a1f234a9486f668a4866d10233e255eb0b41b933"
+        "prev_hash": "f011067f7a0d34160b697b0b2b9347620b0b955b1bf45da6944793bfd97f8578",
+        "entry_hash": "7457eb9cd1bb43436b8d7e13d1bebc383aefc0209a3e7bc8f33059c9a51b4142"
       },
       {
         "sequence": 216,
-        "timestamp": "2026-08-27T19:01:19.501946+00:00",
+        "timestamp": "2026-08-31T08:35:37.855478+00:00",
         "txn_id": "pay_voltbill_1748",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -5803,12 +5808,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "54c1375496eb28e88cc9cdf7a1f234a9486f668a4866d10233e255eb0b41b933",
-        "entry_hash": "2faf40995f29a7bafd24ddf1e0720f0d4f88e1f49b3adbcbf81b9fcc8996f8bb"
+        "prev_hash": "7457eb9cd1bb43436b8d7e13d1bebc383aefc0209a3e7bc8f33059c9a51b4142",
+        "entry_hash": "846967f17d5c7184c0b57e32b51c4436a1194929227e6c6384aaf0c2b1ffcad2"
       },
       {
         "sequence": 217,
-        "timestamp": "2026-08-27T19:01:19.501946+00:00",
+        "timestamp": "2026-08-31T08:35:37.855478+00:00",
         "txn_id": "pay_voltbill_1158",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -5822,12 +5827,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "2faf40995f29a7bafd24ddf1e0720f0d4f88e1f49b3adbcbf81b9fcc8996f8bb",
-        "entry_hash": "7b0d5e924b29e37423beaada9961ddf112d4a254a100a5a13fdc6e816dba0b01"
+        "prev_hash": "846967f17d5c7184c0b57e32b51c4436a1194929227e6c6384aaf0c2b1ffcad2",
+        "entry_hash": "c71d943a44d56801ed7e0625f77ebd5250622ae7fa381a608b88ca4fa4d8d39f"
       },
       {
         "sequence": 218,
-        "timestamp": "2026-08-27T19:01:19.502958+00:00",
+        "timestamp": "2026-08-31T08:35:37.855478+00:00",
         "txn_id": "pay_voltbill_1913",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -5841,12 +5846,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "7b0d5e924b29e37423beaada9961ddf112d4a254a100a5a13fdc6e816dba0b01",
-        "entry_hash": "08e81e36c691cb6dd0eb998e05e3fa2ecfd1801c1af6d1908a2e3b550456be8f"
+        "prev_hash": "c71d943a44d56801ed7e0625f77ebd5250622ae7fa381a608b88ca4fa4d8d39f",
+        "entry_hash": "58e43deb447e2f301c0537d1a62f293b7d825dbd87c454ce8fb0d1cf28f1e028"
       },
       {
         "sequence": 219,
-        "timestamp": "2026-08-27T19:01:19.502958+00:00",
+        "timestamp": "2026-08-31T08:35:37.855478+00:00",
         "txn_id": "pay_voltbill_0046",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -5860,12 +5865,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "08e81e36c691cb6dd0eb998e05e3fa2ecfd1801c1af6d1908a2e3b550456be8f",
-        "entry_hash": "d833684585f52185d1637366dd5cb3e2aaff7e9d47c1bc9d02204c0da8f35eae"
+        "prev_hash": "58e43deb447e2f301c0537d1a62f293b7d825dbd87c454ce8fb0d1cf28f1e028",
+        "entry_hash": "518ee39f239cb28eea24c9dca15c0f44e772d95c9ca56051c1fb5f1268fbfeb7"
       },
       {
         "sequence": 220,
-        "timestamp": "2026-08-27T19:01:19.502958+00:00",
+        "timestamp": "2026-08-31T08:35:37.855478+00:00",
         "txn_id": "pay_voltbill_0997",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -5879,12 +5884,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "d833684585f52185d1637366dd5cb3e2aaff7e9d47c1bc9d02204c0da8f35eae",
-        "entry_hash": "3fcdc65f55451e4af325db8a41caf65184cd7f9dc6dc983120cc0e718165745e"
+        "prev_hash": "518ee39f239cb28eea24c9dca15c0f44e772d95c9ca56051c1fb5f1268fbfeb7",
+        "entry_hash": "6da63af6c6fa0870942f322f518883a11385d2434913871f62157ec3d3a6427b"
       },
       {
         "sequence": 221,
-        "timestamp": "2026-08-27T19:01:19.502958+00:00",
+        "timestamp": "2026-08-31T08:35:37.855478+00:00",
         "txn_id": "pay_voltbill_0980",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -5898,12 +5903,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "3fcdc65f55451e4af325db8a41caf65184cd7f9dc6dc983120cc0e718165745e",
-        "entry_hash": "81f908c6dc9cd3002bbba2dffaa8e817f5077def9d7442998d8a4922131878f0"
+        "prev_hash": "6da63af6c6fa0870942f322f518883a11385d2434913871f62157ec3d3a6427b",
+        "entry_hash": "672b9f56368ae208a5b6c77914efe0c02e9e97eac4cc98bf83d6cfbc162ec639"
       },
       {
         "sequence": 222,
-        "timestamp": "2026-08-27T19:01:19.502958+00:00",
+        "timestamp": "2026-08-31T08:35:37.855478+00:00",
         "txn_id": "pay_voltbill_0813",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -5917,12 +5922,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "81f908c6dc9cd3002bbba2dffaa8e817f5077def9d7442998d8a4922131878f0",
-        "entry_hash": "ea9edd59ef318db5cc690852df17002f10c58976f191b397d7e279a9a5169821"
+        "prev_hash": "672b9f56368ae208a5b6c77914efe0c02e9e97eac4cc98bf83d6cfbc162ec639",
+        "entry_hash": "078bb1c5de32ff8046671babfffda2603ea3acdd7cfffbb6a7761515650624b4"
       },
       {
         "sequence": 223,
-        "timestamp": "2026-08-27T19:01:19.502958+00:00",
+        "timestamp": "2026-08-31T08:35:37.855478+00:00",
         "txn_id": "pay_voltbill_1062",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -5936,12 +5941,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "ea9edd59ef318db5cc690852df17002f10c58976f191b397d7e279a9a5169821",
-        "entry_hash": "16af219e0e8cb93b9a2f88d847047dbcbeedac3975f3a0ea560fb8d40f5b9d05"
+        "prev_hash": "078bb1c5de32ff8046671babfffda2603ea3acdd7cfffbb6a7761515650624b4",
+        "entry_hash": "4656ac5df866d61fbabd51db2ae0687775d1a8539894dfacbd71bd1cb4bb99bc"
       },
       {
         "sequence": 224,
-        "timestamp": "2026-08-27T19:01:19.502958+00:00",
+        "timestamp": "2026-08-31T08:35:37.855478+00:00",
         "txn_id": "pay_voltbill_1828",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -5955,12 +5960,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "16af219e0e8cb93b9a2f88d847047dbcbeedac3975f3a0ea560fb8d40f5b9d05",
-        "entry_hash": "71ffa242b20dda460b2034a2d8746d809786c41b680d79bca66bc00d83774a8e"
+        "prev_hash": "4656ac5df866d61fbabd51db2ae0687775d1a8539894dfacbd71bd1cb4bb99bc",
+        "entry_hash": "298f38bad27b95778c8f274ed442e18538c7c2746daf01c93f81a9dffbc10b48"
       },
       {
         "sequence": 225,
-        "timestamp": "2026-08-27T19:01:19.502958+00:00",
+        "timestamp": "2026-08-31T08:35:37.855478+00:00",
         "txn_id": "pay_voltbill_1172",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -5974,12 +5979,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "71ffa242b20dda460b2034a2d8746d809786c41b680d79bca66bc00d83774a8e",
-        "entry_hash": "6b2d2195673484cd711eecf5f215e0f0a128465a1f84b63134337cbd71423501"
+        "prev_hash": "298f38bad27b95778c8f274ed442e18538c7c2746daf01c93f81a9dffbc10b48",
+        "entry_hash": "21ccdc8d3b01949c42bfb9bfba45027e8a2e1eea181a4588c35c46f5a1c3ca62"
       },
       {
         "sequence": 226,
-        "timestamp": "2026-08-27T19:01:19.502958+00:00",
+        "timestamp": "2026-08-31T08:35:37.856480+00:00",
         "txn_id": "pay_voltbill_0818",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -5993,12 +5998,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "6b2d2195673484cd711eecf5f215e0f0a128465a1f84b63134337cbd71423501",
-        "entry_hash": "907704621321d062459d2614335db8bd1fa6ddf8891c832e12575d93bb3ca302"
+        "prev_hash": "21ccdc8d3b01949c42bfb9bfba45027e8a2e1eea181a4588c35c46f5a1c3ca62",
+        "entry_hash": "3f2d2629c555e0b9de8128efec1fb1c5a2415e85b4565a533bb8c452d0f13eed"
       },
       {
         "sequence": 227,
-        "timestamp": "2026-08-27T19:01:19.502958+00:00",
+        "timestamp": "2026-08-31T08:35:37.856480+00:00",
         "txn_id": "pay_voltbill_0900",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -6012,12 +6017,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "907704621321d062459d2614335db8bd1fa6ddf8891c832e12575d93bb3ca302",
-        "entry_hash": "c4445cb6d34f522dac30fff187a1768767ba05901842188f35e56b05b8ce6d03"
+        "prev_hash": "3f2d2629c555e0b9de8128efec1fb1c5a2415e85b4565a533bb8c452d0f13eed",
+        "entry_hash": "1ab7e36ca4b65e90e1c050304966901d9b9d9ed5aed13f3b04cc015b9ad3e350"
       },
       {
         "sequence": 228,
-        "timestamp": "2026-08-27T19:01:19.502958+00:00",
+        "timestamp": "2026-08-31T08:35:37.856480+00:00",
         "txn_id": "pay_voltbill_1235",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -6031,12 +6036,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "c4445cb6d34f522dac30fff187a1768767ba05901842188f35e56b05b8ce6d03",
-        "entry_hash": "98c9136da5b42807914eca261ef8a3e79ff6b60dae51ba937e4a1e9f28c77e0c"
+        "prev_hash": "1ab7e36ca4b65e90e1c050304966901d9b9d9ed5aed13f3b04cc015b9ad3e350",
+        "entry_hash": "b689b357a4acb600a298b0bd8da669308a7fc0c2c866bcb42c1764ee0eb51775"
       },
       {
         "sequence": 229,
-        "timestamp": "2026-08-27T19:01:19.502958+00:00",
+        "timestamp": "2026-08-31T08:35:37.856480+00:00",
         "txn_id": "pay_voltbill_0948",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -6050,12 +6055,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "98c9136da5b42807914eca261ef8a3e79ff6b60dae51ba937e4a1e9f28c77e0c",
-        "entry_hash": "6f83c8ecf35f3bb5da462449b2aa018ae37e07a8900edaf27dfd6f0f2f128979"
+        "prev_hash": "b689b357a4acb600a298b0bd8da669308a7fc0c2c866bcb42c1764ee0eb51775",
+        "entry_hash": "a1bef8c36e0c794b4b8fa15e4651fb564761e33992f7afce57d7a7a9a39f0a76"
       },
       {
         "sequence": 230,
-        "timestamp": "2026-08-27T19:01:19.502958+00:00",
+        "timestamp": "2026-08-31T08:35:37.856480+00:00",
         "txn_id": "pay_voltbill_1503",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -6069,12 +6074,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "6f83c8ecf35f3bb5da462449b2aa018ae37e07a8900edaf27dfd6f0f2f128979",
-        "entry_hash": "2194d7731f84a695b7b1e420fbe9bafc39d5b2a9bf908170bfbbf75a9a16cf65"
+        "prev_hash": "a1bef8c36e0c794b4b8fa15e4651fb564761e33992f7afce57d7a7a9a39f0a76",
+        "entry_hash": "bdac5deb8a682a496f710a4531697b057fabd87e6ce91a518008d72688ffff62"
       },
       {
         "sequence": 231,
-        "timestamp": "2026-08-27T19:01:19.503951+00:00",
+        "timestamp": "2026-08-31T08:35:37.856480+00:00",
         "txn_id": "pay_voltbill_2084",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -6088,12 +6093,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "2194d7731f84a695b7b1e420fbe9bafc39d5b2a9bf908170bfbbf75a9a16cf65",
-        "entry_hash": "9c38f2c85fe465be2c3f7a822610c3c19ece1b04cfa53792255d4496126426bf"
+        "prev_hash": "bdac5deb8a682a496f710a4531697b057fabd87e6ce91a518008d72688ffff62",
+        "entry_hash": "4861c160753abb11322b28d72a58433066dfa96997e3e86501e4599f515a0921"
       },
       {
         "sequence": 232,
-        "timestamp": "2026-08-27T19:01:19.503951+00:00",
+        "timestamp": "2026-08-31T08:35:37.856480+00:00",
         "txn_id": "pay_voltbill_1468",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -6107,12 +6112,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "9c38f2c85fe465be2c3f7a822610c3c19ece1b04cfa53792255d4496126426bf",
-        "entry_hash": "048692f58aad8ffae124d11c6794d1984792a3e22a1750c1eb450ebb088233cc"
+        "prev_hash": "4861c160753abb11322b28d72a58433066dfa96997e3e86501e4599f515a0921",
+        "entry_hash": "330d15497d8a854942b4fb96d519b10556fe5099cd5e97979a4a6429954b769d"
       },
       {
         "sequence": 233,
-        "timestamp": "2026-08-27T19:01:19.503951+00:00",
+        "timestamp": "2026-08-31T08:35:37.856480+00:00",
         "txn_id": "pay_voltbill_0803",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -6126,12 +6131,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "048692f58aad8ffae124d11c6794d1984792a3e22a1750c1eb450ebb088233cc",
-        "entry_hash": "f8eedca451119faf21e6f26a186ec8943ee5e1d2750ed9dd0e2c53083c357a13"
+        "prev_hash": "330d15497d8a854942b4fb96d519b10556fe5099cd5e97979a4a6429954b769d",
+        "entry_hash": "7610c9b7afad141bc282be21ec275d301dccaf8ea090257dfe5968c877f1cdf0"
       },
       {
         "sequence": 234,
-        "timestamp": "2026-08-27T19:01:19.503951+00:00",
+        "timestamp": "2026-08-31T08:35:37.857484+00:00",
         "txn_id": "pay_voltbill_0596",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -6145,12 +6150,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "f8eedca451119faf21e6f26a186ec8943ee5e1d2750ed9dd0e2c53083c357a13",
-        "entry_hash": "7d2e6cb1164596b0b0069654533d648a19d84b0a955956110d7ef9e98f1adf05"
+        "prev_hash": "7610c9b7afad141bc282be21ec275d301dccaf8ea090257dfe5968c877f1cdf0",
+        "entry_hash": "68c5ffd4a764737506f724a75f26dfca09002e43ddfeed137e9021e463f8bf9e"
       },
       {
         "sequence": 235,
-        "timestamp": "2026-08-27T19:01:19.503951+00:00",
+        "timestamp": "2026-08-31T08:35:37.857484+00:00",
         "txn_id": "pay_voltbill_1578",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -6164,12 +6169,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "7d2e6cb1164596b0b0069654533d648a19d84b0a955956110d7ef9e98f1adf05",
-        "entry_hash": "4652a68f98b87e7dffffe846c8aca154d7dfd54f69bdc741cdf737b90ab31fb3"
+        "prev_hash": "68c5ffd4a764737506f724a75f26dfca09002e43ddfeed137e9021e463f8bf9e",
+        "entry_hash": "80f42b08bd786204923fdda6dfcaf45fd9b62ebe30959ce0932145886fdb6985"
       },
       {
         "sequence": 236,
-        "timestamp": "2026-08-27T19:01:19.503951+00:00",
+        "timestamp": "2026-08-31T08:35:37.857484+00:00",
         "txn_id": "pay_voltbill_1741",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -6183,12 +6188,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "4652a68f98b87e7dffffe846c8aca154d7dfd54f69bdc741cdf737b90ab31fb3",
-        "entry_hash": "bcb90fadb50e565ddf4c208f13de7c1121d4c35e1824d9947f59f181f6ece74a"
+        "prev_hash": "80f42b08bd786204923fdda6dfcaf45fd9b62ebe30959ce0932145886fdb6985",
+        "entry_hash": "1849346f9058f78188572bb62823c4621fa39c83d62eecedf99e1a6f718eb61f"
       },
       {
         "sequence": 237,
-        "timestamp": "2026-08-27T19:01:19.503951+00:00",
+        "timestamp": "2026-08-31T08:35:37.857484+00:00",
         "txn_id": "pay_voltbill_0455",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -6202,12 +6207,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "bcb90fadb50e565ddf4c208f13de7c1121d4c35e1824d9947f59f181f6ece74a",
-        "entry_hash": "5826dc62400d3c92bb6029dc048542e996e8b75a77df118e3b54292d05445008"
+        "prev_hash": "1849346f9058f78188572bb62823c4621fa39c83d62eecedf99e1a6f718eb61f",
+        "entry_hash": "8ab295373dfede08eb51ae0e0849a57d2147fb003e6fc18883cd3f6538b437ac"
       },
       {
         "sequence": 238,
-        "timestamp": "2026-08-27T19:01:19.503951+00:00",
+        "timestamp": "2026-08-31T08:35:37.857484+00:00",
         "txn_id": "pay_voltbill_1129",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -6221,12 +6226,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "5826dc62400d3c92bb6029dc048542e996e8b75a77df118e3b54292d05445008",
-        "entry_hash": "fedc5d8119acffebdccf233ab436f527bcaec1321bc186defa3f471059df0c53"
+        "prev_hash": "8ab295373dfede08eb51ae0e0849a57d2147fb003e6fc18883cd3f6538b437ac",
+        "entry_hash": "375f973af5aef178530ca25517ef00b1b3300c00dd2443ab12ae90c2710b295a"
       },
       {
         "sequence": 239,
-        "timestamp": "2026-08-27T19:01:19.503951+00:00",
+        "timestamp": "2026-08-31T08:35:37.857484+00:00",
         "txn_id": "pay_voltbill_1596",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -6240,12 +6245,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "fedc5d8119acffebdccf233ab436f527bcaec1321bc186defa3f471059df0c53",
-        "entry_hash": "b8ae38c4c4984200dce72da18e195498459c020eccadf84d6facd42d5e8ba3e4"
+        "prev_hash": "375f973af5aef178530ca25517ef00b1b3300c00dd2443ab12ae90c2710b295a",
+        "entry_hash": "13465467e565a10fc6a09e4111dae2bbe02495d66ccdebac9fac32e5193fe646"
       },
       {
         "sequence": 240,
-        "timestamp": "2026-08-27T19:01:19.503951+00:00",
+        "timestamp": "2026-08-31T08:35:37.857484+00:00",
         "txn_id": "pay_voltbill_1233",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -6259,12 +6264,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "b8ae38c4c4984200dce72da18e195498459c020eccadf84d6facd42d5e8ba3e4",
-        "entry_hash": "a54c5aaf914ce091795b65bb52b1af60a1609dff16210b8918963ebf6bec3686"
+        "prev_hash": "13465467e565a10fc6a09e4111dae2bbe02495d66ccdebac9fac32e5193fe646",
+        "entry_hash": "0a9ed8583e54d11e46d86d8f9b99fea6605913d2fcc6521dfac0a5c58a8d9a78"
       },
       {
         "sequence": 241,
-        "timestamp": "2026-08-27T19:01:19.503951+00:00",
+        "timestamp": "2026-08-31T08:35:37.857484+00:00",
         "txn_id": "pay_voltbill_1507",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -6278,12 +6283,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "a54c5aaf914ce091795b65bb52b1af60a1609dff16210b8918963ebf6bec3686",
-        "entry_hash": "95425db6eaf38dee03e51b2c644bcf226846a58a0ff79928c565b82999ee0997"
+        "prev_hash": "0a9ed8583e54d11e46d86d8f9b99fea6605913d2fcc6521dfac0a5c58a8d9a78",
+        "entry_hash": "189aef5b799721f5f612a8c9229464b31e9dd794c9c5e660c991398bc50cb400"
       },
       {
         "sequence": 242,
-        "timestamp": "2026-08-27T19:01:19.503951+00:00",
+        "timestamp": "2026-08-31T08:35:37.857484+00:00",
         "txn_id": "pay_voltbill_1252",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -6297,12 +6302,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "95425db6eaf38dee03e51b2c644bcf226846a58a0ff79928c565b82999ee0997",
-        "entry_hash": "3abc4e4c0d2c2406421dc086d68c5fef46b49e7759e0cbc519fc87f3bceb6fe5"
+        "prev_hash": "189aef5b799721f5f612a8c9229464b31e9dd794c9c5e660c991398bc50cb400",
+        "entry_hash": "3ab41156d3ff36637e0b56403e50bdbd2f9c18717c7f1f5ffc594514462432a9"
       },
       {
         "sequence": 243,
-        "timestamp": "2026-08-27T19:01:19.504959+00:00",
+        "timestamp": "2026-08-31T08:35:37.857484+00:00",
         "txn_id": "pay_voltbill_1929",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -6316,12 +6321,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "3abc4e4c0d2c2406421dc086d68c5fef46b49e7759e0cbc519fc87f3bceb6fe5",
-        "entry_hash": "00b84224216904c7ec96ddfc31f53821281ee2da09533021b68e34e3b7d43e00"
+        "prev_hash": "3ab41156d3ff36637e0b56403e50bdbd2f9c18717c7f1f5ffc594514462432a9",
+        "entry_hash": "d34ca4060c97a31f1f559e4213dee97a85e9b43bfaf3c36f2e4c6ab526e95002"
       },
       {
         "sequence": 244,
-        "timestamp": "2026-08-27T19:01:19.504959+00:00",
+        "timestamp": "2026-08-31T08:35:37.857484+00:00",
         "txn_id": "pay_voltbill_0335",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -6335,12 +6340,12 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "00b84224216904c7ec96ddfc31f53821281ee2da09533021b68e34e3b7d43e00",
-        "entry_hash": "2bbf41411b6540c7116ed5db93562b42ff340c9f536e678aa211cb8279abb773"
+        "prev_hash": "d34ca4060c97a31f1f559e4213dee97a85e9b43bfaf3c36f2e4c6ab526e95002",
+        "entry_hash": "196d6b5b737d77882b656ba6c7c10eb618d264021e8f4baa49dc76fc87dec593"
       },
       {
         "sequence": 245,
-        "timestamp": "2026-08-27T19:01:19.504959+00:00",
+        "timestamp": "2026-08-31T08:35:37.859002+00:00",
         "txn_id": "pay_voltbill_0117",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -6354,8 +6359,8 @@
         "gate_decision": "step_up",
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
-        "prev_hash": "2bbf41411b6540c7116ed5db93562b42ff340c9f536e678aa211cb8279abb773",
-        "entry_hash": "a198f8247a714686fc15202f72557cbcbb2c5707726c877a8270c6079f7d7ce8"
+        "prev_hash": "196d6b5b737d77882b656ba6c7c10eb618d264021e8f4baa49dc76fc87dec593",
+        "entry_hash": "ba530db70c4f8a02f2f0f82f6a2f8a9c3589042fa08f24ae1d2e6c3adc7db093"
       }
     ],
     "exceptions": {

@@ -40,6 +40,7 @@ from doctor.assistant import ask as assistant_ask
 from doctor.authority import draft as authority_draft, review as authority_review
 from doctor.claims import read_note
 from doctor.baseline import Baseline
+from doctor.budget import build_budget
 from doctor.drift import build_drift_report, simulate_exposure
 from doctor.outreach import as_eml, compose, send, smtp_configured
 from doctor.portfolio import build_portfolio, ledger_csv, portfolio_csv
@@ -434,6 +435,18 @@ def evals() -> dict:
         if (DOCS / "npci_finding.md").exists()
         else "",
     }
+
+
+@app.get("/api/budget")
+def budget() -> dict:
+    """What the model steps cost, and what the cache stops them costing again.
+
+    Spent and saved are returned separately and never netted. A single figure
+    would let a fully cached run read as free, and the model steps are not
+    free -- somebody bought those answers once, and a platform running this
+    nightly would buy them every time.
+    """
+    return json.loads(build_budget().model_dump_json())
 
 
 @app.post("/api/ask")

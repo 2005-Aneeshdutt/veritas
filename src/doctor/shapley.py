@@ -48,6 +48,9 @@ THREE LIMITATIONS, STATED HERE BECAUSE THEY ARE REAL
 
 from __future__ import annotations
 
+#: Shared with the analytic ground truth, so both sides land on one grid.
+from .generator import quantise  # noqa: E402
+
 from collections import defaultdict
 from itertools import combinations
 from math import factorial
@@ -310,7 +313,14 @@ class ShapleyDecomposer:
             attributions=attributions,
             residual_pts=gap_pts - v_all,
             process_gap_pts=process_gap(txns),
-            coalition_values={_coalition_key(S): val * 100.0 for S, val in v.items()},
+            # Quantised for the same reason the analytic side is: summing
+            # sixteen coalitions in a different order leaves last-bit noise,
+            # and one value drifting by 2e-14 between two identical runs makes
+            # the stored record differ from itself. Nine decimal places is
+            # nine orders below what this method resolves.
+            coalition_values={
+                _coalition_key(S): quantise(val * 100.0) for S, val in v.items()
+            },
             clamp_rate=clamp_rate,
             effective_support=support,
             degenerate_factors=degenerate,

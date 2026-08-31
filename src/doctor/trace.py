@@ -65,6 +65,17 @@ class RunRecord(BaseModel):
     cache_hit_rate: float = 0.0
     llm_calls: int = 0
     llm_cost_inr: float = 0.0
+    #: Tokens this run needed, split by whether they were bought.
+    #:
+    #: Kept as four numbers rather than a net figure on purpose. A single
+    #: "cost" line on a cached run reads as zero and makes the model steps
+    #: look free, which they are not -- somebody paid for them once, and a
+    #: platform running this nightly would pay every time.
+    tokens_in: int = 0
+    tokens_out: int = 0
+    tokens_in_saved: int = 0
+    tokens_out_saved: int = 0
+    llm_cost_inr_saved: float = 0.0
     used_stubs: bool = False
     traces: list[NodeTrace] = Field(default_factory=list)
     #: The whole diagnosis payload the frontend renders.

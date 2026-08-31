@@ -128,6 +128,21 @@ class LLMResult:
         usd = (self.tokens_in * p["in"] + self.tokens_out * p["out"]) / 1_000_000
         return usd * USD_TO_INR
 
+    @property
+    def cost_inr_billable(self) -> float:
+        """What these tokens cost at list price, cache or no cache.
+
+        `cost_inr` is what was actually spent, which is zero on a cache hit.
+        This is what the same call would cost without one -- the number that
+        makes "we did not spend it" mean something, and the number a platform
+        needs before running this over a million merchants a night.
+        """
+        p = PRICE_USD_PER_MTOK.get(self.model)
+        if not p or self.stub:
+            return 0.0
+        usd = (self.tokens_in * p["in"] + self.tokens_out * p["out"]) / 1_000_000
+        return usd * USD_TO_INR
+
 
 @dataclass
 class CallStats:
@@ -137,20 +152,41 @@ class CallStats:
     tokens_in: int = 0
     tokens_out: int = 0
     cost_inr: float = 0.0
+    #: Tokens that were served from the cache rather than bought again, and
+    #: what buying them would have cost. Kept apart from the spent figures so
+    #: the two can never be added together by accident.
+    tokens_in_saved: int = 0
+    tokens_out_saved: int = 0
+    cost_inr_saved: float = 0.0
     per_model: dict = field(default_factory=dict)
 
     def record(self, r: LLMResult) -> None:
         self.calls += 1
         self.cache_hits += int(r.cache_hit)
         self.stubs += int(r.stub)
-        self.tokens_in += r.tokens_in
-        self.tokens_out += r.tokens_out
-        self.cost_inr += r.cost_inr
+        if r.cache_hit:
+            self.tokens_in_saved += r.tokens_in
+            self.tokens_out_saved += r.tokens_out
+            self.cost_inr_saved += r.cost_inr_billable
+        else:
+            self.tokens_in += r.tokens_in
+            self.tokens_out += r.tokens_out
+            self.cost_inr += r.cost_inr
         self.per_model[r.model] = self.per_model.get(r.model, 0) + 1
 
     @property
     def cache_hit_rate(self) -> float:
         return self.cache_hits / self.calls if self.calls else 0.0
+
+    @property
+    def tokens_total(self) -> int:
+        """Every token the run needed, bought or not."""
+        return (
+            self.tokens_in
+            + self.tokens_out
+            + self.tokens_in_saved
+            + self.tokens_out_saved
+        )
 
 
 def _key(model: str, system: str, prompt: str, schema_name: str) -> str:

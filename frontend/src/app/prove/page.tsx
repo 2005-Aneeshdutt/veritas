@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { TopBar } from "@/components/Chrome";
+import { Budget } from "@/components/Budget";
 import { NpciUpload } from "@/components/NpciUpload";
 import { Card, Detail, Eyebrow, Stagger } from "@/components/ui";
 import { FACTOR_DOCS } from "@/lib/explain";
@@ -614,6 +615,9 @@ export default function ProvePage() {
 
         {/* The other way to break it: give it numbers it has never seen. */}
         <NpciUpload merchants={merchants} />
+
+        {/* And the question that decides whether any of it ships. */}
+        <Budget />
       </main>
     </div>
   );
