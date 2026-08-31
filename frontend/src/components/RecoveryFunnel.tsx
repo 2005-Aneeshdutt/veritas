@@ -67,7 +67,13 @@ export function RecoveryFunnel({ pf, onApproved }: { pf: any; onApproved?: () =>
               {inr(won)}
             </div>
             <div className="text-sm text-muted mt-2">
-              recovered across {pf.merchants_scored} merchants{" "}
+              {/* This figure is not a starting balance and must not read as
+                  one. It is what the agent already won on its own authority
+                  the last time these merchants were diagnosed -- and without
+                  saying so, a reader sees a number that appeared from
+                  nowhere and reasonably assumes it was seeded. */}
+              won unattended across {pf.merchants_scored} of{" "}
+              {pf.merchants.length} merchants, when they were last diagnosed{" "}
               <span className="chip-measured ml-1">measured</span>
             </div>
           </div>

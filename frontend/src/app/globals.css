@@ -217,3 +217,74 @@ h1, h2, h3, h4 {
    read as a second, broken row. */
 .no-scrollbar::-webkit-scrollbar { display: none; }
 .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* ── the assistant window ──────────────────────────────────────────────────
+ *
+ * A light surface in both themes, on purpose: it floats over the app rather
+ * than belonging to it, and reading as a separate object is what stops it
+ * being mistaken for part of the page underneath.
+ *
+ * Because it does not follow the theme, it cannot borrow the theme's colours
+ * either -- every value here is stated. A panel that inherited `--ink` would
+ * render white text on white the moment someone switched to dark.
+ */
+.hd {
+  --hd-bg: #ffffff;
+  --hd-head: #f4f5f7;
+  --hd-ink: #14161a;
+  --hd-muted: #5b6270;
+  --hd-faint: #878e9c;
+  --hd-line: #e3e6ec;
+  --hd-brand: #5b5bd6;
+
+  background: var(--hd-bg);
+  color: var(--hd-ink);
+  border: 1px solid var(--hd-line);
+}
+.hd-head {
+  background: var(--hd-head);
+  border-bottom: 1px solid var(--hd-line);
+}
+.hd-dot { background: var(--hd-brand); }
+
+/* Text inside the window resolves against the window, never the page. */
+.hd .text-muted { color: var(--hd-muted); }
+.hd .text-faint { color: var(--hd-faint); }
+.hd .text-ink   { color: var(--hd-ink); }
+.hd .text-brand { color: var(--hd-brand); }
+.hd .border-line,
+.hd .border-t   { border-color: var(--hd-line); }
+
+.hd .field {
+  background: #fff;
+  color: var(--hd-ink);
+  border-color: var(--hd-line);
+}
+.hd .field::placeholder { color: var(--hd-faint); }
+
+.hd .card-raised {
+  background: var(--hd-head);
+  border-color: var(--hd-line);
+}
+.hd .chip-measured {
+  background: #e8f5ee; color: #1b7048; border-color: #b9e0cb;
+}
+.hd .chip-neutral {
+  background: var(--hd-head); color: var(--hd-muted); border-color: var(--hd-line);
+}
+.hd .chip-warn {
+  background: #fdeceb; color: #a2382f; border-color: #f3c7c3;
+}
+
+/* The Ask button and the mic keep the brand, stated rather than inherited. */
+.hd .btn-primary {
+  background: var(--hd-brand);
+  color: #fff;
+  border-color: var(--hd-brand);
+}
+.hd .btn-primary:disabled { opacity: .5; }
+.hd .bg-brand-soft { background: #ececfb; }
+.hd .text-amber { color: #8c5e00; }
+.hd .bg-rose-soft { background: #fdeceb; }
+.hd .text-rose { color: #a2382f; }
+.hd .border-rose\/40 { border-color: #f3c7c3; }

@@ -67,8 +67,11 @@ function speechEngine(): SpeechRec | null {
  * release.
  */
 const DOCK_KEY = "rd.helpdesk.dock";
+const PANEL_KEY = "rd.helpdesk.panel";
 const EDGE = 16;
 const DRAG_SLOP = 4;
+const PANEL_W = 400;
+const PANEL_H = 560;
 
 function clampToViewport(x: number, y: number, w: number, h: number) {
   const maxX = Math.max(EDGE, window.innerWidth - w - EDGE);
@@ -120,6 +123,76 @@ export function Helpdesk() {
   const [dragging, setDragging] = useState(false);
   const btnRef = useRef<HTMLButtonElement>(null);
   const drag = useRef<{ dx: number; dy: number; moved: boolean } | null>(null);
+
+  //: The window itself moves too. It was pinned to the right edge, full
+  //: height, which is fine until it covers the thing you opened it to ask
+  //: about -- and on this app that is most of the page.
+  const [win, setWin] = useState<{ x: number; y: number } | null>(null);
+  const winRef = useRef<HTMLElement>(null);
+  const winLive = useRef<{ x: number; y: number } | null>(null);
+  const winDrag = useRef<{ dx: number; dy: number } | null>(null);
+
+  useEffect(() => {
+    if (!open || win) return;
+    let start = {
+      x: window.innerWidth - PANEL_W - 20,
+      y: Math.max(EDGE, window.innerHeight - PANEL_H - 76),
+    };
+    try {
+      const raw = localStorage.getItem(PANEL_KEY);
+      if (raw) {
+        const p = JSON.parse(raw);
+        if (typeof p?.x === "number" && typeof p?.y === "number") start = p;
+      }
+    } catch {
+      // No stored spot is not a failure; it opens where it always does.
+    }
+    const at = clampToViewport(start.x, start.y, PANEL_W, PANEL_H);
+    winLive.current = at;
+    setWin(at);
+  }, [open, win]);
+
+  useEffect(() => {
+    function onResize() {
+      if (!win) return;
+      const at = clampToViewport(win.x, win.y, PANEL_W, PANEL_H);
+      winLive.current = at;
+      setWin(at);
+    }
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, [win]);
+
+  function winDown(e: React.PointerEvent<HTMLDivElement>) {
+    // Only the header drags. A window that moves when you select an answer
+    // is a window you cannot copy text out of.
+    const el = winRef.current;
+    if (!el) return;
+    const r = el.getBoundingClientRect();
+    winDrag.current = { dx: e.clientX - r.left, dy: e.clientY - r.top };
+    (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
+  }
+
+  function winMove(e: React.PointerEvent<HTMLDivElement>) {
+    const d = winDrag.current;
+    if (!d) return;
+    const at = clampToViewport(e.clientX - d.dx, e.clientY - d.dy, PANEL_W, PANEL_H);
+    winLive.current = at;
+    setWin(at);
+  }
+
+  function winUp(e: React.PointerEvent<HTMLDivElement>) {
+    if (!winDrag.current) return;
+    winDrag.current = null;
+    (e.currentTarget as HTMLElement).releasePointerCapture(e.pointerId);
+    try {
+      if (winLive.current) {
+        localStorage.setItem(PANEL_KEY, JSON.stringify(winLive.current));
+      }
+    } catch {
+      // Then it simply will not be remembered.
+    }
+  }
   //: The position as of the last move. Reading `dock` on pointerup can be a
   //: render behind, which would save where the button was rather than where
   //: it was dropped.
@@ -354,13 +427,27 @@ export function Helpdesk() {
 
       {open && (
         <aside
-          className="fixed inset-y-0 right-0 z-50 w-full sm:w-[420px] bg-canvas
-                     border-l border-line shadow-2xl flex flex-col animate-rise"
+          ref={winRef as any}
+          style={
+            win
+              ? { left: win.x, top: win.y, width: PANEL_W, height: PANEL_H }
+              : { right: 20, bottom: 76, width: PANEL_W, height: PANEL_H, visibility: "hidden" }
+          }
+          className="hd fixed z-50 max-w-[calc(100vw-2rem)] max-h-[calc(100vh-2rem)]
+                     rounded-xl shadow-2xl flex flex-col animate-rise overflow-hidden"
           aria-label="System questions"
         >
-          <div className="px-5 h-14 flex items-center gap-3 border-b border-line shrink-0">
-            <span className="w-2 h-2 rounded-full bg-brand shrink-0" />
-            <span className="text-sm font-medium">Your assistant</span>
+          <div
+            onPointerDown={winDown}
+            onPointerMove={winMove}
+            onPointerUp={winUp}
+            style={{ touchAction: "none" }}
+            className="px-5 h-14 flex items-center gap-3 shrink-0 cursor-grab
+                       active:cursor-grabbing select-none hd-head"
+            title="Drag to move"
+          >
+            <span className="w-2 h-2 rounded-full shrink-0 hd-dot" />
+            <span className="text-sm font-medium text-ink">Your assistant</span>
 
             {canHear && (
               <button
@@ -389,7 +476,7 @@ export function Helpdesk() {
           <div className="flex-1 overflow-y-auto px-5 py-4 space-y-5">
             {turns.length === 0 && (
               <div className="space-y-3">
-                <p className="text-[15px] leading-relaxed">
+                <p className="text-[15px] leading-relaxed text-ink">
                   I&rsquo;m your assistant. What can I help you with?
                 </p>
                 <p className="text-sm text-muted leading-relaxed">
@@ -414,7 +501,7 @@ export function Helpdesk() {
 
             {turns.map((t, i) => (
               <div key={i} className="space-y-2">
-                <div className="text-sm font-medium">{t.q}</div>
+                <div className="text-sm font-medium text-ink">{t.q}</div>
 
                 {t.a === null ? (
                   <div className="text-sm text-muted animate-breathe">

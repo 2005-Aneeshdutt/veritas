@@ -286,3 +286,33 @@ def test_keyboard_users_can_still_open_it():
     """They never drag, so the pointer handlers must not be the only way in."""
     ui = open("frontend/src/components/Helpdesk.tsx", encoding="utf-8").read()
     assert "onKeyDown" in ui and '"Enter"' in ui
+
+
+def test_the_window_itself_moves_not_just_the_button():
+    """Pinned to the right edge at full height it covered the thing you
+    opened it to ask about, which on this app is most of the page."""
+    ui = open("frontend/src/components/Helpdesk.tsx", encoding="utf-8").read()
+    assert "PANEL_KEY" in ui and "winDown" in ui
+    assert "localStorage.setItem(PANEL_KEY" in ui
+
+
+def test_only_the_header_drags_the_window():
+    """A window that moves when you select an answer is one you cannot copy
+    text out of."""
+    ui = open("frontend/src/components/Helpdesk.tsx", encoding="utf-8").read()
+    head = ui[ui.index("onPointerDown={winDown}") : ui.index("Your assistant")]
+    assert "cursor-grab" in head
+    body = ui[ui.index("flex-1 overflow-y-auto") :]
+    assert "winDown" not in body, "the scrolling body must not drag the window"
+
+
+def test_the_window_states_every_colour_it_uses():
+    """It stays light in both themes, so it cannot inherit the page palette.
+    A panel that borrowed --ink would render white text on white the moment
+    someone switched to dark."""
+    css = open("frontend/src/app/globals.css", encoding="utf-8").read()
+    block = css[css.index(".hd {") :]
+    for token in ("--hd-bg", "--hd-ink", "--hd-muted", "--hd-line", "--hd-brand"):
+        assert token in block, token
+    for cls in (".hd .text-muted", ".hd .field", ".hd .btn-primary", ".hd .card-raised"):
+        assert cls in css, "%s must resolve against the window" % cls
