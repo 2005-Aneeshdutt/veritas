@@ -81,7 +81,7 @@ A model is used in exactly five places, and refused everywhere else.
 
 ---
 
-## The six things most systems do not do
+## The nine things most systems do not do
 
 **1. The error bars change what the agent does.**
 `evals/results/attribution_mae_by_factor.json` is not a slide. `plan.py` loads
@@ -133,6 +133,42 @@ recoverable/month**, 89.31% weighted success against 90.89% achievable, triaged
 into 4 urgent / 2 not-yet-resolvable / 2 healthy — and aggregated **by cause**,
 because one merchant with a billing-window problem is a support ticket and
 forty is a product change.
+
+**7. You can point it at bank data it has never seen.**
+The question a payments company actually has about a demo is *"would this work
+on our numbers?"*, and every answer to it is a promise. Upload a table in
+NPCI's published remitter shape and every baseline is re-derived from that
+file — cohort, achievable rate, each factor's share. Swapping August 2025 for
+January 2024 moves CloudSync's achievable rate **87.4% → 90.8%** and widens the
+gap **6.6 → 10.0 points**, because banks were genuinely healthier that month —
+and the primary cause stays `hour`, because a merchant billing at midnight has
+a midnight problem whatever the banks were doing. Nothing is written to disk; a
+test greps the ingest module for every way it could write, because an upload
+reaching `data/npci/` would turn the "committed results reproduce" CI job into
+a check on a file the demo had edited.
+
+**8. It says what it costs.**
+Every run here reports ₹0 because each model answer was bought once and
+committed — and a bare zero would quietly claim the model steps are free. Spent
+and saved are counted separately and never netted: the book made **45 model
+calls over 75,630 tokens** and spent nothing, avoiding **₹41.74**; the whole
+committed cache is **326 answers, 624,915 tokens, ₹436.69** to rebuild from
+empty. The figure that matters is the *billable* one — **₹5.22 per merchant**,
+what the second merchant costs and the millionth. That is ₹0.52 Cr across a
+million if every model step runs nightly, which is the expensive way and not
+what this pipeline needs: classification answers all 110 published codes from a
+hand-labelled taxonomy with no call at all, and the deterministic half has no
+model in it.
+
+**9. It can explain itself, and refuses when it cannot.**
+A panel on every page answers questions about the system — what MEASURED means
+here, how accurate the attribution is, what the agent may do unattended — from
+the same committed files the pages read, never from prose written for it to
+recite. It is grounded like every other model output here, and that matters
+more rather than less: it is asked about the system's own accuracy, so a figure
+it invented would be a false claim about the system's honesty, made by the
+system, on the screen someone opened to check. Asked *"how many customers does
+Razorpay have"* it answers *"the context does not answer this"*, not a number.
 
 ---
 
