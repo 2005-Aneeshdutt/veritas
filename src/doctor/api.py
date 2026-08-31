@@ -42,7 +42,7 @@ from doctor.claims import read_note
 from doctor.baseline import Baseline
 from doctor.budget import build_budget
 from doctor.drift import build_drift_report, simulate_exposure
-from doctor.outreach import as_eml, compose, send, smtp_configured
+from doctor.outreach import as_eml, compose, send, smtp_configured, verify as smtp_verify
 from doctor.portfolio import build_portfolio, ledger_csv, portfolio_csv
 from doctor.generator import GeneratedMerchant
 from doctor.graph import git_commit, run_diagnosis
@@ -342,6 +342,17 @@ def drift_simulate(merchant: str, bank: str, delta_pts: float = 2.0) -> dict:
         ),
         "exposure": json.loads(exposure.model_dump_json()),
     }
+
+
+@app.post("/api/email/verify")
+def email_verify() -> dict:
+    """Check the mail credentials without mailing anyone.
+
+    The alternative is discovering they are wrong by sending a real merchant
+    a real email mid-demo, and a typo fails in exactly the same way a missing
+    App Password does unless something says which.
+    """
+    return json.loads(smtp_verify().model_dump_json())
 
 
 @app.post("/api/run/{run_id}/email/send")

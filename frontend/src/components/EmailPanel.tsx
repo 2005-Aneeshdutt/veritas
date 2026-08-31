@@ -127,6 +127,24 @@ export function EmailPanel({ runId }: { runId: string }) {
                 >
                   {sending ? "sending…" : "Send via SMTP"}
                 </button>
+
+                {/* Check the credentials without mailing a real merchant.
+                    A typo'd App Password fails exactly like a missing one,
+                    and finding that out mid-demo is the wrong time. */}
+                <button
+                  onClick={async () => {
+                    setSending(true);
+                    const r = await fetch("/api/email/verify", { method: "POST" });
+                    setSendState(await r.json());
+                    setSending(false);
+                  }}
+                  disabled={sending}
+                  className="px-3 py-1.5 rounded-lg card-raised text-xs
+                             hover:border-brand/40 transition-colors disabled:opacity-50"
+                  title="Sign in to the mail server without sending anything"
+                >
+                  Test credentials
+                </button>
               </div>
 
               {sendState && (

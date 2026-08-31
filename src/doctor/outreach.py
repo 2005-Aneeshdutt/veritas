@@ -173,6 +173,66 @@ def smtp_configured() -> bool:
     )
 
 
+#: Providers phrase failure in their own dialect, and the raw string is a
+#: wall of numbers at the moment someone is trying to fix it. These are the
+#: three that actually happen with Gmail, translated into the thing to do.
+def _explain(err: Exception) -> str:
+    raw = str(err)
+    low = raw.lower()
+    if "5.7.8" in raw or "username and password not accepted" in low:
+        return (
+            "Gmail rejected the credentials. With 2-Step Verification on, "
+            "SMTP_PASSWORD must be a 16-character App Password from "
+            "myaccount.google.com/apppasswords -- your normal account "
+            "password will always be refused here."
+        )
+    if "5.5.1" in raw and "authentication required" in low:
+        return "The server wants authentication before it will accept mail. Check SMTP_USER."
+    if "application-specific password required" in low:
+        return (
+            "This account has 2-Step Verification on and needs an App Password. "
+            "Generate one at myaccount.google.com/apppasswords."
+        )
+    if isinstance(err, (TimeoutError, OSError)) and "timed out" in low:
+        return (
+            "Could not reach the mail server. Check SMTP_HOST and SMTP_PORT, "
+            "and whether outbound port 587 is open on this network."
+        )
+    return "%s: %s" % (type(err).__name__, raw[:200])
+
+
+def verify() -> SendResult:
+    """Prove the credentials work without mailing anyone.
+
+    Worth its own path: the alternative is finding out they are wrong by
+    sending a real merchant a real email during a demo, and the failure a
+    typo produces looks identical to the failure a missing App Password
+    produces unless something says which it was.
+    """
+    import os
+    import smtplib
+
+    if not smtp_configured():
+        return SendResult(
+            sent=False, configured=False,
+            detail="SMTP is not configured. Set SMTP_HOST, SMTP_PORT, "
+            "SMTP_USER and SMTP_PASSWORD in .env, then restart the API.",
+        )
+    host = os.environ["SMTP_HOST"]
+    port = int(os.environ.get("SMTP_PORT", "587"))
+    try:
+        with smtplib.SMTP(host, port, timeout=20) as srv:
+            srv.starttls()
+            srv.login(os.environ["SMTP_USER"], os.environ["SMTP_PASSWORD"])
+    except Exception as e:
+        return SendResult(sent=False, configured=True, detail=_explain(e))
+    return SendResult(
+        sent=False, configured=True,
+        detail="Signed in to %s as %s. Nothing was sent."
+        % (host, os.environ["SMTP_USER"]),
+    )
+
+
 def send(email: Email, to_addr: str) -> SendResult:
     """Actually send, if SMTP credentials are configured.
 
@@ -214,10 +274,7 @@ def send(email: Email, to_addr: str) -> SendResult:
             srv.login(os.environ["SMTP_USER"], os.environ["SMTP_PASSWORD"])
             srv.send_message(msg)
     except Exception as e:  # surface the real reason, do not swallow it
-        return SendResult(
-            sent=False, configured=True,
-            detail="%s: %s" % (type(e).__name__, str(e)[:200]),
-        )
+        return SendResult(sent=False, configured=True, detail=_explain(e))
     return SendResult(sent=True, configured=True, detail="Sent to %s" % to_addr)
 
 
