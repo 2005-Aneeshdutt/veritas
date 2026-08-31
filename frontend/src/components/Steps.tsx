@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 
 /**
  * The demo, as a spine.
@@ -86,11 +87,30 @@ function activeStep(path: string, runHref: string | null): number {
  */
 export function Steps({ runHref }: { runHref?: string | null }) {
   const path = usePathname();
-  const current = activeStep(path, runHref ?? null);
+
+  /**
+   * Somewhere to go when you are not already inside a run.
+   *
+   * Steps 3 and 4 were disabled unless the page happened to be a run page,
+   * so landing on Drift or Prove showed half the product greyed out with a
+   * tooltip nobody hovers. There is almost always a run on disk. If there
+   * is, those steps point at the newest one.
+   */
+  const [fallback, setFallback] = useState<string | null>(null);
+  useEffect(() => {
+    if (runHref) return;
+    fetch("/api/run-latest")
+      .then((r) => r.json())
+      .then((d) => setFallback(d.run_id ? `/run/${d.run_id}` : null))
+      .catch(() => {});
+  }, [runHref]);
+
+  const run = runHref ?? fallback;
+  const current = activeStep(path, run);
 
   const hrefFor = (s: Step) => {
-    if (s.n === 3) return runHref ?? null;
-    if (s.n === 4) return runHref ? `${runHref}/authorise` : null;
+    if (s.n === 3) return run ?? null;
+    if (s.n === 4) return run ? `${run}/authorise` : null;
     return s.href;
   };
 
@@ -139,7 +159,7 @@ export function Steps({ runHref }: { runHref?: string | null }) {
               <span
                 key={s.n}
                 className={`${cls} text-faint cursor-not-allowed`}
-                title="Diagnose a merchant first"
+                title="No runs on disk yet — diagnose a merchant first"
               >
                 {body}
               </span>

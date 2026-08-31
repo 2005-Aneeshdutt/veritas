@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ReactNode, useEffect, useState } from "react";
+import { Helpdesk } from "@/components/Helpdesk";
 import { Steps } from "@/components/Steps";
 import { ThemeToggle } from "@/components/Theme";
 
@@ -49,6 +50,7 @@ export function TopBar({ right, runHref }: { right?: ReactNode; runHref?: string
         </div>
       </div>
       <Steps runHref={runHref} />
+      <Helpdesk />
     </header>
   );
 }

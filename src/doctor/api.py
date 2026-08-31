@@ -45,6 +45,7 @@ from doctor.outreach import as_eml, compose, send, smtp_configured
 from doctor.portfolio import build_portfolio, ledger_csv, portfolio_csv
 from doctor.generator import GeneratedMerchant
 from doctor.graph import git_commit, run_diagnosis
+from doctor.helpdesk import ask as helpdesk_ask
 from doctor.cohort import build_cohort
 from doctor.ingest_npci import Rejected, baseline_from, parse as parse_npci
 from doctor.shapley import ShapleyDecomposer
@@ -432,6 +433,50 @@ def evals() -> dict:
         "npci_finding_md": (DOCS / "npci_finding.md").read_text(encoding="utf-8")
         if (DOCS / "npci_finding.md").exists()
         else "",
+    }
+
+
+@app.post("/api/ask")
+def ask_system(q: str) -> dict:
+    """Answer a question about the system itself.
+
+    Grounded the same way every other model output here is: the reply is
+    checked against the context it was given, and refused rather than shown
+    if it cites a figure that is not in it. That matters more for this
+    endpoint than any other -- it is asked about the system's own accuracy,
+    so an invented number would be a false claim about how honest the system
+    is.
+    """
+    if len(q or "") > 500:
+        raise HTTPException(400, "question too long")
+    return json.loads(helpdesk_ask(q).model_dump_json())
+
+
+@app.get("/api/run-latest")
+def run_latest() -> dict:
+    """The newest saved run, so the walkthrough is never a dead end.
+
+    Steps 3 and 4 used to be disabled whenever you were not already inside a
+    run, which meant landing on Drift or Prove and finding half the product
+    unclickable with no way to tell why. There is almost always a run on
+    disk; if there is, those steps should go to it.
+    """
+    best = None
+    for p in RUNS.glob("run_*.json"):
+        try:
+            rec = json.loads(p.read_text(encoding="utf-8"))
+        except (json.JSONDecodeError, OSError):
+            continue
+        if rec.get("used_stubs"):
+            continue
+        at = rec.get("started_at") or 0
+        if best is None or at > best[0]:
+            best = (at, rec)
+    if not best:
+        return {"run_id": None, "merchant_id": None}
+    return {
+        "run_id": best[1].get("run_id"),
+        "merchant_id": best[1].get("merchant_id"),
     }
 
 
