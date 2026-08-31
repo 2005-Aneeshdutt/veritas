@@ -255,6 +255,10 @@ class LLMClient:
         #: fn(schema_name, prompt) -> dict, used only when offline.
         self.offline_stub = offline_stub
         self.stats = CallStats()
+        #: Reused across calls. A fresh connection per completion pays for a
+        #: TLS handshake every time, which is small next to the routing fix
+        #: above but free to avoid.
+        self._http = None
         self._anthropic = None
 
     @property
@@ -284,9 +288,22 @@ class LLMClient:
         return text, resp.usage.input_tokens, resp.usage.output_tokens
 
     def _call_openrouter(self, system: str, prompt: str, slug: str, max_tokens: int):
+        """One completion through OpenRouter.
+
+        The provider is pinned, and that single line is worth 9x. OpenRouter
+        picks a backend for you, and left to itself it was routing Haiku calls
+        to one that took twelve seconds to return eighty tokens -- so the
+        assistant sat on "thinking" long enough to look broken. Naming
+        Anthropic first brings the same call back in 1.5s. Fallbacks stay
+        ALLOWED: preferring a fast provider is worth a lot, and refusing to
+        answer at all when it is busy is not.
+        """
         import httpx
 
-        r = httpx.post(
+        if self._http is None:
+            self._http = httpx.Client(timeout=ANTHROPIC_TIMEOUT)
+
+        r = self._http.post(
             OPENROUTER_URL,
             timeout=ANTHROPIC_TIMEOUT,
             headers={
@@ -300,6 +317,7 @@ class LLMClient:
                 "model": slug,
                 "temperature": 0,  # RULE 3
                 "max_tokens": max_tokens,
+                "provider": {"order": ["Anthropic"]},
                 "messages": [
                     {"role": "system", "content": system},
                     {"role": "user", "content": prompt},

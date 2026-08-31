@@ -316,3 +316,33 @@ def test_the_window_states_every_colour_it_uses():
         assert token in block, token
     for cls in (".hd .text-muted", ".hd .field", ".hd .btn-primary", ".hd .card-raised"):
         assert cls in css, "%s must resolve against the window" % cls
+
+
+def test_openrouter_calls_name_a_provider():
+    """One line worth 9x.
+
+    OpenRouter picks a backend for you, and left to itself it was routing
+    Haiku to one that took twelve seconds to return eighty tokens -- so the
+    assistant sat on "thinking" long enough to look broken. Naming Anthropic
+    first brings the same call back in about 1.5 seconds.
+
+    Fallbacks stay allowed on purpose: preferring a fast provider is worth a
+    lot, and refusing to answer at all when it is busy is not.
+    """
+    import inspect
+
+    from doctor import llm
+
+    src = inspect.getsource(llm.LLMClient._call_openrouter)
+    assert '"provider"' in src and '"Anthropic"' in src
+    assert "allow_fallbacks" not in src, "a busy provider must degrade, not fail"
+
+
+def test_the_http_client_is_reused_across_calls():
+    """A fresh connection per completion pays for a TLS handshake every
+    time -- small next to the routing fix, but free to avoid."""
+    import inspect
+
+    from doctor import llm
+
+    assert "self._http" in inspect.getsource(llm.LLMClient._call_openrouter)
