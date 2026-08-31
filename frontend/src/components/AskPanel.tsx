@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+
 import { useRef, useState } from "react";
 import { Card, Eyebrow } from "@/components/ui";
 
@@ -75,7 +77,55 @@ const SUGGESTED = [
  * The last suggested question is deliberately a trap. It asks for arithmetic
  * the record does not contain, and watching it get refused is the feature.
  */
-export function AskPanel({ runId }: { runId: string }) {
+/**
+ * Which proposed fix an answer is talking about, if any.
+ *
+ * The assistant would say "fix the billing schedule first" and leave the
+ * reader with no way to do it -- advice with no handle on it. This matches
+ * the answer against the fixes this run actually proposed, and only when the
+ * match is unambiguous: a wrong button here would send someone to retry
+ * payments when they were told to move a billing window, which is worse than
+ * no button at all.
+ *
+ * It is a link to the fix, never an execution of it. The kernel still gates
+ * every action when the merchant gets there.
+ */
+const FIX_WORDS: Record<string, string[]> = {
+  reschedule_billing_window: ["billing", "schedule", "window", "midnight", "night"],
+  retry_soft_decline: ["retry", "retries", "soft decline", "unretried"],
+  reissue_payment_link: ["payment link", "reissue", "link"],
+  enable_multi_bank_routing: ["routing", "multi-bank", "concentration", "route"],
+  update_payment_method: ["payment method", "card", "mandate renewal"],
+  flag_for_investigation: ["investigate", "investigation", "flag"],
+};
+
+function matchFix(
+  text: string,
+  groups: { action_type: string; title: string }[]
+): number | null {
+  const t = text.toLowerCase();
+  const scored = groups
+    .map((g, i) => ({
+      i,
+      score: (FIX_WORDS[g.action_type] ?? []).filter((w) => t.includes(w)).length,
+    }))
+    .filter((x) => x.score > 0)
+    .sort((a, b) => b.score - a.score);
+
+  if (!scored.length) return null;
+  // Ambiguous is the same as unknown. Two fixes scoring alike means the
+  // answer did not actually single one out.
+  if (scored.length > 1 && scored[0].score === scored[1].score) return null;
+  return scored[0].i;
+}
+
+export function AskPanel({
+  runId,
+  groups = [],
+}: {
+  runId: string;
+  groups?: { action_type: string; title: string }[];
+}) {
   const [q, setQ] = useState("");
   const [turns, setTurns] = useState<Turn[]>([]);
   const [busy, setBusy] = useState(false);
@@ -278,6 +328,19 @@ export function AskPanel({ runId }: { runId: string }) {
                   {t.a.repaired && (
                     <span className="chip-warn">corrected once</span>
                   )}
+
+                  {(() => {
+                    const k = matchFix(t.a.text, groups);
+                    if (k === null) return null;
+                    return (
+                      <Link
+                        href={`/run/${runId}/authorise?fix=${k}`}
+                        className="btn-primary h-7 px-3 text-xs ml-auto"
+                      >
+                        Do it — {groups[k].title.toLowerCase()} →
+                      </Link>
+                    );
+                  })()}
                 </div>
               </div>
             ) : (

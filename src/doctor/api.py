@@ -27,7 +27,7 @@ ROOT = Path(__file__).resolve().parents[2]
 if str(ROOT / "src") not in sys.path:
     sys.path.insert(0, str(ROOT / "src"))
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, File, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
 
@@ -45,6 +45,9 @@ from doctor.outreach import as_eml, compose, send, smtp_configured
 from doctor.portfolio import build_portfolio, ledger_csv, portfolio_csv
 from doctor.generator import GeneratedMerchant
 from doctor.graph import git_commit, run_diagnosis
+from doctor.cohort import build_cohort
+from doctor.ingest_npci import Rejected, baseline_from, parse as parse_npci
+from doctor.shapley import ShapleyDecomposer
 from doctor.live import LiveMonitor, in_arrival_order
 from doctor.prove import (
     CATEGORIES,
@@ -347,6 +350,73 @@ def run_email_send(run_id: str, to: str) -> dict:
         raise HTTPException(404, "no such run: %s" % run_id)
     email = compose(json.loads(p.read_text(encoding="utf-8")))
     return json.loads(send(email, to).model_dump_json())
+
+
+@app.post("/api/npci/preview")
+async def npci_preview(file: UploadFile = File(...), period: str = "") -> dict:
+    """Read an uploaded NPCI table and say what is in it.
+
+    Deliberately separate from running anything: a merchant hands over a file
+    and finds out whether it parsed before they find out what it changes.
+    """
+    try:
+        stats, summary = parse_npci(await file.read(), period or None)
+    except Rejected as e:
+        raise HTTPException(400, str(e))
+    return json.loads(summary.model_dump_json())
+
+
+@app.post("/api/npci/rerun")
+async def npci_rerun(
+    merchant: str = "cloudsync",
+    period: str = "",
+    file: UploadFile = File(...),
+) -> dict:
+    """Re-diagnose one merchant against bank data the engine has never seen.
+
+    The same decomposer, the same cohort, the same priors -- pointed at a
+    different measurement of the world. A diagnosis that moves when the
+    evidence moves is the only kind that was reading the evidence.
+
+    Nothing is written. The upload lives for the length of this request, so
+    the committed tables CI reproduces against are never touched.
+    """
+    if merchant not in MERCHANTS:
+        raise HTTPException(400, "unknown merchant: %s" % merchant)
+    try:
+        stats, summary = parse_npci(await file.read(), period or None)
+    except Rejected as e:
+        raise HTTPException(400, str(e))
+
+    m = load_merchant(merchant)
+    shipped = Baseline()
+    uploaded = baseline_from(stats, summary.period)
+
+    def diagnose(b: Baseline) -> dict:
+        cohort = build_cohort(m.profile.mcc, b)
+        dec = ShapleyDecomposer(b, cohort).decompose(m.transactions)
+        return {
+            "achievable_pct": round(100 * cohort.s_star, 3),
+            "gap_pts": round(dec.gap_pts, 3),
+            "primary_cause": dec.primary_cause(),
+            "by_factor": {k: round(v, 3) for k, v in dec.by_factor().items()},
+        }
+
+    before, after = diagnose(shipped), diagnose(uploaded)
+    moved = {
+        k: round(after["by_factor"][k] - before["by_factor"][k], 3)
+        for k in after["by_factor"]
+    }
+    return {
+        "merchant_id": merchant,
+        "merchant_name": m.profile.name,
+        "upload": json.loads(summary.model_dump_json()),
+        "shipped_period": shipped.period,
+        "before": before,
+        "after": after,
+        "moved": moved,
+        "primary_changed": before["primary_cause"] != after["primary_cause"],
+    }
 
 
 @app.get("/api/evals")

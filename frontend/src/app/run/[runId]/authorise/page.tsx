@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { AuthorityPanel } from "@/components/AuthorityPanel";
+import { BarStrip } from "@/components/BarStrip";
 import { Card, Detail, Eyebrow, Info, Loading, SectionHeader, Stagger } from "@/components/ui";
 import { GLOSSARY } from "@/lib/explain";
 import { RunRecord, inr } from "@/lib/types";
@@ -159,6 +160,10 @@ export default function AuditPage({ params }: { params: { runId: string } }) {
       </Stagger>
 
       {/* ─────────────────────────────── verification */}
+      <Stagger i={1}>
+        <BarStrip rec={rec} />
+      </Stagger>
+
       <Stagger i={1}>
         <Card className={result?.ok === false ? "border-rose/40" : ""}>
           <SectionHeader

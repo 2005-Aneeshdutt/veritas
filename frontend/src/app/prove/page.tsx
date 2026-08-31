@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { TopBar } from "@/components/Chrome";
+import { NpciUpload } from "@/components/NpciUpload";
 import { Card, Detail, Eyebrow, Stagger } from "@/components/ui";
 import { FACTOR_DOCS } from "@/lib/explain";
 import { inr } from "@/lib/types";
@@ -70,6 +71,9 @@ const VOLUMES = [60, 200, 900, 2500];
  */
 export default function ProvePage() {
   const [cats, setCats] = useState<{ mcc: string; label: string }[]>([]);
+  //: For the "bring your own data" panel, which re-runs one real merchant
+  //: against an uploaded bank table.
+  const [merchants, setMerchants] = useState<any[]>([]);
   const [mcc, setMcc] = useState("5411");
   const [n, setN] = useState(900);
   const [causes, setCauses] = useState<string[]>(["midnight_billing_penalty"]);
@@ -94,6 +98,10 @@ export default function ProvePage() {
     fetch("/api/prove/options")
       .then((r) => r.json())
       .then((d) => setCats(d.categories))
+      .catch(() => {});
+    fetch("/api/merchants")
+      .then((r) => r.json())
+      .then(setMerchants)
       .catch(() => {});
     return () => esRef.current?.close();
   }, []);
@@ -603,6 +611,9 @@ export default function ProvePage() {
             </Card>
           </Stagger>
         )}
+
+        {/* The other way to break it: give it numbers it has never seen. */}
+        <NpciUpload merchants={merchants} />
       </main>
     </div>
   );

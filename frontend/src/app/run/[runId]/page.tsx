@@ -436,7 +436,7 @@ export default function Overview({ params }: { params: { runId: string } }) {
 
       {/* ───────────────────────────────────────────── ask */}
       <Stagger i={4}>
-        <AskPanel runId={params.runId} />
+        <AskPanel runId={params.runId} groups={rec.pending_actions ?? []} />
       </Stagger>
 
       {/* ───────────────────────────────────────────── outreach */}

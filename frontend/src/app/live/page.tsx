@@ -66,7 +66,20 @@ export default function LivePage() {
   const [stats, setStats] = useState<Stats | null>(null);
   const [total, setTotal] = useState(0);
   const [finished, setFinished] = useState(false);
+  /**
+   * What the connection is actually doing.
+   *
+   * Every failure mode used to render as the same screen: counters at zero
+   * and an empty tape. A stream that never opened, one that opened and died,
+   * and one that is simply slow were indistinguishable — so "nothing is
+   * happening" was un-debuggable from the outside and read as a broken
+   * product during a demo.
+   */
+  const [conn, setConn] = useState<
+    "idle" | "connecting" | "live" | "stalled" | "failed"
+  >("idle");
   const esRef = useRef<EventSource | null>(null);
+  const lastAt = useRef<number>(0);
   const tapeRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -88,12 +101,20 @@ export default function LivePage() {
     setStats(null);
     setFinished(false);
     setRunning(true);
+    setConn("connecting");
+    lastAt.current = Date.now();
 
     const es = new EventSource(`/api/live/${who}/stream?rate=${rate}`);
     esRef.current = es;
 
-    es.addEventListener("start", (e: any) => setTotal(JSON.parse(e.data).total));
+    es.addEventListener("start", (e: any) => {
+      setTotal(JSON.parse(e.data).total);
+      lastAt.current = Date.now();
+      setConn("live");
+    });
     es.addEventListener("payment", (e: any) => {
+      lastAt.current = Date.now();
+      setConn("live");
       const p: Payment = JSON.parse(e.data);
       // Newest first, and bounded — this runs for thousands of payments.
       setTape((prev) => [p, ...prev.slice(0, 59)]);
@@ -107,17 +128,30 @@ export default function LivePage() {
       setStats(JSON.parse(e.data));
       setRunning(false);
       setFinished(true);
+      setConn("idle");
       es.close();
     });
     es.onerror = () => {
       setRunning(false);
+      setConn("failed");
       es.close();
     };
   }
 
+  // A stream can stop delivering without erroring — a proxy that buffers, a
+  // backend that restarted mid-run. Silence is a state worth naming.
+  useEffect(() => {
+    if (!running) return;
+    const id = setInterval(() => {
+      if (Date.now() - lastAt.current > 4000) setConn("stalled");
+    }, 1000);
+    return () => clearInterval(id);
+  }, [running]);
+
   function stop() {
     esRef.current?.close();
     setRunning(false);
+    setConn("idle");
   }
 
   async function diagnose() {
@@ -311,12 +345,7 @@ export default function LivePage() {
           <Card className="!p-0 overflow-hidden">
             <div className="px-4 py-2.5 border-b border-line flex items-center gap-3">
               <span className="eyebrow">payment tape</span>
-              {running && (
-                <span className="chip-warn">
-                  <span className="w-1.5 h-1.5 rounded-full bg-rose animate-breathe" />
-                  live
-                </span>
-              )}
+              <ConnBadge conn={conn} />
               <span className="ml-auto text-[11px] text-faint">newest first</span>
             </div>
             <div
@@ -357,7 +386,13 @@ export default function LivePage() {
               ))}
               {tape.length === 0 && (
                 <div className="px-4 py-3 text-faint">
-                  press start to open the feed…
+                  {conn === "connecting"
+                    ? "opening the feed…"
+                    : conn === "stalled"
+                    ? "connected, but nothing has arrived for a few seconds — the backend may have restarted"
+                    : conn === "failed"
+                    ? "could not reach the feed. Is the API running on :8000?"
+                    : "press start to open the feed…"}
                 </div>
               )}
             </div>
@@ -365,6 +400,35 @@ export default function LivePage() {
         </Stagger>
       </main>
     </div>
+  );
+}
+
+/**
+ * What the connection is doing, in one chip.
+ *
+ * The point is that "no payments yet" and "this is broken" must never look
+ * the same, because for a while they did and the only way to tell them apart
+ * was to open devtools mid-demo.
+ */
+function ConnBadge({ conn }: { conn: string }) {
+  if (conn === "idle") return null;
+  const map: Record<string, { cls: string; dot: string; label: string }> = {
+    connecting: { cls: "chip-neutral", dot: "bg-muted", label: "connecting" },
+    live: { cls: "chip-warn", dot: "bg-rose", label: "live" },
+    stalled: { cls: "chip-warn", dot: "bg-amber", label: "stalled" },
+    failed: { cls: "chip-warn", dot: "bg-rose", label: "disconnected" },
+  };
+  const m = map[conn];
+  if (!m) return null;
+  return (
+    <span className={m.cls}>
+      <span
+        className={`w-1.5 h-1.5 rounded-full ${m.dot} ${
+          conn === "live" || conn === "connecting" ? "animate-breathe" : ""
+        }`}
+      />
+      {m.label}
+    </span>
   );
 }
 

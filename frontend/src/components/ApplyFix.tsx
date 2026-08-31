@@ -1,5 +1,6 @@
 "use client";
 
+import { useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { inr } from "@/lib/types";
 
@@ -66,6 +67,34 @@ export function ApplyFix({
   const [active, setActive] = useState<number | null>(null);
   const [shown, setShown] = useState(0);
   const [result, setResult] = useState<Result | null>(null);
+  /**
+   * The checks, available the moment they come back.
+   *
+   * These used to be read off `result`, which is not set until the reveal
+   * finishes -- so the timer counted up against an empty list and the whole
+   * walkthrough appeared at once at the end. The pacing existed; there was
+   * simply nothing to pace. Holding the steps separately lets the checks
+   * appear one by one while the summary still waits for the last of them.
+   */
+  const [checks, setChecks] = useState<Step[]>([]);
+  /**
+   * Arriving from the assistant's "Do it" link.
+   *
+   * The answer names a fix; this opens that fix and scrolls to it, so the
+   * advice and the action are one click apart instead of a hunt down the
+   * page. It only highlights -- nothing is applied without the merchant
+   * pressing the button themselves.
+   */
+  const search = useSearchParams();
+  const asked = search?.get("fix");
+  const highlight = asked !== null && asked !== undefined ? Number(asked) : null;
+  const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
+
+  useEffect(() => {
+    if (highlight === null || Number.isNaN(highlight)) return;
+    const el = cardRefs.current[highlight];
+    if (el) el.scrollIntoView({ behavior: "smooth", block: "center" });
+  }, [highlight]);
   const [done, setDone] = useState<Record<string, Result>>({});
   const [batch, setBatch] = useState<{
     at: number;
@@ -83,12 +112,14 @@ export function ApplyFix({
     setActive(i);
     setShown(0);
     setResult(null);
+    setChecks([]);
 
     const r = await fetch(
       `/api/run/${runId}/apply?group_index=${i}&confirmed=${confirmed}`,
       { method: "POST" }
     );
     const res: Result = await r.json();
+    setChecks(res.steps);
 
     // Reveal one check at a time. The pacing is the point: it is what turns
     // "the gate ran" into something you can watch happen.
@@ -224,8 +255,15 @@ export function ApplyFix({
         return (
           <div
             key={g.group_id}
+            ref={(el) => {
+              cardRefs.current[i] = el;
+            }}
             className={`card overflow-hidden transition-all duration-300 ${
-              open ? "border-brand/40" : ""
+              open
+                ? "border-brand/40"
+                : highlight === i
+                ? "border-brand/60 ring-1 ring-brand/30"
+                : ""
             }`}
           >
             {/* header */}
@@ -283,7 +321,7 @@ export function ApplyFix({
             {/* live walkthrough */}
             {open && (
               <div className="border-t border-line bg-subtle p-4 space-y-2 animate-rise">
-                {(result?.steps ?? []).slice(0, shown).map((s, k) => (
+                {checks.slice(0, shown).map((s, k) => (
                   <div
                     key={s.key}
                     className="flex items-start gap-3 animate-rise"
