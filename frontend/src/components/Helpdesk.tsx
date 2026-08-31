@@ -55,6 +55,27 @@ function speechEngine(): SpeechRec | null {
   return r;
 }
 
+/* ── where the button sits ───────────────────────────────────────────────
+ *
+ * It floats above the page, so wherever it is parked it covers something.
+ * Bottom-right collided with the top bar's own controls on a short viewport,
+ * and no single default avoids every page. So it is draggable and remembers,
+ * which is the only answer that works for a layout nobody has seen yet.
+ *
+ * Dragging and clicking share one pointer, so movement past a few pixels is
+ * what separates them -- otherwise every drag would also open the panel on
+ * release.
+ */
+const DOCK_KEY = "rd.helpdesk.dock";
+const EDGE = 16;
+const DRAG_SLOP = 4;
+
+function clampToViewport(x: number, y: number, w: number, h: number) {
+  const maxX = Math.max(EDGE, window.innerWidth - w - EDGE);
+  const maxY = Math.max(EDGE, window.innerHeight - h - EDGE);
+  return { x: Math.min(Math.max(EDGE, x), maxX), y: Math.min(Math.max(EDGE, y), maxY) };
+}
+
 const SUGGESTED = [
   "What does 'measured' mean here?",
   "How accurate is the attribution?",
@@ -92,6 +113,96 @@ export function Helpdesk() {
   const endRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const recRef = useRef<SpeechRec | null>(null);
+
+  //: null until measured on the client -- the server has no viewport, and
+  //: guessing one would flash the button into the wrong corner on load.
+  const [dock, setDock] = useState<{ x: number; y: number } | null>(null);
+  const [dragging, setDragging] = useState(false);
+  const btnRef = useRef<HTMLButtonElement>(null);
+  const drag = useRef<{ dx: number; dy: number; moved: boolean } | null>(null);
+  //: The position as of the last move. Reading `dock` on pointerup can be a
+  //: render behind, which would save where the button was rather than where
+  //: it was dropped.
+  const live = useRef<{ x: number; y: number } | null>(null);
+
+  // Restore where it was parked, then keep it on screen.
+  useEffect(() => {
+    const el = btnRef.current;
+    if (!el) return;
+    const { width: w, height: h } = el.getBoundingClientRect();
+    let start = { x: window.innerWidth - w - 20, y: window.innerHeight - h - 20 };
+    try {
+      const raw = localStorage.getItem(DOCK_KEY);
+      if (raw) {
+        const p = JSON.parse(raw);
+        if (typeof p?.x === "number" && typeof p?.y === "number") start = p;
+      }
+    } catch {
+      // A blocked or full localStorage is not a reason to lose the button.
+    }
+    const at = clampToViewport(start.x, start.y, w, h);
+    live.current = at;
+    setDock(at);
+  }, []);
+
+  // A window that shrinks must not strand it off-screen.
+  useEffect(() => {
+    function onResize() {
+      const el = btnRef.current;
+      if (!el || !dock) return;
+      const { width: w, height: h } = el.getBoundingClientRect();
+      const at = clampToViewport(dock.x, dock.y, w, h);
+      live.current = at;
+      setDock(at);
+    }
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, [dock]);
+
+  function onPointerDown(e: React.PointerEvent<HTMLButtonElement>) {
+    const el = btnRef.current;
+    if (!el) return;
+    const r = el.getBoundingClientRect();
+    drag.current = { dx: e.clientX - r.left, dy: e.clientY - r.top, moved: false };
+    el.setPointerCapture(e.pointerId);
+  }
+
+  function onPointerMove(e: React.PointerEvent<HTMLButtonElement>) {
+    const d = drag.current;
+    const el = btnRef.current;
+    if (!d || !el) return;
+    const r = el.getBoundingClientRect();
+    const x = e.clientX - d.dx;
+    const y = e.clientY - d.dy;
+    if (!d.moved) {
+      const far =
+        Math.abs(x - r.left) > DRAG_SLOP || Math.abs(y - r.top) > DRAG_SLOP;
+      if (!far) return;
+      d.moved = true;
+      setDragging(true);
+    }
+    const at = clampToViewport(x, y, r.width, r.height);
+    live.current = at;
+    setDock(at);
+  }
+
+  function onPointerUp(e: React.PointerEvent<HTMLButtonElement>) {
+    const d = drag.current;
+    drag.current = null;
+    btnRef.current?.releasePointerCapture(e.pointerId);
+    if (d?.moved) {
+      setDragging(false);
+      try {
+        if (live.current) {
+          localStorage.setItem(DOCK_KEY, JSON.stringify(live.current));
+        }
+      } catch {
+        // Not worth failing over; it simply will not be remembered.
+      }
+      return; // a drag is not a click
+    }
+    setOpen((v) => !v);
+  }
 
   useEffect(() => {
     setCanHear(speechEngine() !== null);
@@ -214,13 +325,28 @@ export function Helpdesk() {
   return (
     <>
       <button
-        onClick={() => setOpen((v) => !v)}
+        ref={btnRef}
+        onPointerDown={onPointerDown}
+        onPointerMove={onPointerMove}
+        onPointerUp={onPointerUp}
+        onKeyDown={(e) => {
+          // Keyboard users never drag, so space and enter must still open it.
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            setOpen((v) => !v);
+          }
+        }}
         aria-expanded={open}
-        className={`fixed bottom-5 right-5 z-[60] h-11 px-5 text-sm rounded-full
-                    shadow-lg transition-all ${
-                      open
-                        ? "btn-secondary"
-                        : "btn-primary"
+        title="Drag to move"
+        style={
+          dock
+            ? { left: dock.x, top: dock.y, touchAction: "none" }
+            : { right: 20, bottom: 20, touchAction: "none", visibility: "hidden" }
+        }
+        className={`fixed z-[60] h-11 px-5 text-sm rounded-full shadow-lg
+                    select-none ${dragging ? "cursor-grabbing scale-105" : "cursor-grab"}
+                    ${dragging ? "" : "transition-all"} ${
+                      open ? "btn-secondary" : "btn-primary"
                     }`}
       >
         {open ? "Close assistant" : "Ask about this system"}

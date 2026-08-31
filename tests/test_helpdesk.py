@@ -247,3 +247,42 @@ def test_the_microphone_stops_when_the_panel_closes():
     microphone indicator lit, which reads as spyware."""
     ui = open("frontend/src/components/Helpdesk.tsx", encoding="utf-8").read()
     assert "abort()" in ui
+
+
+def test_the_button_can_be_moved_and_remembers_where():
+    """It floats above the page, so wherever it parks it covers something --
+    bottom-right sat on the top bar's own controls on a short viewport. No
+    fixed default is right for every page, so it is draggable and persisted."""
+    ui = open("frontend/src/components/Helpdesk.tsx", encoding="utf-8").read()
+    assert "onPointerDown" in ui and "onPointerMove" in ui and "onPointerUp" in ui
+    assert "localStorage.setItem(DOCK_KEY" in ui, "the position must survive a reload"
+    assert "setPointerCapture" in ui, "the drag must survive leaving the button"
+
+
+def test_a_drag_is_not_read_as_a_click():
+    """Dragging and clicking share one pointer. Without a movement threshold
+    every drag would also open the panel on release."""
+    ui = open("frontend/src/components/Helpdesk.tsx", encoding="utf-8").read()
+    up = ui[ui.index("function onPointerUp") : ui.index("useEffect(() => {\n    setCanHear")]
+    assert "d?.moved" in up and "return;" in up, "a moved pointer must not toggle"
+
+
+def test_the_button_cannot_be_dragged_off_screen():
+    """A control dropped past the edge is a control you cannot get back."""
+    ui = open("frontend/src/components/Helpdesk.tsx", encoding="utf-8").read()
+    assert "clampToViewport" in ui
+    assert 'window.addEventListener("resize"' in ui, "a shrinking window must not strand it"
+
+
+def test_the_saved_position_is_the_one_it_was_dropped_at():
+    """Reading React state on pointerup can be a render behind the last move,
+    which would persist where the button was rather than where it landed."""
+    ui = open("frontend/src/components/Helpdesk.tsx", encoding="utf-8").read()
+    assert "live.current" in ui
+    assert "JSON.stringify(live.current)" in ui
+
+
+def test_keyboard_users_can_still_open_it():
+    """They never drag, so the pointer handlers must not be the only way in."""
+    ui = open("frontend/src/components/Helpdesk.tsx", encoding="utf-8").read()
+    assert "onKeyDown" in ui and '"Enter"' in ui
