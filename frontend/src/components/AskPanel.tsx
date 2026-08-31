@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Card, Eyebrow } from "@/components/ui";
 
 interface Citation {
@@ -117,6 +117,25 @@ function matchFix(
   // answer did not actually single one out.
   if (scored.length > 1 && scored[0].score === scored[1].score) return null;
   return scored[0].i;
+}
+
+/** Says how long it has been waiting, so waiting does not look like failing. */
+function Thinking() {
+  const [s, setS] = useState(0);
+  useEffect(() => {
+    const id = setInterval(() => setS((v) => v + 1), 1000);
+    return () => clearInterval(id);
+  }, []);
+  return (
+    <div className="text-sm text-muted flex items-center gap-2">
+      <span className="animate-breathe">thinking…</span>
+      {s > 2 && (
+        <span className="text-[11px] text-faint num">
+          {s}s · asking the model, this one is not cached
+        </span>
+      )}
+    </div>
+  );
 }
 
 export function AskPanel({
@@ -315,7 +334,11 @@ export function AskPanel({
             <div className="text-sm font-medium">{t.q}</div>
 
             {t.a === null ? (
-              <div className="text-sm text-muted animate-breathe">thinking…</div>
+              // A question nobody has asked before takes about fourteen
+              // seconds against a live model, and a static word for that long
+              // is indistinguishable from a hang. The clock is the difference
+              // between "working" and "broken".
+              <Thinking />
             ) : t.a.ok ? (
               <div>
                 <p className="text-sm text-muted leading-relaxed">{t.a.text}</p>

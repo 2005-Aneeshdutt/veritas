@@ -272,3 +272,50 @@ def test_a_group_with_nothing_left_reports_rather_than_raising(tmp_path):
                 pass  # the resume path raises this by design
     finally:
         shutil.copy(backup, path)
+
+
+def test_the_result_carries_every_action_it_gated():
+    """The walkthrough showed six rules and a count -- "17 need your
+    confirmation" -- which asks a reader to take the per-action gating on
+    trust. Gating each payment separately against a signed mandate is the
+    work; a summary of it is not the same as seeing it."""
+    import glob
+    import json
+    import shutil
+    import tempfile
+    import os
+
+    from doctor.apply import apply_group
+    from doctor.run import load_mandate
+
+    target = None
+    for f in sorted(glob.glob("data/runs/*.json")):
+        rec = json.load(open(f, encoding="utf-8"))
+        if rec.get("pending_actions") and not rec.get("applied"):
+            target = (f, rec)
+            break
+    if not target:
+        pytest.skip("no unapplied queue")
+
+    path, rec = target
+    bak = tempfile.mktemp()
+    shutil.copy(path, bak)
+    try:
+        res = apply_group(rec["run_id"], 0, load_mandate(rec["merchant_id"]))
+        assert res.actions, "no per-action detail returned"
+        assert len(res.actions) == res.allowed + res.stepped_up + res.denied
+        for a in res.actions:
+            assert a.txn_id and a.reason and a.decision
+            assert a.amount_paise >= 0
+    finally:
+        shutil.copy(bak, path)
+        os.remove(bak)
+
+
+def test_the_do_it_link_runs_the_fix_rather_than_pointing_at_it():
+    """Landing on a highlighted card and waiting for a second click made the
+    assistant's answer feel like a bookmark. It runs the same gated apply the
+    button runs -- nothing is executed the kernel would not have allowed."""
+    ui = open("frontend/src/components/ApplyFix.tsx", encoding="utf-8").read()
+    assert "autoRan" in ui
+    assert "apply(highlight)" in ui

@@ -47,6 +47,23 @@ class CheckStep(BaseModel):
     status: str  # pass | fail | info
 
 
+class GatedAction(BaseModel):
+    """One payment, and what the kernel decided about it.
+
+    The result used to carry only totals -- "17 need your confirmation" --
+    which is the summary of work the page never showed. Gating every action
+    individually against a signed mandate is the agentic part; a reader who
+    sees only the count has to take it on trust.
+    """
+
+    txn_id: str
+    action_type: str
+    amount_paise: int
+    decision: str
+    reason: str
+    outcome: str
+
+
 class ApplyResult(BaseModel):
     ok: bool
     group_id: str
@@ -60,6 +77,8 @@ class ApplyResult(BaseModel):
     ledger_len: int = 0
     ledger_added: int = 0
     chain_verified: bool = False
+    #: Every action the kernel ruled on, in the order it ruled on them.
+    actions: list[GatedAction] = []
     headline: str = ""
     already_applied: bool = False
 
@@ -308,6 +327,7 @@ def apply_group(
 
     allowed = stepped = denied = executed = 0
     recovered = 0
+    gated: list[GatedAction] = []
     executed_ids: list[str] = []
     held_now: list[str] = []
     for i, action in enumerate(actions):
@@ -351,6 +371,16 @@ def apply_group(
             gate_decision=gate.decision,
             gate_reason=gate.reason_code,
             outcome=outcome,  # type: ignore[arg-type]
+        )
+        gated.append(
+            GatedAction(
+                txn_id=action.txn_id,
+                action_type=action.action_type.value,
+                amount_paise=action.amount_paise,
+                decision=str(gate.decision.value) if hasattr(gate.decision, "value") else str(gate.decision),
+                reason=str(gate.reason_code),
+                outcome=outcome,
+            )
         )
 
     v = led.verify()
@@ -471,5 +501,6 @@ def apply_group(
         ledger_len=len(led),
         ledger_added=len(led) - before,
         chain_verified=v.ok,
+        actions=gated,
         headline=headline,
     )

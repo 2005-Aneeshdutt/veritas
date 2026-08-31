@@ -371,14 +371,22 @@ export function Helpdesk() {
       setQ(said.trim());
     };
     rec.onerror = (e: any) => {
+      // Named causes, because "unavailable right now" tells you nothing and
+      // the commonest cause here is the least obvious one: Chrome's speech
+      // engine is a network service, so it fails offline with no hint.
       const k = e?.error;
-      setMicError(
-        k === "not-allowed" || k === "service-not-allowed"
-          ? "Microphone blocked. Allow it in the address bar and try again."
-          : k === "no-speech"
-          ? "Did not catch that."
-          : "Speech input is unavailable right now."
-      );
+      const msg: Record<string, string> = {
+        "not-allowed":
+          "Microphone blocked. Allow it in the address bar, then try again.",
+        "service-not-allowed":
+          "The browser refused the speech service. Check site permissions.",
+        network:
+          "Speech needs the internet — the browser sends audio to its own service. You are offline or it is blocked.",
+        "audio-capture": "No microphone found.",
+        aborted: "Stopped.",
+        "no-speech": "Did not catch that. Try again.",
+      };
+      setMicError(msg[k] ?? "Speech input failed (" + (k || "unknown") + ").");
       setListening(false);
     };
     rec.onend = () => {

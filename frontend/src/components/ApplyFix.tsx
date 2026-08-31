@@ -4,6 +4,15 @@ import { useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { inr } from "@/lib/types";
 
+interface GatedAction {
+  txn_id: string;
+  action_type: string;
+  amount_paise: number;
+  decision: string;
+  reason: string;
+  outcome: string;
+}
+
 interface Step {
   key: string;
   label: string;
@@ -22,6 +31,7 @@ interface Group {
 }
 
 interface Result {
+  actions?: GatedAction[];
   ok: boolean;
   title: string;
   steps: Step[];
@@ -78,6 +88,17 @@ export function ApplyFix({
    */
   const [checks, setChecks] = useState<Step[]>([]);
   /**
+   * The payments the kernel ruled on, one line each.
+   *
+   * The walkthrough showed six rules and a count -- "17 need your
+   * confirmation" -- and stopped there, which asks a reader to take the
+   * per-action gating on trust. Gating each payment separately against a
+   * signed mandate IS the work; a summary of it is not the same thing as
+   * seeing it happen.
+   */
+  const [gated, setGated] = useState<GatedAction[]>([]);
+  const [shownActions, setShownActions] = useState(0);
+  /**
    * Arriving from the assistant's "Do it" link.
    *
    * The answer names a fix; this opens that fix and scrolls to it, so the
@@ -90,11 +111,23 @@ export function ApplyFix({
   const highlight = asked !== null && asked !== undefined ? Number(asked) : null;
   const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
 
+  const autoRan = useRef(false);
   useEffect(() => {
     if (highlight === null || Number.isNaN(highlight)) return;
     const el = cardRefs.current[highlight];
     if (el) el.scrollIntoView({ behavior: "smooth", block: "center" });
-  }, [highlight]);
+
+    // The assistant said "do it", so do it. Landing on a highlighted card and
+    // waiting for a second click made the answer feel like a bookmark rather
+    // than an instruction -- and the work it then performs is the part worth
+    // watching. Nothing is executed that the kernel would not have allowed
+    // anyway: this is the same gated apply the button runs.
+    if (!autoRan.current && groups[highlight]) {
+      autoRan.current = true;
+      const t = setTimeout(() => apply(highlight), 400);
+      return () => clearTimeout(t);
+    }
+  }, [highlight, groups]);
   const [done, setDone] = useState<Record<string, Result>>({});
   const [batch, setBatch] = useState<{
     at: number;
@@ -113,6 +146,8 @@ export function ApplyFix({
     setShown(0);
     setResult(null);
     setChecks([]);
+    setGated([]);
+    setShownActions(0);
 
     const r = await fetch(
       `/api/run/${runId}/apply?group_index=${i}&confirmed=${confirmed}`,
@@ -120,6 +155,7 @@ export function ApplyFix({
     );
     const res: Result = await r.json();
     setChecks(res.steps);
+    setGated(res.actions ?? []);
 
     // Reveal one check at a time. The pacing is the point: it is what turns
     // "the gate ran" into something you can watch happen.
@@ -128,12 +164,23 @@ export function ApplyFix({
         setTimeout(() => setShown(k + 1), 420 * (k + 1))
       );
     });
+    // Then the payments themselves, fast enough not to be tedious and slow
+    // enough to read. Capped, because ninety rows revealed one at a time is
+    // a screensaver, not evidence.
+    const afterChecks = 420 * res.steps.length;
+    const rows = Math.min(res.actions?.length ?? 0, 24);
+    for (let k = 0; k < rows; k++) {
+      timers.current.push(
+        setTimeout(() => setShownActions(k + 1), afterChecks + 70 * (k + 1))
+      );
+    }
     timers.current.push(
       setTimeout(() => {
+        setShownActions(res.actions?.length ?? 0);
         setResult(res);
         setDone((d) => ({ ...d, [res.title]: res }));
         onApplied?.();
-      }, 420 * res.steps.length + 300)
+      }, afterChecks + 70 * rows + 300)
     );
   }
 
@@ -321,6 +368,47 @@ export function ApplyFix({
             {/* live walkthrough */}
             {open && (
               <div className="border-t border-line bg-subtle p-4 space-y-2 animate-rise">
+                {gated.length > 0 && shownActions > 0 && (
+                  <div className="mt-3 pt-3 border-t border-line">
+                    <div className="eyebrow mb-2">
+                      each payment, checked on its own
+                    </div>
+                    <div className="font-mono text-[11px] space-y-0.5 max-h-52 overflow-y-auto">
+                      {gated.slice(0, shownActions).map((a) => (
+                        <div
+                          key={a.txn_id}
+                          className="flex items-center gap-3 animate-rise"
+                        >
+                          <span
+                            className={`w-1.5 h-1.5 rounded-full shrink-0 ${
+                              a.decision === "deny"
+                                ? "bg-rose"
+                                : a.decision === "step_up"
+                                ? "bg-amber"
+                                : "bg-mint"
+                            }`}
+                          />
+                          <span className="text-faint w-40 truncate shrink-0">
+                            {a.txn_id}
+                          </span>
+                          <span className="num w-20 text-right shrink-0">
+                            {inr(a.amount_paise)}
+                          </span>
+                          <span className="text-muted truncate">
+                            {a.reason.replace(/_/g, " ").toLowerCase()}
+                          </span>
+                        </div>
+                      ))}
+                      {shownActions < gated.length && (
+                        <div className="text-faint pt-1">
+                          …and {gated.length - shownActions} more, all gated the
+                          same way
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+
                 {checks.slice(0, shown).map((s, k) => (
                   <div
                     key={s.key}
