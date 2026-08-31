@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 interface Citation {
   value: number;
@@ -22,23 +22,38 @@ interface Turn {
   a: Answer | null;
 }
 
-/**
- * A question box that follows you across the app.
+/* ── the browser's own speech engine ──────────────────────────────────────
  *
- * The per-run assistant answers "why is this merchant losing money". The
- * questions people actually ask while looking at a screen are different and
- * had nowhere to go: what does MEASURED mean here, how accurate is this, why
- * is the recovered figure smaller than the one above it, what can the agent
- * do without me. All of that was answerable only by reading the README, which
- * means it was answerable only by someone who had already decided to.
- *
- * It is grounded the same way everything else here is, and the stakes are
- * higher rather than lower: this panel is asked about the system's own
- * accuracy, so a figure it invented would be a false claim about how honest
- * the system is. Every number in a reply is checked against the context the
- * model was handed, and a reply that cites one that is not there is refused
- * outright instead of shown with a warning under it.
+ * Not typed in lib.dom, and not present in every browser: Chrome and Edge
+ * have it, Firefox does not, Safari is partial. So it is feature-detected and
+ * the microphone simply is not offered when it is missing — an button that
+ * does nothing is worse than no button, especially on a stage.
  */
+type SpeechRec = {
+  lang: string;
+  continuous: boolean;
+  interimResults: boolean;
+  start: () => void;
+  stop: () => void;
+  abort: () => void;
+  onresult: ((e: any) => void) | null;
+  onerror: ((e: any) => void) | null;
+  onend: (() => void) | null;
+};
+
+function speechEngine(): SpeechRec | null {
+  if (typeof window === "undefined") return null;
+  const Ctor =
+    (window as any).SpeechRecognition ||
+    (window as any).webkitSpeechRecognition;
+  if (!Ctor) return null;
+  const r: SpeechRec = new Ctor();
+  // Indian English: the questions are about rupees, NPCI and merchant names.
+  r.lang = "en-IN";
+  r.continuous = false;
+  r.interimResults = true;
+  return r;
+}
 
 const SUGGESTED = [
   "What does 'measured' mean here?",
@@ -47,24 +62,75 @@ const SUGGESTED = [
   "Why is the recovered figure so small?",
 ];
 
+/**
+ * The assistant, on every page.
+ *
+ * It answers questions about the system itself — what MEASURED means here,
+ * how accurate the attribution is, what the agent may do unattended — from
+ * the same committed files the pages read. Every figure in a reply is checked
+ * against that context, and a reply citing one that is not there is refused
+ * rather than shown with a caveat. This panel gets asked how honest the
+ * system is, so an invented number would be a false claim about exactly that.
+ *
+ * Two things about the voice input are deliberate. It fills the box and lets
+ * you see the transcript before it sends, because a mis-heard question that
+ * submits itself is a demo going wrong in front of people. And speaking the
+ * answer back is off until you turn it on, since a panel that starts talking
+ * over a presenter is a panel nobody opens twice.
+ */
 export function Helpdesk() {
   const [open, setOpen] = useState(false);
   const [q, setQ] = useState("");
   const [turns, setTurns] = useState<Turn[]>([]);
   const [busy, setBusy] = useState(false);
+
+  const [listening, setListening] = useState(false);
+  const [micError, setMicError] = useState<string | null>(null);
+  const [canHear, setCanHear] = useState(false);
+  const [speakBack, setSpeakBack] = useState(false);
+
   const endRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const recRef = useRef<SpeechRec | null>(null);
+
+  useEffect(() => {
+    setCanHear(speechEngine() !== null);
+  }, []);
 
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
   }, [turns]);
 
-  // Escape closes it, because a panel that traps you is worse than no panel.
+  // Escape closes it. A panel that traps you is worse than no panel.
   useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [open]);
+
+  // Never leave the microphone running behind a closed panel.
+  useEffect(() => {
+    if (!open && recRef.current) {
+      recRef.current.abort();
+      recRef.current = null;
+      setListening(false);
+    }
+  }, [open]);
+
+  const say = useCallback(
+    (text: string) => {
+      if (!speakBack || typeof window === "undefined") return;
+      const s = window.speechSynthesis;
+      if (!s) return;
+      s.cancel();
+      const u = new SpeechSynthesisUtterance(text);
+      u.lang = "en-IN";
+      u.rate = 1.02;
+      s.speak(u);
+    },
+    [speakBack]
+  );
 
   async function send(text: string) {
     const asked = text.trim();
@@ -78,6 +144,7 @@ export function Helpdesk() {
       });
       const a: Answer = await r.json();
       setTurns((t) => t.map((x, i) => (i === t.length - 1 ? { ...x, a } : x)));
+      if (a.ok) say(a.text);
     } catch {
       setTurns((t) =>
         t.map((x, i) =>
@@ -101,18 +168,63 @@ export function Helpdesk() {
     }
   }
 
+  function listen() {
+    if (listening) {
+      recRef.current?.stop();
+      return;
+    }
+    const rec = speechEngine();
+    if (!rec) return;
+    setMicError(null);
+    setQ("");
+    recRef.current = rec;
+
+    rec.onresult = (e: any) => {
+      let said = "";
+      for (let i = 0; i < e.results.length; i++) said += e.results[i][0].transcript;
+      // Shown as it is heard, and left in the box to correct. Nothing is
+      // sent until a person presses Ask.
+      setQ(said.trim());
+    };
+    rec.onerror = (e: any) => {
+      const k = e?.error;
+      setMicError(
+        k === "not-allowed" || k === "service-not-allowed"
+          ? "Microphone blocked. Allow it in the address bar and try again."
+          : k === "no-speech"
+          ? "Did not catch that."
+          : "Speech input is unavailable right now."
+      );
+      setListening(false);
+    };
+    rec.onend = () => {
+      setListening(false);
+      recRef.current = null;
+      inputRef.current?.focus();
+    };
+
+    try {
+      rec.start();
+      setListening(true);
+    } catch {
+      setMicError("Speech input is unavailable right now.");
+    }
+  }
+
   return (
     <>
-      {!open && (
-        <button
-          onClick={() => setOpen(true)}
-          className="fixed bottom-5 right-5 z-50 btn-primary h-11 px-5 text-sm
-                     shadow-lg rounded-full"
-          aria-label="Ask about this system"
-        >
-          Ask about this system
-        </button>
-      )}
+      <button
+        onClick={() => setOpen((v) => !v)}
+        aria-expanded={open}
+        className={`fixed bottom-5 right-5 z-[60] h-11 px-5 text-sm rounded-full
+                    shadow-lg transition-all ${
+                      open
+                        ? "btn-secondary"
+                        : "btn-primary"
+                    }`}
+      >
+        {open ? "Close assistant" : "Ask about this system"}
+      </button>
 
       {open && (
         <aside
@@ -121,10 +233,27 @@ export function Helpdesk() {
           aria-label="System questions"
         >
           <div className="px-5 h-14 flex items-center gap-3 border-b border-line shrink-0">
-            <span className="eyebrow">Ask about this system</span>
+            <span className="w-2 h-2 rounded-full bg-brand shrink-0" />
+            <span className="text-sm font-medium">Your assistant</span>
+
+            {canHear && (
+              <button
+                onClick={() => setSpeakBack((v) => !v)}
+                className={`ml-auto text-[11px] px-2 py-1 rounded transition-colors ${
+                  speakBack
+                    ? "bg-brand-soft text-brand"
+                    : "text-faint hover:text-muted"
+                }`}
+                title="Read answers aloud"
+              >
+                {speakBack ? "speaking" : "silent"}
+              </button>
+            )}
+
             <button
               onClick={() => setOpen(false)}
-              className="ml-auto text-muted hover:text-ink transition-colors text-lg leading-none"
+              className={`${canHear ? "" : "ml-auto"} text-muted hover:text-ink
+                          transition-colors text-lg leading-none`}
               aria-label="Close"
             >
               ×
@@ -134,11 +263,14 @@ export function Helpdesk() {
           <div className="flex-1 overflow-y-auto px-5 py-4 space-y-5">
             {turns.length === 0 && (
               <div className="space-y-3">
+                <p className="text-[15px] leading-relaxed">
+                  I&rsquo;m your assistant. What can I help you with?
+                </p>
                 <p className="text-sm text-muted leading-relaxed">
-                  Answers come from this system&rsquo;s own records — the book,
-                  the committed evals, the mandate rules. Every figure is
-                  checked against them, and a reply citing one that is not
-                  there is refused rather than shown.
+                  I answer from this system&rsquo;s own records — the book, the
+                  committed evals, the mandate rules. Every figure is checked
+                  against them, and I refuse rather than guess.
+                  {canHear && " You can type or press the microphone."}
                 </p>
                 <div className="flex flex-col gap-1.5 pt-1">
                   {SUGGESTED.map((s) => (
@@ -191,6 +323,10 @@ export function Helpdesk() {
             <div ref={endRef} />
           </div>
 
+          {micError && (
+            <div className="px-5 pb-2 text-[11px] text-amber">{micError}</div>
+          )}
+
           <form
             onSubmit={(e) => {
               e.preventDefault();
@@ -198,10 +334,34 @@ export function Helpdesk() {
             }}
             className="p-4 border-t border-line flex items-center gap-2 shrink-0"
           >
+            {canHear && (
+              <button
+                type="button"
+                onClick={listen}
+                aria-label={listening ? "Stop listening" : "Ask by voice"}
+                className={`h-9 w-9 rounded-lg grid place-items-center shrink-0
+                            border transition-colors ${
+                              listening
+                                ? "bg-rose-soft border-rose/40 text-rose"
+                                : "border-line text-muted hover:text-ink"
+                            }`}
+              >
+                <span
+                  className={listening ? "animate-breathe" : ""}
+                  aria-hidden="true"
+                >
+                  ●
+                </span>
+              </button>
+            )}
+
             <input
+              ref={inputRef}
               value={q}
               onChange={(e) => setQ(e.target.value)}
-              placeholder="Ask anything about this system…"
+              placeholder={
+                listening ? "listening…" : "Ask anything about this system…"
+              }
               maxLength={500}
               className="field flex-1 h-9 py-0 text-sm"
             />

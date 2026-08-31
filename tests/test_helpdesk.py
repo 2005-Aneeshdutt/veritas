@@ -220,3 +220,30 @@ def test_approving_the_book_does_not_silence_the_panel(tmp_path):
     finally:
         for f in files:
             shutil.copy(tmp_path / os.path.basename(f), f)
+
+
+def test_voice_input_is_feature_detected_not_assumed():
+    """Speech recognition exists in Chrome and Edge, not Firefox, and only
+    partly in Safari. A microphone button that does nothing is worse than no
+    button, especially on a stage, so it is only rendered when the engine is
+    actually there."""
+    ui = open("frontend/src/components/Helpdesk.tsx", encoding="utf-8").read()
+    assert "webkitSpeechRecognition" in ui
+    assert "canHear" in ui, "the button must be gated on detection"
+    assert "not-allowed" in ui, "a blocked microphone must say so"
+
+
+def test_voice_does_not_submit_what_it_only_thinks_it_heard():
+    """A mis-heard question that sends itself is a demo going wrong in front
+    of people. The transcript fills the box; a person still presses Ask."""
+    ui = open("frontend/src/components/Helpdesk.tsx", encoding="utf-8").read()
+    rec = ui[ui.index("rec.onresult") : ui.index("rec.onerror")]
+    assert "setQ(" in rec
+    assert "send(" not in rec, "onresult must not submit on its own"
+
+
+def test_the_microphone_stops_when_the_panel_closes():
+    """A recogniser left running behind a closed panel keeps the tab's
+    microphone indicator lit, which reads as spyware."""
+    ui = open("frontend/src/components/Helpdesk.tsx", encoding="utf-8").read()
+    assert "abort()" in ui
