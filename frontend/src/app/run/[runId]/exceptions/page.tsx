@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Card, Eyebrow, Info, Loading, Stagger, Ticker } from "@/components/ui";
+import { Card, Detail, Eyebrow, Info, Loading, Stagger, Ticker } from "@/components/ui";
 import { GLOSSARY } from "@/lib/explain";
 import { RunRecord, inr } from "@/lib/types";
 
@@ -192,10 +192,12 @@ export default function ExceptionsPage({ params }: { params: { runId: string } }
               <h2 className="text-lg font-semibold mt-1">
                 Money no retry can recover
               </h2>
-              <p className="text-sm text-muted mt-1.5 max-w-2xl">
+              <Detail summary="why this is listed">
+                <p className="text-sm text-muted mt-1.5 max-w-2xl">
                 Listed rather than quietly dropped from the recovery rate — which is
                 how recovery percentages get flattering.
               </p>
+              </Detail>
             </div>
             <div className="text-right">
               <div className="text-3xl font-display font-bold text-rose">
@@ -342,10 +344,12 @@ export default function ExceptionsPage({ params }: { params: { runId: string } }
         <Card>
           <Eyebrow>Bounded by construction</Eyebrow>
           <h2 className="text-lg font-semibold mt-1 mb-1">Why it stopped</h2>
-          <p className="text-sm text-muted mb-4 max-w-2xl">
+          <Detail summary="why this is listed">
+            <p className="text-sm text-muted mb-4 max-w-2xl">
             Six rules in the policy kernel, enforced deterministically. No model is
             ever consulted about what the agent is allowed to do.
           </p>
+          </Detail>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-2.5">
             {STOPPING_RULES.map(([rule, detail]) => (
               <div key={rule} className="card-raised p-3">
@@ -401,12 +405,14 @@ function FaultPanel({ groups }: { groups: any[] }) {
           ? `${inr(mine.total_paise)} of this is your own configuration`
           : "None of this is yours to fix"}
       </h2>
-      <p className="text-sm text-muted mt-1.5 max-w-3xl leading-relaxed">
+      <Detail summary="how fault is attributed">
+        <p className="text-sm text-muted mt-1.5 max-w-3xl leading-relaxed">
         Attributed from Razorpay&apos;s own published next step for each error
         code. This is the one figure here with no error bar on it — a payment
         method you have not enabled does not fail probabilistically, it fails
         every time until the setting changes.
       </p>
+      </Detail>
 
       <div className="mt-4 space-y-2">
         {groups.map((g) => {

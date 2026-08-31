@@ -1,8 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { ReactNode, useEffect, useState } from "react";
+import { Steps } from "@/components/Steps";
 import { ThemeToggle } from "@/components/Theme";
 
 export function Logo({ size = "sm" }: { size?: "sm" | "lg" }) {
@@ -23,45 +24,31 @@ export function Logo({ size = "sm" }: { size?: "sm" | "lg" }) {
   );
 }
 
-const NAV = [
-  { href: "/portfolio", label: "Book" },
-  { href: "/live", label: "Live" },
-  { href: "/drift", label: "Drift" },
-  { href: "/prove", label: "Prove it" },
-];
-
-/** The top bar every signed-in page shares. */
-export function TopBar({ right }: { right?: ReactNode }) {
-  const path = usePathname();
+/**
+ * The top bar every signed-in page shares.
+ *
+ * The old four-item nav lived here and a six-item tab strip lived inside each
+ * run, so the product offered ten destinations in no particular order. Both
+ * are now one numbered spine in the order the demo is told.
+ *
+ * @param runHref  the run in view, so steps 3 and 4 can point at it.
+ */
+export function TopBar({ right, runHref }: { right?: ReactNode; runHref?: string | null }) {
   return (
-    <header className="sticky top-0 z-40 border-b border-line bg-canvas/85 backdrop-blur-xl">
-      <div className="max-w-[1400px] mx-auto px-6 h-14 flex items-center gap-6">
-        <Link href="/portfolio" className="hover:opacity-80 transition-opacity">
-          <Logo />
-        </Link>
-
-        <nav className="flex items-center gap-1">
-          {NAV.map((n) => (
-            <Link
-              key={n.href}
-              href={n.href}
-              className={`px-2.5 py-1.5 rounded-md text-sm transition-colors ${
-                path.startsWith(n.href)
-                  ? "text-ink bg-raised"
-                  : "text-muted hover:text-ink hover:bg-raised"
-              }`}
-            >
-              {n.label}
-            </Link>
-          ))}
-        </nav>
-
-        <div className="ml-auto flex items-center gap-2">
-          {right}
-          <ThemeToggle />
-          <Account />
+    <header className="sticky top-0 z-40 bg-canvas/85 backdrop-blur-xl">
+      <div className="border-b border-line">
+        <div className="max-w-[1400px] mx-auto px-6 h-14 flex items-center gap-6">
+          <Link href="/portfolio" className="hover:opacity-80 transition-opacity">
+            <Logo />
+          </Link>
+          <div className="ml-auto flex items-center gap-2">
+            {right}
+            <ThemeToggle />
+            <Account />
+          </div>
         </div>
       </div>
+      <Steps runHref={runHref} />
     </header>
   );
 }

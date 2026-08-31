@@ -212,3 +212,8 @@ h1, h2, h3, h4 {
     scroll-behavior: auto !important;
   }
 }
+
+/* The step spine scrolls sideways on a phone; a scrollbar under it would
+   read as a second, broken row. */
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }

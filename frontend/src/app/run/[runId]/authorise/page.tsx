@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { AuthorityPanel } from "@/components/AuthorityPanel";
-import { Card, Eyebrow, Info, Loading, SectionHeader, Stagger } from "@/components/ui";
+import { Card, Detail, Eyebrow, Info, Loading, SectionHeader, Stagger } from "@/components/ui";
 import { GLOSSARY } from "@/lib/explain";
 import { RunRecord, inr } from "@/lib/types";
 
@@ -483,11 +483,13 @@ export default function AuditPage({ params }: { params: { runId: string } }) {
             </div>
             <div className="card-raised p-3">
               <div className="text-amber text-xs font-semibold mb-1">✗ does not prove authenticity</div>
-              <p className="text-xs text-muted leading-relaxed">
+              <Detail summary="what this chain does not prove">
+                <p className="text-xs text-muted leading-relaxed">
                 Signing the chain head with the merchant key would add that. It is
                 deliberately out of scope, and stated here rather than left for someone
                 to discover.
               </p>
+              </Detail>
             </div>
           </div>
         </Card>

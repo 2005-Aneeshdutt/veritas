@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { TopBar } from "@/components/Chrome";
-import { Card, Eyebrow, Loading, Stagger, Ticker } from "@/components/ui";
+import { Card, Detail, Eyebrow, Loading, Stagger, Ticker } from "@/components/ui";
 import { inr } from "@/lib/types";
 
 const SEV: Record<string, string> = {
@@ -211,7 +211,8 @@ export default function DriftPage() {
         <Stagger i={5}>
           <Card>
             <Eyebrow>Source</Eyebrow>
-            <p className="text-sm text-muted mt-2 leading-relaxed max-w-3xl">
+            <Detail summary="where this data comes from">
+              <p className="text-sm text-muted mt-2 leading-relaxed max-w-3xl">
               Every number on this page comes from NPCI&apos;s published top-50
               remitter tables — 32 months, committed to the repo, parsed from a
               pinned Internet Archive capture. The national rupee figure multiplies
@@ -219,6 +220,7 @@ export default function DriftPage() {
               from NPCI&apos;s own volume and value columns), which is why it is
               labelled projected rather than measured.
             </p>
+            </Detail>
           </Card>
         </Stagger>
       </div>

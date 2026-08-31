@@ -184,9 +184,22 @@ export default function ValidationPage() {
                       />
                     </div>
                     <p className="text-[11px] text-muted mt-3 leading-relaxed">
-                      Not one weak link — the attribution caps the model at 75%, and the
-                      model then follows it only 63% of the time. Reporting a bare 60%
-                      would have hidden which half to fix.
+                      {/* Read from the same object as the bars above. These were
+                          hardcoded at 75/63/60 while the bars rendered the live
+                          eval, so the sentence contradicted the chart directly
+                          above it -- on the page whose whole job is accuracy. */}
+                      Not one weak link — the attribution caps the model at{" "}
+                      {(
+                        rc.error_decomposition
+                          .attribution_pointed_at_the_right_cause * 100
+                      ).toFixed(0)}
+                      %, and the model follows what it was shown{" "}
+                      {(
+                        rc.error_decomposition.model_faithful_to_what_it_saw * 100
+                      ).toFixed(0)}
+                      % of the time. Reporting a bare{" "}
+                      {(rc.accuracy * 100).toFixed(0)}% would have hidden which half
+                      to fix.
                     </p>
                   </>
                 )}

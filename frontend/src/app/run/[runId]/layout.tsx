@@ -6,13 +6,19 @@ import { useEffect, useState } from "react";
 import { TopBar } from "@/components/Chrome";
 import { Merchant } from "@/lib/types";
 
+/**
+ * Three views, not six.
+ *
+ * The six tabs split one story across six screens, and the demo had to visit
+ * four of them in order while the top bar offered four more destinations of
+ * its own. These three map onto steps 3 and 4 of the spine: what the agent
+ * found, how it worked, and what happens next. Validation and Exceptions are
+ * sections inside them now rather than places to go.
+ */
 const TABS = [
-  { href: "", label: "Overview", hint: "the money and the gap" },
-  { href: "/flow", label: "Agent flow", hint: "watch all ten nodes run" },
-  { href: "/diagnosis", label: "Diagnosis", hint: "why, with the arithmetic" },
-  { href: "/validation", label: "Validation", hint: "how often it is wrong" },
-  { href: "/audit", label: "Audit", hint: "verify the chain yourself" },
-  { href: "/exceptions", label: "Exceptions", hint: "what it could not fix" },
+  { href: "", label: "Findings" },
+  { href: "/flow", label: "How it worked" },
+  { href: "/authorise", label: "Authorise" },
 ];
 
 export default function RunLayout({
@@ -72,11 +78,12 @@ export default function RunLayout({
             </select>
           </>
         }
+        runHref={base}
       />
 
-      {/* sub-nav — the six views of one merchant */}
-      <div className="sticky top-14 z-30 border-b border-line bg-canvas/85 backdrop-blur-xl">
-        <div className="max-w-[1400px] mx-auto px-6 flex items-center gap-1 -mb-px overflow-x-auto">
+      {/* sub-nav — three views of one merchant */}
+      <div className="border-b border-line bg-canvas">
+        <div className="max-w-[1400px] mx-auto px-6 flex items-center gap-1 -mb-px overflow-x-auto no-scrollbar">
           {TABS.map((t) => {
             const href = base + t.href;
             const active = path === href;
@@ -84,7 +91,6 @@ export default function RunLayout({
               <Link
                 key={t.href}
                 href={href}
-                title={t.hint}
                 className={`px-3 py-2.5 text-sm whitespace-nowrap border-b-2 transition-colors ${
                   active
                     ? "border-brand text-ink"

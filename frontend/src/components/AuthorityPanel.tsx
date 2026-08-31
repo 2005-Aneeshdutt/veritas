@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Card, Eyebrow, SectionHeader } from "@/components/ui";
+import { Card, Detail, Eyebrow, SectionHeader } from "@/components/ui";
 import { inr } from "@/lib/types";
 
 interface Proposal {
@@ -204,7 +204,8 @@ export function AuthorityPanel({ runId }: { runId: string }) {
                 <div className="font-mono text-[11px] break-all mt-1 text-muted">
                   {rv.signing_payload_sha256}
                 </div>
-                <p className="text-sm text-muted mt-3 leading-relaxed">
+                <Detail summary="why the agent cannot sign this">
+                  <p className="text-sm text-muted mt-3 leading-relaxed">
                   This is where the agent stops. Turning this draft into
                   authority takes your Ed25519 private key, which this system
                   has never held and cannot ask for — an agent able to sign its
@@ -212,6 +213,7 @@ export function AuthorityPanel({ runId }: { runId: string }) {
                   Sign these bytes offline and the new mandate governs the next
                   run.
                 </p>
+                </Detail>
               </div>
             </div>
           )}

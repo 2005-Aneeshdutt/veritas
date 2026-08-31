@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Card, Eyebrow, Info, Loading, SectionHeader, Stagger } from "@/components/ui";
+import { RunSteps } from "@/components/RunSteps";
+import { Card, Detail, Eyebrow, Info, Loading, SectionHeader, Stagger } from "@/components/ui";
 import { FLOW_ORDER, NODE_DOCS } from "@/lib/explain";
 import { NodeTrace, RunRecord } from "@/lib/types";
 
@@ -333,9 +334,20 @@ export default function FlowPage({ params }: { params: { runId: string } }) {
       </Stagger>
 
       <div className="grid xl:grid-cols-[1.55fr_1fr] gap-5">
-        {/* ─────────────────────────────────────────────── graph */}
+        {/* ────────────────────────────────── the run, top to bottom */}
         <Stagger i={2}>
-          <Card className="!p-4 overflow-x-auto">
+          <Card className="!p-0 overflow-hidden">
+            <RunSteps
+              traces={traces}
+              steps={steps}
+              live={playing}
+              selected={selected}
+              onSelect={setSelected}
+            />
+
+            <div className="px-4 py-3 border-t border-line">
+              <Detail summary="show the pipeline as a graph">
+          <div className="overflow-x-auto">
             <svg
               viewBox={`0 0 ${PAD * 2 + 7 * COL_W + NODE_W} ${PAD * 2 + 2 * ROW_H + NODE_H}`}
               className="w-full min-w-[900px]"
@@ -484,6 +496,9 @@ export default function FlowPage({ params }: { params: { runId: string } }) {
               <span className="ml-auto text-faint">
                 click a node · ‹ › to step through
               </span>
+            </div>
+          </div>
+              </Detail>
             </div>
           </Card>
         </Stagger>

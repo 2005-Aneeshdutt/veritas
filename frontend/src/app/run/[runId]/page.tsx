@@ -225,7 +225,7 @@ export default function Overview({ params }: { params: { runId: string } }) {
             <span className="text-faint">→</span>
             <Ladder n={gate.deny} label="denied by mandate" tone="rose" />
             <Link
-              href={`/run/${params.runId}/audit`}
+              href={`/run/${params.runId}/authorise`}
               className="ml-auto text-brand hover:text-brand"
             >
               inspect the ledger →
@@ -639,7 +639,7 @@ export default function Overview({ params }: { params: { runId: string } }) {
             hint="How often this engine is wrong, measured"
           />
           <Evidence
-            href={`/run/${params.runId}/audit`}
+            href={`/run/${params.runId}/authorise`}
             title="Audit"
             detail={`chain ✓ · ${m.mandate_violations} violations`}
             hint="Verify the hash chain in your own browser"

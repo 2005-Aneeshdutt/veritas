@@ -208,6 +208,19 @@ export default function PortfolioPage() {
           </Card>
         </Stagger>
 
+        {/* Drift lost its slot in the nav when ten destinations became five.
+            It belongs to the book, so it is reachable from the book. */}
+        <div className="flex justify-end -mt-2">
+          <Link
+            href="/drift"
+            className="text-[13px] text-muted hover:text-ink transition-colors
+                       inline-flex items-center gap-1.5"
+          >
+            Watch a bank degrade against its published rate
+            <span aria-hidden="true">→</span>
+          </Link>
+        </div>
+
         {/* ─────────────────── what the batch actually won back */}
         <Stagger>
           <RecoveryFunnel pf={pf} onApproved={load} />

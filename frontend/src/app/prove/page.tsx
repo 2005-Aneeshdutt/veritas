@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { TopBar } from "@/components/Chrome";
-import { Card, Eyebrow, Stagger } from "@/components/ui";
+import { Card, Detail, Eyebrow, Stagger } from "@/components/ui";
 import { FACTOR_DOCS } from "@/lib/explain";
 import { inr } from "@/lib/types";
 
@@ -359,10 +359,12 @@ export default function ProvePage() {
                 </span>
               </div>
 
-              <p className="text-sm text-muted mt-2 max-w-3xl leading-relaxed">
+              <Detail summary="how to verify the seal yourself">
+                <p className="text-sm text-muted mt-2 max-w-3xl leading-relaxed">
                 This is the SHA-256 of the exact ground truth. It is on screen now,
                 before the engine has seen anything. Nothing below can change it.
               </p>
+              </Detail>
 
               <div className="card-raised p-3 mt-3 font-mono text-[11px] break-all text-brand">
                 {challenge.seal}
@@ -583,10 +585,12 @@ export default function ProvePage() {
               </button>
               {showBytes && (
                 <div className="mt-3 space-y-2 animate-rise">
-                  <p className="text-xs text-muted">
+                  <Detail summary="how to verify the seal yourself">
+                    <p className="text-xs text-muted">
                     These are the exact bytes that were hashed. Run them through
                     SHA-256 and compare with the seal published in step 2.
                   </p>
+                  </Detail>
                   <pre className="card-raised p-3 text-[10px] overflow-x-auto whitespace-pre-wrap break-all">
                     {reveal.canonical_bytes}
                   </pre>

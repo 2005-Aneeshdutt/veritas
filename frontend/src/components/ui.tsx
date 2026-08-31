@@ -32,6 +32,10 @@ export function Card({
   );
 }
 
+/** Roughly a line and a half at this measure. Past it, prose stops being a
+ *  subtitle and starts being an essay standing between a reader and a number. */
+const SUB_INLINE_LIMIT = 105;
+
 export function SectionHeader({
   eyebrow,
   title,
@@ -43,14 +47,24 @@ export function SectionHeader({
   sub?: ReactNode;
   right?: ReactNode;
 }) {
+  // A long subtitle collapses instead of shouting.
+  //
+  // Every one of these was worth saying and none was worth saying first --
+  // eighteen of them on one screen is how a page ends up with 427 words of
+  // explanation above the measurements it exists to show. Long ones become a
+  // disclosure; short ones stay inline, because hiding six words behind a
+  // click is its own kind of rude.
+  const long = typeof sub === "string" && sub.length > SUB_INLINE_LIMIT;
+
   return (
     <div className="flex items-start justify-between gap-6 mb-4">
       <div className="min-w-0">
         {eyebrow && <Eyebrow>{eyebrow}</Eyebrow>}
         <h2 className="text-lg font-semibold mt-1">{title}</h2>
-        {sub && (
+        {sub && !long && (
           <p className="text-sm text-muted mt-1.5 max-w-2xl leading-relaxed">{sub}</p>
         )}
+        {long && <Detail summary="why this is measured this way">{sub}</Detail>}
       </div>
       {right && <div className="shrink-0">{right}</div>}
     </div>
@@ -341,5 +355,45 @@ export function Stagger({
     <div className="animate-rise" style={{ animationDelay: `${i * 60}ms` }}>
       {children}
     </div>
+  );
+}
+
+/**
+ * A paragraph that is not on screen until someone wants it.
+ *
+ * The UI carried 1,813 words of explanatory prose — 427 on a single page —
+ * because the README's voice leaked into the product. None of it was wrong
+ * and almost none of it was needed at a glance, which is the definition of
+ * clutter: true things competing with the number you came to read.
+ *
+ * So the reasoning stays, one click away. A judge who wants to know why we
+ * report a Wilson bound can still find out; a judge watching a demo is not
+ * made to read it first.
+ */
+export function Detail({
+  summary,
+  children,
+}: {
+  summary: string;
+  children: ReactNode;
+}) {
+  return (
+    <details className="group mt-3">
+      <summary
+        className="cursor-pointer list-none text-[13px] text-muted hover:text-ink
+                   transition-colors inline-flex items-center gap-1.5 select-none"
+      >
+        <span
+          className="text-faint transition-transform group-open:rotate-90"
+          aria-hidden="true"
+        >
+          ›
+        </span>
+        {summary}
+      </summary>
+      <div className="mt-2.5 text-sm text-muted leading-relaxed max-w-[68ch] space-y-2.5">
+        {children}
+      </div>
+    </details>
   );
 }
