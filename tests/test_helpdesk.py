@@ -12,6 +12,7 @@ moment an eval is regenerated, and nobody notices until a judge cross-checks.
 """
 
 import json
+import os
 
 import pytest
 
@@ -144,3 +145,78 @@ def test_the_context_survives_a_missing_portfolio(monkeypatch):
     monkeypatch.setattr(portfolio, "build_portfolio", boom)
     ctx = build_context()
     assert "THE MANDATE" in ctx, "the rest of the context must still assemble"
+
+
+#: The questions the panel offers as buttons. Kept here so the test fails
+#: loudly if the UI list and the warmed cache drift apart.
+SUGGESTED = [
+    "What does 'measured' mean here?",
+    "How accurate is the attribution?",
+    "What can the agent do without asking me?",
+    "Why is the recovered figure so small?",
+]
+
+
+def _is_cached(question: str) -> bool:
+    from doctor.helpdesk import SYSTEM, build_context
+    from doctor.llm import CACHE_DIR, MODEL_FAST, _key
+
+    prompt = "CONTEXT\n%s\n\nQUESTION\n%s" % (build_context(), question)
+    return (CACHE_DIR / (_key(MODEL_FAST, SYSTEM, prompt, "helpdesk_answer") + ".json")).exists()
+
+
+def test_the_panels_own_suggestions_answer_without_an_api_key():
+    """The deployed build sets no API key, deliberately.
+
+    So a suggested question that is not pre-cached refuses when a judge
+    clicks it -- and one of these four did exactly that, because it had been
+    warmed with slightly different wording than the button sends.
+    """
+    missing = [q for q in SUGGESTED if not _is_cached(q)]
+    assert not missing, "not cached: %s" % missing
+
+
+def test_the_suggestions_here_match_the_ones_in_the_ui():
+    """If someone edits a button's wording, the warmed answer stops matching
+    and the panel refuses on the deployed build. The cache key is the exact
+    string."""
+    ui = open("frontend/src/components/Helpdesk.tsx", encoding="utf-8").read()
+    for q in SUGGESTED:
+        assert q.replace("'", "&apos;") in ui or q in ui, q
+
+
+def test_approving_the_book_does_not_silence_the_panel(tmp_path):
+    """The context carries live book figures, so approving changes the cache
+    key for every question at once. Both states the demo can be in are
+    warmed; this proves the second one still is.
+    """
+    import glob
+    import json
+    import shutil
+
+    from doctor.apply import apply_group
+    from doctor.run import load_mandate
+
+    files = sorted(glob.glob("data/runs/*.json"))
+    if not files:
+        pytest.skip("no runs")
+    for f in files:
+        shutil.copy(f, tmp_path / os.path.basename(f))
+    try:
+        for f in files:
+            rec = json.load(open(f, encoding="utf-8"))
+            try:
+                signed = load_mandate(rec["merchant_id"])
+            except (SystemExit, FileNotFoundError):
+                continue
+            for i in range(len(rec.get("pending_actions") or [])):
+                try:
+                    apply_group(rec["run_id"], i, signed, confirmed=True)
+                except (IndexError, FileNotFoundError, ValueError):
+                    pass
+
+        missing = [q for q in SUGGESTED if not _is_cached(q)]
+        assert not missing, "silent after approval: %s" % missing
+    finally:
+        for f in files:
+            shutil.copy(tmp_path / os.path.basename(f), f)

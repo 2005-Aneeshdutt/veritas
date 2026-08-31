@@ -126,3 +126,24 @@ def test_the_runs_on_disk_carry_their_own_token_counts(b):
 
 def test_the_budget_is_serialisable(b):
     Budget.model_validate_json(b.model_dump_json())
+
+
+def test_the_readme_quotes_the_budget_this_code_produces(b):
+    """These figures went stale within an hour of being written, because
+    warming six answers into the cache changed all three of them and nothing
+    complained. Numbers in prose rot silently; this makes them fail loudly.
+    """
+    import io
+
+    readme = io.open("README.md", encoding="utf-8").read()
+    tokens = format(b.cached_tokens_in + b.cached_tokens_out, ",d")
+    for label, needle in (
+        ("cached answers", "%d answers" % b.cached_calls),
+        ("cache tokens", tokens),
+        ("cache worth", "%.2f" % b.cache_worth_inr),
+        ("cost per merchant", "%.2f per merchant" % b.cost_per_merchant_inr),
+        ("book calls", "%d model" % b.run_calls),
+        ("book tokens", format(b.run_tokens, ",d")),
+        ("avoided", "%.2f" % b.run_saved_inr),
+    ):
+        assert needle in readme, "README is stale on %s (expected %r)" % (label, needle)
