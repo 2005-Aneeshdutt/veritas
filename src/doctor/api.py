@@ -36,6 +36,7 @@ from chitragupta.rails.mock_rail import Calibration
 from fastapi.responses import PlainTextResponse
 
 from doctor.apply import apply_group
+from doctor.approvals import TokenError, read as read_token
 from doctor.assistant import ask as assistant_ask
 from doctor.authority import draft as authority_draft, review as authority_review
 from doctor.claims import read_note
@@ -344,6 +345,105 @@ def drift_simulate(merchant: str, bank: str, delta_pts: float = 2.0) -> dict:
     }
 
 
+@app.get("/api/decide/{token}")
+def decide_preview(token: str) -> dict:
+    """What this link would do. Reads only.
+
+    Separate from acting on purpose. Mail scanners fetch every URL in a
+    message before a person sees it, so a GET that applied a fix would fire
+    on delivery with nobody having decided anything.
+    """
+    try:
+        merchant_id, grant = read_token(token)
+    except TokenError as e:
+        raise HTTPException(400, str(e))
+
+    p = RUNS / (grant.run_id + ".json")
+    if not p.exists():
+        raise HTTPException(404, "That run is no longer on file.")
+    rec = _read_json(p)
+    groups = rec.get("pending_actions") or []
+    if not (0 <= grant.group_index < len(groups)):
+        raise HTTPException(404, "That fix is no longer part of this run.")
+    g = groups[grant.group_index]
+    applied = {a["group_id"] for a in (rec.get("applied") or [])}
+
+    return {
+        "merchant_id": merchant_id,
+        "merchant_name": rec.get("merchant_name", merchant_id),
+        "run_id": grant.run_id,
+        "intent": grant.intent,
+        "group_index": grant.group_index,
+        "title": g["title"],
+        "why": g.get("why", ""),
+        "count": g["count"],
+        "total_paise": g["total_paise"],
+        "already_applied": g["group_id"] in applied,
+        "expires_at": grant.expires_at,
+    }
+
+
+@app.post("/api/decide/{token}")
+def decide(token: str) -> dict:
+    """Act on the merchant's answer.
+
+    Approving lands in apply_group, the same call the button in the app makes,
+    which re-gates every action against the signed mandate. Email is a channel
+    for the merchant's yes -- it is not a way round the policy that governs
+    what that yes can authorise.
+    """
+    try:
+        merchant_id, grant = read_token(token)
+    except TokenError as e:
+        raise HTTPException(400, str(e))
+
+    p = RUNS / (grant.run_id + ".json")
+    if not p.exists():
+        raise HTTPException(404, "That run is no longer on file.")
+
+    if grant.intent == "reject":
+        rec = _read_json(p)
+        groups = rec.get("pending_actions") or []
+        title = (
+            groups[grant.group_index]["title"]
+            if 0 <= grant.group_index < len(groups)
+            else "that fix"
+        )
+        # Recorded, not executed. A rejection that changed nothing and left no
+        # trace would make the button decoration.
+        rec.setdefault("rejected", [])
+        if grant.group_index not in rec["rejected"]:
+            rec["rejected"].append(grant.group_index)
+            p.write_text(json.dumps(rec, indent=2), encoding="utf-8", newline=chr(10))
+        return {
+            "ok": True,
+            "intent": "reject",
+            "headline": "Noted. %s will not run." % title,
+            "detail": "Nothing was sent to any payment rail.",
+        }
+
+    try:
+        res = apply_group(
+            grant.run_id, grant.group_index, load_mandate(merchant_id), confirmed=True
+        )
+    except (IndexError, FileNotFoundError, ValueError) as e:
+        raise HTTPException(400, str(e))
+
+    return {
+        "ok": res.ok,
+        "intent": "approve",
+        "headline": res.headline,
+        "executed": res.executed,
+        "allowed": res.allowed,
+        "stepped_up": res.stepped_up,
+        "denied": res.denied,
+        "recovered_paise": res.recovered_paise,
+        "ledger_added": res.ledger_added,
+        "chain_verified": res.chain_verified,
+        "detail": "Every action was checked against your signed mandate again.",
+    }
+
+
 @app.post("/api/email/verify")
 def email_verify() -> dict:
     """Check the mail credentials without mailing anyone.
@@ -361,8 +461,10 @@ def run_email_send(run_id: str, to: str) -> dict:
     p = RUNS / (run_id + ".json")
     if not p.exists():
         raise HTTPException(404, "no such run: %s" % run_id)
-    email = compose(json.loads(p.read_text(encoding="utf-8")))
-    return json.loads(send(email, to).model_dump_json())
+    rec = json.loads(p.read_text(encoding="utf-8"))
+    # The record goes through so the HTML report can carry a signed Approve
+    # and Reject button for each proposed fix.
+    return json.loads(send(compose(rec), to, rec).model_dump_json())
 
 
 @app.post("/api/npci/preview")

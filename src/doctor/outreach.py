@@ -258,7 +258,7 @@ def verify() -> SendResult:
     )
 
 
-def send(email: Email, to_addr: str) -> SendResult:
+def send(email: Email, to_addr: str, rec: dict | None = None) -> SendResult:
     """Actually send, if SMTP credentials are configured.
 
     Opt-in and off by default. Nothing about this project needs to hold a mail
@@ -290,6 +290,21 @@ def send(email: Email, to_addr: str) -> SendResult:
     msg["From"] = os.environ["SMTP_USER"]
     msg["To"] = to_addr
     msg.set_content(email.body)
+
+    # multipart/alternative: the report for clients that render HTML, the
+    # plain text above for those that do not. The text part is not a
+    # courtesy -- a mail with no text alternative scores worse with spam
+    # filters, and this one already landed in spam once.
+    if rec is not None:
+        try:
+            from .report_mail import render
+
+            base = os.environ.get("DOCTOR_PUBLIC_URL", "http://localhost:3000")
+            msg.add_alternative(render(rec, base.rstrip("/")), subtype="html")
+        except Exception:
+            # A report that fails to render must not stop the mail going. The
+            # plain-text body already carries every figure.
+            pass
 
     host = os.environ["SMTP_HOST"]
     port = int(os.environ.get("SMTP_PORT", "587"))
