@@ -228,8 +228,16 @@ def node_decompose(s: State) -> State:
     dec = ShapleyDecomposer(s.baseline, s.cohort).decompose(
         s.transactions,
         mae_by_factor=mae,
+        # The value goes in the detail as a number, not only inside the
+        # message. A client that has to parse "v(bank+hour) = +3.893 pts"
+        # back into a float is one regex away from drawing the wrong chart.
         on_coalition=lambda i, n, label, val: s.tracer.step(
-            "decompose", "v(%s) = %+.3f pts" % (label, val), i, n, coalition=label
+            "decompose",
+            "v(%s) = %+.3f pts" % (label, val),
+            i,
+            n,
+            coalition=label,
+            value=round(val, 4),
         ),
     )
     s.decomposition = dec

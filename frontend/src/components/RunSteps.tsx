@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { Coalition, ShapleyLive } from "@/components/ShapleyLive";
 import { FLOW_ORDER, NODE_DOCS } from "@/lib/explain";
 import { NodeTrace } from "@/lib/types";
 
@@ -122,7 +123,28 @@ export function RunSteps({
               </span>
             </button>
 
-            {isRunning && liveSteps.length > 0 && (
+            {/* The decomposition gets shown rather than logged. Sixteen
+                lines of "v(bank+hour) = +3.893" scrolling past is the most
+                interesting computation in the product rendered as noise. */}
+            {isRunning && node === "decompose" && (
+              <div className="px-4 pb-4 pl-11">
+                <ShapleyLive
+                  coalitions={steps
+                    .filter(
+                      (x) =>
+                        x.node === "decompose" &&
+                        x.detail?.coalition !== undefined &&
+                        typeof x.detail?.value === "number"
+                    )
+                    .map((x) => ({
+                      label: String(x.detail!.coalition),
+                      value: Number(x.detail!.value),
+                    })) as Coalition[]}
+                />
+              </div>
+            )}
+
+            {isRunning && node !== "decompose" && liveSteps.length > 0 && (
               <div className="px-4 pb-3 pl-11 font-mono text-[11px] space-y-0.5">
                 {liveSteps.map((s, i) => (
                   <div
