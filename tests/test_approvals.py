@@ -202,3 +202,53 @@ def test_a_broken_report_does_not_stop_the_mail():
     src = inspect.getsource(outreach.send)
     block = src[src.index("add_alternative") - 400 : src.index("add_alternative") + 200]
     assert "except" in block
+
+
+# ──────────────────────────────── money is not always the right unit
+
+def test_a_fix_with_no_money_is_not_reported_as_zero(run):
+    """Escalations and settings changes carry no per-payment amount on
+    purpose -- a routing switch is not a payment and must not be measured
+    against a per-payment ceiling. Printing "Rs 0 at stake" is true and reads
+    as a broken number, which costs more trust than the line is worth.
+    """
+    from doctor.report_mail import _stake
+
+    zero = [g for g in run["pending_actions"] if g["total_paise"] == 0]
+    if not zero:
+        pytest.skip("this run has no zero-value groups")
+    for g in zero:
+        line = _stake(g)
+        assert "Rs 0" not in line
+        assert "no money moves" in line or "no payment is retried" in line
+
+
+def test_a_fix_worth_money_still_says_how_much(run):
+    from doctor.report_mail import _stake
+
+    paid = [g for g in run["pending_actions"] if g["total_paise"] > 0]
+    if not paid:
+        pytest.skip("this run has no money groups")
+    for g in paid:
+        assert "at stake" in _stake(g)
+
+
+def test_the_decision_page_makes_the_same_distinction():
+    ui = open(
+        "frontend/src/app/decide/[token]/page.tsx", encoding="utf-8"
+    ).read()
+    assert "no money moves" in ui
+    assert "preview.total_paise > 0" in ui
+
+
+def test_the_book_refreshes_when_the_tab_comes_back():
+    """A fix approved from an email lands in another tab. Without this the
+    book a merchant switches back to shows the figures from before the thing
+    they just authorised."""
+    for page in (
+        "frontend/src/app/portfolio/page.tsx",
+        "frontend/src/app/run/[runId]/authorise/page.tsx",
+    ):
+        ui = open(page, encoding="utf-8").read()
+        assert "visibilitychange" in ui, page
+        assert 'addEventListener("focus"' in ui, page

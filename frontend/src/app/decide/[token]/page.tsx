@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Logo } from "@/components/Chrome";
 import { inr } from "@/lib/types";
@@ -120,8 +121,21 @@ export default function DecidePage({ params }: { params: { token: string } }) {
                   {preview.why}
                 </p>
               )}
-              <div className="num text-sm text-amber mt-3">
-                {inr(preview.total_paise)} at stake · {preview.count} payments
+              {/* Escalations and settings changes carry no per-payment
+                  amount on purpose. "Rs 0 at stake" is true and reads as a
+                  broken number, which costs more than the line is worth. */}
+              <div
+                className={`num text-sm mt-3 ${
+                  preview.total_paise ? "text-amber" : "text-faint"
+                }`}
+              >
+                {preview.total_paise > 0
+                  ? `${inr(preview.total_paise)} at stake · ${preview.count} payment${
+                      preview.count === 1 ? "" : "s"
+                    }`
+                  : `${preview.count} item${
+                      preview.count === 1 ? "" : "s"
+                    } · no money moves`}
               </div>
             </div>
 
@@ -193,6 +207,23 @@ export default function DecidePage({ params }: { params: { token: string } }) {
                 The audit chain re-verified from genesis after these entries
                 were written.
               </p>
+            )}
+
+            {/* Somewhere to go and check. A decision that ends on a page with
+                no way back leaves the merchant taking the outcome on faith,
+                when the whole point is that they can inspect it. */}
+            {preview && (
+              <div className="flex flex-wrap gap-2 mt-6 pt-5 border-t border-line">
+                <Link
+                  href={`/run/${preview.run_id}/authorise`}
+                  className="btn-primary h-9 px-4 text-sm"
+                >
+                  See the audit trail →
+                </Link>
+                <Link href="/portfolio" className="btn-secondary h-9 px-4 text-sm">
+                  Open the book
+                </Link>
+              </div>
             )}
           </div>
         )}

@@ -55,6 +55,26 @@ export default function PortfolioPage() {
     load();
   }, []);
 
+  /**
+   * Refresh when this tab comes back to the front.
+   *
+   * A fix approved from an email lands in a different tab, so the book a
+   * merchant switches back to is the one they left -- showing the figures
+   * from before the thing they just authorised. Refetching on focus costs
+   * one request and stops the page quietly lying about the present.
+   */
+  useEffect(() => {
+    function onFocus() {
+      if (!document.hidden) load();
+    }
+    window.addEventListener("focus", onFocus);
+    document.addEventListener("visibilitychange", onFocus);
+    return () => {
+      window.removeEventListener("focus", onFocus);
+      document.removeEventListener("visibilitychange", onFocus);
+    };
+  }, []);
+
   function load() {
     // Distinguish "the API said there are no runs" from "the API is not
     // there". Both used to render "No runs yet — diagnose a merchant", which

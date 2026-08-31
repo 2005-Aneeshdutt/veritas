@@ -53,6 +53,26 @@ export default function AuditPage({ params }: { params: { runId: string } }) {
   }, [params.runId]);
 
   /**
+   * Refresh when this tab comes back to the front.
+   *
+   * A fix approved from an email lands in a different tab, so the audit page
+   * a merchant switches back to is the one they left -- showing the ledger
+   * from before the thing they just authorised. One request on focus stops
+   * the page quietly describing the past.
+   */
+  useEffect(() => {
+    function onFocus() {
+      if (!document.hidden) load();
+    }
+    window.addEventListener("focus", onFocus);
+    document.addEventListener("visibilitychange", onFocus);
+    return () => {
+      window.removeEventListener("focus", onFocus);
+      document.removeEventListener("visibilitychange", onFocus);
+    };
+  }, [params.runId]);
+
+  /**
    * Release everything the kernel held for the merchant.
    *
    * The ledger showed dozens of step_up rows sitting at "merchant_action"

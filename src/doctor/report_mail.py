@@ -44,6 +44,29 @@ def _esc(s: str) -> str:
     )
 
 
+#: What a fix is worth, or what it is when money is the wrong unit.
+#:
+#: Escalations and configuration changes carry no per-payment amount on
+#: purpose -- a routing switch is not a payment and must not be measured
+#: against a per-payment ceiling. Rendering that as "Rs 0 at stake" is
+#: technically true and reads as a broken number, which costs more trust than
+#: the line was ever worth.
+def _stake(group: dict) -> str:
+    n = group["count"]
+    plural = "" if n == 1 else "s"
+    if group["total_paise"] > 0:
+        return "%s at stake &middot; %d payment%s" % (
+            _esc(_inr(group["total_paise"])), n, plural,
+        )
+    kind = group.get("action_type", "")
+    if kind == "flag_for_investigation":
+        return "%d finding%s for a person to look at &middot; no money moves" % (n, plural)
+    if kind in ("enable_multi_bank_routing", "update_payment_method",
+                "reschedule_billing_window"):
+        return "a settings change &middot; no payment is retried"
+    return "%d item%s &middot; no money moves" % (n, plural)
+
+
 def _row(label: str, value: str, strong: bool = False) -> str:
     weight = "600" if strong else "400"
     colour = INK if strong else MUTED
@@ -184,8 +207,8 @@ def render(rec: dict, base_url: str) -> str:
             A('<div style="font:13px -apple-system,Segoe UI,Arial,sans-serif;color:%s;'
               'margin-top:5px;line-height:1.5;">%s</div>' % (MUTED, _esc(g.get("why", ""))))
             A('<div style="font:600 13px ui-monospace,Menlo,monospace;color:%s;'
-              'margin-top:9px;">%s at stake &middot; %d payments</div>'
-              % (WARN, _esc(_inr(g["total_paise"])), g["count"]))
+              'margin-top:9px;">%s</div>'
+              % (WARN if g["total_paise"] else FAINT, _stake(g)))
 
             A('<table role="presentation" cellpadding="0" cellspacing="0" '
               'style="margin-top:14px;"><tr>')
