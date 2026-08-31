@@ -130,10 +130,6 @@ export default function PortfolioPage() {
 
   return shell(
     <>
-        {/* ─────────────────── what the batch actually won back */}
-        <Stagger>
-          <RecoveryFunnel pf={pf} onApproved={load} />
-        </Stagger>
 
         {/* ───────────────────────────────────── headline */}
         <Stagger>
@@ -210,6 +206,11 @@ export default function PortfolioPage() {
               ))}
             </div>
           </Card>
+        </Stagger>
+
+        {/* ─────────────────── what the batch actually won back */}
+        <Stagger>
+          <RecoveryFunnel pf={pf} onApproved={load} />
         </Stagger>
 
         {/* ───────────────────────────────────── work queue */}

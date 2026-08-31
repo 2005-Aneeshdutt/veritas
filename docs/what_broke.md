@@ -16,8 +16,9 @@ what changed. They are ordered by how much they hurt.
 cause ~31% of the time and Shapley ~6%. That was the whole justification for
 building the complicated method.
 
-**What happened.** Across 200 merchants: naive **97.5%**, Shapley **96.3%**.
-They disagreed on **1.2%** of merchants, and naive won both disagreements.
+**What happened.** Across 200 merchants both score **97.5%** (157 of 161
+scored), and they did not disagree on a single merchant — a disagreement
+rate of **0.0%**. There was no gap to win.
 
 I did not want to believe it, so I built six regimes specifically designed to
 favour Shapley — up to four correlated causes at ρ=0.8. Both hit **100%** in

@@ -98,14 +98,14 @@ export default function SignIn() {
       </div>
 
       {/* ─────────────────────────────────────────────── panel */}
-      <aside className="hidden lg:block relative overflow-hidden border-l border-line">
+      <aside className="relative overflow-hidden border-t lg:border-t-0 lg:border-l border-line">
         <div className="absolute inset-0 bg-spectrum opacity-[0.16]" />
         <div
           className="absolute inset-0 bg-grid opacity-40"
           style={{ backgroundSize: "44px 44px" }}
         />
 
-        <div className="relative h-full flex flex-col justify-center px-16">
+        <div className="relative h-full flex flex-col justify-center px-8 py-14 lg:px-16 lg:py-0">
           <div className="max-w-lg">
             <div className="eyebrow">What it does</div>
             <h2 className="text-3xl font-semibold tracking-tightest mt-3 leading-[1.15]">
@@ -129,10 +129,31 @@ export default function SignIn() {
               />
             </div>
 
-            <div className="mt-10 grid grid-cols-3 gap-4 pt-6 border-t border-line">
-              <Stat k="± 0.57" v="attribution error, points" />
-              <Stat k="97.5%" v="primary cause found" />
-              <Stat k="0" v="mandate violations" />
+            <div className="mt-10 pt-6 border-t border-line">
+              <div className="flex flex-wrap items-end gap-x-8 gap-y-3">
+                <div>
+                  <div className="text-3xl font-semibold tracking-tightest text-brand">
+                    ₹5.56L
+                  </div>
+                  <div className="text-xs text-muted mt-0.5">
+                    recoverable, found across 8 merchants
+                  </div>
+                </div>
+                <div>
+                  <div className="text-3xl font-semibold tracking-tightest text-mint">
+                    ₹1.94L
+                  </div>
+                  <div className="text-xs text-muted mt-0.5">
+                    recovered — and marked against known truth
+                  </div>
+                </div>
+              </div>
+
+              <div className="mt-6 grid grid-cols-3 gap-4 pt-5 border-t border-line">
+                <Stat k="± 0.57" v="attribution error, points" />
+                <Stat k="97.5%" v="primary cause found" />
+                <Stat k="0" v="mandate violations" />
+              </div>
             </div>
           </div>
         </div>

@@ -37,13 +37,24 @@ def test_the_measured_total_is_the_sum_of_its_merchants(pf):
     assert pf.total_converted == sum(r.converted for r in pf.merchants)
 
 
+def _book():
+    """The runs the portfolio is actually built from.
+
+    Not every file in data/runs/. One extra diagnose during a demo leaves a
+    second run for that merchant on disk, and build_portfolio keeps only the
+    newest -- so a test that globbed the directory failed on a file that was
+    never part of the book.
+    """
+    from doctor.portfolio import _latest_run_per_merchant
+
+    return list(_latest_run_per_merchant().values())
+
+
 def test_the_totals_reconcile_with_the_runs_on_disk(pf):
     """The aggregate must come from the same place the run pages read."""
     seen = {}
-    for f in sorted(glob.glob("data/runs/*.json")):
-        rec = json.load(open(f, encoding="utf-8"))
+    for rec in _book():
         sc = rec["report"]["measured"].get("recovery_vs_truth", {}) or {}
-        # latest run per merchant wins, same rule build_portfolio uses
         seen[rec["merchant_id"]] = sc.get("measured_paise", 0)
     assert pf.total_measured_paise == sum(seen.values())
 
@@ -60,12 +71,11 @@ def test_the_gate_tally_counts_actions_not_ledger_rows(pf):
     approved their queue."""
     actions = set()
     rows = 0
-    for f in sorted(glob.glob("data/runs/*.json")):
-        rec = json.load(open(f, encoding="utf-8"))
+    for rec in _book():
         for e in rec["report"]["ledger"]:
             rows += 1
             a = e.get("proposed_action") or {}
-            actions.add((f, e.get("txn_id"), a.get("action_type")))
+            actions.add((rec["run_id"], e.get("txn_id"), a.get("action_type")))
 
     tally = pf.acted_on + pf.awaiting + pf.refused + pf.escalated
     assert tally == len(actions)

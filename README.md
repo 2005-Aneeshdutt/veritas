@@ -229,12 +229,12 @@ difference between that and what the engine produces from the sampled batch
 
 | Factor | MAE (pts) | bias | p90 | coverage ±0.5 |
 |---|---|---|---|---|
-| bank | 0.538 | +0.012 | 1.136 | 58.0% |
-| method | 0.530 | −0.009 | 1.194 | 59.0% |
-| hour | 0.529 | −0.005 | 1.187 | 63.0% |
-| amount_band | 0.532 | −0.022 | 1.157 | 62.5% |
+| bank | 0.573 | +0.041 | 1.259 | 59.0% |
+| method | 0.569 | −0.026 | 1.292 | 58.5% |
+| hour | 0.568 | −0.058 | 1.233 | 58.5% |
+| amount_band | 0.578 | −0.029 | 1.288 | 57.5% |
 
-Primary-cause accuracy **96.3%** · mean residual **0.47 pts** · mandate
+Primary-cause accuracy **97.5%** (157/161) · mean |residual| **0.35 pts** · mandate
 violations **0** · Σφᵢ = v(N) to machine precision, asserted in tests.
 
 **The AI steps, including where they fall short.** Classification **87.9%**
@@ -336,18 +336,19 @@ visible: every coefficient carries a provenance field and a range.
 ## Was the complicated method necessary?
 
 I predicted naive attribution would pick the wrong cause ~31% of the time vs
-Shapley's 6%. **It did not reproduce** — 97.5% vs 96.3%, disagreeing on 1.2%.
+Shapley's 6%. **It did not reproduce** — both score 97.5%, and across the
+161 scored merchants they did not disagree on a single one.
 
 So I measured what Shapley *does* buy:
 
 ```
 sum(attribution) / v(N)     1.000 = the parts add up to the whole
   Shapley   mean 1.0000     max deviation 0.00e+00
-  Naive     mean 2.3934     range −11.28 … +31.37
+  Naive     mean 2.2069     range −13.59 … +38.20
 ```
 
-Naive **ranks** fine; its **magnitudes are incoherent**, averaging 2.4× the real
-gap. You cannot convert that into rupees — and every output here is a rupee
+Naive **ranks** fine; its **magnitudes are incoherent**, averaging 2.2× the real
+gap and overstating it on 75.7% of merchants. You cannot convert that into rupees — and every output here is a rupee
 figure derived from a magnitude.
 
 ---
