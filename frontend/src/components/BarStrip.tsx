@@ -99,23 +99,36 @@ export function BarStrip({ rec }: { rec: RunRecord }) {
               action.
             </p>
           )}
-          <Detail summary="the seven rules, always on">
-            <ul className="list-disc pl-4 space-y-1">
+          {/* Every check the kernel runs, in the order it runs them. This
+              used to list seven and omit the bank-degraded hold, which is a
+              rule that really does refuse retries — a panel that undersells
+              the kernel is as misleading as one that oversells it. */}
+          <Detail summary="every check, in the order they run">
+            <ol className="list-decimal pl-4 space-y-1">
               <li>the mandate signature must verify, before anything else</li>
+              <li>the mandate must be in force — expiry is absolute</li>
+              <li>the action type must be one the merchant authorised</li>
+              <li>nothing above the hard ceiling, at any approval</li>
               <li>
                 a payment that has already been collected is never chased
                 again — charging a customer twice is worse than recovering
                 nothing
               </li>
-              <li>the mandate must be in force at the moment of the action</li>
-              <li>the action type must be one the merchant authorised</li>
-              <li>no payment may be attempted more than the cap allows</li>
-              <li>nothing is remediated more than 7 days after it failed</li>
+              <li>no payment attempted more times than the cap allows</li>
+              <li>nothing remediated more than 7 days after it failed</li>
               <li>
-                every amount is checked against the auto-execute limit and the
-                hard ceiling
+                nothing retried into a bank under a degradation hold, which
+                lapses after 4 hours — retrying there only burns an attempt
               </li>
-            </ul>
+              <li>
+                anything the agent may not execute itself is escalated or
+                handed to the merchant rather than done
+              </li>
+              <li>
+                anything over the auto-execute limit waits for a person, even
+                though it is permitted in kind
+              </li>
+            </ol>
           </Detail>
         </Panel>
 

@@ -187,3 +187,22 @@ def test_every_reason_code_in_the_book_has_plain_words(run_id):
                 seen.add(e["gate_reason"])
     missing = sorted(seen - set(_REASONS))
     assert not missing, "no plain-words entry for: %s" % ", ".join(missing)
+
+
+def test_every_reason_the_kernel_can_return_has_plain_words():
+    """Stronger than the book, and it had already caught something.
+
+    Checking only the codes this month's runs happen to produce leaves the
+    rarer refusals unexplained until the day they fire, which is the day
+    somebody needs the explanation. The stopping-rules panel had drifted the
+    same way -- it listed seven checks and quietly omitted the bank-degraded
+    hold, a rule that really does refuse retries.
+    """
+    from chitragupta.policy import ReasonCode
+    from doctor.journey import _REASONS
+
+    codes = {v for k, v in vars(ReasonCode).items() if not k.startswith("_")}
+    missing = sorted(c for c in codes if c not in _REASONS)
+    assert not missing, "the kernel can return these with no explanation: %s" % (
+        ", ".join(missing)
+    )

@@ -354,6 +354,10 @@ _REASONS: dict[str, str] = {
     "DENY_ACTION_NOT_PERMITTED": "This action type is not among the ones the merchant authorised.",
     "DENY_MANDATE_EXPIRED": "The mandate was out of force at the moment of the decision.",
     "DENY_SIGNATURE_INVALID": "The mandate's signature did not verify, so nothing past this point ran.",
+    "DENY_MANDATE_NOT_YET_VALID": "The mandate does not start until later. It grants nothing before then.",
+    "DENY_MAX_ATTEMPTS": "Already attempted as many times as the mandate allows, counting retries the merchant made themselves.",
+    "DENY_OUTSIDE_RECOVERY_WINDOW": "The original failure is older than the seven-day recovery window.",
+    "DENY_BANK_DEGRADED_HOLD": "This bank is under a degradation hold. Retrying into it would only burn an attempt; the hold lapses after four hours.",
 }
 
 

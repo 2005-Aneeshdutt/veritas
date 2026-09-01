@@ -215,9 +215,14 @@ export default function WhoseFaultPage() {
         </Card>
       </Stagger>
 
+      {/* ── the tickets that never need a person ── */}
+      <Stagger i={3}>
+        <Deflection backlog={b} />
+      </Stagger>
+
       {/* ── what the reader can fix today ── */}
       {merchantGroup && (
-        <Stagger i={3}>
+        <Stagger i={4}>
           <Card>
             <SectionHeader
               eyebrow="Not the platform's, not the customer's"
@@ -247,6 +252,154 @@ export default function WhoseFaultPage() {
         </Stagger>
       )}
     </>
+  );
+}
+
+/**
+ * The failures that already have an answer.
+ *
+ * Every one of these 765 payments failed for a reason Razorpay publishes a
+ * next step for. That makes each of them a support ticket with a canned
+ * resolution sitting in front of it — and a customer who is told what to do
+ * at the moment the payment fails is a customer who does not write in.
+ *
+ * The honest part is the arithmetic. The COUNT is measured; how many of those
+ * customers would actually have contacted support, and what a contact costs,
+ * are two things this system has never observed and cannot pretend to. So
+ * they are inputs, they start at values you are invited to change, and the
+ * result is labelled as yours rather than ours. A deflection rate quoted as a
+ * finding here would be the one invented number on a page whose whole point
+ * is that it does not invent numbers.
+ */
+function Deflection({ backlog }: { backlog: Backlog }) {
+  const [rate, setRate] = useState(15);
+  const [cost, setCost] = useState(75);
+
+  const customer = backlog.groups.find((g) => g.owner === "customer");
+  const answerable = backlog.groups.reduce(
+    (n, g) => n + g.codes.filter((c) => c.next_steps).reduce((m, c) => m + c.count, 0),
+    0
+  );
+  const contacts = Math.round((answerable * rate) / 100);
+  const saved = contacts * cost;
+
+  return (
+    <Card>
+      <SectionHeader
+        eyebrow="A ticket answered before it is written"
+        title="Every one of these already has an answer"
+        sub="All of these payments failed for a code Razorpay publishes a next step for. Shown to the customer at the moment of failure, that is a support contact that never happens."
+      />
+
+      <div className="grid sm:grid-cols-3 gap-3">
+        <div className="card-raised p-4">
+          <div className="eyebrow">failures with a published answer</div>
+          <div className="num text-2xl font-semibold mt-1">
+            {answerable.toLocaleString("en-IN")}
+          </div>
+          <div className="text-[11px] text-faint mt-1">
+            {answerable === backlog.total_count
+              ? "every one, with no exceptions"
+              : `of ${backlog.total_count.toLocaleString("en-IN")}`}
+          </div>
+          <span className="chip-measured mt-2 inline-flex">measured</span>
+        </div>
+
+        <div className="card-raised p-4">
+          <div className="eyebrow">of those, the customer&rsquo;s own</div>
+          <div className="num text-2xl font-semibold mt-1">
+            {(customer?.count ?? 0).toLocaleString("en-IN")}
+          </div>
+          <div className="text-[11px] text-faint mt-1">
+            wrong PIN, expired OTP, exhausted credit limit — the ones people
+            ring about
+          </div>
+          <span className="chip-measured mt-2 inline-flex">measured</span>
+        </div>
+
+        <div className="card-raised p-4 border-l-2 border-l-amber">
+          <div className="eyebrow">contacts avoided, at your numbers</div>
+          <div className="num text-2xl font-semibold mt-1 text-amber">
+            ₹{saved.toLocaleString("en-IN")}
+          </div>
+          <div className="text-[11px] text-faint mt-1">
+            {contacts.toLocaleString("en-IN")} contacts × ₹{cost}
+          </div>
+          <span className="chip-projected mt-2 inline-flex">your assumption</span>
+        </div>
+      </div>
+
+      <div className="grid sm:grid-cols-2 gap-4 mt-4">
+        <Slider
+          label="how many of these would have contacted support"
+          value={rate}
+          min={0}
+          max={60}
+          suffix="%"
+          onChange={setRate}
+        />
+        <Slider
+          label="what one support contact costs you"
+          value={cost}
+          min={0}
+          max={400}
+          step={5}
+          prefix="₹"
+          onChange={setCost}
+        />
+      </div>
+
+      <p className="text-[12px] text-faint mt-4 leading-relaxed">
+        Both of those are yours, not ours. This system has never watched a
+        support queue, so it has no contact rate and no cost per ticket to
+        report — quoting one as a finding would be the single invented number
+        on a page whose argument is that it does not invent them. The count on
+        the left is the measurement; the rest is your arithmetic, shown
+        because it is the arithmetic you were going to do anyway.
+      </p>
+    </Card>
+  );
+}
+
+function Slider({
+  label,
+  value,
+  min,
+  max,
+  step = 1,
+  prefix = "",
+  suffix = "",
+  onChange,
+}: {
+  label: string;
+  value: number;
+  min: number;
+  max: number;
+  step?: number;
+  prefix?: string;
+  suffix?: string;
+  onChange: (n: number) => void;
+}) {
+  return (
+    <label className="block">
+      <span className="eyebrow">{label}</span>
+      <div className="flex items-center gap-3 mt-1.5">
+        <input
+          type="range"
+          min={min}
+          max={max}
+          step={step}
+          value={value}
+          onChange={(e) => onChange(Number(e.target.value))}
+          className="flex-1 accent-brand"
+        />
+        <span className="num text-sm w-16 text-right">
+          {prefix}
+          {value}
+          {suffix}
+        </span>
+      </div>
+    </label>
   );
 }
 
