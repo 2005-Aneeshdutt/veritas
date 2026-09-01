@@ -49,6 +49,7 @@ from doctor.portfolio import build_portfolio, ledger_csv, portfolio_csv
 from doctor.generator import GeneratedMerchant
 from doctor.graph import git_commit, run_diagnosis
 from doctor.helpdesk import ask as helpdesk_ask
+from doctor.journey import build as build_journey, candidates as journey_candidates
 from doctor.cohort import build_cohort
 from doctor.ingest_npci import Rejected, baseline_from, parse as parse_npci
 from doctor.ingest_txns import Rejected as TxnRejected, diagnose as diagnose_txns, parse as parse_txns
@@ -215,6 +216,31 @@ def portfolio_approve(confirm: bool = False) -> dict:
         m["measured_paise"] for m in out["merchants"]
     )
     return out
+
+
+@app.get("/api/run/{run_id}/journeys")
+def journeys(run_id: str, limit: int = 40) -> dict:
+    """Payments in this run worth opening, most interesting first.
+
+    Denied before held before executed. A list that opened on forty identical
+    successes would read as a log rather than as a set of decisions.
+    """
+    if not (RUNS / (run_id + ".json")).exists():
+        raise HTTPException(404, "no such run: %s" % run_id)
+    return {"run_id": run_id, "payments": journey_candidates(run_id, limit)}
+
+
+@app.get("/api/run/{run_id}/journey/{txn_id}")
+def journey(run_id: str, txn_id: str) -> dict:
+    """One payment, from the failure to whatever finally happened to it.
+
+    Assembled entirely from what was already written down, so the page cannot
+    disagree with the ledger it is describing.
+    """
+    j = build_journey(run_id, txn_id)
+    if not j.found:
+        raise HTTPException(404, j.detail)
+    return json.loads(j.model_dump_json())
 
 
 @app.get("/api/audit")

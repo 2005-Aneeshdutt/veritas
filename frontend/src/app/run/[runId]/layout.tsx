@@ -7,17 +7,22 @@ import { TopBar } from "@/components/Chrome";
 import { Merchant } from "@/lib/types";
 
 /**
- * Three views, not six.
+ * Four views, not six.
  *
  * The six tabs split one story across six screens, and the demo had to visit
  * four of them in order while the top bar offered four more destinations of
- * its own. These three map onto steps 3 and 4 of the spine: what the agent
+ * its own. Three of these map onto steps 3 and 4 of the spine: what the agent
  * found, how it worked, and what happens next. Validation and Exceptions are
  * sections inside them now rather than places to go.
+ *
+ * "One payment" earns the fourth slot by being a different SCOPE rather than
+ * another cut of the same one. The other three aggregate, and the question
+ * people ask when they stop believing an aggregate is always show me one.
  */
 const TABS = [
   { href: "", label: "Findings" },
   { href: "/flow", label: "How it worked" },
+  { href: "/journey", label: "One payment" },
   { href: "/authorise", label: "Authorise" },
 ];
 

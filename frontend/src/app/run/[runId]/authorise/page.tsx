@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { AuthorityPanel } from "@/components/AuthorityPanel";
 import { BarStrip } from "@/components/BarStrip";
@@ -395,9 +396,16 @@ export default function AuditPage({ params }: { params: { runId: string } }) {
                       key={e.txn_id}
                       className="flex items-center gap-3 py-2 font-mono text-[11px]"
                     >
-                      <span className="text-faint w-40 truncate shrink-0">
+                      {/* Deciding one payment is easier with the file on it
+                          open, so the id is the way in rather than a label. */}
+                      <Link
+                        href={`/run/${params.runId}/journey?txn=${encodeURIComponent(e.txn_id)}`}
+                        className="text-faint hover:text-ink w-40 truncate shrink-0
+                                   transition-colors"
+                        title="See everything that happened to this payment"
+                      >
                         {e.txn_id}
-                      </span>
+                      </Link>
                       <span className="num w-20 text-right shrink-0">
                         {inr(e.proposed_action?.amount_paise ?? 0)}
                       </span>

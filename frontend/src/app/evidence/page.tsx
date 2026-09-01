@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Budget } from "@/components/Budget";
 import { TopBar } from "@/components/Chrome";
@@ -345,7 +346,20 @@ export default function EvidencePage() {
                       className="border-b border-line/50 last:border-0 hover:bg-raised/50"
                     >
                       <td className="py-1.5 px-2 whitespace-nowrap">{e.merchant}</td>
-                      <td className="py-1.5 px-2 num truncate max-w-[10rem]">{e.txn_id}</td>
+                      <td className="py-1.5 px-2 num truncate max-w-[10rem]">
+                        {/* Every row is a decision about a real payment, and
+                            the file on that payment is one click away. */}
+                        {e.txn_id.startsWith("merchant:") ? (
+                          e.txn_id
+                        ) : (
+                          <Link
+                            href={`/run/${e.run_id}/journey?txn=${encodeURIComponent(e.txn_id)}`}
+                            className="link-quiet"
+                          >
+                            {e.txn_id}
+                          </Link>
+                        )}
+                      </td>
                       <td className="py-1.5 px-2 text-muted whitespace-nowrap">
                         {e.action_type?.replace(/_/g, " ")}
                       </td>
