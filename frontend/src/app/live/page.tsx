@@ -2,8 +2,9 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import { BookLenses } from "@/components/BookLenses";
 import { TopBar } from "@/components/Chrome";
-import { Card, Eyebrow, Stagger } from "@/components/ui";
+import { Card, Eyebrow, PageHead, Stagger } from "@/components/ui";
 import { Merchant, inr } from "@/lib/types";
 
 interface Payment {
@@ -164,17 +165,18 @@ export default function LivePage() {
   const pct = total ? Math.min(100, ((stats?.seen ?? 0) / total) * 100) : 0;
 
   return (
-    <div className="min-h-screen bg-canvas lg:pl-60">
+    <div className="min-h-screen bg-canvas lg:pl-56">
       <TopBar />
-      <main className="max-w-[1400px] mx-auto px-6 py-8 space-y-6">
+      <main className="max-w-[1180px] mx-auto px-8 py-8 space-y-8">
         <Stagger>
+          <PageHead
+            title="The book"
+            sub="Payments arriving in order, with the detector running over them. It speaks only when the interval says it should."
+            right={<BookLenses />}
+          />
           <div className="flex items-end justify-between gap-6 flex-wrap">
-            <div>
-              <Eyebrow>Watching it happen</Eyebrow>
-              <h1 className="text-2xl font-semibold mt-1">Live payment feed</h1>
-              <p className="text-sm text-muted mt-1.5 max-w-3xl leading-relaxed">
-                Payments arriving in order, with the detector running over them. It only speaks when the interval says it should.
-            </p>
+            <div className="text-[13px] text-muted">
+              Pick a merchant and a speed, then start the feed.
             </div>
 
             <div className="flex items-center gap-2 flex-wrap">

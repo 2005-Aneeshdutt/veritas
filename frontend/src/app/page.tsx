@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { Backdrop } from "@/components/Backdrop";
 import { Logo } from "@/components/Chrome";
 import { ThemeToggle } from "@/components/Theme";
 
@@ -32,6 +33,10 @@ export default function SignIn() {
 
   return (
     <div className="min-h-screen grid lg:grid-cols-[1fr_1.1fr] bg-canvas">
+      {/* The drifting field lives on the front door only. Inside the console
+          the motion budget is spent on the lattice and the live stream, and a
+          background that competes with those made both pages worse. */}
+      <Backdrop />
       {/* ─────────────────────────────────────────────── form */}
       <div className="flex flex-col px-6 sm:px-12 lg:px-16 py-8">
         <div className="flex items-center justify-between">

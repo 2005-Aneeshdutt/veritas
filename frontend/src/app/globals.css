@@ -10,30 +10,32 @@
 
 :root {
   --canvas: 255 255 255;
-  --subtle: 246 249 252;
+  --subtle: 250 250 251;
   --surface: 255 255 255;
-  --raised: 246 249 252;
-  --line: 227 232 238;
-  --edge: 206 214 224;
+  --raised: 249 250 251;
+  --line: 232 233 237;
+  --edge: 214 216 222;
 
-  --brand: 99 91 255;
-  --brand-soft: 240 239 255;
+  --brand: 79 70 229;
+  --brand-soft: 238 238 253;
   --brand-ink: 255 255 255;
 
-  --mint: 14 159 110;
-  --mint-soft: 222 247 236;
-  --rose: 224 36 36;
-  --rose-soft: 253 232 232;
-  --sky: 5 112 222;
-  --sky-soft: 225 239 254;
-  --amber: 194 120 3;
-  --amber-soft: 253 246 178;
-  --iris: 124 58 237;
-  --iris-soft: 237 235 254;
+  --mint: 9 121 105;
+  --mint-soft: 236 248 245;
+  --rose: 190 42 42;
+  --rose-soft: 253 242 242;
+  --sky: 21 94 179;
+  --sky-soft: 240 246 254;
+  --amber: 156 96 12;
+  --amber-soft: 253 248 238;
+  --iris: 109 64 199;
+  --iris-soft: 244 242 253;
 
-  --ink: 10 37 64;
-  --muted: 66 84 102;
-  --faint: 135 146 162;
+  /* Near-neutral, a touch warm. The old ink was #0A2540 -- a blue that made
+     every page read as a marketing site rather than a console. */
+  --ink: 24 25 30;
+  --muted: 94 98 108;
+  --faint: 143 147 158;
 
   --shadow: 10 37 64;
 
@@ -45,31 +47,31 @@
 }
 
 .dark {
-  --canvas: 8 12 22;
-  --subtle: 14 19 32;
-  --surface: 17 23 38;
-  --raised: 23 30 48;
-  --line: 34 44 66;
-  --edge: 48 61 88;
+  --canvas: 12 13 16;
+  --subtle: 17 18 22;
+  --surface: 17 18 22;
+  --raised: 22 24 29;
+  --line: 38 40 47;
+  --edge: 55 58 67;
 
-  --brand: 139 133 255;
-  --brand-soft: 30 32 72;
-  --brand-ink: 10 14 25;
+  --brand: 139 132 250;
+  --brand-soft: 30 29 58;
+  --brand-ink: 12 13 16;
 
-  --mint: 52 211 153;
-  --mint-soft: 16 48 42;
-  --rose: 248 113 113;
-  --rose-soft: 60 24 30;
-  --sky: 96 165 250;
-  --sky-soft: 17 38 68;
-  --amber: 251 191 36;
-  --amber-soft: 58 44 12;
-  --iris: 167 139 250;
-  --iris-soft: 41 32 74;
+  --mint: 62 197 160;
+  --mint-soft: 15 38 34;
+  --rose: 242 122 122;
+  --rose-soft: 46 24 26;
+  --sky: 116 171 246;
+  --sky-soft: 20 32 52;
+  --amber: 226 168 76;
+  --amber-soft: 45 36 20;
+  --iris: 164 141 245;
+  --iris-soft: 34 29 54;
 
-  --ink: 240 244 250;
-  --muted: 160 172 190;
-  --faint: 108 122 143;
+  --ink: 237 238 242;
+  --muted: 155 159 170;
+  --faint: 111 116 128;
 
   --shadow: 0 0 0;
 
@@ -92,8 +94,14 @@ body {
 }
 
 h1, h2, h3, h4 {
-  @apply font-display tracking-tightest;
+  @apply font-display tracking-tight;
 }
+
+/* Enterprise software runs small. The old scale had 2xl and 3xl headings on
+   pages whose actual content was 12px tables. */
+h1 { @apply text-[20px] font-semibold; }
+h2 { @apply text-[15px] font-semibold; }
+h3 { @apply text-[13px] font-semibold; }
 
 /* Theme changes should not animate every element on the page. */
 .theme-transition,
@@ -105,60 +113,83 @@ h1, h2, h3, h4 {
 /* ---------------------------------------------------------- surfaces */
 
 @layer components {
+  /* A page is ONE surface.
+     .card used to be a bordered, rounded, shadowed box, and a page was six of
+     them stacked -- which reads as a marketing site, not a console. It is now
+     a plain block; sections are separated by whitespace and a hairline above
+     their heading. Every existing <Card> quiets down without being touched. */
   .card {
-    @apply bg-surface border border-line rounded-xl shadow-xs;
+    @apply bg-transparent;
+  }
+  /* Kept for the genuinely enclosed things: a callout, a scrolling picker,
+     the assistant. Rare on purpose. */
+  .panel {
+    @apply bg-surface border border-line rounded-lg;
   }
   .card-raised {
     @apply bg-raised border border-line rounded-lg;
   }
   .card-lift {
-    @apply bg-surface border border-line rounded-xl shadow-card
-           hover:shadow-lift transition-shadow duration-200;
+    @apply bg-surface border border-line rounded-lg
+           hover:border-edge transition-colors duration-150;
   }
 
-  /* The MEASURED / PROJECTED wall. Still the thesis, rendered. */
+  /* MEASURED / PROJECTED keeps its colour. It is the one distinction in the
+     product worth spending a hue on, so everything else gives up its hue to
+     leave room for it. */
   .panel-measured {
-    @apply rounded-xl border border-mint/30 bg-mint-soft;
+    @apply rounded-lg border border-mint/25 bg-mint-soft;
   }
   .panel-projected {
-    @apply rounded-xl border border-amber/30 bg-hatch;
+    @apply rounded-lg border border-amber/25 bg-amber-soft;
   }
 
+  /* Quiet by default: mono, small, no fill, no border. A page carried up to
+     fifteen filled pills in five colours, which turned status -- a thing you
+     glance at -- into the loudest element on screen. */
   .chip {
     @apply inline-flex items-center gap-1 font-mono text-[10px] uppercase
-           tracking-[0.07em] px-1.5 py-0.5 rounded border whitespace-nowrap;
+           tracking-[0.07em] whitespace-nowrap text-faint;
   }
-  .chip-measured { @apply chip bg-mint-soft text-mint border-mint/30; }
-  .chip-projected { @apply chip bg-amber-soft text-amber border-amber/40; }
-  .chip-llm { @apply chip bg-iris-soft text-iris border-iris/30; }
-  .chip-det { @apply chip bg-sky-soft text-sky border-sky/30; }
-  .chip-warn { @apply chip bg-rose-soft text-rose border-rose/30; }
-  .chip-neutral { @apply chip bg-raised text-muted border-line; }
-  .chip-brand { @apply chip bg-brand-soft text-brand border-brand/30; }
+  /* The two that keep a fill, because they are the thesis. */
+  .chip-measured {
+    @apply chip text-mint bg-mint-soft border border-mint/25
+           px-1.5 py-0.5 rounded;
+  }
+  .chip-projected {
+    @apply chip text-amber bg-amber-soft border border-amber/30
+           px-1.5 py-0.5 rounded;
+  }
+  /* A refusal is a decision, not decoration: coloured text, no fill. */
+  .chip-warn { @apply chip text-rose; }
+  .chip-brand { @apply chip text-brand; }
+  .chip-llm { @apply chip text-muted; }
+  .chip-det { @apply chip text-muted; }
+  .chip-neutral { @apply chip text-faint; }
 
   .btn {
-    @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2
-           text-sm font-semibold transition-all duration-150
-           disabled:opacity-50 disabled:cursor-not-allowed;
+    @apply inline-flex items-center justify-center gap-2 rounded-md px-3.5 py-2
+           text-[13px] font-medium transition-colors duration-150
+           disabled:opacity-45 disabled:cursor-not-allowed;
   }
   .btn-primary {
-    @apply btn bg-brand text-brand-ink hover:brightness-110 shadow-xs;
+    @apply btn bg-brand text-brand-ink hover:brightness-110;
   }
   .btn-secondary {
-    @apply btn bg-surface text-ink border border-line hover:border-edge shadow-xs;
+    @apply btn bg-surface text-ink border border-line hover:border-edge;
   }
   .btn-quiet {
     @apply btn text-muted hover:text-ink hover:bg-raised;
   }
 
   .field {
-    @apply w-full rounded-lg border border-line bg-surface px-3 py-2 text-sm
+    @apply w-full rounded-md border border-line bg-surface px-3 py-1.5 text-[13px]
            text-ink placeholder:text-faint outline-none
            focus:border-brand focus:shadow-ring transition-shadow;
   }
 
   .eyebrow {
-    @apply font-mono text-[10px] uppercase tracking-[0.12em] text-faint;
+    @apply font-mono text-[10px] uppercase tracking-[0.1em] text-faint;
   }
 
   .num {
@@ -168,6 +199,28 @@ h1, h2, h3, h4 {
   .link-quiet {
     @apply text-muted hover:text-ink transition-colors;
   }
+
+  /* Rows, for the many places that were a grid of little boxes. */
+  .row {
+    @apply flex items-center gap-3 py-2 border-b border-line/70 last:border-0;
+  }
+  .row-hover {
+    @apply row -mx-2 px-2 rounded hover:bg-raised transition-colors;
+  }
+
+  /* A table that looks like software. */
+  .tbl { @apply w-full text-[13px] border-collapse; }
+  .tbl thead th {
+    @apply font-mono text-[10px] uppercase tracking-[0.1em] text-faint
+           font-normal text-left pb-2 px-3 first:pl-0 last:pr-0
+           border-b border-line;
+  }
+  .tbl tbody td {
+    @apply py-2 px-3 first:pl-0 last:pr-0 border-b border-line/60;
+  }
+  .tbl tbody tr:last-child td { @apply border-0; }
+  .tbl tbody tr { @apply transition-colors; }
+  .tbl tbody tr:hover { @apply bg-raised/60; }
 }
 
 /* "we don't know what this is", without needing a caption */

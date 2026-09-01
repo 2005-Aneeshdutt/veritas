@@ -207,9 +207,9 @@ export default function ProvePage() {
   }
 
   return (
-    <div className="min-h-screen bg-canvas lg:pl-60">
+    <div className="min-h-screen bg-canvas lg:pl-56">
       <TopBar />
-      <main className="max-w-[1400px] mx-auto px-6 py-8 space-y-6">
+      <main className="max-w-[1180px] mx-auto px-8 py-8 space-y-8">
         <Stagger>
           <div>
             <Eyebrow>Falsification on demand</Eyebrow>

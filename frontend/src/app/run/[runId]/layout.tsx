@@ -1,29 +1,37 @@
 "use client";
 
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { TopBar } from "@/components/Chrome";
+import { Segmented } from "@/components/ui";
 import { Merchant } from "@/lib/types";
 
 /**
- * Four views, not six.
+ * Two lenses on one merchant, not a second navigation.
  *
- * The six tabs split one story across six screens, and the demo had to visit
- * four of them in order while the top bar offered four more destinations of
- * its own. Three of these map onto steps 3 and 4 of the spine: what the agent
- * found, how it worked, and what happens next. Validation and Exceptions are
- * sections inside them now rather than places to go.
+ * This was a four-tab strip — Findings, How it worked, One payment,
+ * Authorise — sitting under a sidebar that already numbered the walkthrough.
+ * Sidebar steps 2 and 3 both pointed into it, so a viewer watching one
+ * continuous thing saw the step number change AND a tab change. That is the
+ * exact problem the sidebar was built to remove, reappearing a level down.
  *
- * "One payment" earns the fourth slot by being a different SCOPE rather than
- * another cut of the same one. The other three aggregate, and the question
- * people ask when they stop believing an aggregate is always show me one.
+ * Two of the four left:
+ *
+ *   * Authorise is step 3. It is a different stage of the story, not a
+ *     different view of this one, and it belongs where the numbers are
+ *   * One payment is a detail view. It is reached by clicking a payment —
+ *     from the held queue, or from the ledger on Evidence — which is where
+ *     someone actually wants it, and nobody navigates to "some payment"
+ *
+ * What is left is genuinely two views of the same object, so it is drawn the
+ * same way the book's three lenses are: a segmented control, not a tab rail.
+ * Merging them into one page was the other option and it would have been a
+ * fifteen-hundred-line scroll, which is the complaint this rework started
+ * from wearing a different hat.
  */
-const TABS = [
-  { href: "", label: "Findings" },
-  { href: "/flow", label: "How it worked" },
-  { href: "/journey", label: "One payment" },
-  { href: "/authorise", label: "Authorise" },
+const LENSES = [
+  { value: "", label: "Findings" },
+  { value: "/flow", label: "How it worked" },
 ];
 
 export default function RunLayout({
@@ -34,6 +42,7 @@ export default function RunLayout({
   params: { runId: string };
 }) {
   const path = usePathname();
+  const router = useRouter();
   const base = `/run/${params.runId}`;
   const [merchants, setMerchants] = useState<Merchant[]>([]);
   const [current, setCurrent] = useState<string>("");
@@ -56,14 +65,17 @@ export default function RunLayout({
     window.location.href = `/run/${rec.run_id}${tail}`;
   }
 
+  // Authorise and the payment file live under the same prefix but are not
+  // lenses, so the control hides rather than showing a wrong selection.
+  const lensed = path === base || path === `${base}/flow`;
+  const lens = path === `${base}/flow` ? "/flow" : "";
+
   return (
-    <div className="min-h-screen bg-canvas lg:pl-60">
+    <div className="min-h-screen bg-canvas lg:pl-56">
       <TopBar
         right={
           <>
-            {switching && (
-              <span className="eyebrow animate-breathe">re-running…</span>
-            )}
+            {switching && <span className="eyebrow animate-breathe">re-running…</span>}
             <label className="sr-only" htmlFor="merchant">
               Merchant
             </label>
@@ -72,7 +84,7 @@ export default function RunLayout({
               value={current}
               disabled={switching || merchants.length === 0}
               onChange={(e) => switchTo(e.target.value)}
-              className="field h-8 py-0 pr-8 text-sm max-w-[15rem]"
+              className="field h-8 py-0 pr-8 text-[13px] max-w-[14rem]"
             >
               {merchants.length === 0 && <option value="">Loading…</option>}
               {merchants.map((m) => (
@@ -86,30 +98,18 @@ export default function RunLayout({
         runHref={base}
       />
 
-      {/* sub-nav — three views of one merchant */}
-      <div className="border-b border-line bg-canvas">
-        <div className="max-w-[1400px] mx-auto px-6 flex items-center gap-1 -mb-px overflow-x-auto no-scrollbar">
-          {TABS.map((t) => {
-            const href = base + t.href;
-            const active = path === href;
-            return (
-              <Link
-                key={t.href}
-                href={href}
-                className={`px-3 py-2.5 text-sm whitespace-nowrap border-b-2 transition-colors ${
-                  active
-                    ? "border-brand text-ink"
-                    : "border-transparent text-muted hover:text-ink"
-                }`}
-              >
-                {t.label}
-              </Link>
-            );
-          })}
-        </div>
-      </div>
-
-      <main className="max-w-[1400px] mx-auto px-6 py-8">{children}</main>
+      <main className="max-w-[1180px] mx-auto px-8 py-8">
+        {lensed && (
+          <div className="flex justify-end -mb-2">
+            <Segmented
+              options={LENSES}
+              value={lens}
+              onChange={(v) => router.push(base + v)}
+            />
+          </div>
+        )}
+        {children}
+      </main>
     </div>
   );
 }

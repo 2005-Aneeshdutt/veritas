@@ -70,9 +70,9 @@ export default function WhoseFaultPage() {
   }, []);
 
   const shell = (body: React.ReactNode) => (
-    <div className="min-h-screen bg-canvas lg:pl-60">
+    <div className="min-h-screen bg-canvas lg:pl-56">
       <TopBar />
-      <main className="max-w-[1400px] mx-auto px-6 py-8 space-y-6">{body}</main>
+      <main className="max-w-[1180px] mx-auto px-8 py-8 space-y-8">{body}</main>
     </div>
   );
 

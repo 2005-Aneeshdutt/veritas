@@ -27,8 +27,8 @@ export function TopBar({ right, runHref }: { right?: ReactNode; runHref?: string
     <>
       <Sidebar runHref={runHref} />
       {right && (
-        <header className="sticky top-0 lg:top-0 z-20 bg-canvas/85 backdrop-blur-xl border-b border-line">
-          <div className="max-w-[1400px] mx-auto px-6 h-14 flex items-center justify-end gap-2">
+        <header className="sticky top-0 z-20 bg-canvas/90 backdrop-blur-xl border-b border-line">
+          <div className="max-w-[1180px] mx-auto px-8 h-12 flex items-center justify-end gap-2">
             {right}
           </div>
         </header>
@@ -40,9 +40,9 @@ export function TopBar({ right, runHref }: { right?: ReactNode; runHref?: string
 
 export function Page({ children }: { children: ReactNode }) {
   return (
-    <div className="min-h-screen bg-canvas lg:pl-60">
+    <div className="min-h-screen bg-canvas lg:pl-56">
       <TopBar />
-      <main className="max-w-[1400px] mx-auto px-6 py-8">{children}</main>
+      <main className="max-w-[1180px] mx-auto px-8 py-8">{children}</main>
     </div>
   );
 }

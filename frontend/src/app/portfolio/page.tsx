@@ -1,37 +1,43 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
 import { RecoveryFunnel } from "@/components/RecoveryFunnel";
+import { BookLenses } from "@/components/BookLenses";
 import { TopBar } from "@/components/Chrome";
-import { Card, Eyebrow, Loading, Stagger, Ticker } from "@/components/ui";
+import {
+  Detail,
+  Empty,
+  Figure,
+  Figures,
+  Hero,
+  Loading,
+  Notes,
+  PageHead,
+  Panel,
+  SectionHeader,
+  Stagger,
+  Ticker,
+} from "@/components/ui";
 import { inr } from "@/lib/types";
 
-const BAND: Record<
-  string,
-  { label: string; tone: string; dot: string; blurb: string }
-> = {
+const BAND: Record<string, { label: string; dot: string; blurb: string }> = {
   urgent: {
     label: "Act now",
-    tone: "text-rose border-rose/30 bg-rose-soft",
     dot: "bg-rose",
     blurb: "material money on the table and a cause we can name",
   },
   review: {
     label: "Review",
-    tone: "text-amber border-amber/30 bg-amber-soft",
     dot: "bg-amber",
     blurb: "a real gap, smaller than the urgent band",
   },
   insufficient_data: {
     label: "Not enough data",
-    tone: "text-muted border-line bg-raised",
     dot: "bg-faint",
     blurb: "too few payments to resolve a gap this size — no call yet",
   },
   healthy: {
     label: "Healthy",
-    tone: "text-mint border-mint/30 bg-mint-soft",
     dot: "bg-mint",
     blurb: "at or near what their category achieves",
   },
@@ -46,6 +52,19 @@ const CAUSE_LABEL: Record<string, string> = {
   none_of_the_above: "Nothing conclusive",
 };
 
+/**
+ * Step 1: where the money is, across the whole book.
+ *
+ * This was a stack of bordered cards — a five-line headline panel in a tinted
+ * box, a row of chips, then eight merchant rows drawn as clickable cards with
+ * hover lift. It read as a landing page for a product rather than the first
+ * screen of one.
+ *
+ * It is now one number, a row of four facts, and a table. The merchants are a
+ * table because that is what a ranked list of eight things with five columns
+ * is; drawing each row as a card added a border, a shadow and a translate
+ * animation, and no information.
+ */
 export default function PortfolioPage() {
   const [pf, setPf] = useState<any>(null);
   const [band, setBand] = useState<string>("all");
@@ -59,9 +78,8 @@ export default function PortfolioPage() {
    * Refresh when this tab comes back to the front.
    *
    * A fix approved from an email lands in a different tab, so the book a
-   * merchant switches back to is the one they left -- showing the figures
-   * from before the thing they just authorised. Refetching on focus costs
-   * one request and stops the page quietly lying about the present.
+   * merchant switches back to is the one they left — showing the figures from
+   * before the thing they just authorised.
    */
   useEffect(() => {
     function onFocus() {
@@ -99,262 +117,304 @@ export default function PortfolioPage() {
     setBusy(false);
   }
 
-  // The chrome renders immediately, so the theme toggle and re-scan button are
-  // there while the book is still loading rather than appearing after it.
+  // The chrome renders immediately, so the actions are there while the book is
+  // still loading rather than appearing after it.
   const shell = (body: React.ReactNode) => (
-    <div className="min-h-screen bg-canvas lg:pl-60">
+    <div className="min-h-screen bg-canvas lg:pl-56">
       <TopBar
         right={
           <>
-            <a href="/api/portfolio.csv" className="btn-quiet h-8 px-3 text-xs">
+            <a href="/api/portfolio.csv" className="btn-quiet h-8 text-[12px]">
               Export CSV
             </a>
-            <button onClick={refreshAll} disabled={busy} className="btn-primary h-8 px-3 text-xs">
-              {busy ? "Scanning…" : "Re-scan the book"}
+            <button
+              onClick={refreshAll}
+              disabled={busy}
+              className="btn-secondary h-8 text-[12px]"
+            >
+              {busy ? "Scanning…" : "Re-scan"}
             </button>
           </>
         }
       />
-      <main className="max-w-[1400px] mx-auto px-6 py-8 space-y-6">{body}</main>
+      <main className="max-w-[1180px] mx-auto px-8 py-8 space-y-8">{body}</main>
     </div>
   );
 
   if (!pf) return shell(<Loading label="scanning the book" />);
+
   if (pf.unreachable)
     return shell(
-      <Card className="border-l-2 border-l-rose">
-        <div className="text-sm font-medium">Cannot reach the API</div>
-        <p className="text-sm text-muted mt-1.5 leading-relaxed">
+      <Panel tone="warn">
+        <div className="text-[13px] font-medium">Cannot reach the API</div>
+        <p className="text-[13px] text-muted mt-1 leading-relaxed">
           The book could not be loaded because the backend did not respond.
           Nothing here is missing — start it with{" "}
           <span className="num">make demo</span> and reload.
         </p>
-      </Card>
+      </Panel>
     );
 
   if (!pf.merchants?.length)
-    return shell(
-      <Card>
-        <div className="text-sm text-muted">
-          No runs yet. Diagnose a merchant first, or hit “Re-scan the book”.
-        </div>
-      </Card>
-    );
+    return shell(<Empty label="no runs yet — press Re-scan" />);
 
   const rows =
     band === "all" ? pf.merchants : pf.merchants.filter((r: any) => r.band === band);
   const actionable = pf.merchants.filter(
     (r: any) => r.band === "urgent" || r.band === "review"
   ).length;
-  const maxRec = Math.max(...pf.merchants.map((r: any) => r.recoverable_central_paise), 1);
+  const maxRec = Math.max(
+    ...pf.merchants.map((r: any) => r.recoverable_central_paise),
+    1
+  );
 
   return shell(
     <>
+      <Stagger>
+        <PageHead
+          title="The book"
+          sub="Every merchant at once, ranked by money on the table."
+          right={<BookLenses />}
+        />
+      </Stagger>
 
-        {/* ───────────────────────────────────── headline */}
-        <Stagger>
-          <Card className="!p-0 overflow-hidden">
-            <div className="bg-brand-soft px-6 py-6">
-              <Eyebrow>Across the entire merchant book</Eyebrow>
-              <div className="flex flex-wrap items-end gap-x-10 gap-y-4 mt-3">
-                <div>
-                  <div className="text-5xl font-display font-bold text-brand leading-none">
-                    <Ticker
-                      value={pf.total_recoverable_central_paise / 100}
-                      prefix="₹"
-                      decimals={0}
-                    />
-                  </div>
-                  <div className="text-sm text-muted mt-2">
-                    recoverable this month ·{" "}
-                    <span className="num">
-                      {inr(pf.total_recoverable_low_paise, { compact: true })}–
-                      {inr(pf.total_recoverable_high_paise, { compact: true })}
-                    </span>{" "}
-                    <span className="chip-projected ml-1">projected</span>
-                  </div>
-                </div>
+      {/* ── the one number, and the row of facts under it ── */}
+      <Stagger>
+        <div className="space-y-7">
+          <Hero
+            label="Recoverable this month"
+            kind="projected"
+            value={
+              <Ticker value={pf.total_recoverable_central_paise / 100} prefix="₹" />
+            }
+            sub={
+              <>
+                Central estimate. The published range is{" "}
+                <span className="num">
+                  {inr(pf.total_recoverable_low_paise, { compact: true })}–
+                  {inr(pf.total_recoverable_high_paise, { compact: true })}
+                </span>
+                , and it is the range rather than this figure that the
+                validation brackets.
+              </>
+            }
+          />
 
-                <div className="h-12 w-px bg-line hidden md:block" />
+          <Figures>
+            <Figure
+              label="Success rate"
+              kind="measured"
+              value={
+                <>
+                  {pf.weighted_observed_pct}%
+                  <span className="text-faint mx-1.5 text-base">→</span>
+                  <span className="text-amber">{pf.weighted_achievable_pct}%</span>
+                </>
+              }
+              sub="volume-weighted, against what these categories achieve"
+            />
+            <Figure
+              label="Worth a call"
+              value={
+                <>
+                  {actionable}
+                  <span className="text-faint"> / {pf.merchants.length}</span>
+                </>
+              }
+              sub="a nameable cause and material money"
+            />
+            <Figure
+              label="Already won back"
+              kind="measured"
+              tone="good"
+              value={inr(pf.total_measured_paise, { compact: true })}
+              sub={`${pf.total_converted} of ${pf.total_attempted} retries converted`}
+            />
+            <Figure
+              label="Waiting on a person"
+              value={pf.awaiting.toLocaleString("en-IN")}
+              sub={`${pf.refused} refused by the kernel outright`}
+            />
+          </Figures>
+        </div>
+      </Stagger>
 
-                <div>
-                  <div className="text-2xl font-display font-bold">
-                    {pf.weighted_observed_pct}%
-                    <span className="text-muted text-lg mx-2">→</span>
-                    <span className="text-amber">{pf.weighted_achievable_pct}%</span>
-                  </div>
-                  <div className="text-sm text-muted mt-1">
-                    volume-weighted success rate vs achievable
-                  </div>
-                </div>
+      {/* ── what the batch actually won back ── */}
+      <Stagger>
+        <RecoveryFunnel pf={pf} onApproved={load} />
+      </Stagger>
 
-                <div className="h-12 w-px bg-line hidden md:block" />
-
-                <div>
-                  <div className="text-2xl font-display font-bold">
-                    {actionable}
-                    <span className="text-muted text-lg"> / {pf.merchants.length}</span>
-                  </div>
-                  <div className="text-sm text-muted mt-1">merchants worth a call</div>
-                </div>
-              </div>
-            </div>
-
-            {/* band filter */}
-            <div className="px-6 py-3 border-t border-line flex flex-wrap gap-2">
-              <button
-                onClick={() => setBand("all")}
-                className={`chip ${
-                  band === "all"
-                    ? "bg-brand-soft text-brand border-brand/30"
-                    : "bg-raised text-muted border-line"
-                }`}
-              >
+      {/* ── the work queue ── */}
+      <Stagger i={1}>
+        <SectionHeader
+          title="Who to call"
+          sub="Ranked by recoverable value. Open a merchant to watch the agent work the case."
+          right={
+            <div className="flex flex-wrap gap-1">
+              <BandTab on={band === "all"} onClick={() => setBand("all")}>
                 all {pf.merchants.length}
-              </button>
+              </BandTab>
               {Object.entries(pf.bands).map(([k, n]: any) => (
-                <button
+                <BandTab
                   key={k}
+                  on={band === k}
                   onClick={() => setBand(k)}
-                  className={`chip ${
-                    band === k ? BAND[k].tone : "bg-raised text-muted border-line"
-                  }`}
+                  dot={BAND[k].dot}
                 >
-                  <span className={`w-1.5 h-1.5 rounded-full ${BAND[k].dot}`} />
                   {BAND[k].label} {n}
-                </button>
+                </BandTab>
               ))}
             </div>
-          </Card>
-        </Stagger>
+          }
+        />
 
-        {/* Drift lost its slot in the nav when ten destinations became five.
-            It belongs to the book, so it is reachable from the book. */}
-        <div className="flex justify-end -mt-2">
-          <Link
-            href="/drift"
-            className="text-[13px] text-muted hover:text-ink transition-colors
-                       inline-flex items-center gap-1.5"
-          >
-            Watch a bank degrade against its published rate
-            <span aria-hidden="true">→</span>
-          </Link>
-        </div>
-
-        {/* ─────────────────── what the batch actually won back */}
-        <Stagger>
-          <RecoveryFunnel pf={pf} onApproved={load} />
-        </Stagger>
-
-        {/* ───────────────────────────────────── work queue */}
-        <Stagger i={1}>
-          <div className="space-y-2">
-            {rows.map((r: any) => {
-              const b = BAND[r.band];
-              return (
-                <Link
+        <div className="overflow-x-auto">
+          <table className="tbl min-w-[54rem]">
+            <thead>
+              <tr>
+                <th>merchant</th>
+                <th>success → achievable</th>
+                <th>primary cause</th>
+                <th className="w-44">recoverable</th>
+                <th className="text-right">fixes</th>
+              </tr>
+            </thead>
+            <tbody>
+              {rows.map((r: any) => (
+                <tr
                   key={r.merchant_id}
-                  href={`/run/${r.run_id}`}
-                  className="card p-4 flex items-center gap-4 hover:border-brand/40
-                             hover:-translate-y-0.5 transition-all duration-300 group"
+                  onClick={() => {
+                    window.location.href = `/run/${r.run_id}`;
+                  }}
+                  className="cursor-pointer"
                 >
-                  <span className={`w-2 h-10 rounded-full shrink-0 ${b.dot}`} />
-
-                  <div className="w-52 shrink-0 min-w-0">
-                    <div className="font-semibold text-sm truncate">{r.name}</div>
-                    <div className="eyebrow mt-0.5">
-                      MCC {r.mcc} · {r.transactions.toLocaleString()} payments
-                    </div>
-                  </div>
-
-                  <div className="w-40 shrink-0 hidden lg:block">
-                    <div className="num text-sm">
-                      {r.observed_pct}%
-                      <span className="text-faint mx-1">→</span>
-                      <span className="text-amber">{r.achievable_pct}%</span>
-                    </div>
-                    <div className="eyebrow mt-0.5">
-                      gap {r.gap_pts > 0 ? "+" : ""}
-                      {r.gap_pts.toFixed(2)} pts
-                    </div>
-                  </div>
-
-                  <div className="w-44 shrink-0 hidden xl:block">
-                    <div className="text-xs">{CAUSE_LABEL[r.primary_cause]}</div>
-                    <div className="eyebrow mt-0.5 truncate">{b.blurb}</div>
-                  </div>
-
-                  <div className="flex-1 min-w-0 hidden md:block">
-                    <div className="h-1.5 rounded-full bg-raised overflow-hidden">
-                      <div
-                        className="h-full rounded-full bg-gradient-to-r bg-brand"
-                        style={{
-                          width: `${
-                            (r.recoverable_central_paise / maxRec) * 100
-                          }%`,
-                        }}
+                  <td>
+                    <div className="flex items-center gap-2.5">
+                      <span
+                        className={`w-1.5 h-1.5 rounded-full shrink-0 ${BAND[r.band].dot}`}
+                        title={BAND[r.band].blurb}
                       />
-                    </div>
-                  </div>
-
-                  <div className="w-28 shrink-0 text-right">
-                    <div className="num text-sm text-amber">
-                      {inr(r.recoverable_central_paise, { compact: true })}
-                    </div>
-                    <div className="eyebrow mt-0.5">recoverable</div>
-                  </div>
-
-                  <div className="w-24 shrink-0 text-right hidden sm:block">
-                    {r.fixes_auto > 0 ? (
-                      <span className="chip bg-brand-soft text-brand border-brand/30">
-                        {r.fixes_auto} auto-fix
+                      <span className="min-w-0">
+                        <span className="block font-medium truncate">{r.name}</span>
+                        <span className="block text-[11px] text-faint">
+                          MCC {r.mcc} · {r.transactions.toLocaleString("en-IN")} payments
+                        </span>
                       </span>
+                    </div>
+                  </td>
+                  <td className="num whitespace-nowrap">
+                    {r.observed_pct}%
+                    <span className="text-faint mx-1">→</span>
+                    <span className="text-amber">{r.achievable_pct}%</span>
+                    <span className="text-[11px] text-faint ml-2">
+                      {r.gap_pts > 0 ? "+" : ""}
+                      {r.gap_pts.toFixed(2)} pts
+                    </span>
+                  </td>
+                  <td className="text-muted whitespace-nowrap">
+                    {CAUSE_LABEL[r.primary_cause] ?? r.primary_cause}
+                  </td>
+                  <td>
+                    <div className="flex items-center gap-2.5">
+                      <span className="h-1 flex-1 min-w-[3rem] rounded-full bg-raised overflow-hidden">
+                        <span
+                          className="block h-full bg-brand"
+                          style={{
+                            width: `${(r.recoverable_central_paise / maxRec) * 100}%`,
+                          }}
+                        />
+                      </span>
+                      <span className="num text-amber whitespace-nowrap">
+                        {inr(r.recoverable_central_paise, { compact: true })}
+                      </span>
+                    </div>
+                  </td>
+                  <td className="text-right whitespace-nowrap">
+                    {r.fixes_auto > 0 ? (
+                      <span className="chip-brand">{r.fixes_auto} auto</span>
                     ) : (
-                      <span className="chip-neutral">{r.fixes_available} fixes</span>
+                      <span className="chip-neutral">{r.fixes_available}</span>
                     )}
-                  </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </Stagger>
 
-                  <span className="text-brand shrink-0 group-hover:translate-x-1 transition-transform">
-                    →
-                  </span>
-                </Link>
-              );
-            })}
+      {/* ── the same causes, over and over ── */}
+      {Object.keys(pf.by_cause ?? {}).length > 0 && (
+        <Stagger i={2}>
+          <SectionHeader
+            title="The same causes recur"
+            sub="One merchant with a billing-window problem is a support ticket. Forty of them is a product change."
+          />
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-6">
+            {Object.entries(pf.by_cause).map(([cause, v]: any) => (
+              <div key={cause}>
+                <div className="text-[13px] font-medium">
+                  {CAUSE_LABEL[cause] ?? cause}
+                </div>
+                <div className="num text-[20px] font-semibold text-amber mt-1">
+                  {inr(v.value_paise, { compact: true })}
+                </div>
+                <div className="text-[11px] text-faint mt-1">
+                  {v.merchants} merchant{v.merchants > 1 ? "s" : ""} ·{" "}
+                  {v.names.slice(0, 2).join(", ")}
+                  {v.names.length > 2 ? ` +${v.names.length - 2}` : ""}
+                </div>
+              </div>
+            ))}
           </div>
         </Stagger>
+      )}
 
-        {/* ───────────────────────────────────── by cause */}
-        {Object.keys(pf.by_cause ?? {}).length > 0 && (
-          <Stagger i={2}>
-            <Card>
-              <Eyebrow>What to build, not just who to call</Eyebrow>
-              <h2 className="text-lg font-semibold mt-1">
-                The same causes recur across the book
-              </h2>
-              <p className="text-sm text-muted mt-1.5 max-w-2xl">
-                One merchant with a billing-window problem is a support ticket.
-                Forty of them is a product change.
-              </p>
-              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3 mt-4">
-                {Object.entries(pf.by_cause).map(([cause, v]: any) => (
-                  <div key={cause} className="card-raised p-4">
-                    <div className="text-sm font-medium">
-                      {CAUSE_LABEL[cause] ?? cause}
-                    </div>
-                    <div className="num text-2xl font-display font-bold text-amber mt-1.5">
-                      {inr(v.value_paise, { compact: true })}
-                    </div>
-                    <div className="eyebrow mt-1">
-                      {v.merchants} merchant{v.merchants > 1 ? "s" : ""} ·{" "}
-                      {v.names.slice(0, 2).join(", ")}
-                      {v.names.length > 2 ? ` +${v.names.length - 2}` : ""}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </Card>
-          </Stagger>
-        )}
+      <Notes>
+        <Detail summary="why the range matters more than the central figure">
+          <p>
+            Every rupee on this page is projected through a retry model. The
+            three calibrations are published together because it is the range
+            the validation brackets — quoting the central estimate on its own
+            would report a point where the evidence supports an interval.
+          </p>
+        </Detail>
+        <Detail summary="how a merchant lands in a band">
+          <p>
+            Below a 0.75-point gap a merchant is healthy and gets no call. Above
+            it, a merchant whose gap cannot be resolved from this month&rsquo;s
+            volume is filed as insufficient data rather than given a priority —
+            sending an account manager after noise is worse than saying nothing.
+            The rest split on whether the money is material.
+          </p>
+        </Detail>
+      </Notes>
     </>
+  );
+}
+
+/** A filter that reads as a filter, not as a status pill. */
+function BandTab({
+  on,
+  onClick,
+  dot,
+  children,
+}: {
+  on: boolean;
+  onClick: () => void;
+  dot?: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <button
+      onClick={onClick}
+      className={`inline-flex items-center gap-1.5 px-2 py-1 rounded text-[12px]
+                  transition-colors ${
+                    on ? "bg-raised text-ink" : "text-muted hover:text-ink"
+                  }`}
+    >
+      {dot && <span className={`w-1.5 h-1.5 rounded-full ${dot}`} />}
+      {children}
+    </button>
   );
 }

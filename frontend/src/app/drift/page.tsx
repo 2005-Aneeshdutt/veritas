@@ -2,8 +2,9 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { BookLenses } from "@/components/BookLenses";
 import { TopBar } from "@/components/Chrome";
-import { Card, Detail, Eyebrow, Loading, Stagger, Ticker } from "@/components/ui";
+import { Card, Detail, Eyebrow, Figure, Figures, Hero, Loading, PageHead, Stagger, Ticker } from "@/components/ui";
 import { inr } from "@/lib/types";
 
 const SEV: Record<string, string> = {
@@ -50,70 +51,67 @@ export default function DriftPage() {
     <Shell>
       <div className="space-y-6">
         <Stagger>
-          <div>
-            <Eyebrow>The proactive half</Eyebrow>
-            <h1 className="text-2xl font-semibold mt-1">
-              Issuers that moved before anyone complained
-            </h1>
-            <p className="text-sm text-muted mt-1.5 max-w-3xl leading-relaxed">
-              NPCI publishes bank performance monthly, and it moves. This watches it and prices the damage.
-            </p>
-          </div>
+          <PageHead
+            title="The book"
+            sub="NPCI publishes bank performance monthly, and it moves. This watches it and prices the damage before anyone complains."
+            right={<BookLenses />}
+          />
         </Stagger>
 
-        {/* headline */}
         <Stagger i={1}>
-          <Card className="!p-0 overflow-hidden">
-            <div className="bg-brand-soft px-6 py-6 flex flex-wrap items-end gap-x-10 gap-y-4">
-              <div>
-                <Eyebrow>Cost of this quarter&apos;s degradation, nationally</Eyebrow>
-                <div className="flex items-baseline gap-3 mt-2">
-                  <span className="text-5xl font-display font-bold text-brand leading-none">
-                    ₹
-                    <Ticker
-                      value={d.total_national_impact_paise / 100 / 1e7}
-                      decimals={0}
-                    />
-                    <span className="text-2xl ml-1">Cr</span>
-                  </span>
-                  <span className="chip-projected">projected</span>
-                </div>
-                <div className="text-sm text-muted mt-2">
-                  per month, across every merchant in India on these issuers
-                </div>
-              </div>
+          <div className="space-y-7">
+            <Hero
+              label="Cost of this quarter's degradation, nationally"
+              kind="projected"
+              value={
+                <>
+                  ₹
+                  <Ticker
+                    value={d.total_national_impact_paise / 100 / 1e7}
+                    decimals={0}
+                  />
+                  <span className="text-xl ml-1">Cr</span>
+                </>
+              }
+              sub={`Per month, across every merchant in India on these issuers. Comparing ${d.recent_window.join(
+                ", "
+              )} against ${d.prior_window.join(
+                ", "
+              )} — three-month windows, because a single-month comparison on a noisy series fires every month and gets ignored.`}
+            />
 
-              <div className="h-12 w-px bg-line hidden md:block" />
-
-              <div>
-                <div className="text-2xl font-display font-bold text-rose">
-                  {d.deteriorating.length}
-                </div>
-                <div className="text-sm text-muted mt-1">issuers deteriorating</div>
-              </div>
-
-              <div>
-                <div className="text-2xl font-display font-bold text-mint">
-                  {d.improving.length}
-                </div>
-                <div className="text-sm text-muted mt-1">improving</div>
-              </div>
-
-              <div>
-                <div className="text-2xl font-display font-bold">
-                  {d.banks_examined}
-                </div>
-                <div className="text-sm text-muted mt-1">examined</div>
-              </div>
-            </div>
-
-            <div className="px-6 py-3 border-t border-line eyebrow">
-              comparing {d.recent_window.join(", ")} against{" "}
-              {d.prior_window.join(", ")} — three-month windows, because a
-              single-month comparison on a noisy series fires every month and gets
-              ignored
-            </div>
-          </Card>
+            <Figures>
+              <Figure
+                label="Deteriorating"
+                value={d.deteriorating.length}
+                tone="bad"
+                kind="measured"
+                sub="issuers materially worse than their own prior window"
+              />
+              <Figure
+                label="Improving"
+                value={d.improving.length}
+                tone="good"
+                kind="measured"
+                sub="moving the other way over the same window"
+              />
+              <Figure
+                label="Examined"
+                value={d.banks_examined}
+                sub="every remitter NPCI publishes for both windows"
+              />
+              <Figure
+                label="Exposed on this book"
+                kind="projected"
+                value={d.merchants_affected}
+                sub={
+                  d.merchants_affected
+                    ? `${inr(d.total_exposure_paise, { compact: true })}/month, from their actual bank mix`
+                    : "no merchant here has material volume on a deteriorating issuer"
+                }
+              />
+            </Figures>
+          </div>
         </Stagger>
 
         {/* deteriorating */}
@@ -296,9 +294,9 @@ function BankRow({
 
 function Shell({ children }: { children: React.ReactNode }) {
   return (
-    <div className="min-h-screen bg-canvas lg:pl-60">
+    <div className="min-h-screen bg-canvas lg:pl-56">
       <TopBar />
-      <main className="max-w-[1400px] mx-auto px-6 py-8">{children}</main>
+      <main className="max-w-[1180px] mx-auto px-8 py-8">{children}</main>
     </div>
   );
 }
