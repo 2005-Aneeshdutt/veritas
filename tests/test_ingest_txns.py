@@ -159,3 +159,49 @@ def test_nothing_is_written_to_disk():
     src = inspect.getsource(ingest_txns)
     for banned in ("write_text", "write_bytes", "RUNS", "open("):
         assert banned not in src, "ingest must not write: %s" % banned
+
+
+# ─────────────────────────────────────── the files that ship with it
+
+def test_the_sample_is_not_one_of_the_demo_merchants():
+    """Diagnosing a merchant already in the book would prove nothing about
+    whether this works on data the engine has never seen."""
+    import glob
+    import json
+
+    raw = open("samples/northwind_payments.csv", "rb").read()
+    txns, _ = parse(raw, mcc="5411")
+    ids = {t.txn_id for t in txns}
+    for f in sorted(glob.glob("data/runs/*.json")):
+        rec = json.load(open(f, encoding="utf-8"))
+        known = {e["txn_id"] for e in rec["report"]["ledger"]}
+        assert not (ids & known), "sample overlaps %s" % rec["merchant_id"]
+
+
+def test_the_sample_diagnoses_to_the_cause_its_readme_promises():
+    """If the sample stops finding what the README says it finds, the first
+    thing anyone tries goes wrong in front of them."""
+    txns, s = parse(open("samples/northwind_payments.csv", "rb").read(), mcc="5411")
+    assert s.used == 2400
+    assert not s.unclassified_codes
+    d = diagnose(txns, "5411")
+    assert d["primary_cause"] == "hour"
+    hour = next(f for f in d["factors"] if f["factor"] == "hour")
+    assert hour["points"] > 2.5, hour
+
+
+def test_the_sample_uses_none_of_our_own_column_names():
+    """It exists to prove the loose matching works. Written in our spelling
+    it would prove only that we can read our own files."""
+    header = open("samples/northwind_payments.csv", encoding="utf-8").readline()
+    for ours in ("txn_id", "amount_paise", "succeeded", "error_code", "bank\b"):
+        assert ours not in header, ours
+    for theirs in ("payment_id", "issuer", "amount_inr", "status"):
+        assert theirs in header, theirs
+
+
+def test_the_undersized_sample_is_still_refused():
+    """The refusal is a feature and it ships as one."""
+    with pytest.raises(Rejected) as e:
+        parse(open("samples/too_small_to_diagnose.csv", "rb").read(), mcc="5411")
+    assert "would be noise" in str(e.value)
