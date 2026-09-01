@@ -275,6 +275,41 @@ export default function DataPage() {
 
             {summary && diag && (
               <div className="mt-5 space-y-5 animate-rise">
+                {/* What the parser found, named. An ingestion console that
+                    says "2,400 rows" without saying which columns it matched
+                    is asking you to trust the match. */}
+                <div>
+                  <div className="ui text-[10px] uppercase tracking-[0.11em] text-faint mb-2">
+                    Columns matched
+                  </div>
+                  <div className="flex flex-wrap gap-x-5 gap-y-1.5">
+                    {[
+                      ["bank", true],
+                      ["method", true],
+                      ["amount", true],
+                      ["succeeded", true],
+                      ["error_code", summary.failures > 0],
+                      ["hour", true],
+                    ].map(([k, ok]) => (
+                      <span key={String(k)} className="flex items-center gap-1.5">
+                        <span
+                          className={`w-1.5 h-1.5 rounded-full ${
+                            ok ? "bg-mint" : "bg-line"
+                          }`}
+                        />
+                        <span className="num text-[11.5px] text-muted">{k}</span>
+                      </span>
+                    ))}
+                  </div>
+                  {summary.unclassified_codes.length > 0 && (
+                    <p className="text-[11px] text-amber mt-2">
+                      {summary.unclassified_codes.length} error codes outside
+                      Razorpay&rsquo;s published list — carried as unclassified
+                      rather than guessed at.
+                    </p>
+                  )}
+                </div>
+
                 <div className="flex flex-wrap items-center gap-2">
                   <span className="chip-measured">
                     {summary.used.toLocaleString("en-IN")} payments

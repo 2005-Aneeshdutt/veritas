@@ -103,18 +103,35 @@ export default function WhoseFaultPage() {
         />
       </Stagger>
 
-      {/* ── the split ── */}
+      {/* One number, then who owns it. The split is a single bar rather
+          than four tiles: these are shares of one pile, and four boxes state
+          them as four unrelated facts. */}
       <Stagger i={1}>
-        <div className="space-y-7">
-          <Hero
-            label="Unrecoverable this month"
-            kind="measured"
-            value={<Ticker value={b.total_paise / 100} prefix="₹" />}
-            sub="Attributed using Razorpay's own published next_steps wording for each error code, not our opinion of it. Nothing on this page is forecast, so nothing on it carries an error bar."
-          />
+        <div className="grid lg:grid-cols-[minmax(0,20rem)_minmax(0,1fr)] gap-8 items-start">
+          <div>
+            <div className="flex items-center gap-2">
+              <span className="ui text-[10.5px] uppercase tracking-[0.12em] text-faint">
+                Unrecoverable
+              </span>
+              <span className="chip-measured">measured</span>
+            </div>
+            <div className="num text-[40px] font-semibold leading-none mt-2.5">
+              <Ticker value={b.total_paise / 100} prefix="₹" />
+            </div>
+            <div className="text-[12.5px] text-muted mt-2.5 leading-relaxed">
+              <span className="num">{b.total_count.toLocaleString("en-IN")}</span>{" "}
+              payments across{" "}
+              <span className="num">{b.merchants}</span> merchants failed for
+              reasons no retry can fix. Nothing on this page is forecast, so
+              nothing on it carries an error bar.
+            </div>
+          </div>
 
           <div>
-            <div className="flex h-1.5 rounded-full overflow-hidden bg-raised">
+            <div className="ui text-[10.5px] uppercase tracking-[0.12em] text-faint mb-2.5">
+              Who has to act
+            </div>
+            <div className="flex h-3 rounded-full overflow-hidden bg-raised">
               {b.groups.map((g) => (
                 <div
                   key={g.owner}
@@ -125,17 +142,34 @@ export default function WhoseFaultPage() {
               ))}
             </div>
 
-            <Figures>
+            <div className="grid sm:grid-cols-2 gap-x-8 gap-y-3 mt-4">
               {b.groups.map((g) => (
-                <Figure
-                  key={g.owner}
-                  label={g.owner}
-                  value={inr(g.total_paise, { compact: true })}
-                  tone={g.owner === "platform" ? "brand" : undefined}
-                  sub={`${g.share_pct}% · ${g.count} payments · ${g.label.toLowerCase()}`}
-                />
+                <div key={g.owner} className="flex items-baseline gap-2.5">
+                  <span
+                    className={`w-1.5 h-1.5 rounded-full shrink-0 mt-1.5 ${
+                      TONE[g.owner]?.bar
+                    }`}
+                  />
+                  <span className="min-w-0 flex-1">
+                    <span className="flex items-baseline gap-2">
+                      <span className="ui text-[11px] uppercase tracking-[0.1em] text-muted">
+                        {g.owner}
+                      </span>
+                      <span
+                        className={`num text-lg font-semibold ml-auto ${
+                          g.owner === "platform" ? "text-brand" : ""
+                        }`}
+                      >
+                        {g.share_pct}%
+                      </span>
+                    </span>
+                    <span className="block text-[11px] text-faint mt-0.5">
+                      {inr(g.total_paise)} · {g.count} payments
+                    </span>
+                  </span>
+                </div>
               ))}
-            </Figures>
+            </div>
           </div>
         </div>
       </Stagger>

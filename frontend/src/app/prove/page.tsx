@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { TopBar } from "@/components/Chrome";
 import Link from "next/link";
 import { ShapleyLive } from "@/components/ShapleyLive";
+import { clearActivity, reportActivity } from "@/lib/activity";
 import { Card, Detail, Eyebrow, PageHead, Stagger } from "@/components/ui";
 import { FACTOR_DOCS } from "@/lib/explain";
 import { inr } from "@/lib/types";
@@ -183,16 +184,25 @@ export default function ProvePage() {
       `/api/prove/${challenge.challenge_id}/diagnose?pace_ms=150`
     );
     esRef.current = es;
-    es.addEventListener("coalition", (e: any) =>
-      setCoalitions((prev) => [...prev, JSON.parse(e.data)])
-    );
+    es.addEventListener("coalition", (e: any) => {
+      const c = JSON.parse(e.data);
+      setCoalitions((prev) => [...prev, c]);
+      reportActivity({
+        active: true,
+        label: "diagnosing blind — sealed challenge",
+        i: c.i + 1,
+        n: c.n,
+      });
+    });
     es.addEventListener("estimate", (e: any) => setEstimate(JSON.parse(e.data)));
     es.addEventListener("done", () => {
       setStage("done");
+      clearActivity();
       es.close();
     });
     es.onerror = () => {
       setStage("done");
+      clearActivity();
       es.close();
     };
   }
@@ -215,6 +225,10 @@ export default function ProvePage() {
             title="Prove it"
             sub="You choose the merchant. The answer is hashed before the engine runs. Break the seal and check it yourself."
           />
+          {/* The experiment, as a controlled sequence. The seal is created and
+              published at step 2 and the engine does not run until step 4 —
+              which is the only reason the result at step 6 means anything. */}
+          <Protocol stage={stage} coalitions={coalitions.length} />
         </Stagger>
 
         {/* ═══════════════════════════════ 1 · build the challenge */}
@@ -685,6 +699,76 @@ function Stat({ k, v }: { k: string; v: string }) {
     <div className="card-raised p-3">
       <div className="eyebrow">{k}</div>
       <div className="text-sm font-semibold mt-0.5 truncate">{v}</div>
+    </div>
+  );
+}
+
+/**
+ * The protocol, always visible.
+ *
+ * A controlled experiment is only worth anything if the order is checkable,
+ * so the order is on screen the whole time rather than implied by which card
+ * happens to be expanded. The seal is created and published at step 2; the
+ * engine does not receive the batch until step 4. That gap is the entire
+ * argument, and a viewer who cannot see it has to take it on trust.
+ *
+ * Every state here is derived from the page's existing `stage`, which is
+ * driven by the real endpoints. Nothing advances on a timer.
+ */
+function Protocol({
+  stage,
+  coalitions,
+}: {
+  stage: "build" | "sealed" | "running" | "done" | "open";
+  coalitions: number;
+}) {
+  const order = ["build", "sealed", "running", "done", "open"];
+  const at = order.indexOf(stage);
+
+  const steps: { k: string; label: string; at: number }[] = [
+    { k: "select", label: "Select challenge", at: 0 },
+    { k: "seal", label: "Seal the answer", at: 1 },
+    { k: "publish", label: "Publish SHA-256", at: 1 },
+    { k: "blind", label: "Run blind", at: 2 },
+    { k: "diagnose", label: "Engine diagnoses", at: 2 },
+    { k: "break", label: "Break the seal", at: 4 },
+    { k: "compare", label: "Compare", at: 4 },
+  ];
+
+  return (
+    <div className="flex items-center gap-0 overflow-x-auto no-scrollbar mt-4 pb-1">
+      {steps.map((s, i) => {
+        const done = at > s.at || (at === s.at && stage !== "running");
+        const live = at === s.at && stage === "running";
+        return (
+          <div key={s.k} className="flex items-center shrink-0">
+            <div className="flex items-center gap-1.5 px-2.5 first:pl-0">
+              <span
+                className={`w-1.5 h-1.5 rounded-full transition-colors ${
+                  live
+                    ? "bg-brand animate-pulse-ring"
+                    : done
+                    ? "bg-mint"
+                    : "bg-line"
+                }`}
+              />
+              <span
+                className={`text-[11px] whitespace-nowrap ${
+                  live ? "text-brand" : done ? "text-muted" : "text-faint"
+                }`}
+              >
+                {s.label}
+                {live && s.k === "diagnose" && coalitions > 0 && (
+                  <span className="num text-[10px] ml-1.5">{coalitions}/16</span>
+                )}
+              </span>
+            </div>
+            {i < steps.length - 1 && (
+              <span className="w-4 h-px bg-line shrink-0" />
+            )}
+          </div>
+        );
+      })}
     </div>
   );
 }

@@ -1,5 +1,6 @@
 "use client";
 
+import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 interface Citation {
@@ -108,6 +109,28 @@ const SUGGESTED = [
 ];
 
 /**
+ * The same four questions, ordered for the screen you are on.
+ *
+ * Only the ORDER changes, never the set: all four are pre-warmed in the
+ * committed cache, so every suggestion answers on a deployment with no API
+ * key. Adding page-specific questions would have looked more contextual and
+ * quietly broken that guarantee, which is the one property this panel is
+ * for.
+ *
+ * Nothing about grounding, context, refusal, caching or prompts is touched.
+ */
+function suggestionsFor(path: string): string[] {
+  const first = (q: string) => [q, ...SUGGESTED.filter((x) => x !== q)];
+  if (path.includes("/authorise") || path.includes("/journey"))
+    return first("What can the agent do without asking me?");
+  if (path.startsWith("/evidence") || path.startsWith("/impact"))
+    return first("How accurate is the attribution?");
+  if (path.startsWith("/portfolio") || path.startsWith("/platform"))
+    return first("Why is the recovered figure so small?");
+  return SUGGESTED;
+}
+
+/**
  * The assistant, on every page.
  *
  * It answers questions about the system itself — what MEASURED means here,
@@ -124,6 +147,7 @@ const SUGGESTED = [
  * over a presenter is a panel nobody opens twice.
  */
 export function Helpdesk() {
+  const path = usePathname() ?? "";
   const [open, setOpen] = useState(false);
   const [q, setQ] = useState("");
   const [turns, setTurns] = useState<Turn[]>([]);
@@ -514,7 +538,7 @@ export function Helpdesk() {
             title="Drag to move"
           >
             <span className="w-2 h-2 rounded-full shrink-0 hd-dot" />
-            <span className="text-sm font-medium text-ink">Your assistant</span>
+            <span className="text-sm font-medium text-ink">Revenue Doctor</span>
 
             {canHear && (
               <button
@@ -567,7 +591,7 @@ export function Helpdesk() {
                   {canHear && " You can type or press the microphone."}
                 </p>
                 <div className="flex flex-col gap-1.5 pt-1">
-                  {SUGGESTED.map((s) => (
+                  {suggestionsFor(path).map((s) => (
                     <button
                       key={s}
                       onClick={() => send(s)}

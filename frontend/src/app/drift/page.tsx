@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { BookLenses } from "@/components/BookLenses";
+import { DriftDetail, DriftPlot } from "@/components/DriftPlot";
 import { TopBar } from "@/components/Chrome";
 import { Card, Detail, Eyebrow, Figure, Figures, Hero, Loading, PageHead, Stagger, Ticker } from "@/components/ui";
 import { inr } from "@/lib/types";
@@ -14,6 +15,9 @@ const SEV: Record<string, string> = {
 };
 
 export default function DriftPage() {
+  //: Which issuer the reader has opened. One at a time — the plot is the
+  //: overview and this is the detail, rather than eight expanded rows.
+  const [picked, setPicked] = useState<any>(null);
   const [d, setD] = useState<any>(null);
 
   useEffect(() => {
@@ -114,19 +118,50 @@ export default function DriftPage() {
           </div>
         </Stagger>
 
-        {/* deteriorating */}
+        {/* Every bank on one axis, so the shape of the month is the first
+            thing you see: most of the rail held still, a handful moved. */}
         <Stagger i={2}>
-          <Card>
-            <Eyebrow>Getting worse</Eyebrow>
-            <h2 className="text-lg font-semibold mt-1 mb-4">
-              Where the ecosystem is degrading
-            </h2>
-            <div className="space-y-2">
-              {d.deteriorating.map((b: any) => (
-                <BankRow key={b.key} b={b} maxDelta={maxDelta} worse />
-              ))}
+          <div className="border-t border-line pt-5">
+            <div className="flex items-baseline gap-3 flex-wrap mb-1">
+              <h2>Which issuers moved</h2>
+              <span className="text-[12px] text-muted">
+                {d.prior_window.join(", ")} against {d.recent_window.join(", ")} —
+                three-month windows, because a single month on a noisy series
+                fires every month and gets ignored.
+              </span>
             </div>
-          </Card>
+            <div className="flex flex-wrap gap-2 mb-4">
+              <span className="chip text-rose">{d.deteriorating.length} deteriorating</span>
+              <span className="chip text-mint">{d.improving.length} improving</span>
+              <span className="chip text-faint">
+                {d.banks_examined - d.deteriorating.length - d.improving.length} held still
+              </span>
+            </div>
+
+            <div className="grid lg:grid-cols-[minmax(0,1fr)_minmax(0,22rem)] gap-5 items-start">
+              <DriftPlot
+                banks={[...d.deteriorating, ...d.improving.slice(0, 8)]}
+                selected={picked?.bank}
+                onSelect={(b) => setPicked(b)}
+              />
+              <div className="space-y-3">
+                {picked ? (
+                  <DriftDetail b={picked} />
+                ) : (
+                  <div className="panel p-4">
+                    <div className="ui text-[10.5px] uppercase tracking-[0.12em] text-faint">
+                      Pick an issuer
+                    </div>
+                    <p className="text-[12.5px] text-muted mt-2 leading-relaxed">
+                      The system noticed these moving before any merchant
+                      complained. Select one to see what it cost and whether it
+                      looks like an incident or like customers with less money.
+                    </p>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
         </Stagger>
 
         {/* exposure */}
@@ -187,23 +222,12 @@ export default function DriftPage() {
           <Intervention report={d} />
         </Stagger>
 
-        {/* improving */}
         <Stagger i={4}>
-          <Card>
-            <Eyebrow>Getting better</Eyebrow>
-            <h2 className="text-lg font-semibold mt-1 mb-1">
-              Not everything is degrading
-            </h2>
-            <p className="text-sm text-muted mb-4 max-w-3xl">
-              Shown because a monitor that only ever reports bad news is not
-              measuring, it is alarming.
-            </p>
-            <div className="space-y-2">
-              {d.improving.slice(0, 6).map((b: any) => (
-                <BankRow key={b.key} b={b} maxDelta={maxDelta} />
-              ))}
-            </div>
-          </Card>
+          <p className="text-[12px] text-faint leading-relaxed max-w-3xl">
+            Improving issuers are on the same axis rather than in a separate
+            list. A monitor that only ever reports bad news is not measuring,
+            it is alarming.
+          </p>
         </Stagger>
 
         <Stagger i={5}>

@@ -145,14 +145,60 @@ export default function EvidencePage() {
   if (!o || !a) return shell(<Loading label="gathering the evidence" />);
 
   const held = o.overall.within_own_error_bar;
+  // The scoreboard's own figures, read from the two endpoints already
+  // fetched — nothing here is a second source for a number shown elsewhere.
+  const escalated =
+    (a.by_outcome["merchant_action"] ?? 0) + (a.by_outcome["escalated"] ?? 0);
+  const recovered = o.fixes.reduce(
+    (n, f) => n + Math.max(0, f.measured_value_paise),
+    0
+  );
 
   return shell(
     <>
       <Stagger>
         <PageHead
           title="Evidence"
-          sub="Whether the forecasts came true, every decision the system has taken and whether that record has been tampered with, and what the model steps cost."
+          sub="The proof behind everything on the other eight screens: whether the forecasts came true, every decision the system took and whether that record has been tampered with, and what the model steps cost."
         />
+      </Stagger>
+
+      {/* The scoreboard. One row, five numbers, each one the answer to a
+          question the brief asked by name. */}
+      <Stagger i={0}>
+        <div className="grid grid-cols-2 lg:grid-cols-5 gap-px bg-line rounded-xl overflow-hidden">
+          <Score
+            label="measured recovery"
+            value={inr(recovered)}
+            tone="text-mint"
+            kind="measured"
+            sub="marked against a known outcome"
+          />
+          <Score
+            label="escalated"
+            value={escalated.toLocaleString("en-IN")}
+            tone="text-amber"
+            sub="handed to a person, by rule"
+          />
+          <Score
+            label="stopped"
+            value={String(a.by_outcome["denied"] ?? 0)}
+            tone="text-rose"
+            sub="refused, and unapprovable"
+          />
+          <Score
+            label="ledger entries"
+            value={a.entries_total.toLocaleString("en-IN")}
+            sub="one per decision, append-only"
+          />
+          <Score
+            label="chains verified"
+            value={`${a.chains_verified} / ${a.chains_total}`}
+            tone={a.chains_verified === a.chains_total ? "text-mint" : "text-rose"}
+            kind="measured"
+            sub="re-hashed from genesis just now"
+          />
+        </div>
       </Stagger>
 
       {/* ── 1. did the fix work ── */}
@@ -469,4 +515,38 @@ export default function EvidencePage() {
 
 function Th({ children, right }: { children: React.ReactNode; right?: boolean }) {
   return <th className={right ? "text-right" : ""}>{children}</th>;
+}
+
+/** One figure on the scoreboard. Provenance is shown where it applies. */
+function Score({
+  label,
+  value,
+  sub,
+  tone,
+  kind,
+}: {
+  label: string;
+  value: string;
+  sub?: string;
+  tone?: string;
+  kind?: "measured" | "projected";
+}) {
+  return (
+    <div className="bg-surface p-4">
+      <div className="flex items-center gap-1.5">
+        <span className="ui text-[10px] uppercase tracking-[0.11em] text-faint">
+          {label}
+        </span>
+        {kind && (
+          <span className={kind === "measured" ? "chip-measured" : "chip-projected"}>
+            {kind}
+          </span>
+        )}
+      </div>
+      <div className={`num text-2xl font-semibold leading-none mt-2 ${tone ?? ""}`}>
+        {value}
+      </div>
+      {sub && <div className="text-[10.5px] text-faint mt-1.5 leading-tight">{sub}</div>}
+    </div>
+  );
 }

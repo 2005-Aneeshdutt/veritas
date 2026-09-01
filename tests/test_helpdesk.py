@@ -300,7 +300,11 @@ def test_only_the_header_drags_the_window():
     """A window that moves when you select an answer is one you cannot copy
     text out of."""
     ui = open("frontend/src/components/Helpdesk.tsx", encoding="utf-8").read()
-    head = ui[ui.index("onPointerDown={winDown}") : ui.index("Your assistant")]
+    # Sliced by structure rather than by the panel's title: the title is a
+    # design choice and this test is about where the drag handler lives, so
+    # renaming the panel should not fail it.
+    start = ui.index("onPointerDown={winDown}")
+    head = ui[start : ui.index("</div>", start)]
     assert "cursor-grab" in head
     body = ui[ui.index("flex-1 overflow-y-auto") :]
     assert "winDown" not in body, "the scrolling body must not drag the window"
