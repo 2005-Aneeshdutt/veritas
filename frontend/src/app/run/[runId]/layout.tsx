@@ -76,6 +76,16 @@ export default function RunLayout({
         right={
           <>
             {switching && <span className="eyebrow animate-breathe">re-running…</span>}
+            {/* The lens control lives with the other page-level controls
+                rather than above the heading, where it read as something the
+                heading belonged to. */}
+            {lensed && (
+              <Segmented
+                options={LENSES}
+                value={lens}
+                onChange={(v) => router.push(base + v)}
+              />
+            )}
             <label className="sr-only" htmlFor="merchant">
               Merchant
             </label>
@@ -98,18 +108,7 @@ export default function RunLayout({
         runHref={base}
       />
 
-      <main className="max-w-[1180px] mx-auto px-8 py-8">
-        {lensed && (
-          <div className="flex justify-end -mb-2">
-            <Segmented
-              options={LENSES}
-              value={lens}
-              onChange={(v) => router.push(base + v)}
-            />
-          </div>
-        )}
-        {children}
-      </main>
+      <main className="max-w-[1180px] mx-auto px-8 py-8">{children}</main>
     </div>
   );
 }

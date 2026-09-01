@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { TopBar } from "@/components/Chrome";
 import { NpciUpload } from "@/components/NpciUpload";
-import { Card, Detail, Eyebrow, SectionHeader, Stagger } from "@/components/ui";
+import { Card, Detail, Eyebrow, Figure, PageHead, Panel, SectionHeader, Stagger } from "@/components/ui";
 import { Merchant } from "@/lib/types";
 
 interface Summary {
@@ -141,21 +141,16 @@ export default function DataPage() {
       <TopBar />
       <main className="max-w-[1180px] mx-auto px-8 py-8 space-y-8">
         <Stagger>
-          <div>
-            <Eyebrow>Not the demo book</Eyebrow>
-            <h1 className="text-2xl font-semibold mt-1">Run it on your data</h1>
-            <p className="text-sm text-muted mt-1.5 max-w-3xl leading-relaxed">
-              Two ways to stop taking this on trust: hand it your payments, or
-              hand it the bank table it measures against.
-            </p>
-          </div>
+          <PageHead
+            title="Your own data"
+            sub="Two ways to stop taking this on trust: hand it your payments, or hand it the bank table it measures against."
+          />
         </Stagger>
 
         {/* ── your payments ── */}
         <Stagger i={1}>
           <Card>
             <SectionHeader
-              eyebrow="Your payments"
               title="Diagnose a month of your own transactions"
               sub="The same decomposition the demo merchants get. Column names are matched loosely — issuer or bank, status or succeeded, amount or amount_paise — because no two exports agree on them."
             />
@@ -260,10 +255,10 @@ export default function DataPage() {
             </Detail>
 
             {err && (
-              <div className="card-raised border-l-2 border-l-rose p-3 mt-4">
+              <Panel tone="warn" className="mt-4">
                 <div className="chip-warn">rejected</div>
-                <p className="text-sm text-muted mt-2 leading-relaxed">{err}</p>
-              </div>
+                <p className="text-[13px] text-muted mt-1.5 leading-relaxed">{err}</p>
+              </Panel>
             )}
 
             {summary && diag && (
@@ -286,20 +281,23 @@ export default function DataPage() {
                   )}
                 </div>
 
-                <div className="grid sm:grid-cols-3 gap-3">
-                  <Fig
-                    k="your success rate"
-                    v={`${diag.observed_pct.toFixed(2)}%`}
+                <div className="grid gap-x-8 gap-y-5 sm:grid-cols-3
+                                divide-y divide-line sm:divide-y-0 sm:divide-x">
+                  <Figure
+                    label="your success rate"
+                    kind="measured"
+                    value={`${diag.observed_pct.toFixed(2)}%`}
                   />
-                  <Fig
-                    k="your category achieves"
-                    v={`${diag.achievable_pct.toFixed(2)}%`}
-                    tone="text-amber"
+                  <Figure
+                    label="your category achieves"
+                    kind="projected"
+                    value={`${diag.achievable_pct.toFixed(2)}%`}
                   />
-                  <Fig
-                    k="the gap"
-                    v={`${diag.gap_pts.toFixed(2)} pts`}
-                    tone={diag.gap_pts > 0.75 ? "text-rose" : "text-mint"}
+                  <Figure
+                    label="the gap"
+                    kind="projected"
+                    value={`${diag.gap_pts.toFixed(2)} pts`}
+                    tone={diag.gap_pts > 0.75 ? "bad" : "good"}
                   />
                 </div>
 
@@ -343,7 +341,7 @@ export default function DataPage() {
                   )}
                 </div>
 
-                <div className="card-raised p-4 border-l-2 border-l-amber">
+                <Panel tone="note">
                   <Eyebrow>what this does not tell you</Eyebrow>
                   <p className="text-sm text-muted mt-1.5 leading-relaxed">
                     Every figure here is projected. There is no known outcome
@@ -351,7 +349,7 @@ export default function DataPage() {
                     can be measured the way the demo book is — and no action is
                     proposed, because a file upload is not a signed mandate.
                   </p>
-                </div>
+                </Panel>
               </div>
             )}
           </Card>
@@ -362,15 +360,6 @@ export default function DataPage() {
           <NpciUpload merchants={merchants} />
         </Stagger>
       </main>
-    </div>
-  );
-}
-
-function Fig({ k, v, tone }: { k: string; v: string; tone?: string }) {
-  return (
-    <div className="card-raised p-4">
-      <div className="eyebrow">{k}</div>
-      <div className={`num text-2xl font-semibold mt-1 ${tone ?? ""}`}>{v}</div>
     </div>
   );
 }

@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { AuthorityPanel } from "@/components/AuthorityPanel";
 import { BarStrip } from "@/components/BarStrip";
-import { Card, Detail, Eyebrow, Info, Loading, SectionHeader, Stagger } from "@/components/ui";
+import { Card, Detail, Eyebrow, Figure, Figures, Info, Loading, Notes, PageHead, Panel, SectionHeader, Stagger } from "@/components/ui";
 import { GLOSSARY } from "@/lib/explain";
 import { RunRecord, inr } from "@/lib/types";
 
@@ -215,15 +215,10 @@ export default function AuditPage({ params }: { params: { runId: string } }) {
   return (
     <div className="space-y-6">
       <Stagger>
-        <div>
-          <Eyebrow>Compliance and provenance</Eyebrow>
-          <h1 className="text-2xl font-semibold mt-1">Audit trail</h1>
-          <p className="text-sm text-muted mt-1.5 max-w-3xl leading-relaxed">
-            Every decision the agent made — allowed, escalated and denied — is
-            hash-chained. Denied actions are recorded too; a trail of only successes is
-            a highlight reel.
-          </p>
-        </div>
+        <PageHead
+          title="Authorise"
+          sub="Every decision the agent made — allowed, escalated and denied — is hash-chained. Denied actions are recorded too; a trail of only successes is a highlight reel."
+        />
       </Stagger>
 
       {/* ─────────────────────────────── verification */}
@@ -232,9 +227,8 @@ export default function AuditPage({ params }: { params: { runId: string } }) {
       </Stagger>
 
       <Stagger i={1}>
-        <Card className={result?.ok === false ? "border-rose/40" : ""}>
+        <Card>
           <SectionHeader
-            eyebrow="Do not take my word for it"
             title="Verify the chain in your own browser"
             sub="This recomputes SHA-256 over the canonical encoding of every entry, client-side, exactly the way the Python ledger does. It is not reading a boolean off the server."
           />
@@ -243,8 +237,7 @@ export default function AuditPage({ params }: { params: { runId: string } }) {
             <button
               onClick={() => verify()}
               disabled={busy}
-              className="px-4 py-2 rounded-lg bg-mint-soft text-mint border border-mint/40
-                         text-sm font-semibold hover:bg-mint/25 transition-colors disabled:opacity-50"
+              className="btn-secondary"
             >
               {busy ? "verifying…" : "✓ Verify chain"}
             </button>
@@ -290,29 +283,34 @@ export default function AuditPage({ params }: { params: { runId: string } }) {
 
       {/* ─────────────────────────────── summary */}
       <Stagger i={2}>
-        <div className="grid sm:grid-cols-4 gap-3">
-          <Sum label="ledger entries" v={m.ledger_entries} />
-          <Sum
+        <Figures>
+          <Figure label="ledger entries" value={m.ledger_entries} kind="measured" />
+          <Figure
             label="mandate violations"
-            v={m.mandate_violations}
+            value={m.mandate_violations}
+            kind="measured"
             tone={m.mandate_violations === 0 ? "good" : "bad"}
             info="Actions executed outside what the merchant cryptographically authorised. Must be zero."
           />
-          <Sum
+          <Figure
             label="chain"
-            v={m.chain_verified ? "verified" : "broken"}
+            value={m.chain_verified ? "verified" : "broken"}
+            kind="measured"
             tone={m.chain_verified ? "good" : "bad"}
           />
-          <Sum
+          <Figure
             label="gated at diagnosis"
-            v={Object.values(r.gate.decisions).reduce((a: any, b: any) => a + b, 0)}
+            value={(Object.values(r.gate.decisions) as number[]).reduce(
+              (a, b) => a + b,
+              0
+            )}
             info={
               "Actions the kernel judged during the diagnosis run. Fixes you " +
               "approve afterwards are gated again and appended, so the ledger " +
               "below is longer than this once anything has been applied."
             }
           />
-        </div>
+        </Figures>
       </Stagger>
 
       {/* ─────────────────────────────── mandate */}
@@ -360,7 +358,7 @@ export default function AuditPage({ params }: { params: { runId: string } }) {
       {/* ─────────────────────────────── the chain */}
       {pendingStepUps > 0 && (
         <Stagger i={3}>
-          <Card className="border-l-2 border-l-amber">
+          <Panel tone="note">
             <div className="flex items-center gap-4 flex-wrap">
               <div className="min-w-0 flex-1">
                 <Eyebrow>Waiting on a person</Eyebrow>
@@ -432,13 +430,13 @@ export default function AuditPage({ params }: { params: { runId: string } }) {
                       </span>
                       {state ? (
                         <span
-                          className={
+                          className={`shrink-0 text-[11px] ${
                             state === "approved"
-                              ? "chip-measured shrink-0"
+                              ? "text-mint"
                               : state === "rejected"
-                              ? "chip-neutral shrink-0"
-                              : "chip-warn shrink-0"
-                          }
+                              ? "text-faint"
+                              : "text-rose"
+                          }`}
                         >
                           {state}
                         </span>
@@ -492,7 +490,7 @@ export default function AuditPage({ params }: { params: { runId: string } }) {
                 <p className="text-sm text-muted mt-2">{confirmed.headline}</p>
               </div>
             )}
-          </Card>
+        </Panel>
         </Stagger>
       )}
 
