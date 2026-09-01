@@ -52,13 +52,36 @@ when to say nothing.
 
 ---
 
-## Bank data
+## `npci_three_months.csv` — the bank table
 
-The NPCI remitter table already ships at **`data/npci/remitter_banks.csv`** —
-1,601 rows across 24 months of real published data. Upload that file to the
-second panel on `/data` and pick a different month: every baseline is
-re-derived from it, the achievable rate moves, and you can watch whether the
-diagnosis holds.
+150 rows: 50 banks across three real NPCI months, cut from the committed
+remitter table. Nothing here is invented — those months genuinely differ:
+
+| month | median bank failure rate |
+|---|---|
+| 2023-12 | 5.75% |
+| 2024-06 | 6.78% |
+| 2025-01 | 8.71% |
+| *(shipped baseline: 2025-08)* | *7.92%* |
+
+Drop it into the **bank table** panel on `/data` and the whole baseline is
+re-derived from it, step by step. For CloudSync:
+
+```
+2023-12   achievable 87.35% -> 90.87%   gap 6.59 -> 10.11 pts
+2024-06   achievable 87.35% -> 89.36%   gap 6.59 ->  8.60 pts
+2025-01   achievable 87.35% -> 85.10%   gap 6.59 ->  4.34 pts
+```
+
+The achievable rate swings nearly six points across the three, and the gap
+more than doubles — **and the primary cause stays `hour` in all three.** That
+is the whole point of the exercise. A merchant billing at midnight has a
+midnight problem whatever the banks were doing, so a diagnosis that flipped
+around every time the baseline moved would not have been reading the evidence
+in the first place.
+
+The full table is also there at **`data/npci/remitter_banks.csv`** — 1,601
+rows across 24 months, if you want more months to pick from.
 
 For CloudSync, swapping August 2025 for January 2024 moves the achievable
 rate 87.4% → 90.8% and widens the gap 6.6 → 10.0 points, because banks were

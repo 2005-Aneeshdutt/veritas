@@ -223,7 +223,7 @@ export default function AuditPage({ params }: { params: { runId: string } }) {
 
       {/* ─────────────────────────────── verification */}
       <Stagger i={1}>
-        <BarStrip rec={rec} />
+        <BarStrip rec={rec} runId={params.runId} />
       </Stagger>
 
       <Stagger i={1}>
@@ -387,15 +387,22 @@ export default function AuditPage({ params }: { params: { runId: string } }) {
                   the hash.
                 </p>
               </div>
-              <button
-                onClick={confirmAll}
-                disabled={confirming}
-                className="btn-primary shrink-0"
-              >
-                {confirming
-                  ? "gating…"
-                  : `Approve all ${pendingStepUps} on their behalf →`}
-              </button>
+              {/* Two ways out of this queue, side by side, because they are
+                  the two different people the ledger distinguishes. Approving
+                  is the platform acting for the merchant; sending is asking
+                  the merchant to decide it themselves. */}
+              <div className="shrink-0 flex flex-col items-end gap-2">
+                <button
+                  onClick={confirmAll}
+                  disabled={confirming}
+                  className="btn-primary"
+                >
+                  {confirming
+                    ? "gating…"
+                    : `Approve all ${pendingStepUps} on their behalf →`}
+                </button>
+                <SendToMerchant runId={params.runId} held={pendingStepUps} />
+              </div>
             </div>
 
             {/* One at a time, for anyone who does not want to say yes to
@@ -789,6 +796,113 @@ function Sum({
         }`}
       >
         {v}
+      </div>
+    </div>
+  );
+}
+
+/**
+ * Hand the queue back to the person it belongs to.
+ *
+ * The console can approve these, and the ledger records that as the platform
+ * acting on the merchant's behalf. The other option — the one an account
+ * manager actually wants most mornings — is to let the merchant decide, and
+ * that meant navigating to a different page to find the mail panel.
+ *
+ * The report carries a signed approve and reject button per fix, so a
+ * decision made from the inbox comes back through the same kernel and is
+ * recorded as the merchant's own.
+ */
+function SendToMerchant({ runId, held }: { runId: string; held: number }) {
+  const [to, setTo] = useState("");
+  const [state, setState] = useState<
+    { sent?: boolean; configured?: boolean; detail?: string } | null
+  >(null);
+  const [busy, setBusy] = useState(false);
+  const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    fetch(`/api/run/${runId}/email`)
+      .then((r) => r.json())
+      .then((d) => d.default_to && setTo((cur) => cur || d.default_to))
+      .catch(() => {});
+  }, [runId]);
+
+  async function send() {
+    setBusy(true);
+    try {
+      const r = await fetch(
+        `/api/run/${runId}/email/send?to=${encodeURIComponent(to)}`,
+        { method: "POST" }
+      );
+      setState(await r.json());
+    } catch {
+      setState({ sent: false, configured: true, detail: "Could not reach the API." });
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  if (!open)
+    return (
+      <button onClick={() => setOpen(true)} className="btn-secondary">
+        Email the merchant to decide →
+      </button>
+    );
+
+  return (
+    <div className="panel p-3 w-[22rem] text-left">
+      <div className="eyebrow">send the report, with signed buttons</div>
+      <p className="text-[11px] text-faint mt-1 leading-relaxed">
+        {held} held actions, each with an approve and a reject link only they
+        can use. A decision made there is recorded as the merchant&rsquo;s.
+      </p>
+      <div className="flex items-center gap-1.5 mt-2">
+        <input
+          value={to}
+          onChange={(e) => setTo(e.target.value)}
+          placeholder="merchant@example.com"
+          className="field flex-1"
+        />
+        <button
+          onClick={send}
+          disabled={busy || !to}
+          className="btn-primary shrink-0"
+        >
+          {busy ? "sending…" : "Send"}
+        </button>
+      </div>
+      {state && (
+        <div
+          className={`text-[11px] mt-2 leading-relaxed ${
+            state.sent ? "text-mint" : state.configured ? "text-rose" : "text-muted"
+          }`}
+        >
+          {state.sent ? "✓ " : ""}
+          {state.detail}
+        </div>
+      )}
+      <div className="flex gap-3 mt-2">
+        <a href={`/api/run/${runId}/email.eml`} className="text-[11px] text-brand">
+          download .eml
+        </a>
+        <button
+          onClick={async () => {
+            setBusy(true);
+            const r = await fetch("/api/email/verify", { method: "POST" });
+            setState(await r.json());
+            setBusy(false);
+          }}
+          className="text-[11px] text-muted hover:text-ink"
+        >
+          test credentials
+        </button>
+        <button
+          onClick={() => setOpen(false)}
+          className="text-[11px] text-faint hover:text-ink ml-auto"
+        >
+          close
+        </button>
       </div>
     </div>
   );

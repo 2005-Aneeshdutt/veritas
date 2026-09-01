@@ -7,6 +7,17 @@ interface Citation {
   grounded: boolean;
 }
 
+interface ChainLink {
+  sequence: number;
+  txn_id: string;
+  action_type: string;
+  gate_decision: string;
+  gate_reason: string;
+  actor: string;
+  prev_hash: string;
+  entry_hash: string;
+}
+
 interface Answer {
   ok: boolean;
   text: string;
@@ -15,6 +26,8 @@ interface Answer {
   figures_verified: number;
   refused_reason?: string | null;
   cache_hit?: boolean;
+  chain?: ChainLink[];
+  chain_note?: string;
 }
 
 interface Turn {
@@ -590,6 +603,16 @@ export function Helpdesk() {
                         <span className="chip-neutral">cached</span>
                       )}
                     </div>
+
+                    {/* Asked about the chain, show the chain. Prose about a
+                        hash chain is the one answer a reader cannot check,
+                        and checkability is the whole argument. */}
+                    {t.a.chain && t.a.chain.length > 0 && (
+                      <ChainPreview
+                        links={t.a.chain}
+                        note={t.a.chain_note ?? ""}
+                      />
+                    )}
                   </div>
                 ) : (
                   <div className="card-raised border-l-2 border-l-rose p-3">
@@ -657,5 +680,63 @@ export function Helpdesk() {
         </aside>
       )}
     </>
+  );
+}
+
+/**
+ * The chain, inside the answer.
+ *
+ * Every link shows its prev_hash directly under the previous link's own
+ * hash, because the matching pair IS the property — a table with a hash
+ * column proves only that hashes exist. The first entry's prev is sixty-four
+ * zeros, which is where the chain provably starts.
+ */
+function ChainPreview({ links, note }: { links: ChainLink[]; note: string }) {
+  const TONE: Record<string, string> = {
+    allow: "#1b7048",
+    step_up: "#8c5e00",
+    deny: "#a2382f",
+  };
+  return (
+    <div className="mt-3 pt-3 border-t">
+      <div className="text-[10px] uppercase tracking-[0.1em] text-faint">
+        the chain itself
+      </div>
+
+      <div className="mt-2 space-y-0">
+        {links.map((l, i) => (
+          <div key={l.entry_hash}>
+            <div className="font-mono text-[9px] text-faint pl-2">
+              {i === 0 ? "genesis " : "prev "}
+              {l.prev_hash.slice(0, 20)}…
+            </div>
+            <div
+              className="pl-2 py-1 border-l-2"
+              style={{ borderColor: TONE[l.gate_decision] ?? "#e3e6ec" }}
+            >
+              <div className="flex items-baseline gap-1.5 text-[11px]">
+                <span className="font-mono text-faint">#{l.sequence}</span>
+                <span className="font-mono truncate max-w-[8.5rem]">
+                  {l.txn_id}
+                </span>
+                <span
+                  className="ml-auto text-[10px]"
+                  style={{ color: TONE[l.gate_decision] ?? "#5b6270" }}
+                >
+                  {l.gate_decision}
+                </span>
+              </div>
+              <div className="font-mono text-[9px] mt-0.5" style={{ color: "#5b5bd6" }}>
+                hash {l.entry_hash.slice(0, 20)}…
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {note && (
+        <p className="text-[10px] text-faint mt-2 leading-relaxed">{note}</p>
+      )}
+    </div>
   );
 }

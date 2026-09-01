@@ -1,8 +1,23 @@
 "use client";
 
-import { useRef, useState } from "react";
-import { Card, Detail, Eyebrow, SectionHeader } from "@/components/ui";
+import { useEffect, useRef, useState } from "react";
+import { Card, Detail, Eyebrow, Panel, SectionHeader } from "@/components/ui";
 import { Merchant } from "@/lib/types";
+
+interface Step {
+  key: string;
+  label: string;
+  detail: string;
+  status: string;
+  data: Record<string, any>;
+}
+
+interface NpciSample {
+  key: string;
+  filename: string;
+  about: string;
+  bytes: number;
+}
 
 interface Rerun {
   merchant_id: string;
@@ -50,26 +65,92 @@ export function NpciUpload({ merchants }: { merchants: Merchant[] }) {
   const [res, setRes] = useState<Rerun | null>(null);
   const [err, setErr] = useState<string | null>(null);
   const [name, setName] = useState<string | null>(null);
+  const [steps, setSteps] = useState<Step[]>([]);
+  const [bundled, setBundled] = useState<NpciSample[]>([]);
+  const [usingSample, setUsingSample] = useState<string | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
   const held = useRef<File | null>(null);
 
-  async function send(f: File, p: string) {
+  useEffect(() => {
+    fetch("/api/samples")
+      .then((r) => r.json())
+      .then((d) => setBundled(d.npci ?? []))
+      .catch(() => {});
+  }, []);
+
+  /**
+   * Read the response as it arrives, one step at a time.
+   *
+   * A spinner followed by a finished table asks a reader to take the middle
+   * on trust, which is the opposite of what this panel is for. The steps are
+   * real work already done when they are sent -- the pacing throttles the
+   * emission, never the computation -- so nothing here is a progress bar
+   * pretending to be a calculation.
+   *
+   * Hand-rolled rather than EventSource because EventSource cannot POST a
+   * file. Same wire format either way.
+   */
+  async function run(opts: { file?: File; sample?: string; p: string }) {
     setBusy(true);
     setErr(null);
+    setRes(null);
+    setSteps([]);
+
+    const q = new URLSearchParams({
+      merchant,
+      period: opts.p,
+      pace_ms: "260",
+    });
+    if (opts.sample) q.set("sample", opts.sample);
+
+    let body: FormData | undefined;
+    if (opts.file) {
+      body = new FormData();
+      body.append("file", opts.file);
+    }
+
     try {
-      const fd = new FormData();
-      fd.append("file", f);
-      const r = await fetch(
-        `/api/npci/rerun?merchant=${merchant}&period=${encodeURIComponent(p)}`,
-        { method: "POST", body: fd }
-      );
-      const d = await r.json();
-      if (!r.ok) {
+      const r = await fetch(`/api/npci/rerun/stream?${q}`, {
+        method: "POST",
+        body,
+      });
+      if (!r.ok || !r.body) {
+        const d = await r.json().catch(() => ({}));
         setErr(d.detail ?? "that file could not be read");
-        setRes(null);
-      } else {
-        setRes(d);
-        setPeriod(d.upload.period);
+        setBusy(false);
+        return;
+      }
+
+      // Frames are separated by a blank line, fields by one newline.
+      const NL = String.fromCharCode(10);
+      const SEP = NL + NL;
+      const reader = r.body.getReader();
+      const dec = new TextDecoder();
+      let buf = "";
+      let event = "";
+
+      for (;;) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        buf += dec.decode(value, { stream: true });
+
+        let cut: number;
+        while ((cut = buf.indexOf(SEP)) !== -1) {
+          const frame = buf.slice(0, cut);
+          buf = buf.slice(cut + 2);
+          for (const line of frame.split(NL)) {
+            if (line.startsWith("event: ")) event = line.slice(7).trim();
+            else if (line.startsWith("data: ")) {
+              const d = JSON.parse(line.slice(6));
+              if (event === "step") setSteps((s) => [...s, d]);
+              else if (event === "error") setErr(d.detail);
+              else if (event === "done") {
+                setRes(d);
+                setPeriod(d.upload.period);
+              }
+            }
+          }
+        }
       }
     } catch {
       setErr("could not reach the API");
@@ -83,7 +164,14 @@ export function NpciUpload({ merchants }: { merchants: Merchant[] }) {
     if (!f) return;
     held.current = f;
     setName(f.name);
-    send(f, "");
+    setUsingSample(null);
+    run({ file: f, p: "" });
+  }
+
+  /** Whichever source is loaded, re-run it rather than leaving a stale result. */
+  function rerun(p: string) {
+    if (held.current) run({ file: held.current, p });
+    else if (usingSample) run({ sample: usingSample, p });
   }
 
   return (
@@ -99,7 +187,7 @@ export function NpciUpload({ merchants }: { merchants: Merchant[] }) {
           value={merchant}
           onChange={(e) => {
             setMerchant(e.target.value);
-            if (held.current) send(held.current, period);
+            rerun(period);
           }}
           disabled={busy}
           className="field h-9 py-0 text-sm max-w-[13rem]"
@@ -129,6 +217,66 @@ export function NpciUpload({ merchants }: { merchants: Merchant[] }) {
         {name && <span className="text-[13px] text-muted truncate">{name}</span>}
       </div>
 
+      {/* Nobody arrives carrying a bank table either. This one is a real
+          slice of the committed NPCI file -- three months whose median
+          failure rate genuinely runs 5.75% to 8.71% -- so the achievable
+          rate moves because banks moved, not because we wrote a number. */}
+      {bundled.length > 0 && (
+        <div className="flex flex-wrap items-center gap-2 mt-3">
+          <span className="text-[12px] text-faint">
+            or run the bank table that ships with this repo —
+          </span>
+          {bundled.map((b) => (
+            <button
+              key={b.key}
+              onClick={() => {
+                held.current = null;
+                setUsingSample(b.key);
+                setName(b.filename);
+                run({ sample: b.key, p: "" });
+              }}
+              disabled={busy}
+              title={b.about}
+              className={`btn-secondary h-8 text-[12px] ${
+                usingSample === b.key ? "border-brand text-brand" : ""
+              }`}
+            >
+              {b.filename}
+            </button>
+          ))}
+        </div>
+      )}
+
+      {/* the agent working, one step at a time */}
+      {steps.length > 0 && (
+        <div className="mt-5 border-l-2 border-l-line pl-4 space-y-2.5">
+          {steps.map((st, i) => (
+            <div key={st.key} className="animate-rise">
+              <div className="flex items-baseline gap-2">
+                <span
+                  className={`w-1.5 h-1.5 rounded-full shrink-0 -ml-[21px] mt-1.5 ${
+                    st.status === "fail" ? "bg-rose" : "bg-mint"
+                  }`}
+                />
+                <span className="text-[13px] font-medium">{st.label}</span>
+                {i === steps.length - 1 && busy && (
+                  <span className="eyebrow animate-breathe">working…</span>
+                )}
+              </div>
+              {st.detail && (
+                <p
+                  className={`text-[12px] mt-0.5 leading-relaxed ${
+                    st.status === "fail" ? "text-rose" : "text-muted"
+                  }`}
+                >
+                  {st.detail}
+                </p>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
+
       <Detail summary="what the file has to look like">
         <p>
           NPCI&rsquo;s remitter table, as published:{" "}
@@ -142,10 +290,10 @@ export function NpciUpload({ merchants }: { merchants: Merchant[] }) {
       </Detail>
 
       {err && (
-        <div className="card-raised border-l-2 border-l-rose p-3 mt-4">
+        <Panel tone="warn" className="mt-4">
           <div className="chip-warn">rejected</div>
-          <p className="text-sm text-muted mt-2 leading-relaxed">{err}</p>
-        </div>
+          <p className="text-[13px] text-muted mt-1.5 leading-relaxed">{err}</p>
+        </Panel>
       )}
 
       {res && (
@@ -165,7 +313,7 @@ export function NpciUpload({ merchants }: { merchants: Merchant[] }) {
                 value={period}
                 onChange={(e) => {
                   setPeriod(e.target.value);
-                  if (held.current) send(held.current, e.target.value);
+                  rerun(e.target.value);
                 }}
                 disabled={busy}
                 className="field h-8 py-0 text-xs max-w-[9rem] ml-auto"

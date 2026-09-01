@@ -95,6 +95,10 @@ export function Sidebar({ runHref }: { runHref?: string | null }) {
   ];
 
   const reference: Item[] = [
+    // Evidence is the numeric record; this is the same eight fixes as a
+    // picture. Different jobs -- one is for checking, one is for seeing --
+    // and the picture was buried in a column called forecast_error_pts.
+    { href: "/impact", label: "Before / after", match: ["/impact"] },
     { href: "/evidence", label: "Evidence", match: ["/evidence"] },
     { href: "/data", label: "Your own data", match: ["/data"] },
   ];

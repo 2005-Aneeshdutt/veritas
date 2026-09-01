@@ -650,6 +650,18 @@ async def txns_diagnose(
 #: somebody who has not brought any. Names are matched against this list
 #: rather than joined onto a path -- a filename off the wire must never be
 #: able to read anything the repository did not intend to publish.
+#: Bank tables for the NPCI panel. A real slice of the committed remitter
+#: table rather than an invented file: three months whose median failure rate
+#: really does run 5.75% to 8.71%, so uploading it moves the achievable rate
+#: because banks moved, not because we wrote a number down.
+NPCI_SAMPLES = {
+    "three_months": (
+        "npci_three_months.csv",
+        "50 banks across three real NPCI months — Dec 2023, Jun 2024 and "
+        "Jan 2025 — healthy, middling and bad.",
+    ),
+}
+
 SAMPLES = {
     "northwind": (
         "northwind_payments.csv",
@@ -669,6 +681,11 @@ SAMPLES = {
 def samples() -> dict:
     """What a visitor can try without bringing a file of their own."""
     root = ROOT / "samples"
+
+    def size(name: str) -> int:
+        p = root / name
+        return p.stat().st_size if p.exists() else 0
+
     return {
         "samples": [
             {
@@ -676,10 +693,14 @@ def samples() -> dict:
                 "filename": name,
                 "mcc": mcc,
                 "about": about,
-                "bytes": (root / name).stat().st_size if (root / name).exists() else 0,
+                "bytes": size(name),
             }
             for key, (name, mcc, about) in SAMPLES.items()
-        ]
+        ],
+        "npci": [
+            {"key": key, "filename": name, "about": about, "bytes": size(name)}
+            for key, (name, about) in NPCI_SAMPLES.items()
+        ],
     }
 
 
@@ -771,6 +792,183 @@ async def npci_rerun(
         "moved": moved,
         "primary_changed": before["primary_cause"] != after["primary_cause"],
     }
+
+
+@app.post("/api/npci/rerun/stream")
+async def npci_rerun_stream(
+    merchant: str = "cloudsync",
+    period: str = "",
+    pace_ms: float = 260.0,
+    sample: str = "",
+    file: UploadFile | None = File(None),
+) -> StreamingResponse:
+    """The same re-diagnosis, narrated step by step.
+
+    `npci_rerun` returns the finished comparison, which is the right shape for
+    a test and the wrong shape for a person who has just handed over a file
+    and wants to know it was READ. A spinner followed by a table asks them to
+    take the middle on trust; this shows the parse, the cohort rebuild and the
+    two decompositions as they happen, on the same code path.
+
+    `pace_ms` throttles the emission, never the work -- the steps are real and
+    already computed when they are sent, so nothing here is a progress bar
+    pretending to be a computation.
+    """
+    if merchant not in MERCHANTS:
+        raise HTTPException(400, "unknown merchant: %s" % merchant)
+
+    # A bundled table takes the identical path an upload does. Names are
+    # matched against a list rather than joined onto one, so a name off the
+    # wire cannot read anything the repository did not mean to publish.
+    if sample:
+        if sample not in NPCI_SAMPLES:
+            raise HTTPException(404, "no bank table called %r" % sample)
+        path = ROOT / "samples" / NPCI_SAMPLES[sample][0]
+        if not path.exists():
+            raise HTTPException(404, "%s is not in this checkout" % path.name)
+        raw = path.read_bytes()
+    elif file is not None:
+        raw = await file.read()
+    else:
+        raise HTTPException(400, "upload a file or name a bundled sample")
+
+    delay = max(0.0, min(pace_ms, 1500.0)) / 1000.0
+
+    async def gen():
+        def step(key, label, detail="", status="ok", data=None):
+            return _sse(
+                "step",
+                {"key": key, "label": label, "detail": detail,
+                 "status": status, "data": data or {}},
+            )
+
+        yield step("read", "Read the upload", "%.1f KB received" % (len(raw) / 1024))
+        if delay:
+            await asyncio.sleep(delay)
+
+        try:
+            stats, summary = parse_npci(raw, period or None)
+        except Rejected as e:
+            # A refusal is a result, not a crash. It has to arrive on the
+            # stream or the panel sits on a spinner forever.
+            yield step("parse", "Parse the bank table", str(e), "fail")
+            yield _sse("error", {"detail": str(e)})
+            return
+
+        yield step(
+            "parse",
+            "Parse the bank table",
+            "%d banks for %s, %d rows skipped" % (summary.banks, summary.period, summary.skipped),
+            data={"banks": summary.banks, "period": summary.period,
+                  "periods": summary.periods[:12], "skipped": summary.skipped},
+        )
+        if delay:
+            await asyncio.sleep(delay)
+
+        yield step(
+            "spread",
+            "Measure the spread between banks",
+            "best %s at %.2f%% failures, worst %s at %.2f%%, median %.2f%%"
+            % (summary.best_bank, summary.best_fail_pct,
+               summary.worst_bank, summary.worst_fail_pct, summary.median_fail_pct),
+            data={"best_bank": summary.best_bank, "best_fail_pct": summary.best_fail_pct,
+                  "worst_bank": summary.worst_bank, "worst_fail_pct": summary.worst_fail_pct,
+                  "median_fail_pct": summary.median_fail_pct},
+        )
+        if delay:
+            await asyncio.sleep(delay)
+
+        m = load_merchant(merchant)
+        shipped = Baseline()
+        uploaded = baseline_from(stats, summary.period)
+
+        def diagnose(b: Baseline) -> dict:
+            cohort = build_cohort(m.profile.mcc, b)
+            dec = ShapleyDecomposer(b, cohort).decompose(m.transactions)
+            return {
+                "achievable_pct": round(100 * cohort.s_star, 3),
+                "observed_pct": round(100 * dec.s_obs, 3),
+                "gap_pts": round(dec.gap_pts, 3),
+                "primary_cause": dec.primary_cause(),
+                "by_factor": {k: round(v, 3) for k, v in dec.by_factor().items()},
+                "gap_value_paise": int(
+                    round(
+                        dec.gap_pts / 100
+                        * m.profile.monthly_txn_count
+                        * m.profile.avg_ticket_paise
+                    )
+                ),
+            }
+
+        yield step(
+            "cohort",
+            "Rebuild the cohort from the uploaded table",
+            "%s, MCC %s — every baseline re-derived from your file"
+            % (m.profile.name, m.profile.mcc),
+        )
+        if delay:
+            await asyncio.sleep(delay)
+
+        before = diagnose(shipped)
+        yield step(
+            "before",
+            "Diagnose against the shipped table",
+            "achievable %.2f%%, gap %.2f pts, primary cause %s"
+            % (before["achievable_pct"], before["gap_pts"], before["primary_cause"]),
+            data=before,
+        )
+        if delay:
+            await asyncio.sleep(delay)
+
+        after = diagnose(uploaded)
+        yield step(
+            "after",
+            "Diagnose against yours",
+            "achievable %.2f%%, gap %.2f pts, primary cause %s"
+            % (after["achievable_pct"], after["gap_pts"], after["primary_cause"]),
+            data=after,
+        )
+        if delay:
+            await asyncio.sleep(delay)
+
+        moved = {
+            k: round(after["by_factor"][k] - before["by_factor"][k], 3)
+            for k in after["by_factor"]
+        }
+        changed = before["primary_cause"] != after["primary_cause"]
+        yield step(
+            "compare",
+            "Compare the two",
+            (
+                "the primary cause CHANGED from %s to %s"
+                % (before["primary_cause"], after["primary_cause"])
+                if changed
+                else "the primary cause held at %s — which is the point: a "
+                "merchant billing at midnight has a midnight problem whatever "
+                "the banks were doing" % after["primary_cause"]
+            ),
+            data={"moved": moved, "primary_changed": changed},
+        )
+
+        yield _sse(
+            "done",
+            {
+                "merchant_id": merchant,
+                "merchant_name": m.profile.name,
+                "upload": json.loads(summary.model_dump_json()),
+                "shipped_period": shipped.period,
+                "before": before,
+                "after": after,
+                "moved": moved,
+                "primary_changed": changed,
+            },
+        )
+
+    return StreamingResponse(
+        gen(),
+        media_type="text/event-stream",
+        headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"},
+    )
 
 
 @app.get("/api/evals")
@@ -888,14 +1086,46 @@ def run_authority(run_id: str) -> dict:
 
 
 @app.post("/api/run")
-def start_run(merchant: str = "quickmart", calibration: str = "central") -> dict:
-    """Run synchronously and return the record. Fast enough not to need a job."""
+def start_run(
+    merchant: str = "quickmart",
+    calibration: str = "central",
+    fresh: bool = False,
+) -> dict:
+    """Run synchronously and return the record. Fast enough not to need a job.
+
+    Reuses the merchant's existing run_id by default, and that is a
+    correctness fix rather than tidiness. Minting a new id on every call meant
+    the merchant switcher left an orphan behind each time it was used; the
+    orphan was NEWER than the committed run, so the portfolio silently
+    switched to it, which changed the book, which changed the assistant's
+    grounding context, which invalidated every pre-cached answer it relies on
+    to work without an API key. Three clicks of a dropdown could take the
+    deployed assistant from answering to refusing.
+
+    The runs are deterministic, so re-running into the same id reproduces the
+    record rather than overwriting it with something different. `fresh=true`
+    is there for anyone who genuinely wants a second copy.
+    """
     if merchant not in MERCHANTS:
         raise HTTPException(400, "unknown merchant: %s" % merchant)
+
+    keep = None
+    if not fresh:
+        mine = sorted(
+            (
+                (q.stat().st_mtime, q.stem)
+                for q in RUNS.glob("run_*.json")
+                if _read_json(q).get("merchant_id") == merchant
+            ),
+            reverse=True,
+        )
+        keep = mine[0][1] if mine else None
+
     m = load_merchant(merchant)
     rec = run_diagnosis(
         m.profile, m.transactions, load_mandate(merchant),
         baseline=Baseline(), calibration=Calibration(calibration),
+        run_id=keep,
     )
     return json.loads(rec.model_dump_json())
 

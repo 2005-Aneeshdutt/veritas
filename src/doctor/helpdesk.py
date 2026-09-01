@@ -34,6 +34,7 @@ from .llm import MODEL_FAST, LLMClient
 
 ROOT = Path(__file__).resolve().parents[2]
 EVALS = ROOT / "evals" / "results"
+RUNS = ROOT / "data" / "runs"
 
 SYSTEM = """You answer questions about Revenue Doctor, a payment recovery
 system, for someone looking at its screens.
@@ -50,6 +51,19 @@ RULES
 Return JSON: {"answer": "..."}"""
 
 
+class ChainLink(BaseModel):
+    """One entry, reduced to what makes the chain a chain."""
+
+    sequence: int
+    txn_id: str
+    action_type: str
+    gate_decision: str
+    gate_reason: str
+    actor: str
+    prev_hash: str
+    entry_hash: str
+
+
 class HelpAnswer(BaseModel):
     ok: bool
     text: str
@@ -59,6 +73,65 @@ class HelpAnswer(BaseModel):
     refused_reason: str | None = None
     cache_hit: bool = False
     model: str | None = None
+    #: Real ledger entries, attached when the question is about the audit
+    #: trail. Prose describing a hash chain is the one answer a reader cannot
+    #: check, and this system's whole argument is that its claims are
+    #: checkable -- so when somebody asks what the chain is, they get the
+    #: chain rather than a paragraph about chains.
+    chain: list[ChainLink] = []
+    chain_note: str = ""
+
+
+#: Words that mean somebody is asking about the ledger rather than about a
+#: number. Deliberately narrow: attaching the chain to every answer would
+#: make it wallpaper, and the point is that it appears when it is the answer.
+_CHAIN_WORDS = (
+    "audit trail", "audit-trail", "hash chain", "hash-chain", "chain",
+    "ledger", "tamper", "tamper-evident", "provenance", "immutable",
+)
+
+
+def _chain_sample(limit: int = 6) -> tuple[list[ChainLink], str]:
+    """A few real links, newest run first, with the count they came from.
+
+    Read off the stored ledger rather than recomputed: the answer should show
+    what the system wrote down, not a fresh rendering of what it would write
+    down now.
+    """
+    runs = sorted(RUNS.glob("run_*.json"), key=lambda q: q.stat().st_mtime, reverse=True)
+    for path in runs:
+        try:
+            rec = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            continue
+        if rec.get("used_stubs"):
+            continue
+        entries = rec.get("report", {}).get("ledger", []) or []
+        if not entries:
+            continue
+        # The first few, so the genesis link is visible: an entry whose
+        # prev_hash is all zeros is where the chain provably starts.
+        links = [
+            ChainLink(
+                sequence=e.get("sequence", 0),
+                txn_id=e.get("txn_id", ""),
+                action_type=(e.get("proposed_action") or {}).get("action_type", ""),
+                gate_decision=e.get("gate_decision", ""),
+                gate_reason=e.get("gate_reason", ""),
+                actor=e.get("actor", "agent"),
+                prev_hash=e.get("prev_hash", ""),
+                entry_hash=e.get("entry_hash", ""),
+            )
+            for e in entries[:limit]
+        ]
+        note = (
+            "The first %d of %d entries from %s. Each carries the hash of the "
+            "one before it, so changing any field in any entry breaks every "
+            "hash after it."
+            % (len(links), len(entries), rec.get("merchant_name") or rec.get("merchant_id", "a run"))
+        )
+        return links, note
+    return [], ""
 
 
 def _eval(name: str) -> dict:
@@ -283,10 +356,16 @@ def ask(question: str, client: LLMClient | None = None) -> HelpAnswer:
             ),
         )
 
+    chain, chain_note = ([], "")
+    if any(w in question.lower() for w in _CHAIN_WORDS):
+        chain, chain_note = _chain_sample()
+
     return HelpAnswer(
         ok=True, text=text, citations=cites,
         figures_cited=len(cites),
         figures_verified=sum(1 for c in cites if c.grounded),
         cache_hit=res.cache_hit,
         model=MODEL_FAST,
+        chain=chain,
+        chain_note=chain_note,
     )
