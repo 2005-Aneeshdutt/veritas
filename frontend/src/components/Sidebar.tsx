@@ -24,6 +24,15 @@ export function Logo({ size = "sm" }: { size?: "sm" | "lg" }) {
   );
 }
 
+/**
+ * The merchant the walkthrough is built around.
+ *
+ * Named rather than derived: picking dynamically -- by value, by gap, by
+ * recency -- makes step 2 land somewhere different depending on the state of
+ * the book, and a demo whose second click moves is a demo nobody can rehearse.
+ */
+const DEMO_MERCHANT = "cloudsync";
+
 interface Item {
   href: string | null;
   label: string;
@@ -68,14 +77,49 @@ export function Sidebar({ runHref }: { runHref?: string | null }) {
   const [fallback, setFallback] = useState<string | null>(null);
   const [open, setOpen] = useState(false);
 
-  // Steps 2 and 3 need a run. There is almost always one on disk, so greying
-  // out half the product without checking would be wrong more often than not.
+  /**
+   * Where Diagnose goes when you are not already inside a run.
+   *
+   * It used to follow /api/run-latest, which is whichever record was written
+   * most recently. After a reset that is whichever merchant the loop happened
+   * to finish last -- currently FuelStop, which is healthy, has a 0.57-point
+   * gap and no retries at all. The walkthrough's second step landed on the one
+   * merchant in the book with nothing to demonstrate.
+   *
+   * So it resolves to the canonical demo merchant's existing committed run.
+   * This creates nothing and mints nothing: it reads the run_id already on
+   * disk for that merchant, exactly as the Book's own rows do. The fallback to
+   * run-latest is kept for a checkout where that merchant is absent, so the
+   * step is never a dead end.
+   *
+   * Clicking a merchant in the Book is untouched and still opens whichever
+   * merchant was clicked.
+   */
   useEffect(() => {
     if (runHref) return;
-    fetch("/api/run-latest")
+    let cancelled = false;
+
+    fetch("/api/portfolio")
       .then((r) => r.json())
-      .then((d) => setFallback(d.run_id ? `/run/${d.run_id}` : null))
+      .then((d) => {
+        if (cancelled) return null;
+        const demo = (d.merchants ?? []).find(
+          (m: { merchant_id: string }) => m.merchant_id === DEMO_MERCHANT
+        );
+        if (demo?.run_id) {
+          setFallback(`/run/${demo.run_id}`);
+          return null;
+        }
+        return fetch("/api/run-latest").then((r) => r.json());
+      })
+      .then((d) => {
+        if (!cancelled && d?.run_id) setFallback(`/run/${d.run_id}`);
+      })
       .catch(() => {});
+
+    return () => {
+      cancelled = true;
+    };
   }, [runHref]);
 
   useEffect(() => setOpen(false), [path]);

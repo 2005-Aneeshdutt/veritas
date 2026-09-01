@@ -168,9 +168,17 @@ h3 { @apply text-[13px] font-semibold; }
   /* Quiet by default: mono, small, no fill, no border. A page carried up to
      fifteen filled pills in five colours, which turned status -- a thing you
      glance at -- into the loudest element on screen. */
+  /* Shape only, NO colour.
+   *
+   * This carried `text-faint`, and because @apply flattens every variant into
+   * one rule with Tailwind's own utility ordering, that grey beat the colour
+   * each variant set on itself. Every chip in the product resolved to faint:
+   * measured was not green, denied was not red, and the semantic language the
+   * whole interface depends on was silently dead. Each variant states its own
+   * colour now, and this states none. */
   .chip {
     @apply inline-flex items-center gap-1 font-mono text-[10px] uppercase
-           tracking-[0.07em] whitespace-nowrap text-faint;
+           tracking-[0.07em] whitespace-nowrap;
   }
   /* The two that keep a fill, because they are the thesis. */
   .chip-measured {
@@ -184,8 +192,8 @@ h3 { @apply text-[13px] font-semibold; }
   /* A refusal is a decision, not decoration: coloured text, no fill. */
   .chip-warn { @apply chip text-rose; }
   .chip-brand { @apply chip text-brand; }
-  .chip-llm { @apply chip text-muted; }
-  .chip-det { @apply chip text-muted; }
+  .chip-llm { @apply chip text-iris; }
+  .chip-det { @apply chip text-sky; }
   .chip-neutral { @apply chip text-faint; }
 
   .btn {

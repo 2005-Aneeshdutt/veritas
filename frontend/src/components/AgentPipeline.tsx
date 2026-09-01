@@ -242,7 +242,7 @@ export function AgentPipeline({
                   >
                     {s.label}
                   </span>
-                  {s.kind === "llm" && <span className="chip text-iris">model</span>}
+                  {s.kind === "llm" && <span className="chip-llm">model</span>}
                   {s.phase === "running" && s.n ? (
                     <span className="num text-[11px] text-brand">
                       {s.i}/{s.n}
