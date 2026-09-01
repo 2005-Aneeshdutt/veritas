@@ -2,7 +2,20 @@
 
 import { useEffect, useState } from "react";
 import { TopBar } from "@/components/Chrome";
-import { Card, Detail, Empty, Eyebrow, Loading, SectionHeader, Stagger, Ticker } from "@/components/ui";
+import {
+  Detail,
+  Empty,
+  Eyebrow,
+  Figure,
+  Figures,
+  Hero,
+  Loading,
+  Notes,
+  PageHead,
+  SectionHeader,
+  Stagger,
+  Ticker,
+} from "@/components/ui";
 import { inr } from "@/lib/types";
 
 interface Code {
@@ -84,135 +97,84 @@ export default function WhoseFaultPage() {
   return shell(
     <>
       <Stagger>
-        <div>
-          <Eyebrow>Across all {b.merchants} merchants</Eyebrow>
-          <h1 className="text-2xl font-semibold mt-1">Whose fault is it?</h1>
-          <p className="text-sm text-muted mt-1.5 max-w-3xl leading-relaxed">
-            {b.total_count.toLocaleString("en-IN")} payments this month failed
-            for reasons no retry can fix. They are written off everywhere else
-            in this product. Here they are attributed to whoever actually has
-            to do something — using Razorpay&rsquo;s own published guidance for
-            each code, not our opinion of it.
-          </p>
-        </div>
+        <PageHead
+          title="Platform"
+          sub={`${b.total_count.toLocaleString("en-IN")} payments across ${b.merchants} merchants failed this month for reasons no retry can fix. Here they are attributed to whoever actually has to act.`}
+        />
       </Stagger>
 
       {/* ── the split ── */}
       <Stagger i={1}>
-        <Card>
-          <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-            <span className="num text-3xl font-semibold">
-              <Ticker value={b.total_paise / 100} prefix="₹" />
-            </span>
-            <span className="text-sm text-muted">unrecoverable this month</span>
-            <span className="chip-measured ml-auto">measured</span>
-          </div>
+        <div className="space-y-7">
+          <Hero
+            label="Unrecoverable this month"
+            kind="measured"
+            value={<Ticker value={b.total_paise / 100} prefix="₹" />}
+            sub="Attributed using Razorpay's own published next_steps wording for each error code, not our opinion of it. Nothing on this page is forecast, so nothing on it carries an error bar."
+          />
 
-          <div className="flex h-2.5 rounded-full overflow-hidden mt-5 bg-raised">
-            {b.groups.map((g) => (
-              <div
-                key={g.owner}
-                className={TONE[g.owner]?.bar ?? "bg-line"}
-                style={{ width: `${g.share_pct}%` }}
-                title={`${g.label} — ${g.share_pct}%`}
-              />
-            ))}
-          </div>
+          <div>
+            <div className="flex h-1.5 rounded-full overflow-hidden bg-raised">
+              {b.groups.map((g) => (
+                <div
+                  key={g.owner}
+                  className={TONE[g.owner]?.bar ?? "bg-line"}
+                  style={{ width: `${g.share_pct}%` }}
+                  title={`${g.label} — ${g.share_pct}%`}
+                />
+              ))}
+            </div>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-4">
-            {b.groups.map((g) => (
-              <div key={g.owner} className="card-raised p-3.5">
-                <div className="flex items-center gap-2">
-                  <span className={`w-2 h-2 rounded-full ${TONE[g.owner]?.bar}`} />
-                  <span className="eyebrow">{g.owner}</span>
-                </div>
-                <div className="num text-xl font-semibold mt-1.5">
-                  {inr(g.total_paise)}
-                </div>
-                <div className="text-[12px] text-muted mt-0.5">
-                  {g.share_pct}% · {g.count} payments
-                </div>
-                <div className="text-[11px] text-faint mt-1.5 leading-tight">
-                  {g.label}
-                </div>
-              </div>
-            ))}
+            <Figures>
+              {b.groups.map((g) => (
+                <Figure
+                  key={g.owner}
+                  label={g.owner}
+                  value={inr(g.total_paise, { compact: true })}
+                  tone={g.owner === "platform" ? "brand" : undefined}
+                  sub={`${g.share_pct}% · ${g.count} payments · ${g.label.toLowerCase()}`}
+                />
+              ))}
+            </Figures>
           </div>
-
-          <Detail summary="where the attribution comes from">
-            <p>
-              Razorpay publishes a <span className="num">next_steps</span> line
-              for every one of its 110 error codes, and that line is addressed
-              to somebody. &ldquo;The customer must use a different card&rdquo;
-              is the customer&rsquo;s. &ldquo;Please reach out to
-              Razorpay&rdquo; is the platform&rsquo;s. &ldquo;Please make sure
-              the payment amount is…&rdquo; is the merchant&rsquo;s. Reading
-              the owner off that sentence means the split is grounded in the
-              same published source as the taxonomy, and a code Razorpay adds
-              tomorrow gets classified by its own guidance rather than by a
-              list here that has quietly gone stale.
-            </p>
-            <p>
-              Codes whose wording is genuinely ambiguous — &ldquo;retry with a
-              different payment method&rdquo; could be either party — come out{" "}
-              <span className="num">unknown</span> and are reported as unknown.
-              Putting a merchant to work on something that was never theirs is
-              worse than admitting we cannot tell.
-            </p>
-            <p>
-              Every rupee on this page is <strong>measured</strong>. These
-              payments already failed for a reason the taxonomy says is not
-              retryable, so nothing here is forecast and nothing here carries
-              an error bar — unlike every recovery figure elsewhere in the
-              product, which does.
-            </p>
-          </Detail>
-        </Card>
+        </div>
       </Stagger>
 
       {/* ── the platform's own backlog ── */}
       <Stagger i={2}>
-        <Card>
-          <SectionHeader
-            eyebrow="Only the platform can see this"
-            title="Razorpay's defect backlog"
-            sub="One merchant seeing a code twelve times sees twelve bad account numbers. Six merchants seeing it in the same month is a statement about the rail — and no merchant is standing anywhere they could notice."
-          />
+        <SectionHeader
+          title="Razorpay's defect backlog"
+          sub="One merchant seeing a code twelve times sees twelve bad account numbers. Six merchants seeing it in one month is a statement about the rail."
+          right={
+            <span className="text-[12px] text-muted whitespace-nowrap">
+              <span className="num text-brand">{inr(b.platform_paise)}</span> ·{" "}
+              {b.systemic_codes} of {b.platform_codes.length} codes systemic
+            </span>
+          }
+        />
 
-          <div className="flex flex-wrap gap-2 mb-4">
-            <span className="chip-brand">
-              {inr(b.platform_paise)} · {b.platform_share_pct}% of the write-off
-            </span>
-            <span className="chip-neutral">{b.platform_codes.length} codes</span>
-            <span className="chip-measured">
-              {b.systemic_codes} hitting more than one merchant
-            </span>
+        {b.platform_codes.length === 0 ? (
+          <Empty label="nothing attributable to the platform this month" />
+        ) : (
+          <div>
+            {b.platform_codes.map((c) => (
+              <CodeRow
+                key={c.code}
+                c={c}
+                max={b.platform_codes[0].total_paise}
+                open={open === c.code}
+                onToggle={() => setOpen(open === c.code ? null : c.code)}
+              />
+            ))}
           </div>
+        )}
 
-          {b.platform_codes.length === 0 ? (
-            <Empty label="nothing attributable to the platform this month" />
-          ) : (
-            <div className="space-y-1">
-              {b.platform_codes.map((c) => (
-                <CodeRow
-                  key={c.code}
-                  c={c}
-                  max={b.platform_codes[0].total_paise}
-                  open={open === c.code}
-                  onToggle={() => setOpen(open === c.code ? null : c.code)}
-                />
-              ))}
-            </div>
-          )}
-
-          <p className="text-[11px] text-faint mt-4 leading-relaxed">
-            Ranked by money, not by count, because an engineer&rsquo;s
-            afternoon should go where the rupees are. &ldquo;Systemic&rdquo;
-            means two or more merchants — below that it is one integration
-            having a bad month, and calling it a platform defect would waste
-            the ticket.
-          </p>
-        </Card>
+        <p className="text-[11px] text-faint mt-3 leading-relaxed">
+          Ranked by money, not by count, because an engineer&rsquo;s afternoon
+          should go where the rupees are. Systemic means two or more merchants
+          — below that it is one integration having a bad month, and calling
+          it a platform defect would waste the ticket.
+        </p>
       </Stagger>
 
       {/* ── the tickets that never need a person ── */}
@@ -223,34 +185,61 @@ export default function WhoseFaultPage() {
       {/* ── what the reader can fix today ── */}
       {merchantGroup && (
         <Stagger i={4}>
-          <Card>
-            <SectionHeader
-              eyebrow="Not the platform's, not the customer's"
-              title="What a merchant can fix this afternoon"
-              sub="Configuration, not bad luck. This used to sit inside a bucket labelled permanently unusable, which told merchants nothing could be done while they lost money on every affected payment."
-            />
-            <div className="flex flex-wrap gap-2 mb-4">
-              <span className="chip-projected">
-                {inr(merchantGroup.total_paise)} · {merchantGroup.share_pct}%
-              </span>
-              <span className="chip-neutral">
+          <SectionHeader
+            title="What a merchant can fix this afternoon"
+            sub="Configuration, not bad luck. This used to sit in a bucket labelled permanently unusable, which told merchants nothing could be done while they lost money on every affected payment."
+            right={
+              <span className="text-[12px] text-muted whitespace-nowrap">
+                <span className="num">{inr(merchantGroup.total_paise)}</span> ·{" "}
                 {merchantGroup.count} payments
               </span>
-            </div>
-            <div className="space-y-1">
-              {merchantGroup.codes.slice(0, 8).map((c) => (
-                <CodeRow
-                  key={c.code}
-                  c={c}
-                  max={merchantGroup.codes[0].total_paise}
-                  open={open === c.code}
-                  onToggle={() => setOpen(open === c.code ? null : c.code)}
-                />
-              ))}
-            </div>
-          </Card>
+            }
+          />
+          <div>
+            {merchantGroup.codes.slice(0, 8).map((c) => (
+              <CodeRow
+                key={c.code}
+                c={c}
+                max={merchantGroup.codes[0].total_paise}
+                open={open === c.code}
+                onToggle={() => setOpen(open === c.code ? null : c.code)}
+              />
+            ))}
+          </div>
         </Stagger>
       )}
+
+      <Notes>
+        <Detail summary="where the attribution comes from">
+          <p>
+            Razorpay publishes a <span className="num">next_steps</span> line
+            for every one of its 110 error codes, and that line is addressed to
+            somebody. &ldquo;The customer must use a different card&rdquo; is
+            the customer&rsquo;s. &ldquo;Please reach out to Razorpay&rdquo; is
+            the platform&rsquo;s. &ldquo;Please make sure the payment amount
+            is…&rdquo; is the merchant&rsquo;s. Reading the owner off that
+            sentence means the split is grounded in the same published source
+            as the taxonomy, and a code Razorpay adds tomorrow is classified by
+            its own guidance rather than by a list here that has quietly gone
+            stale.
+          </p>
+          <p>
+            Codes whose wording is genuinely ambiguous — &ldquo;retry with a
+            different payment method&rdquo; could be either party — come out{" "}
+            <span className="num">unknown</span> and are reported as unknown.
+            Putting a merchant to work on something that was never theirs is
+            worse than admitting we cannot tell.
+          </p>
+        </Detail>
+        <Detail summary="why nothing here has an error bar">
+          <p>
+            Every rupee on this page is measured. These payments already failed
+            for a reason the taxonomy says is not retryable, so nothing here is
+            forecast — unlike every recovery figure elsewhere in the product,
+            which is, and which carries one.
+          </p>
+        </Detail>
+      </Notes>
     </>
   );
 }
@@ -284,52 +273,40 @@ function Deflection({ backlog }: { backlog: Backlog }) {
   const saved = contacts * cost;
 
   return (
-    <Card>
+    <>
       <SectionHeader
-        eyebrow="A ticket answered before it is written"
         title="Every one of these already has an answer"
-        sub="All of these payments failed for a code Razorpay publishes a next step for. Shown to the customer at the moment of failure, that is a support contact that never happens."
+        sub="All of them failed for a code Razorpay publishes a next step for. Shown to the customer at the moment of failure, that is a support contact that never happens."
       />
 
-      <div className="grid sm:grid-cols-3 gap-3">
-        <div className="card-raised p-4">
-          <div className="eyebrow">failures with a published answer</div>
-          <div className="num text-2xl font-semibold mt-1">
-            {answerable.toLocaleString("en-IN")}
-          </div>
-          <div className="text-[11px] text-faint mt-1">
-            {answerable === backlog.total_count
+      <div className="grid gap-x-8 gap-y-5 sm:grid-cols-3
+                      divide-y divide-line sm:divide-y-0 sm:divide-x">
+        <Figure
+          label="failures with a published answer"
+          kind="measured"
+          value={answerable.toLocaleString("en-IN")}
+          sub={
+            answerable === backlog.total_count
               ? "every one, with no exceptions"
-              : `of ${backlog.total_count.toLocaleString("en-IN")}`}
-          </div>
-          <span className="chip-measured mt-2 inline-flex">measured</span>
-        </div>
-
-        <div className="card-raised p-4">
-          <div className="eyebrow">of those, the customer&rsquo;s own</div>
-          <div className="num text-2xl font-semibold mt-1">
-            {(customer?.count ?? 0).toLocaleString("en-IN")}
-          </div>
-          <div className="text-[11px] text-faint mt-1">
-            wrong PIN, expired OTP, exhausted credit limit — the ones people
-            ring about
-          </div>
-          <span className="chip-measured mt-2 inline-flex">measured</span>
-        </div>
-
-        <div className="card-raised p-4 border-l-2 border-l-amber">
-          <div className="eyebrow">contacts avoided, at your numbers</div>
-          <div className="num text-2xl font-semibold mt-1 text-amber">
-            ₹{saved.toLocaleString("en-IN")}
-          </div>
-          <div className="text-[11px] text-faint mt-1">
-            {contacts.toLocaleString("en-IN")} contacts × ₹{cost}
-          </div>
-          <span className="chip-projected mt-2 inline-flex">your assumption</span>
-        </div>
+              : `of ${backlog.total_count.toLocaleString("en-IN")}`
+          }
+        />
+        <Figure
+          label="of those, the customer's own"
+          kind="measured"
+          value={(customer?.count ?? 0).toLocaleString("en-IN")}
+          sub="wrong PIN, expired OTP, exhausted credit limit — the ones people ring about"
+        />
+        <Figure
+          label="contacts avoided, at your numbers"
+          kind="projected"
+          tone="bad"
+          value={`₹${saved.toLocaleString("en-IN")}`}
+          sub={`${contacts.toLocaleString("en-IN")} contacts × ₹${cost} — your assumption, not our measurement`}
+        />
       </div>
 
-      <div className="grid sm:grid-cols-2 gap-4 mt-4">
+      <div className="grid sm:grid-cols-2 gap-x-8 gap-y-4 mt-6">
         <Slider
           label="how many of these would have contacted support"
           value={rate}
@@ -357,7 +334,7 @@ function Deflection({ backlog }: { backlog: Backlog }) {
         the left is the measurement; the rest is your arithmetic, shown
         because it is the arithmetic you were going to do anyway.
       </p>
-    </Card>
+    </>
   );
 }
 
@@ -415,12 +392,14 @@ function CodeRow({
   onToggle: () => void;
 }) {
   const tone = TONE[c.owner] ?? TONE.unknown;
+  // A list of codes is a list, not fourteen bordered boxes. One hairline
+  // between rows, and the row itself opens.
   return (
-    <div className="rounded-lg border border-line overflow-hidden">
+    <div className="border-b border-line/70 last:border-0">
       <button
         onClick={onToggle}
-        className="w-full flex items-center gap-3 px-3 py-2.5 text-left
-                   hover:bg-raised/60 transition-colors"
+        className="w-full flex items-center gap-3 py-2 text-left -mx-2 px-2 rounded
+                   hover:bg-raised transition-colors"
       >
         <span className="num text-[12px] flex-1 min-w-0 truncate">{c.code}</span>
 
@@ -451,7 +430,7 @@ function CodeRow({
       </button>
 
       {open && (
-        <div className="px-3 pb-3 pt-1 border-t border-line bg-raised/40 space-y-2 animate-rise">
+        <div className="pb-4 pt-1 pl-3 border-l-2 border-l-line ml-1 space-y-2.5 animate-rise">
           {c.explanation && (
             <p className="text-[13px] text-muted leading-relaxed">{c.explanation}</p>
           )}

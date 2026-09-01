@@ -4,7 +4,19 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Budget } from "@/components/Budget";
 import { TopBar } from "@/components/Chrome";
-import { Card, Detail, Empty, Eyebrow, Loading, SectionHeader, Stagger } from "@/components/ui";
+import {
+  Detail,
+  Empty,
+  Eyebrow,
+  Figure,
+  Figures,
+  Loading,
+  Notes,
+  PageHead,
+  Panel,
+  SectionHeader,
+  Stagger,
+} from "@/components/ui";
 import { inr } from "@/lib/types";
 
 interface Fix {
@@ -137,65 +149,60 @@ export default function EvidencePage() {
   return shell(
     <>
       <Stagger>
-        <div>
-          <Eyebrow>Nothing to take on trust</Eyebrow>
-          <h1 className="text-2xl font-semibold mt-1">Evidence</h1>
-          <p className="text-sm text-muted mt-1.5 max-w-3xl leading-relaxed">
-            Whether the forecasts came true, every decision the system has
-            taken and whether that record has been tampered with, and what the
-            model steps cost.
-          </p>
-        </div>
+        <PageHead
+          title="Evidence"
+          sub="Whether the forecasts came true, every decision the system has taken and whether that record has been tampered with, and what the model steps cost."
+        />
       </Stagger>
 
       {/* ── 1. did the fix work ── */}
       <Stagger i={1}>
-        <Card>
-          <SectionHeader
-            eyebrow="The only question that can embarrass us"
-            title="Did the fix actually work?"
-            sub="Attribution accuracy asks whether the cause was named correctly. This asks the harder thing: after the fix landed, did the merchant's success rate move by as much as we said it would."
+        <SectionHeader
+          title="Did the fix actually work?"
+          sub="Attribution accuracy asks whether the cause was named correctly. This asks the harder thing: after the fix landed, did the merchant's success rate move by as much as we said it would."
+          right={
+            <span className="text-[12px] text-muted whitespace-nowrap">
+              {o.overall.optimistic} over-promised · {o.overall.pessimistic} beat
+              it · {o.overall.held} landed on it
+            </span>
+          }
+        />
+
+        <Figures>
+          <Figure
+            label="fixes scored"
+            value={String(o.n_fixes)}
+            sub="each a real counterfactual month"
           />
+          <Figure
+            label="mean absolute error"
+            kind="measured"
+            value={`${o.overall.mae_pts.toFixed(3)} pts`}
+            sub="how far off, on average"
+          />
+          <Figure
+            label="bias"
+            kind="measured"
+            value={`${o.overall.mean_forecast_error_pts > 0 ? "+" : ""}${o.overall.mean_forecast_error_pts.toFixed(3)} pts`}
+            sub={
+              o.overall.mean_forecast_error_pts < 0
+                ? "negative — we under-promised on balance"
+                : "positive — we over-promised on balance"
+            }
+            tone={o.overall.mean_forecast_error_pts < 0 ? "good" : "bad"}
+          />
+          <Figure
+            label="inside their own error bar"
+            value={`${held} of ${o.n_fixes}`}
+            sub="the bar we publish beforehand"
+            tone={held * 2 >= o.n_fixes ? "good" : "bad"}
+          />
+        </Figures>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
-            <Fig
-              k="fixes scored"
-              v={String(o.n_fixes)}
-              sub="each a real counterfactual month"
-            />
-            <Fig
-              k="mean absolute error"
-              v={`${o.overall.mae_pts.toFixed(3)} pts`}
-              sub="how far off, on average"
-            />
-            <Fig
-              k="bias"
-              v={`${o.overall.mean_forecast_error_pts > 0 ? "+" : ""}${o.overall.mean_forecast_error_pts.toFixed(3)} pts`}
-              sub={
-                o.overall.mean_forecast_error_pts < 0
-                  ? "negative — we under-promised on balance"
-                  : "positive — we over-promised on balance"
-              }
-              tone={o.overall.mean_forecast_error_pts < 0 ? "text-mint" : "text-amber"}
-            />
-            <Fig
-              k="inside their own error bar"
-              v={`${held} of ${o.n_fixes}`}
-              sub="the bar we publish beforehand"
-              tone={held * 2 >= o.n_fixes ? "text-mint" : "text-amber"}
-            />
-          </div>
-
-          <div className="flex flex-wrap gap-2 mt-4">
-            <span className="chip-warn">{o.overall.optimistic} over-promised</span>
-            <span className="chip-measured">{o.overall.pessimistic} beat the forecast</span>
-            <span className="chip-neutral">{o.overall.held} landed on it</span>
-          </div>
-
-          <div className="mt-5 overflow-x-auto">
-            <table className="w-full text-[13px] min-w-[46rem]">
+          <div className="mt-6 overflow-x-auto">
+            <table className="tbl min-w-[46rem]">
               <thead>
-                <tr className="text-left border-b border-line">
+                <tr>
                   <Th>merchant</Th>
                   <Th>cause fixed</Th>
                   <Th right>we said</Th>
@@ -206,12 +213,12 @@ export default function EvidencePage() {
               </thead>
               <tbody>
                 {o.fixes.map((f, i) => (
-                  <tr key={i} className="border-b border-line/60 last:border-0">
-                    <td className="py-2 pr-3">{f.merchant_name}</td>
-                    <td className="py-2 pr-3 text-muted">
+                  <tr key={i}>
+                    <td>{f.merchant_name}</td>
+                    <td className="text-muted">
                       {f.cause_fixed.replace(/_/g, " ")}
                     </td>
-                    <td className="py-2 pr-3 num text-right whitespace-nowrap">
+                    <td className="num text-right whitespace-nowrap">
                       +{f.predicted_pts.toFixed(2)}
                       {f.predicted_error_pts != null && (
                         <span className="text-faint">
@@ -220,27 +227,27 @@ export default function EvidencePage() {
                         </span>
                       )}
                     </td>
-                    <td className="py-2 pr-3 num text-right">
+                    <td className="num text-right">
                       {f.measured_pts >= 0 ? "+" : ""}
                       {f.measured_pts.toFixed(2)}
                     </td>
                     <td
-                      className={`py-2 pr-3 num text-right ${
+                      className={`num text-right ${
                         Math.abs(f.forecast_error_pts) <= 0.5 ? "text-mint" : "text-amber"
                       }`}
                     >
                       {f.forecast_error_pts >= 0 ? "+" : ""}
                       {f.forecast_error_pts.toFixed(2)}
                     </td>
-                    <td className="py-2">
+                    <td>
                       <span
-                        className={
+                        className={`text-[12px] ${
                           f.within_error_bar
-                            ? "chip-measured"
+                            ? "text-mint"
                             : f.forecast_error_pts < 0
-                            ? "chip-brand"
-                            : "chip-warn"
-                        }
+                            ? "text-muted"
+                            : "text-amber"
+                        }`}
                       >
                         {f.verdict}
                       </span>
@@ -252,7 +259,7 @@ export default function EvidencePage() {
           </div>
 
           {o.excluded_from_headline?.n > 0 && (
-            <div className="card-raised p-4 mt-5 border-l-2 border-l-amber">
+            <Panel tone="note" className="mt-5">
               <button
                 onClick={() => setShowExcluded(!showExcluded)}
                 className="text-left w-full"
@@ -272,72 +279,58 @@ export default function EvidencePage() {
                   {o.excluded_from_headline.why}
                 </p>
               )}
-            </div>
+            </Panel>
           )}
-
-          <Detail summary="how a counterfactual month is built">
-            <p>{o.note}</p>
-            <p>{o.fix_effectiveness_assumed}</p>
-          </Detail>
-        </Card>
       </Stagger>
 
       {/* ── 2. the audit trail ── */}
       <Stagger i={2}>
-        <Card>
           <SectionHeader
-            eyebrow="Every decision, across the whole book"
             title="The audit trail"
-            sub="Each run keeps a hash-chained ledger. These chains are re-verified from genesis on every load of this page rather than read off a stored flag — a stored 'verified: true' is a claim, and recomputing the hashes is a check."
+            sub="Each run keeps a hash-chained ledger, re-verified from genesis on every load of this page rather than read off a stored flag — a stored 'verified: true' is a claim, recomputing the hashes is a check."
           />
 
-          <div className="grid sm:grid-cols-3 gap-3">
-            <Fig
-              k="chains intact"
-              v={`${a.chains_verified} / ${a.chains_total}`}
+          <Figures>
+            <Figure
+              label="chains intact"
+              kind="measured"
+              value={`${a.chains_verified} / ${a.chains_total}`}
               sub="re-hashed from genesis just now"
-              tone={a.chains_verified === a.chains_total ? "text-mint" : "text-rose"}
+              tone={a.chains_verified === a.chains_total ? "good" : "bad"}
             />
-            <Fig
-              k="entries"
-              v={a.entries_total.toLocaleString("en-IN")}
+            <Figure
+              label="entries"
+              value={a.entries_total.toLocaleString("en-IN")}
               sub="one per decision, append-only"
             />
-            <Fig
-              k="denied"
-              v={String(a.by_outcome["denied"] ?? 0)}
+            <Figure
+              label="denied"
+              value={String(a.by_outcome["denied"] ?? 0)}
               sub="the kernel refusing, on the record"
-              tone="text-rose"
+              tone="bad"
             />
-          </div>
+            {/* Three different people are answerable for these numbers, and a
+                ledger that recorded them identically would be crediting a
+                console operator with the merchant's own decisions. */}
+            <Figure
+              label="acted by"
+              value={
+                <span className="flex items-baseline gap-3">
+                  {(["agent", "platform", "merchant"] as const).map((who) => (
+                    <span key={who} className="flex items-baseline gap-1">
+                      {(a.by_actor?.[who] ?? 0).toLocaleString("en-IN")}
+                      <span className="text-[11px] text-faint font-normal">
+                        {ACTOR_LABEL[who]}
+                      </span>
+                    </span>
+                  ))}
+                </span>
+              }
+              sub="the actor is inside the hash, not beside it"
+            />
+          </Figures>
 
-          {/* Three different people are answerable for these three numbers.
-              A ledger that recorded them identically would be crediting a
-              console operator with the merchant's own decisions. */}
-          <div className="mt-4">
-            <Eyebrow>who caused each entry</Eyebrow>
-            <div className="grid sm:grid-cols-3 gap-3 mt-2">
-              {(["agent", "platform", "merchant"] as const).map((who) => (
-                <div key={who} className="card-raised p-3.5">
-                  <div className="num text-xl font-semibold">
-                    {(a.by_actor?.[who] ?? 0).toLocaleString("en-IN")}
-                  </div>
-                  <div className="text-[12px] mt-0.5">{ACTOR_LABEL[who]}</div>
-                  <div className="text-[11px] text-faint mt-1 leading-tight">
-                    {ACTOR_NOTE[who]}
-                  </div>
-                </div>
-              ))}
-            </div>
-            <p className="text-[11px] text-faint mt-2 leading-relaxed">
-              The actor is inside the hash, not beside it. Adding it cost a
-              rebuild of every chain in the book, which is the price of an
-              answer to &ldquo;who approved this&rdquo; that cannot be edited
-              afterwards.
-            </p>
-          </div>
-
-          <div className="mt-5">
+          <div className="mt-7">
             <Eyebrow>why each decision went the way it did</Eyebrow>
             <div className="space-y-1.5 mt-2">
               {Object.entries(a.by_reason).map(([reason, n]) => {
@@ -367,9 +360,9 @@ export default function EvidencePage() {
           <div className="mt-6">
             <Eyebrow>the last {a.recent.length} entries, newest first</Eyebrow>
             <div className="mt-2 overflow-x-auto max-h-[26rem] overflow-y-auto rounded-lg border border-line">
-              <table className="w-full text-[12px] min-w-[52rem]">
+              <table className="tbl text-[12px] min-w-[52rem]">
                 <thead className="sticky top-0 bg-canvas">
-                  <tr className="text-left border-b border-line">
+                  <tr>
                     <Th>merchant</Th>
                     <Th>payment</Th>
                     <Th>action</Th>
@@ -384,10 +377,10 @@ export default function EvidencePage() {
                   {a.recent.map((e) => (
                     <tr
                       key={e.entry_hash}
-                      className="border-b border-line/50 last:border-0 hover:bg-raised/50"
+                      className=""
                     >
-                      <td className="py-1.5 px-2 whitespace-nowrap">{e.merchant}</td>
-                      <td className="py-1.5 px-2 num truncate max-w-[10rem]">
+                      <td className="whitespace-nowrap">{e.merchant}</td>
+                      <td className="num truncate max-w-[10rem]">
                         {/* Every row is a decision about a real payment, and
                             the file on that payment is one click away. */}
                         {e.txn_id.startsWith("merchant:") ? (
@@ -401,24 +394,24 @@ export default function EvidencePage() {
                           </Link>
                         )}
                       </td>
-                      <td className="py-1.5 px-2 text-muted whitespace-nowrap">
+                      <td className="text-muted whitespace-nowrap">
                         {e.action_type?.replace(/_/g, " ")}
                       </td>
-                      <td className="py-1.5 px-2 num text-right whitespace-nowrap">
+                      <td className="num text-right whitespace-nowrap">
                         {e.amount_paise ? inr(e.amount_paise) : "—"}
                       </td>
-                      <td className="py-1.5 px-2">
+                      <td>
                         <span className={DECISION_CHIP[e.gate_decision] ?? "chip-neutral"}>
                           {e.gate_decision}
                         </span>
                       </td>
-                      <td className="py-1.5 px-2 num text-[10px] text-faint whitespace-nowrap">
+                      <td className="num text-[10px] text-faint whitespace-nowrap">
                         {e.gate_reason}
                       </td>
-                      <td className="py-1.5 px-2 text-[11px] whitespace-nowrap">
+                      <td className="text-[11px] whitespace-nowrap">
                         {ACTOR_LABEL[e.actor] ?? e.actor}
                       </td>
-                      <td className="py-1.5 px-2 num text-[10px] text-faint">
+                      <td className="num text-[10px] text-faint">
                         {e.entry_hash?.slice(0, 10)}…
                       </td>
                     </tr>
@@ -428,62 +421,52 @@ export default function EvidencePage() {
             </div>
           </div>
 
-          <Detail summary="the chains, one per merchant">
-            <div className="space-y-1 not-prose">
-              {a.chains.map((c) => (
-                <div
-                  key={c.run_id}
-                  className="flex items-center gap-3 text-[12px] py-1"
-                >
-                  <span className={c.verified ? "chip-measured" : "chip-warn"}>
-                    {c.verified ? "intact" : "BROKEN"}
-                  </span>
-                  <span className="flex-1 truncate">{c.merchant_name}</span>
-                  <span className="num text-muted">{c.entries} entries</span>
-                  <span className="num text-faint hidden sm:inline">
-                    head {c.head?.slice(0, 12)}…
-                  </span>
-                </div>
-              ))}
-            </div>
-          </Detail>
-        </Card>
       </Stagger>
 
       {/* ── 3. the bill ── */}
       <Stagger i={3}>
         <Budget />
       </Stagger>
+
+      <Notes>
+        <Detail summary="how a counterfactual month is built">
+          <p>{o.note}</p>
+          <p>{o.fix_effectiveness_assumed}</p>
+        </Detail>
+        <Detail summary="the chains, one per merchant">
+          <div className="space-y-1 not-prose">
+            {a.chains.map((c) => (
+              <div key={c.run_id} className="flex items-center gap-3 text-[12px] py-1">
+                <span className={c.verified ? "text-mint" : "text-rose"}>
+                  {c.verified ? "intact" : "BROKEN"}
+                </span>
+                <span className="flex-1 truncate">{c.merchant_name}</span>
+                <span className="num text-muted">{c.entries} entries</span>
+                <span className="num text-faint hidden sm:inline">
+                  head {c.head?.slice(0, 12)}…
+                </span>
+              </div>
+            ))}
+          </div>
+        </Detail>
+        <Detail summary="who the three actors are, and why it is in the hash">
+          <p>
+            <strong>{ACTOR_LABEL.agent}</strong> — {ACTOR_NOTE.agent}.{" "}
+            <strong>{ACTOR_LABEL.platform}</strong> — {ACTOR_NOTE.platform}.{" "}
+            <strong>{ACTOR_LABEL.merchant}</strong> — {ACTOR_NOTE.merchant}.
+          </p>
+          <p>
+            The actor is inside the hash rather than beside it. Adding it cost
+            a rebuild of every chain in the book, which is the price of an
+            answer to &ldquo;who approved this&rdquo; that cannot be edited
+            afterwards.
+          </p>
+        </Detail>
+      </Notes>
     </>
   );
 }
 
 function Th({ children, right }: { children: React.ReactNode; right?: boolean }) {
-  return (
-    <th
-      className={`eyebrow font-normal pb-2 px-2 first:pl-0 ${right ? "text-right" : ""}`}
-    >
-      {children}
-    </th>
-  );
-}
-
-function Fig({
-  k,
-  v,
-  sub,
-  tone,
-}: {
-  k: string;
-  v: string;
-  sub?: string;
-  tone?: string;
-}) {
-  return (
-    <div className="card-raised p-4">
-      <div className="eyebrow">{k}</div>
-      <div className={`num text-2xl font-semibold mt-1 ${tone ?? ""}`}>{v}</div>
-      {sub && <div className="text-[11px] text-faint mt-1 leading-tight">{sub}</div>}
-    </div>
-  );
+  return <th className={right ? "text-right" : ""}>{children}</th>;
 }

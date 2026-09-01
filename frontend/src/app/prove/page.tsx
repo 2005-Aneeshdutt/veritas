@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { TopBar } from "@/components/Chrome";
 import Link from "next/link";
 import { ShapleyLive } from "@/components/ShapleyLive";
-import { Card, Detail, Eyebrow, Stagger } from "@/components/ui";
+import { Card, Detail, Eyebrow, PageHead, Stagger } from "@/components/ui";
 import { FACTOR_DOCS } from "@/lib/explain";
 import { inr } from "@/lib/types";
 
@@ -211,21 +211,18 @@ export default function ProvePage() {
       <TopBar />
       <main className="max-w-[1180px] mx-auto px-8 py-8 space-y-8">
         <Stagger>
-          <div>
-            <Eyebrow>Falsification on demand</Eyebrow>
-            <h1 className="text-2xl font-semibold mt-1">Prove it</h1>
-            <p className="text-sm text-muted mt-1.5 max-w-3xl leading-relaxed">
-              You choose the merchant. The answer is hashed before the engine runs. Break the seal and check it yourself.
-            </p>
-          </div>
+          <PageHead
+            title="Prove it"
+            sub="You choose the merchant. The answer is hashed before the engine runs. Break the seal and check it yourself."
+          />
         </Stagger>
 
         {/* ═══════════════════════════════ 1 · build the challenge */}
         <Stagger i={1}>
           <Card>
-            <div className="flex items-center gap-3 flex-wrap">
+            <div className="flex items-center gap-3 flex-wrap border-t border-line pt-5">
               <StepBadge n={1} on={stage === "build"} done={stage !== "build"} />
-              <h2 className="text-lg font-semibold">Set the exam</h2>
+              <h2>Set the exam</h2>
               <div className="ml-auto flex items-center gap-2">
                 <button onClick={surpriseMe} className="btn-quiet h-8 px-3 text-xs">
                   Surprise me
@@ -359,13 +356,13 @@ export default function ProvePage() {
         {challenge && (
           <Stagger i={2}>
             <Card className="border-l-2 border-l-brand">
-              <div className="flex items-center gap-3 flex-wrap">
+              <div className="flex items-center gap-3 flex-wrap border-t border-line pt-5">
                 <StepBadge
                   n={2}
                   on={stage === "sealed"}
                   done={stage === "running" || stage === "done" || stage === "open"}
                 />
-                <h2 className="text-lg font-semibold">The answer is sealed</h2>
+                <h2>The answer is sealed</h2>
                 <span className="chip-brand ml-auto">
                   🔒 committed before the run
                 </span>
@@ -413,13 +410,13 @@ export default function ProvePage() {
         {(stage === "running" || stage === "done" || stage === "open") && (
           <Stagger i={3}>
             <Card>
-              <div className="flex items-center gap-3 flex-wrap">
+              <div className="flex items-center gap-3 flex-wrap border-t border-line pt-5">
                 <StepBadge
                   n={3}
                   on={stage === "running"}
                   done={stage === "done" || stage === "open"}
                 />
-                <h2 className="text-lg font-semibold">Diagnosing, blind</h2>
+                <h2>Diagnosing, blind</h2>
                 <span className="chip-neutral ml-auto">
                   {coalitions.length}/16 coalitions
                 </span>
@@ -495,9 +492,9 @@ export default function ProvePage() {
                   : "border-l-mint"
               }`}
             >
-              <div className="flex items-center gap-3 flex-wrap">
+              <div className="flex items-center gap-3 flex-wrap border-t border-line pt-5">
                 <StepBadge n={4} on done={false} />
-                <h2 className="text-lg font-semibold">The seal is broken</h2>
+                <h2>The seal is broken</h2>
                 <span
                   className={
                     reveal.matches_published_seal ? "chip-measured" : "chip-warn"

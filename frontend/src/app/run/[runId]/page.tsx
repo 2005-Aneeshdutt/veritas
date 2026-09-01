@@ -4,10 +4,17 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import {
   Card,
+  Detail,
   Eyebrow,
+  Figure,
+  Figures,
+  Hero,
   Info,
   Loading,
   Metric,
+  Notes,
+  PageHead,
+  Panel,
   SectionHeader,
   Stagger,
   Ticker,
@@ -90,104 +97,51 @@ export default function Overview({ params }: { params: { runId: string } }) {
 
   return (
     <div className="space-y-7">
-      {/* ───────────────────────────────────────────── provenance */}
       <Stagger>
-        <div className="card px-4 py-2.5 flex flex-wrap items-center gap-x-3 gap-y-1
-                        font-mono text-[11px] text-muted">
-          <span className="text-brand">{rec.run_id}</span>
-          <Dot /> <span>{rec.merchant_name}</span>
-          <Dot /> <span>MCC {rec.mcc}</span>
-          <Dot /> <span>seed {rec.seed}</span>
-          <Dot /> <span>{rec.models.fast} + {rec.models.reasoning}</span>
-          <Dot /> <span>temp 0</span>
-          <Dot />
-          <span className={rec.cache_hit_rate === 1 ? "text-mint" : ""}>
-            cache {(rec.cache_hit_rate * 100).toFixed(0)}%
-          </span>
-          <Dot /> <span>NPCI {r.run.npci_period}</span>
-          <Dot /> <span>{rec.commit}</span>
-          <Dot /> <span>{rec.duration_ms} ms</span>
-          {rec.used_stubs && <span className="chip-warn ml-1">stubs — no key</span>}
-          <button
-            onClick={copyCmd}
-            className="ml-auto text-brand hover:text-brand transition-colors"
-          >
-            {copied ? "✓ copied" : "copy reproduce command"}
-          </button>
-        </div>
+        <PageHead
+          title={rec.merchant_name}
+          sub={`${m.transactions.toLocaleString("en-IN")} payments · ${m.failures} failed · ${gate.allow} actions executed under a signed mandate.`}
+          right={<ChainBadge ok={m.chain_verified} violations={m.mandate_violations} />}
+        />
       </Stagger>
 
-      {/* ───────────────────────────────────────────── recovery hero */}
+      {/* what the batch won back */}
       <Stagger i={1}>
-        <Card className="!p-0 overflow-hidden">
-          <div className="bg-brand-soft px-6 py-5 border-b border-line">
-            <div className="flex flex-wrap items-end justify-between gap-6">
-              <div>
-                <Eyebrow>Money recovered across this batch</Eyebrow>
-                <div className="flex items-baseline gap-3 mt-2">
-                  <span className="text-5xl font-display font-bold text-brand leading-none">
-                    <Ticker
-                      value={p.recovered_this_run_paise / 100}
-                      prefix="₹"
-                      decimals={0}
-                    />
+        <div className="space-y-7">
+          <Hero
+            label="Money recovered across this batch"
+            kind={m.recovery_vs_truth?.scored ? "measured" : "projected"}
+            value={
+              <Ticker
+                value={
+                  (m.recovery_vs_truth?.scored
+                    ? m.recovery_vs_truth.measured_paise
+                    : p.recovered_this_run_paise) / 100
+                }
+                prefix="₹"
+              />
+            }
+            sub={
+              m.recovery_vs_truth?.scored ? (
+                <>
+                  {m.recovery_vs_truth.truly_converted} of{" "}
+                  {m.recovery_vs_truth.attempted} retries would truly have
+                  converted. The rail forecast{" "}
+                  <span className="num">
+                    {inr(p.recovered_this_run_paise, { compact: true })}
                   </span>
-                  <span className="chip-projected">projected</span>
-                </div>
+                  , which is the projection this marks.
+                </>
+              ) : (
+                "Projected through the retry model. Nothing here has been marked against a known outcome yet."
+              )
+            }
+          />
 
-                {m.recovery_vs_truth?.scored && (
-                  <div className="flex items-baseline gap-3 mt-3">
-                    <span className="text-3xl font-display font-bold text-mint leading-none">
-                      <Ticker
-                        value={m.recovery_vs_truth.measured_paise / 100}
-                        prefix="₹"
-                        decimals={0}
-                      />
-                    </span>
-                    <span className="chip-measured">measured</span>
-                    <span className="text-xs text-muted">
-                      {m.recovery_vs_truth.truly_converted} of{" "}
-                      {m.recovery_vs_truth.attempted} retries would truly have
-                      converted
-                    </span>
-                  </div>
-                )}
-                {m.recovery_vs_truth?.scored && (
-                  <div className="text-xs text-muted mt-2 max-w-xl leading-relaxed">
-                    {m.recovery_vs_truth.detail}
-                  </div>
-                )}
-                {recov?.by_calibration?.central && (
-                  <div className="text-xs text-muted mt-2 max-w-xl leading-relaxed">
-                    <span className="chip-measured mr-1.5">measured</span>
-                    Against a known retry outcome for every recoverable failure
-                    across {recov.by_calibration.central.merchants_scored} merchants,
-                    this calibration forecasts{" "}
-                    <span className="text-ink">
-                      {(recov.by_calibration.central.portfolio_ratio * 100).toFixed(0)}%
-                    </span>{" "}
-                    of what a retry truly recovers
-                    {recov.range_brackets_the_truth
-                      ? ", and the published range brackets the truth."
-                      : "."}
-                  </div>
-                )}
-                <div className="text-sm text-muted mt-2">
-                  {m.transactions.toLocaleString()} payments · {m.failures} failed ·{" "}
-                  <span className="text-ink">{gate.allow} actions executed</span> under a
-                  signed mandate
-                </div>
-              </div>
-
-              <div className="flex items-center gap-3">
-                <ChainBadge ok={m.chain_verified} violations={m.mandate_violations} />
-              </div>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-2 lg:grid-cols-4 divide-x divide-line border-b border-line">
-            <Tile
+          <Figures>
+            <Figure
               label="still recoverable"
+              kind="projected"
               value={`${inr(p.recoverable.low_paise, { compact: true })}–${inr(
                 p.recoverable.high_paise,
                 { compact: true }
@@ -195,29 +149,31 @@ export default function Overview({ params }: { params: { runId: string } }) {
               sub="range across 3 calibrations"
               info="Shipped as a range, never one number — retry success is a modelled assumption. evals/results/recovery_accuracy.json measures how far that assumption sits from a known truth, and confirms the range brackets it."
             />
-            <Tile
+            <Figure
               label="unrecoverable"
+              kind="measured"
+              tone="bad"
               value={inr(p.unrecoverable_paise, { compact: true })}
               sub={`${p.unrecoverable_count} payments · listed, not dropped`}
-              tone="bad"
-              info="Expired cards, closed accounts. No retry can fix these, and every one is listed on the Exceptions page rather than quietly removed from the recovery rate."
+              info="Expired cards, closed accounts. No retry can fix these, and every one is listed rather than quietly removed from the recovery rate."
             />
-            <Tile
-              label="escalation"
+            <Figure
+              label="auto / held / denied"
               value={`${gate.allow} / ${gate.step_up} / ${gate.deny}`}
-              sub="auto · merchant · denied"
-              info="The policy gate fans out three ways. Denied means the signed mandate forbade it — the agent cannot widen its own authority."
+              sub="the kernel fans out three ways"
+              info="Denied means the signed mandate forbade it — the agent cannot widen its own authority, and no confirmation turns a deny into an allow."
             />
-            <Tile
+            <Figure
               label="audit trail"
+              kind="measured"
+              tone={m.chain_verified ? "good" : "bad"}
               value={`${m.ledger_entries} entries`}
               sub={m.chain_verified ? "hash chain verified" : "CHAIN BROKEN"}
-              tone={m.chain_verified ? "good" : "bad"}
-              info="Every decision — allowed, stepped up and denied — is hash-chained. Denied actions are logged too; a trail of only successes is a highlight reel."
+              info="Every decision — allowed, stepped up and denied — is hash-chained. A trail of only successes is a highlight reel."
             />
-          </div>
+          </Figures>
 
-          <div className="px-6 py-3 flex flex-wrap items-center gap-2 text-xs text-muted">
+          <div className="flex flex-wrap items-center gap-2 text-[12px] text-muted">
             <span className="eyebrow">escalation ladder</span>
             <Ladder n={gate.allow} label="auto-retry" tone="mint" />
             <span className="text-faint">→</span>
@@ -226,12 +182,12 @@ export default function Overview({ params }: { params: { runId: string } }) {
             <Ladder n={gate.deny} label="denied by mandate" tone="rose" />
             <Link
               href={`/run/${params.runId}/authorise`}
-              className="ml-auto text-brand hover:text-brand"
+              className="ml-auto text-brand"
             >
               inspect the ledger →
             </Link>
           </div>
-        </Card>
+        </div>
       </Stagger>
 
       {/* ───────────────────────────────────────────── before / after */}
@@ -446,19 +402,13 @@ export default function Overview({ params }: { params: { runId: string } }) {
 
       {/* ───────────────────────────────────────────── withholding */}
       <Stagger i={4}>
-        <Card className="border-l-2 border-l-brand">
+        <Panel tone="brand">
           <div className="flex items-baseline justify-between gap-4 flex-wrap">
-            <div className="text-lg font-display font-semibold">
-              {r.plan.headline}
-            </div>
-            <div className="flex gap-1.5 text-[10px] font-mono">
-              <span className="chip bg-mint-soft text-mint border-mint/30">
-                &gt;2× error · act
-              </span>
-              <span className="chip bg-amber-soft text-amber border-amber/30">
-                1–2× · ask
-              </span>
-              <span className="chip-warn">&lt;1× · refuse</span>
+            <div className="text-[15px] font-semibold">{r.plan.headline}</div>
+            <div className="flex gap-3 text-[11px] font-mono text-faint">
+              <span>&gt;2× error · act</span>
+              <span>1–2× · ask</span>
+              <span>&lt;1× · refuse</span>
             </div>
           </div>
 
@@ -477,7 +427,7 @@ export default function Overview({ params }: { params: { runId: string } }) {
               ))}
             </div>
           )}
-        </Card>
+        </Panel>
       </Stagger>
 
       {/* ───────────────────────────────────────────── the wall */}
@@ -624,39 +574,50 @@ export default function Overview({ params }: { params: { runId: string } }) {
       )}
 
       {/* ───────────────────────────────────────────── evidence */}
+      {/* Four link cards pointing at pages the sidebar already names, plus
+          two that are sections of this one. What is left is the pair a
+          reader on THIS page actually wants next, as links rather than
+          tiles. */}
       <Stagger i={7}>
-        <div className="grid md:grid-cols-4 gap-3">
-          <Evidence
-            href={`/run/${params.runId}/flow`}
-            title="Agent flow"
-            detail={`${rec.traces.length} nodes · ${rec.duration_ms} ms`}
-            hint="Step through every node, read the real prompts"
-          />
-          <Evidence
-            href={`/run/${params.runId}/validation`}
-            title="Validation"
-            detail={`± ${avgMae.toFixed(2)} pts · ${m.validation_merchants} merchants`}
-            hint="How often this engine is wrong, measured"
-          />
-          <Evidence
-            href={`/run/${params.runId}/authorise`}
-            title="Audit"
-            detail={`chain ✓ · ${m.mandate_violations} violations`}
-            hint="Verify the hash chain in your own browser"
-          />
-          <Evidence
-            href={`/run/${params.runId}/exceptions`}
-            title="Exceptions"
-            detail={`${p.unrecoverable_count} payments · ${r.exceptions.method_failures.length} method failures`}
-            hint="What it could not fix, and where it should not be trusted"
-          />
+        <div className="border-t border-line pt-4 flex flex-wrap items-center gap-x-6 gap-y-2 text-[12px]">
+          <Link href={`/run/${params.runId}/validation`} className="text-brand">
+            How often this is wrong, measured — ± {avgMae.toFixed(2)} pts →
+          </Link>
+          <Link href={`/run/${params.runId}/exceptions`} className="text-brand">
+            What it could not fix — {p.unrecoverable_count} payments →
+          </Link>
         </div>
       </Stagger>
 
-      <div className="eyebrow pb-4">
-        LLM cost this run ₹{rec.llm_cost_inr.toFixed(2)} · {rec.llm_calls} calls ·{" "}
-        {(rec.cache_hit_rate * 100).toFixed(0)}% served from cache
-      </div>
+      <Notes>
+        <Detail summary="how to reproduce this exact run">
+          <p className="not-prose">
+            <span className="num">{rec.run_id}</span> · seed{" "}
+            <span className="num">{rec.seed}</span> · {rec.models.fast} +{" "}
+            {rec.models.reasoning} at temperature 0 · NPCI {r.run.npci_period}{" "}
+            · commit <span className="num">{rec.commit}</span> · {rec.duration_ms} ms
+            · {(rec.cache_hit_rate * 100).toFixed(0)}% of model calls served
+            from the committed cache.
+          </p>
+          <p>
+            <button onClick={copyCmd} className="text-brand">
+              {copied ? "✓ copied" : "copy the reproduce command"}
+            </button>
+            {rec.used_stubs && (
+              <span className="text-rose ml-3">
+                this run used stubs — no API key was configured
+              </span>
+            )}
+          </p>
+        </Detail>
+        <Detail summary="what this run cost">
+          <p>
+            ₹{rec.llm_cost_inr.toFixed(2)} across {rec.llm_calls} model calls.
+            Every figure on this page that is not marked measured is projected
+            through a retry model whose error is published on Evidence.
+          </p>
+        </Detail>
+      </Notes>
     </div>
   );
 }
