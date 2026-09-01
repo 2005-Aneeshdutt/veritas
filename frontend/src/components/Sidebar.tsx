@@ -170,6 +170,11 @@ export function Sidebar({ runHref }: { runHref?: string | null }) {
     // Live and drift are lenses on the book, so they light this row too.
     { href: "/portfolio", label: "Book", match: ["/portfolio", "/live", "/drift"] },
     { href: run, label: "Diagnose", match: run ? [run] : [] },
+    // Between finding the cause and acting on it there is a question nobody
+    // else in this track asks: what would the alternatives have done? It
+    // belongs here, before Authorise, because it is what justifies the
+    // decision Authorise then executes.
+    { href: "/lab", label: "Compare", match: ["/lab"] },
     {
       href: run ? `${run}/authorise` : null,
       label: "Authorise",

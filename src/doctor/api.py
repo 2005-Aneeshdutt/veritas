@@ -52,6 +52,8 @@ from doctor.outreach import (
     smtp_configured,
     verify as smtp_verify,
 )
+from doctor.counterfactual import run_lab
+from doctor.reconcile import drilldown, reconcile
 from doctor.portfolio import build_portfolio, ledger_csv, portfolio_csv
 from doctor.generator import GeneratedMerchant
 from doctor.graph import git_commit, run_diagnosis
@@ -225,6 +227,52 @@ def portfolio_approve(confirm: bool = False) -> dict:
     return out
 
 
+def _stop_rules(sched, cap: int) -> list[dict]:
+    """The conditions that end a ladder, each with the value it is holding to.
+
+    Four of them, in the order they bind, and every one enforced by
+    `chitragupta/policy.py` rather than described here. A schedule that
+    proposed an attempt the kernel would refuse is not a schedule, so the
+    sequencer already tests every slot against these -- this only surfaces
+    what it was testing.
+    """
+    from chitragupta.policy import BANK_DEGRADED_HOLD, RECOVERY_WINDOW
+
+    last = sched.attempts[-1].hours_after_failure if sched.attempts else 0.0
+    return [
+        {
+            "rule": "attempt cap",
+            "detail": "no payment is attempted more than %d times in total, "
+                      "counting retries the merchant already made" % cap,
+            "value": "%d / %d used" % (len(sched.attempts), cap),
+            "binds": len(sched.attempts) >= cap,
+        },
+        {
+            "rule": "recovery window",
+            "detail": "nothing is remediated more than %d days after it failed"
+                      % RECOVERY_WINDOW.days,
+            "value": "last slot at +%gh of %gh" % (last, RECOVERY_WINDOW.days * 24),
+            "binds": False,
+        },
+        {
+            "rule": "bank-degraded hold",
+            "detail": "while an issuer is held, a retry into it only burns an "
+                      "attempt; the slot slides past the hold rather than "
+                      "being dropped",
+            "value": "%gh hold" % (BANK_DEGRADED_HOLD.total_seconds() / 3600),
+            "binds": False,
+        },
+        {
+            "rule": "already settled",
+            "detail": "a payment that has since succeeded is never chased "
+                      "again -- checked before the attempt cap, because "
+                      "charging twice is worse than recovering nothing",
+            "value": "checked first",
+            "binds": False,
+        },
+    ]
+
+
 @app.get("/api/run/{run_id}/schedule")
 def retry_schedule(run_id: str) -> dict:
     """WHEN each retry is scheduled, and what the timing is worth.
@@ -275,6 +323,15 @@ def retry_schedule(run_id: str) -> dict:
     failed = datetime(2026, 8, 20, 9, 0, tzinfo=timezone.utc)
     now = datetime(2026, 8, 20, 10, 0, tzinfo=timezone.utc)
 
+    try:
+        from doctor.run import load_mandate
+
+        mandate_cap = load_mandate(
+            rec.get("merchant_id", "")
+        ).mandate.max_attempts_per_payment
+    except (SystemExit, FileNotFoundError):
+        mandate_cap = 3
+
     out = []
     for cls in ("technical", "soft_decline"):
         sched = plan_retries("schedule:%s" % cls, cls, failed, now=now)
@@ -296,6 +353,15 @@ def retry_schedule(run_id: str) -> dict:
                     }
                     for a in sched.attempts
                 ],
+                # WHY THE LADDER ENDS.
+                #
+                # The design being argued for is "retry only while the
+                # recovery condition still holds", and the difference between
+                # that and "retry until 3" is invisible unless the conditions
+                # are named. These are the live constants from policy.py and
+                # the mandate -- not copy -- so a change to the kernel moves
+                # what this page says.
+                "stops": _stop_rules(sched, mandate_cap),
             }
         )
 
@@ -1054,6 +1120,53 @@ async def npci_rerun_stream(
         media_type="text/event-stream",
         headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"},
     )
+
+
+@app.get("/api/lab/{merchant_id}")
+def lab(merchant_id: str) -> dict:
+    """The Counterfactual Recovery Lab for one merchant's batch.
+
+    Four policies over the same failed payments, marked against the same
+    hidden outcomes, plus the autonomy frontier and the live run's own
+    observed result. Deterministic: no model is called and nothing is
+    written, so this is safe to hit as often as the page likes.
+    """
+    try:
+        return json.loads(run_lab(merchant_id).model_dump_json())
+    except FileNotFoundError:
+        raise HTTPException(404, "no such merchant: %s" % merchant_id)
+
+
+@app.get("/api/reconcile/{run_id}")
+def reconcile_run(run_id: str) -> dict:
+    """Recompute every headline for this run and check it against the file.
+
+    The Evidence page is only worth having if its numbers can be walked down
+    to the records under them. This is that walk, done server-side, so a
+    mismatch surfaces as a failed check rather than as a page that quietly
+    disagrees with itself.
+    """
+    p = RUNS / (run_id + ".json")
+    if not p.exists():
+        raise HTTPException(404, "no such run: %s" % run_id)
+    return json.loads(
+        reconcile(json.loads(p.read_text(encoding="utf-8"))).model_dump_json()
+    )
+
+
+@app.get("/api/reconcile/{run_id}/{bucket}")
+def reconcile_bucket(run_id: str, bucket: str) -> dict:
+    """The payments behind one bucket, each with the audit entry that put it there."""
+    valid = {
+        "recovered", "attempted", "held", "refused", "escalated", "untouched",
+    }
+    if bucket not in valid:
+        raise HTTPException(404, "no such bucket: %s" % bucket)
+    p = RUNS / (run_id + ".json")
+    if not p.exists():
+        raise HTTPException(404, "no such run: %s" % run_id)
+    rows = drilldown(json.loads(p.read_text(encoding="utf-8")), bucket)
+    return {"run_id": run_id, "bucket": bucket, "count": len(rows), "rows": rows}
 
 
 @app.get("/api/evals")

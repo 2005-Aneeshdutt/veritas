@@ -225,6 +225,22 @@ export default function ProvePage() {
             title="Prove it"
             sub="You choose the merchant. The answer is hashed before the engine runs. Break the seal and check it yourself."
           />
+          {/* Why this page exists, in one sentence, before the cryptography.
+              A judge who reads SHA-256 before reading "recovery claims should
+              be checkable" files this under demo and moves on. */}
+          <p className="text-[13px] text-muted leading-relaxed max-w-3xl mt-3">
+            Every rupee this product reports rests on a diagnosis it produced
+            itself. That is a claim, and a claim you cannot check is a claim
+            you should not act on. So: the answer is sealed before the engine
+            is allowed to look, the engine decides blind, the seal is broken,
+            and expected is compared against actual in front of you. The same
+            hash chain records every recovery decision on the{" "}
+            <a href="/evidence" className="text-brand">
+              Evidence
+            </a>{" "}
+            page — sealing the exam and sealing the ledger are the same
+            mechanism, used for the same reason.
+          </p>
           {/* The experiment, as a controlled sequence. The seal is created and
               published at step 2 and the engine does not run until step 4 —
               which is the only reason the result at step 6 means anything. */}

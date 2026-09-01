@@ -11,6 +11,13 @@ interface Attempt {
   reason: string;
 }
 
+interface Stop {
+  rule: string;
+  detail: string;
+  value: string;
+  binds: boolean;
+}
+
 interface Klass {
   error_class: string;
   payments: number;
@@ -20,6 +27,7 @@ interface Klass {
   naive_p: number;
   lift_pts: number;
   attempts: Attempt[];
+  stops?: Stop[];
 }
 
 interface Sched {
@@ -142,6 +150,40 @@ export function RetrySchedule({ runId }: { runId: string }) {
                 {(100 * c.cumulative_p).toFixed(1)}%
               </span>
             </div>
+
+            {/* Where the ladder STOPS, and which rule stopped it.
+                "Retry until 3" and "retry while the recovery condition still
+                holds" produce the same three dots on the axis above. The
+                difference is only visible if the conditions are named, so
+                they are — with the live value each one is holding to, read
+                from the policy kernel rather than written here. */}
+            {c.stops && (
+              <div className="mt-3 space-y-1.5">
+                <div className="ui text-[10px] uppercase tracking-[0.1em] text-faint">
+                  Execution stops when
+                </div>
+                {c.stops.map((st) => (
+                  <div
+                    key={st.rule}
+                    className="flex items-baseline gap-2 text-[11px]"
+                    title={st.detail}
+                  >
+                    <span
+                      className={`w-1 h-1 rounded-full shrink-0 translate-y-[-2px] ${
+                        st.binds ? "bg-rose" : "bg-edge"
+                      }`}
+                    />
+                    <span className={st.binds ? "text-ink" : "text-muted"}>
+                      {st.rule}
+                    </span>
+                    <span className="num text-faint ml-auto">{st.value}</span>
+                    {st.binds && (
+                      <span className="chip-warn shrink-0">stops here</span>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         ))}
       </div>

@@ -50,18 +50,19 @@ a feature: the deployed copy always resets to a clean book.
 
 ## What is on screen
 
-Five numbered steps down the left, in the order the story is told, and three
+Six numbered steps down the left, in the order the story is told, and three
 rooms you go to when you stop believing it.
 
 | | |
 |---|---|
 | **1 · Book** | Every merchant at once, ranked by money on the table, with the funnel from proposed to acted-on. Three lenses on the same object: *ranked*, *live* — payments arriving and a bank degrading in real time — and *bank drift*. |
 | **2 · Diagnose** | The agent working one case: the sixteen-coalition lattice filling in, the Shapley values converging on the whole. A second lens shows every node, prompt and gate decision. |
-| **3 · Authorise** | What the mandate permits, what the kernel held, and per-payment approve or reject. Click any payment to read its whole file. |
-| **4 · Platform** | The write-off attributed to whoever Razorpay's own `next_steps` line addresses. The platform's own share is a defect backlog no merchant is standing anywhere to compute. |
-| **5 · Prove** | A sealed challenge nobody has seen, diagnosed blind, then marked. |
+| **3 · Compare** | The Counterfactual Recovery Lab. The same batch under four policies, all marked against outcomes none of them could see, plus the autonomy frontier. The one page where the product is willing to lose: the naive loop recovers more, and the two columns next to it say what that cost. |
+| **4 · Authorise** | What the mandate permits, what the kernel held, and per-payment approve or reject. Click any payment to read its whole file. |
+| **5 · Platform** | The write-off attributed to whoever Razorpay's own `next_steps` line addresses. The platform's own share is a defect backlog no merchant is standing anywhere to compute. |
+| **6 · Prove** | A sealed challenge nobody has seen, diagnosed blind, then marked. |
 | **Before / after** | Every scored fix drawn as the merchant's success rate moving, with the band published beforehand laid over the distance it actually travelled. |
-| **Evidence** | Whether the forecasts came true after the fix landed, every decision with its chain re-hashed from genesis on each load, and the model bill. |
+| **Evidence** | Where the recovered number came from: every failed payment in one of six buckets that sum to the money at risk, each clickable down to the payments, the rule that decided them and the hash of the entry that recorded it. Plus whether the forecasts came true, the chain re-hashed from genesis on each load, and the model bill. |
 | **Your own data** | Upload a month of payments, or swap the NPCI table every baseline is measured against. Three bundled files if you have neither, including a real NPCI slice that moves the achievable rate six points. |
 
 Left and right arrows move through the walkthrough. **Reset the demo** is in
@@ -277,6 +278,157 @@ git checkout -- data/runs/
 
 ---
 
+## The Counterfactual Recovery Lab
+
+A recovery figure with nothing beside it is not a result. Recovering ₹39,833 is
+excellent if the alternative was ₹5,000 and unremarkable if a `for` loop over
+the failure export would have got ₹55,000. Nobody publishes the second
+comparison, so nobody can tell the two apart.
+
+`src/doctor/counterfactual.py` runs the **same batch of failed payments through
+four policies** and marks all of them against the **same hidden outcomes**.
+
+```
+CloudSync Pro · 227 failed payments · ₹17,64,721 at risk
+137 worth retrying at all · 29 would ever have converted · ceiling ₹2,11,258
+
+POLICY                    RECOVERED   ATTEMPTS  WASTED  HIT   ₹/ATTEMPT  BREACHES
+no intervention                  ₹0          0       0    0%          ₹0     none
+naive retry               ₹2,11,258        623     594   13%        ₹339      247
+static rules              ₹2,11,258        353     324   21%        ₹598      142
+Revenue Doctor              ₹16,026         58      44   28%      ₹27,632     none
+  + merchant approval       ₹78,781        125     103   21%      ₹63,025     none
+Revenue Doctor (this run)    ₹4,741         11       8   27%      ₹43,101     none   [MEASURED]
+```
+
+**Read that table honestly: the naive loop recovers more.** It gets there by
+breaching the signed mandate 247 times — 198 payments pushed past the attempt
+cap, 49 retried above the hard ceiling — and by spending 594 attempts on
+payments that were never going to convert. Static rules, the baseline that
+actually matters because it is what a competent engineer builds in an
+afternoon, does the same thing 142 times.
+
+That is the finding. Not "we recover more", but **"we recover less, on purpose,
+and here is exactly what the difference bought you."**
+
+### No ground-truth leakage
+
+Every generated merchant carries `ground_truth.retry_conversions` — for each
+recoverable failure, whether a retry would truly have converted. It lives on
+`GroundTruth`, never on `Transaction`, so no strategy can reach it.
+
+The separation is structural, not conventional:
+
+* every `decide_*` is a function of `(batch, mandate)` and returns decisions
+* `_reveal()` loads the truth and marks them, and is the only thing that does
+* `test_no_strategy_takes_a_truth_argument` fails if any decision function
+  grows a parameter that could carry an outcome
+* `test_decisions_are_unchanged_when_the_truth_is_inverted` flips every label
+  in the truth table and asserts not one decision moves — with a control test
+  that asserts the *score* does move, so the first cannot pass vacuously
+
+### The autonomy frontier
+
+The only number on a mandate a merchant genuinely has to choose is
+`auto_execute_limit_paise`: how large a payment the agent may retry without
+stopping to ask. Every merchant on this book picked it out of the air, because
+nobody has a method for choosing it.
+
+Sweeping it shows the choice is a trade, not a maximisation:
+
+```
+AUTO LIMIT   RECOVERED   MOVED UNSUPERVISED   HELD FOR MERCHANT
+      ₹500      ₹1,028              ₹2,525            ₹4,71,140
+    ₹3,000     ₹16,026             ₹56,458            ₹4,17,207   ← signed
+    ₹7,500     ₹40,512           ₹1,86,120            ₹2,87,544
+   ₹15,000     ₹78,781           ₹4,73,665                   ₹0
+```
+
+Turning the dial to the hard ceiling recovers 4.9× more and moves 8.4× more
+customer money with no human in the loop. Each point is a **mandate that
+verifies** — re-signed with the merchant's key, not waved past the gate, because
+`policy.evaluate` refuses an unverifiable mandate before it checks anything
+else.
+
+### Abstention is a first-class outcome
+
+Five dispositions, not two: `RECOVER · HOLD · DENY · ESCALATE · ABSTAIN`.
+
+`ABSTAIN` is the one most systems do not have. "We looked at this payment and
+chose to do nothing" is a different statement from "the mandate refused it",
+and a product that conflates them cannot explain why it left money on the
+table. Two reasons fire: `NOT_RECOVERABLE_BY_CLASS` (an expired card does not
+become valid by being asked twice) and `BELOW_EVIDENCE_FLOOR` (the best slot on
+this payment's ladder still models under 0.20, so spending one of three
+attempts on it is not justified).
+
+### Where this is weaker than it looks
+
+`retry_conversions` is **one boolean per payment**, so it does not vary with
+retry timing. That is why the naive policies reach the ceiling — retrying
+everything three times catches every convertible payment by construction. On a
+live rail, delay and attempt count would both matter and the gap would come
+from somewhere else. **The comparison this defends is about attempts spent and
+rules broken, not about who finds the last rupee.** Stated here rather than
+discovered by a judge.
+
+Friction is priced at a stated ₹3.00 per attempt (`FRICTION_PAISE_PER_ATTEMPT`)
+— an assumption, labelled as one in the API response and next to every figure
+derived from it in the UI.
+
+---
+
+## Money reconciliation
+
+`src/doctor/reconcile.py` exists because the UI must never show a number that
+cannot be walked down to the records under it.
+
+Every failed payment in a batch lands in **exactly one** bucket, and the
+buckets sum to the money at risk:
+
+```
+CloudSync Pro · run_beec9668
+  recovered                     3 payments      ₹4,741
+  attempted, did not convert    9 payments      ₹8,687
+  held for the merchant        50 payments   ₹2,87,283
+  refused by the mandate       16 payments   ₹3,13,911
+  escalated to a human          0 payments          ₹0
+  no action proposed          149 payments  ₹11,50,097
+  ─────────────────────────────────────────────────────
+  at risk                     227 payments  ₹17,64,721   ✓ closes
+```
+
+The aggregates are **not trusted** — they are recomputed from the ledger and
+compared against what the run file claims. Eleven invariants per run, checked
+on all eight committed runs by `tests/test_reconcile.py`:
+
+* buckets sum to money at risk, and to the payment count
+* no payment appears in two buckets
+* each bucket's drilldown matches its own total, row for row
+* `report.gate.decisions` equals what the ledger entries actually say
+* `recovery_vs_truth.measured_paise` recomputes from the ledger and the truth
+* the hash chain verifies from genesis, and a tampered entry breaks the check
+* the reconciliation is capable of failing — a corrupted total is asserted to
+  be *caught*, so the check cannot pass vacuously
+
+`/api/reconcile/{run_id}/{bucket}` returns the payments behind any number, each
+with the action proposed, the rule the gate applied, the outcome, and the hash
+of the audit entry that recorded it:
+
+```
+AGGREGATE → PAYMENT → DECISION → POLICY → EXECUTION → OUTCOME → AUDIT ENTRY
+```
+
+The Evidence page is that walk, rendered. Click ₹4,741 and get the three
+payments.
+
+**This is also how the Book's headline stays honest:** `total_at_risk_paise` on
+`/api/portfolio` is computed by `reconcile._batch`, the same function backing
+the drilldown, so the summary and the detail are one computation rather than
+two that can drift apart.
+
+---
+
 ## What is measured
 
 200 merchants, each carrying a **known** cause of a **known** size. Ground truth
@@ -430,7 +582,7 @@ remitter bank-months. Full write-up: [`docs/npci_finding.md`](docs/npci_finding.
 
 ## What broke
 
-**Fourteen things. Twelve found by a measurement disagreeing with me, not by a
+**Fifteen things. Thirteen found by a measurement disagreeing with me, not by a
 crash** — the last one by a check I wrote to prove the others were safe. Full write-up: **[`docs/what_broke.md`](docs/what_broke.md)** — the
 best 10 minutes you can spend in this repo.
 
@@ -445,34 +597,71 @@ the demo was quietly serving placeholder output because I killed Node but not
 Python · the verifier I was confident about turned out to fix consistency
 rather than accuracy, after an 8-merchant pilot showed +12 points and the full
 60 showed noise · **and the reproducibility check failed on its first run,
-because Python randomises string hashing and my set iteration was silently
-changing float summation order.**
+because Python randomises float summation order through set iteration, because
+Python randomises string hashing.**
+
+The newest one is the best-behaved failure in the list. The money partition
+closed on all eight runs — buckets summed to the money at risk, to the payment
+count, every total agreed. It was wrong anyway: a plan contains ACCOUNT-level
+actions (`merchant:cloudsync`, "enable multi-bank routing") which were being
+counted as payments. They are worth ₹0, so the money reconciled perfectly while
+the untouched bucket was one payment short on every run on the book. Nothing
+visible was broken and no total disagreed. What caught it was the test that
+asserts each bucket's **drilldown** has exactly as many rows as the bucket
+claims payments — an invariant one level below the one I thought was
+sufficient. Account-level entries are now excluded from the partition and
+reported separately, because silently dropping a ledger entry is the exact
+failure mode `reconcile.py` exists to prevent.
 
 ---
 
 ## Architecture
 
 ```
-ingest ──▶ classify ──low confidence──▶ human_review ──┐
-            [LLM]                                       │
-              │ confidence ≥ 0.85                       │
-              ▼                                         │
-        bank_health [DET]  ◀── NPCI join ───────────────┘
-              ▼
-         decompose [DET]   Shapley-Oaxaca-Blinder, 16 coalitions
-              ▼
-        hypothesise [LLM]  forced-choice root cause
-              ▼
-           plan [LLM]      typed actions, gated by MEASURED error
-              ▼
-           gate [DET]      signed mandate · policy kernel
-        ┌─────┼─────┐
-        ▼     ▼     ▼
-    execute  merchant  denied
-        └─────┼─────┘
-              ▼
-           report          measured │ projected
+       PROBABILISTIC                    DETERMINISTIC
+       proposes, reasons, estimates     constrains, authorises, records
+  ─────────────────────────────────┬─────────────────────────────────────
+                                   │
+ingest ─▶ classify ─low conf─▶ human_review
+           [LLM]               [HUMAN]      │
+             │ confidence ≥ 0.85            │
+             ▼                              │
+                                   │  bank_health [DET] ◀─ NPCI join
+                                   │        │
+                                   │  decompose [DET]  Shapley-OB,
+                                   │        │          16 coalitions
+      hypothesise [LLM]  ◀─────────┤        │
+      forced-choice root cause     │        │
+             │                     │        │
+        plan [LLM]                 │  uncertainty gate [DET]
+        typed actions ─────────────┼─▶ >2× MAE act · 1–2× ask · <1× refuse
+                                   │        │
+                                   │  gate [DET]  Ed25519 mandate
+                                   │              12-check policy kernel
+                                   │        │
+                                   │  ┌─────┼─────┬────────┐
+                                   │  ▼     ▼     ▼        ▼
+                                   │ ALLOW  HOLD  DENY   ABSTAIN
+                                   │  │     │
+                                   │  ▼     └─▶ merchant confirms
+                                   │ execute [DET]  bounded, idempotent
+                                   │        │
+                                   │  ledger [DET]  SHA-256 hash chain,
+                                   │        │       actor inside the hash
+  ─────────────────────────────────┴────────┼─────────────────────────────
+                                            ▼
+                                     VERIFICATION
+                        reconcile.py   buckets sum to money at risk
+                        scoring.py     retries marked against truth
+                        counterfactual what the alternatives would have done
+                        prove.py       sealed → blind → revealed → verified
 ```
+
+**The model never holds a credential and never emits an action.** It emits a
+`ProposedAction` — a validated struct drawn from a closed enum — which a
+deterministic kernel then accepts or rejects. A fully prompt-injected model
+still cannot exceed the mandate, because it never held the signing key and its
+output is parsed, not executed.
 
 **Deterministic wherever correctness is checkable; a model only where judgement
 is required.** The gate, the decomposition, the retry list and all ten of the kernel's
@@ -485,7 +674,7 @@ checks never consult a model. See [`ARCHITECTURE.md`](ARCHITECTURE.md).
 ```bash
 make setup      # python + frontend dependencies
 make demo       # backend :8000 + frontend :3000
-make test       # 428 tests
+make test       # 521 tests
 make verify     # regenerate everything, fail if any committed number moved
 ```
 
@@ -507,13 +696,41 @@ python evals/run_npci_finding.py
 python evals/run_backtest.py               # out-of-sample, real NPCI data
 python evals/run_outcome_eval.py           # forecast accuracy after a fix
 python evals/run_scale_benchmark.py        # throughput at book scale
-pytest -q                                  # 428 tests
+pytest -q                                  # 521 tests
 ```
 
 The LLM evals need a key **once** to populate the cache; after that they
 reproduce offline, and they **refuse to run against stub responses** rather than
 produce a number that looks like a measurement. Either provider works —
 `ANTHROPIC_API_KEY` or `OPENROUTER_API_KEY`.
+
+---
+
+## Reproduce the demo
+
+Five minutes, from a clean reset. Every number below is what the committed
+data actually produces — nothing is staged.
+
+| | | |
+|---|---|---|
+| 0:00 | **Book** | ₹5,56,225 of revenue opportunity across 8 merchants, 2,090 failed payments, ₹64,24,667 at risk. Hero is **₹39,833 recovered — measured**, not identified. |
+| 0:40 | Click **CloudSync Pro** | 1,180 payments, 227 failures. |
+| 1:00 | **Diagnose** → *Run diagnosis* | Ten real graph nodes stream over SSE. No timers, no interpolated progress: a node reads RUNNING only while the engine says so. |
+| 1:50 | The gap | 80.76% → 87.35%, **6.59 pts**, ₹1,09,595/month opportunity. |
+| 2:00 | Root cause | Hour-of-day degradation, **+3.79 ± 0.57 pts**, ACTIONABLE — it cleared 2× its own measured error. Two fixes withheld because theirs did not. |
+| 2:30 | **Compare** | The Lab. Replayed over the same batch, naive retry gets ₹2,11,258 and this policy gets ₹16,026 — and the loop breaches the signed mandate 247 times and wastes 594 attempts getting there. Both are counterfactual; the row marked **measured** is what the live run actually did. The frontier prices raising the ₹3,000 auto-limit: ₹78,781 recovered, but ₹4,73,665 moved with nobody watching. |
+| 3:30 | **Authorise** | AI proposes, policy decides: 14 allowed, 51 held, 16 denied. |
+| 4:00 | One payment | `pay_cloudsync_0060`, ₹24,816, ceiling ₹15,000 → rule 5, `DENY_AMOUNT_ABOVE_CEILING`, **DENIED**. The AI asked; the policy refused; the money was protected. |
+| 4:20 | Retry ladder | Not "retry 3× every 30 minutes". Slots at +30h/+48h/+68h for a funding decline, all inside the 24–72h plateau, all inside the 7-day window and the attempt cap. When a stopping rule fires, execution stops. |
+| 4:35 | **Evidence** | Click ₹4,741 → the three payments, each with its rule, outcome and audit hash. Eleven invariants hold; the chain re-hashes from genesis. |
+| 4:45 | **Prove** | Sealed → blind → revealed → verified. |
+| 4:55 | End | **₹39,833 recovered. Not identified.** |
+
+```bash
+# from a clean state
+curl -X POST localhost:8000/api/demo/reset     # re-runs each merchant, reuses run_ids
+python tests/browser/audit.py                  # drives the whole flow in Chromium
+```
 
 ---
 

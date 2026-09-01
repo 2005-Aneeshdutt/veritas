@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { TopBar } from "@/components/Chrome";
+import { ChainFooter } from "@/components/Chain";
 import {
   Detail,
   Empty,
@@ -350,6 +351,7 @@ export default function ImpactPage() {
           </p>
         </Detail>
       </Notes>
+      <ChainFooter />
     </>
   );
 }

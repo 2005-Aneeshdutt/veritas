@@ -378,6 +378,85 @@ def main() -> int:
             else:
                 record("assistant", "text input", "input missing", "FAIL")
 
+        # ── COUNTERFACTUAL RECOVERY LAB ───────────────────────────────────
+        #
+        # The page makes an argument out of four numbers, so the audit checks
+        # the argument is actually on screen rather than that the route
+        # returns 200: the winning row must be present, the losing rows must
+        # be present, and the breach counts that explain why the biggest
+        # number is not the best one must be present too.
+        print("\nCOUNTERFACTUAL LAB")
+        page.goto(BASE + "/lab", wait_until="networkidle")
+
+        safe("/lab", "page", "renders the comparison",
+             lambda: page.get_by_text("Four policies, one batch").count() > 0)
+
+        for name in ("No intervention", "Naive retry", "Static rules",
+                     "Revenue Doctor"):
+            safe("/lab", "row: %s" % name, "present",
+                 lambda n=name: page.get_by_text(n, exact=False).count() > 0)
+
+        # The honest bit. If the mandate-breach column ever disappears, the
+        # table becomes a rigged benchmark and this audit has to fail.
+        safe("/lab", "mandate breaches", "counted for the baselines",
+             lambda: page.get_by_text("over cap", exact=False).count() > 0)
+        safe("/lab", "observed arm", "labelled measured, not counterfactual",
+             lambda: page.get_by_text("Revenue Doctor (this run)").count() > 0)
+        safe("/lab", "why this policy", "explains from the evaluation",
+             lambda: page.get_by_text("The alternative").count() > 0)
+        safe("/lab", "frontier", "shows the signed mandate",
+             lambda: page.get_by_text("signed", exact=False).count() > 0)
+
+        # Switching merchant must actually re-evaluate, not just relabel.
+        sel = page.locator("select").first
+        if sel.count():
+            before = page.inner_text("body")[:4000]
+            sel.select_option("voltbill")
+            page.wait_for_timeout(1500)
+            safe("/lab", "merchant selector", "re-evaluates the batch",
+                 lambda: page.inner_text("body")[:4000] != before)
+            sel.select_option("cloudsync")
+            page.wait_for_timeout(1200)
+        else:
+            record("/lab", "merchant selector", "select missing", "FAIL")
+
+        safe("/lab", "method disclosure", "opens",
+             lambda: (page.locator("summary").first.click(), True)[1])
+
+        # ── EVIDENCE: THE MONEY DRILLDOWN ─────────────────────────────────
+        #
+        # The claim is that no aggregate is unfalsifiable. So the audit
+        # clicks an aggregate and asserts payments with audit hashes come
+        # back — the whole point of the page failing silently would be a
+        # bucket that opens onto nothing.
+        print("\nEVIDENCE DRILLDOWN")
+        page.goto(BASE + "/evidence", wait_until="networkidle")
+
+        safe("/evidence", "reconciliation", "invariants hold",
+             lambda: page.get_by_text("invariants hold", exact=False).count() > 0)
+        safe("/evidence", "no failed invariant", "nothing is out of balance",
+             lambda: page.get_by_text("invariants FAILED", exact=False).count() == 0)
+
+        rec_btn = page.get_by_role("button", name=re.compile("Recovered", re.I)).first
+        if rec_btn.count():
+            rec_btn.click()
+            page.wait_for_timeout(1200)
+            safe("/evidence", "click Recovered", "opens the payments behind it",
+                 lambda: page.get_by_text("retry_soft_decline", exact=False).count() > 0)
+            safe("/evidence", "drilldown rows", "carry the audit entry",
+                 lambda: page.get_by_text("OK_WITHIN_MANDATE", exact=False).count() > 0)
+        else:
+            record("/evidence", "click Recovered", "bucket button missing", "FAIL")
+
+        ref_btn = page.get_by_role("button", name=re.compile("Refused", re.I)).first
+        if ref_btn.count():
+            ref_btn.click()
+            page.wait_for_timeout(1200)
+            safe("/evidence", "click Refused", "names the rule that refused it",
+                 lambda: page.get_by_text("DENY_", exact=False).count() > 0)
+        else:
+            record("/evidence", "click Refused", "bucket button missing", "FAIL")
+
         # ── BACK / FORWARD / REFRESH ──────────────────────────────────────
         print("\nHISTORY + REFRESH")
         page.goto(BASE + "/portfolio", wait_until="networkidle")
@@ -437,7 +516,7 @@ def main() -> int:
         for w, h in ((1366, 768), (1440, 900), (1920, 1080)):
             page.set_viewport_size({"width": w, "height": h})
             for path in ("/portfolio", diag_url, diag_url + "/authorise",
-                         "/platform", "/prove", "/evidence", "/data"):
+                         "/lab", "/platform", "/prove", "/evidence", "/data"):
                 def no_overflow(path=path, w=w):
                     page.goto(BASE + path if path.startswith("/") else path,
                               wait_until="networkidle")

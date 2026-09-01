@@ -28,6 +28,7 @@ import { EmailPanel } from "@/components/EmailPanel";
 import { FACTOR_DOCS, GLOSSARY } from "@/lib/explain";
 import { RunRecord, inr, pts } from "@/lib/types";
 import { AskPanel } from "@/components/AskPanel";
+import { ChainFooter } from "@/components/Chain";
 
 const FACTOR_COLOR: Record<string, string> = {
   bank: "rgb(var(--sky))",
@@ -157,6 +158,7 @@ export default function Overview({ params }: { params: { runId: string } }) {
           observedPct={100 * liveDec.s_obs}
           achievablePct={100 * liveDec.s_star}
           gapPts={liveDec.gap_pts}
+          opportunityPaise={r.projected?.recoverable?.central_paise ?? 0}
           stages={live.stages}
           steps={live.steps}
           live={live.running}
@@ -168,32 +170,41 @@ export default function Overview({ params }: { params: { runId: string } }) {
       </Stagger>
 
       {/* ── 2. why the gap is happening ──
-          Dominant once the investigation is done: this is the answer the
-          whole thing exists to produce. */}
+          The root cause is the answer, so it gets the width. The sixteen
+          coalitions are the working, so they get a disclosure. Showing both
+          at equal weight made the reader decide which one was the finding. */}
       <Stagger i={1}>
-        <div className="border-t border-line pt-5">
-          <div className="flex items-baseline gap-3 flex-wrap mb-4">
+        <div className="border-t border-line pt-5 space-y-4">
+          <div className="flex items-baseline gap-3 flex-wrap">
             <h2>Why the gap is happening</h2>
             <span className="text-[12px] text-muted">
-              All sixteen coalitions of four factors, split by Shapley value.
+              One cause, named, with this engine&apos;s own measured error on it.
             </span>
           </div>
 
-          <div className="grid lg:grid-cols-[minmax(0,1fr)_minmax(0,22rem)] gap-6 items-start">
-            <Attribution
-              factors={liveDec.factors ?? []}
-              gapPts={liveDec.gap_pts}
-              residual={liveDec.residual_pts}
+          {top && (
+            <RootCause
+              factor={top.factor}
+              points={top.points}
+              mae={top.mae}
+              summary={r.diagnosis?.summary}
             />
-            {top && (
-              <RootCause
-                factor={top.factor}
-                points={top.points}
-                mae={top.mae}
-                summary={r.diagnosis?.summary}
+          )}
+
+          <details className="group">
+            <summary className="cursor-pointer list-none inline-flex items-center gap-1.5 text-[12px] text-faint hover:text-ink transition-colors">
+              <span className="transition-transform group-open:rotate-90">›</span>
+              View attribution — all sixteen coalitions of four factors, split
+              by Shapley value
+            </summary>
+            <div className="mt-4">
+              <Attribution
+                factors={liveDec.factors ?? []}
+                gapPts={liveDec.gap_pts}
+                residual={liveDec.residual_pts}
               />
-            )}
-          </div>
+            </div>
+          </details>
         </div>
       </Stagger>
 
@@ -203,9 +214,57 @@ export default function Overview({ params }: { params: { runId: string } }) {
         <div>
           <SectionHeader
             eyebrow="Close the loop"
-            title="Approve a fix and watch the mandate check it"
-            sub="Nothing here has run yet. Applying a fix re-checks every action against your signed mandate, executes only what is permitted, and writes the audit entry."
+            title="The recovery decision"
+            sub="Applying a fix re-checks every action against your signed mandate, executes only what is permitted, and writes the audit entry."
+            right={
+              <a href="/lab" className="text-[12px] text-brand whitespace-nowrap">
+                Compare against other policies →
+              </a>
+            }
           />
+
+          {/* Proposed and withheld, side by side. A system that only ever
+              shows you what it decided to do is not showing you a decision. */}
+          <div className="grid sm:grid-cols-2 gap-px bg-line rounded-lg overflow-hidden mb-5">
+            <div className="bg-surface p-4">
+              <div className="ui text-[10px] uppercase tracking-[0.12em] text-mint">
+                Proposed
+              </div>
+              <div className="num text-[20px] font-semibold mt-1.5">
+                {(rec.pending_actions ?? []).length} fixes
+                <span className="text-[13px] text-faint font-normal">
+                  {" "}
+                  · {r.plan.actions} actions
+                </span>
+              </div>
+              <div className="text-[11.5px] text-muted mt-2 leading-snug">
+                Each one cleared twice its own measured error before it was
+                allowed to become an action.
+              </div>
+            </div>
+
+            <div className="bg-surface p-4">
+              <div className="ui text-[10px] uppercase tracking-[0.12em] text-amber">
+                Withheld
+              </div>
+              <div className="num text-[20px] font-semibold mt-1.5">
+                {r.plan.withheld.length} fixes
+              </div>
+              <div className="text-[11.5px] text-muted mt-2 leading-snug">
+                {r.plan.withheld.length === 0
+                  ? "Nothing was withheld on this batch."
+                  : r.plan.withheld
+                      .map(
+                        (w: any) =>
+                          FACTOR_DOCS[w.factor]?.label ?? w.factor
+                      )
+                      .join(", ") +
+                    " — the attribution did not clear its own error bar, so " +
+                    "no action was proposed."}
+              </div>
+            </div>
+          </div>
+
           <ApplyFix
             runId={params.runId}
             groups={rec.pending_actions ?? []}
@@ -564,6 +623,7 @@ export default function Overview({ params }: { params: { runId: string } }) {
           </p>
         </Detail>
       </Notes>
+      <ChainFooter runHref={`/run/${params.runId}`} />
     </div>
   );
 }

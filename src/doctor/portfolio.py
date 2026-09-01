@@ -121,6 +121,13 @@ class Portfolio(BaseModel):
     pending_projected_high_paise: int
     total_transactions: int
     total_failures: int
+    #: Face value of every failed payment across the book. The floor of the
+    #: money story, and the denominator the funnel is read against.
+    #:
+    #: Taken from reconcile.py rather than computed a second time here. Two
+    #: implementations of "what is at risk" is exactly how a dashboard ends up
+    #: disagreeing with its own drilldown.
+    total_at_risk_paise: int = 0
     #: band -> count
     bands: dict[str, int]
     #: cause -> {merchants, value_paise}, so the platform can see which problem
@@ -318,6 +325,12 @@ def build_portfolio() -> Portfolio:
     w_obs = sum(r.observed_pct * r.transactions for r in rows) / total_txn
     w_ach = sum(r.achievable_pct * r.transactions for r in rows) / total_txn
 
+    from .reconcile import _batch as _failed_payments
+
+    at_risk = sum(
+        sum(_failed_payments(r.merchant_id).values()) for r in rows
+    )
+
     return Portfolio(
         merchants=rows,
         total_gap_value_paise=sum(r.gap_value_paise for r in rows),
@@ -344,6 +357,7 @@ def build_portfolio() -> Portfolio:
         pending_projected_high_paise=int(pending_value[Calibration.OPTIMISTIC.value]),
         total_transactions=sum(r.transactions for r in rows),
         total_failures=sum(r.failures for r in rows),
+        total_at_risk_paise=at_risk,
         bands=bands,
         by_cause=dict(
             sorted(by_cause.items(), key=lambda kv: -kv[1]["value_paise"])

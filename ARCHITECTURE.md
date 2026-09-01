@@ -203,6 +203,26 @@ Correlation is induced by mixing the independent joint with a Fréchet
 upper-bound (comonotone) coupling on the injected pair, and the **realised** ρ
 is measured and reported rather than trusting the nominal knob.
 
+### The retry counterfactual, and why it lives where it does
+
+`GroundTruth.retry_conversions` holds, for every recoverable failure, whether a
+retry would truly have converted. It is drawn from a **second, independently
+seeded stream**, so adding it did not shift any other draw or move any
+committed number.
+
+It is on `GroundTruth` and never on `Transaction`, and that placement is the
+entire validity argument for two separate things:
+
+* `scoring.py` marks the retries the agent really sent, turning "recovered ₹X
+  (projected)" into a measurement with an error
+* `counterfactual.py` marks four policies against it, none of which can see it
+
+The engine receives a profile and a list of transactions. It has no route to
+this dict, and `test_no_strategy_takes_a_truth_argument` plus
+`test_decisions_are_unchanged_when_the_truth_is_inverted` hold the same line
+for the evaluation harness — the first structurally, the second behaviourally,
+with a control test so the second cannot pass vacuously.
+
 ---
 
 ## 6. Data provenance
@@ -258,6 +278,8 @@ src/doctor/
   the agent               graph · classify · hypothesise · tools (its toolset)
                           verify · plan · sequence (when to retry)
   acting                  apply · scoring (marks itself against truth)
+  evaluation              counterfactual (four policies, one batch, one truth)
+                          reconcile (aggregates traced to the records under them)
   reading text            claims (merchant's theory) · assistant (grounded Q&A)
   surfaces                report · portfolio · drift · live · fault · outreach
                           outcome · prove (sealed envelope) · trace · llm · api · run
@@ -267,15 +289,24 @@ evals/                    validation_sweep · s_star_sensitivity · baseline_lad
                           recovery · classification · root_cause · verifier_ablation
                           scale_benchmark · results/ (17 files, committed)
 
-frontend/src/app/         sign-in · portfolio · live · drift · prove
-                          run/[runId]/{,flow,diagnosis,validation,audit,exceptions}
+frontend/src/app/         sign-in · portfolio · live · drift · lab · platform
+                          evidence · impact · data · prove
+                          run/[runId]/{,flow,diagnosis,validation,journey,
+                                       authorise,exceptions}
 
-tests/                    17 files, 209 tests. shapley (efficiency) · ledger
+tests/                    36 files, 521 tests. shapley (efficiency) · ledger
                           (tamper) · policy · canonical · types · apply
                           (stranded step-ups) · live (inverted bound) · prove
                           (the seal) · tools (containment) · sequence (the
                           ladder the eval scores) · claims · fault · scoring
                           · assistant · reissue · drift_action · recovery_truth
+                          · counterfactual (no ground-truth leakage, abstention,
+                            the frontier) · reconcile (the money partition)
+
+tests/browser/            audit.py — 87 steps in a real Chromium. Clicks every
+                          control a judge would, records console errors and
+                          failed requests, and asserts the demo creates no new
+                          run files.
 
 docs/                     what_broke.md · npci_finding.md · pitch_script.md
 ```

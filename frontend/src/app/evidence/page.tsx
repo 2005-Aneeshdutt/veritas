@@ -4,6 +4,8 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Budget } from "@/components/Budget";
 import { TopBar } from "@/components/Chrome";
+import { ChainFooter } from "@/components/Chain";
+import { MoneyTrace } from "@/components/MoneyTrace";
 import {
   Detail,
   Empty,
@@ -122,6 +124,10 @@ export default function EvidencePage() {
   const [a, setA] = useState<Audit | null>(null);
   const [dead, setDead] = useState(false);
   const [showExcluded, setShowExcluded] = useState(false);
+  // Which run's money is being traced. Defaults to the canonical demo
+  // merchant so the section is never empty on first load.
+  const [runs, setRuns] = useState<any[]>([]);
+  const [traceRun, setTraceRun] = useState<string | null>(null);
 
   useEffect(() => {
     fetch("/api/evals")
@@ -132,6 +138,15 @@ export default function EvidencePage() {
       .then((r) => r.json())
       .then(setA)
       .catch(() => setDead(true));
+    fetch("/api/portfolio")
+      .then((r) => r.json())
+      .then((d) => {
+        const ms = d.merchants ?? [];
+        setRuns(ms);
+        const canonical = ms.find((m: any) => m.merchant_id === "cloudsync");
+        setTraceRun((canonical ?? ms[0])?.run_id ?? null);
+      })
+      .catch(() => {});
   }, []);
 
   const shell = (body: React.ReactNode) => (
@@ -199,6 +214,40 @@ export default function EvidencePage() {
             sub="re-hashed from genesis just now"
           />
         </div>
+      </Stagger>
+
+      {/* ── 0. where the money came from ──
+          Placed first, above the forecast scoring, because "is this number
+          real" comes before "was the forecast good". Every figure below is
+          recomputed from the ledger server-side and checked against the run
+          file, so a drift shows up as a failed invariant rather than as a
+          page that disagrees with itself. */}
+      <Stagger i={1}>
+        <SectionHeader
+          title="Where the recovered number came from"
+          sub="Every failed payment in this batch lands in exactly one bucket, and the buckets sum to the money at risk. Click any of them for the payments underneath, each with the rule that decided it and the hash of the entry that recorded it."
+          right={
+            runs.length > 1 ? (
+              <select
+                value={traceRun ?? ""}
+                onChange={(e) => setTraceRun(e.target.value)}
+                className="field h-8 text-[12px] w-44"
+                aria-label="run to trace"
+              >
+                {runs.map((m: any) => (
+                  <option key={m.run_id} value={m.run_id}>
+                    {m.name}
+                  </option>
+                ))}
+              </select>
+            ) : undefined
+          }
+        />
+        {traceRun ? (
+          <MoneyTrace runId={traceRun} />
+        ) : (
+          <p className="text-[13px] text-faint">no run on disk to trace</p>
+        )}
       </Stagger>
 
       {/* ── 1. did the fix work ── */}
@@ -511,6 +560,7 @@ export default function EvidencePage() {
           </p>
         </Detail>
       </Notes>
+      <ChainFooter />
     </>
   );
 }

@@ -3,6 +3,7 @@
 import { AgentPipeline, Stage } from "@/components/AgentPipeline";
 import { EventFeed, PipelineRail } from "@/components/Investigation";
 import { LiveStep } from "@/components/useDiagnosis";
+import { inr } from "@/lib/types";
 
 /**
  * The first screen: who, how far behind, and what the system is doing.
@@ -22,6 +23,7 @@ export function DiagnoseHead({
   observedPct,
   achievablePct,
   gapPts,
+  opportunityPaise,
   stages,
   steps,
   live,
@@ -34,6 +36,8 @@ export function DiagnoseHead({
   observedPct: number;
   achievablePct: number;
   gapPts: number;
+  /** What the gap is worth per month. PROJECTED. */
+  opportunityPaise: number;
   stages: Stage[];
   steps: LiveStep[];
   live: boolean;
@@ -72,6 +76,14 @@ export function DiagnoseHead({
               tone="text-rose"
               big
             />
+            {/* The gap in rupees, because "6.59 points" is not a number
+                anybody acts on. Projected, and chipped as such. */}
+            <Fig
+              label="opportunity / month"
+              value={inr(opportunityPaise)}
+              tone="text-amber"
+              chip="projected"
+            />
           </div>
         </div>
 
@@ -83,15 +95,19 @@ export function DiagnoseHead({
           <div className="flex items-center gap-2 mt-1.5">
             <span
               className={`w-1.5 h-1.5 rounded-full ${
-                live ? "bg-brand animate-pulse-ring" : "bg-mint"
+                live
+                  ? "bg-brand animate-pulse-ring"
+                  : finished
+                  ? "bg-mint"
+                  : "bg-edge"
               }`}
             />
             <span
-              className={`text-[13px] font-medium ${
-                live ? "text-brand" : "text-mint"
+              className={`ui text-[11px] font-medium uppercase tracking-[0.12em] ${
+                live ? "text-brand" : finished ? "text-mint" : "text-faint"
               }`}
             >
-              {live ? "Running" : finished ? "Ready" : "Idle"}
+              {live ? "Live" : finished ? "Complete" : "Idle"}
             </span>
             <span className="num text-[11px] text-faint ml-auto">
               {done}/{stages.length}
@@ -122,21 +138,41 @@ export function DiagnoseHead({
         </div>
       </div>
 
-      {/* ── the investigation ── */}
-      <div>
-        <div className="flex items-baseline gap-3 flex-wrap mb-2.5">
-          <h2>Live investigation</h2>
-          <span className="text-[12px] text-muted">
-            Every node below is one the engine really ran. Pacing throttles the
-            feed, never the work.
-          </span>
-        </div>
+      {/* ── the investigation ──
+          Dominant while it is happening; a single line once it is not. The
+          answer the page exists to produce is the root cause below, and an
+          eleven-tile grid of finished work standing in front of it is the
+          page telling you about itself instead of about the merchant. */}
+      {live || !finished ? (
+        <div>
+          <div className="flex items-baseline gap-3 flex-wrap mb-2.5">
+            <h2>Live investigation</h2>
+            <span className="text-[12px] text-muted">
+              Every node below is one the engine really ran. Pacing throttles
+              the feed, never the work.
+            </span>
+          </div>
 
-        <div className="grid lg:grid-cols-[minmax(0,1fr)_minmax(0,17rem)] gap-4 items-stretch">
-          <PipelineRail stages={stages} />
-          <EventFeed steps={steps} stages={stages} live={live} />
+          <div className="grid lg:grid-cols-[minmax(0,1fr)_minmax(0,17rem)] gap-4 items-stretch">
+            <PipelineRail stages={stages} />
+            <EventFeed steps={steps} stages={stages} live={live} />
+          </div>
         </div>
-      </div>
+      ) : (
+        <details className="group border-t border-line pt-3">
+          <summary className="cursor-pointer list-none flex items-center gap-2 text-[12.5px] text-muted hover:text-ink transition-colors">
+            <span className="transition-transform group-open:rotate-90">›</span>
+            <span className="text-mint">✓</span>
+            Investigation complete — {done} of {stages.length} nodes ran
+            {coalitions ? `, ${coalitions.n} coalitions evaluated` : ""}. Open
+            the live system.
+          </summary>
+          <div className="mt-4 grid lg:grid-cols-[minmax(0,1fr)_minmax(0,17rem)] gap-4 items-stretch">
+            <PipelineRail stages={stages} />
+            <EventFeed steps={steps} stages={stages} live={live} />
+          </div>
+        </details>
+      )}
     </div>
   );
 }
@@ -146,16 +182,23 @@ function Fig({
   value,
   tone,
   big,
+  chip,
 }: {
   label: string;
   value: string;
   tone?: string;
   big?: boolean;
+  chip?: "projected" | "measured";
 }) {
   return (
     <div>
-      <div className="ui text-[10px] uppercase tracking-[0.1em] text-faint">
+      <div className="ui text-[10px] uppercase tracking-[0.1em] text-faint flex items-center gap-1.5">
         {label}
+        {chip && (
+          <span className={chip === "measured" ? "chip-measured" : "chip-projected"}>
+            {chip}
+          </span>
+        )}
       </div>
       <div
         className={`num font-semibold leading-none mt-1 tracking-tight ${

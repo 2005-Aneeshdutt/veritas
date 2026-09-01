@@ -7,6 +7,7 @@ import { BarStrip } from "@/components/BarStrip";
 import { ChainView, VerifyProgress } from "@/components/ChainView";
 import { RetrySchedule } from "@/components/RetrySchedule";
 import { Card, Detail, Eyebrow, Figure, Figures, Info, Loading, Notes, PageHead, Panel, SectionHeader, Stagger, Ticker } from "@/components/ui";
+import { ChainFooter } from "@/components/Chain";
 import { GLOSSARY, NEXT_STEP } from "@/lib/explain";
 import { RunRecord, inr } from "@/lib/types";
 
@@ -227,6 +228,20 @@ export default function AuditPage({ params }: { params: { runId: string } }) {
           title="Authorise"
           sub="Every decision the agent made — allowed, escalated and denied — is hash-chained. Denied actions are recorded too; a trail of only successes is a highlight reel."
         />
+        {/* The division of labour, stated once and in four words, because it
+            is the whole architecture and it is easy to miss inside a queue of
+            eighty-one rows. */}
+        <div className="flex items-center gap-3 flex-wrap mt-3 text-[12.5px]">
+          <span className="chip-llm">AI proposes</span>
+          <span className="text-faint">→</span>
+          <span className="chip-det">policy decides</span>
+          <span className="text-muted leading-relaxed">
+            The model emits a typed action and never a credential. A
+            deterministic kernel checks it against a mandate signed with a key
+            the agent has never held. A fully prompt-injected model still
+            cannot exceed it.
+          </span>
+        </div>
       </Stagger>
 
       {/* Three outcomes, three counts, each one opening the payments behind
@@ -767,6 +782,7 @@ export default function AuditPage({ params }: { params: { runId: string } }) {
           </Detail>
         </Card>
       </Stagger>
+      <ChainFooter runHref={`/run/${params.runId}`} />
     </div>
   );
 }

@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { RecoveryFunnel } from "@/components/RecoveryFunnel";
 import { BookLenses } from "@/components/BookLenses";
 import { TopBar } from "@/components/Chrome";
+import { ChainFooter } from "@/components/Chain";
 import {
   Detail,
   Empty,
@@ -188,6 +189,25 @@ export default function PortfolioPage() {
             <div className="bg-surface p-5">
               <div className="flex items-center gap-2">
                 <span className="ui text-[10px] uppercase tracking-[0.12em] text-faint">
+                  Money recovered
+                </span>
+                <span className="chip-measured">measured</span>
+              </div>
+              <div className="num text-[34px] font-semibold leading-none mt-2.5 text-mint">
+                <Ticker value={pf.total_measured_paise / 100} prefix="₹" />
+              </div>
+              <div className="text-[12px] text-muted mt-2.5 leading-relaxed">
+                Not identified — recovered.{" "}
+                <span className="num">{pf.total_converted}</span> of{" "}
+                <span className="num">{pf.total_attempted}</span> executed
+                retries truly converted, marked afterwards against an outcome
+                the engine never saw.
+              </div>
+            </div>
+
+            <div className="bg-surface p-5">
+              <div className="flex items-center gap-2">
+                <span className="ui text-[10px] uppercase tracking-[0.12em] text-faint">
                   Revenue opportunity
                 </span>
                 <span className="chip-projected">projected</span>
@@ -196,7 +216,7 @@ export default function PortfolioPage() {
                 <Ticker value={pf.total_recoverable_central_paise / 100} prefix="₹" />
               </div>
               <div className="text-[12px] text-muted mt-2.5 leading-relaxed">
-                Central estimate. The published range is{" "}
+                Central estimate on the whole book. The published range is{" "}
                 <span className="num">
                   {inr(pf.total_recoverable_low_paise, { compact: true })}–
                   {inr(pf.total_recoverable_high_paise, { compact: true })}
@@ -204,36 +224,41 @@ export default function PortfolioPage() {
                 , and it is the range the validation brackets, not this figure.
               </div>
             </div>
-
-            <div className="bg-surface p-5">
-              <div className="flex items-center gap-2">
-                <span className="ui text-[10px] uppercase tracking-[0.12em] text-faint">
-                  Actually won back
-                </span>
-                <span className="chip-measured">measured</span>
-              </div>
-              <div className="num text-[34px] font-semibold leading-none mt-2.5 text-mint">
-                <Ticker value={pf.total_measured_paise / 100} prefix="₹" />
-              </div>
-              <div className="text-[12px] text-muted mt-2.5 leading-relaxed">
-                <span className="num">{pf.total_converted}</span> of{" "}
-                <span className="num">{pf.total_attempted}</span> executed
-                retries truly converted, marked against an outcome the engine
-                never saw.
-              </div>
-            </div>
           </div>
 
           {/* the book, as a flow rather than four unrelated tiles */}
+          {/* The money story, stage by stage.
+              Each stage narrows the one before it, and every figure here is
+              traceable: at risk and recovered come out of reconcile.py, which
+              also backs the Evidence drilldown, so the Book and the drilldown
+              cannot disagree. */}
           <Flow
             steps={[
-              { k: "payments examined", v: pf.total_transactions.toLocaleString("en-IN") },
-              { k: "failures", v: pf.total_failures.toLocaleString("en-IN"), tone: "text-rose" },
-              { k: "projected recoverable", v: inr(pf.total_recoverable_central_paise, { compact: true }), tone: "text-amber" },
-              { k: "retries", v: `${pf.total_attempted} → ${pf.total_converted}`, tone: "text-muted" },
-              { k: "actually recovered", v: inr(pf.total_measured_paise, { compact: true }), tone: "text-mint" },
+              { k: "at risk", v: inr(pf.total_at_risk_paise, { compact: true }), tone: "text-rose" },
+              { k: "opportunity", v: inr(pf.total_recoverable_central_paise, { compact: true }), tone: "text-amber" },
+              { k: "authorised", v: pf.acted_on.toLocaleString("en-IN"), tone: "text-sky" },
+              { k: "attempted", v: pf.total_attempted.toLocaleString("en-IN"), tone: "text-muted" },
+              { k: "recovered", v: inr(pf.total_measured_paise, { compact: true }), tone: "text-mint" },
+              { k: "verified", v: "chain ok", tone: "text-mint" },
             ]}
           />
+          <p className="text-[11.5px] text-faint leading-relaxed -mt-3">
+            <span className="num">{pf.total_failures.toLocaleString("en-IN")}</span>{" "}
+            failed payments across{" "}
+            <span className="num">{pf.total_transactions.toLocaleString("en-IN")}</span>{" "}
+            examined. Held for merchant confirmation:{" "}
+            <span className="num text-amber">
+              {inr(pf.total_held_paise, { compact: true })}
+            </span>
+            . Refused by mandate:{" "}
+            <span className="num text-rose">
+              {inr(pf.total_denied_paise, { compact: true })}
+            </span>
+            .{" "}
+            <a href="/evidence" className="text-brand">
+              Trace any of these →
+            </a>
+          </p>
 
           <Figures>
             <Figure
@@ -424,6 +449,7 @@ export default function PortfolioPage() {
           </p>
         </Detail>
       </Notes>
+      <ChainFooter />
     </>
   );
 }

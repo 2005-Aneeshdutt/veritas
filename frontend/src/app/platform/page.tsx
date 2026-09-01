@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { TopBar } from "@/components/Chrome";
+import { ChainFooter } from "@/components/Chain";
 import {
   Detail,
   Empty,
@@ -274,6 +275,7 @@ export default function WhoseFaultPage() {
           </p>
         </Detail>
       </Notes>
+      <ChainFooter />
     </>
   );
 }
