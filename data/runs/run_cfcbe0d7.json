@@ -4,9 +4,9 @@
   "merchant_name": "TechBazaar",
   "mcc": "5732",
   "seed": 20260824,
-  "started_at": 1788248435.910559,
-  "duration_ms": 753,
-  "commit": "3a7675b",
+  "started_at": 1788249550.6658008,
+  "duration_ms": 358,
+  "commit": "07c0560",
   "models": {
     "fast": "claude-haiku-4.5",
     "reasoning": "claude-sonnet-4.6",
@@ -28,8 +28,8 @@
       "node": "ingest",
       "kind": "deterministic",
       "status": "ok",
-      "started_at": 1788248435.9185748,
-      "duration_ms": 38,
+      "started_at": 1788249550.6718001,
+      "duration_ms": 20,
       "input_summary": {
         "merchant": "techbazaar",
         "mcc": "5732"
@@ -60,8 +60,8 @@
       "node": "classify",
       "kind": "llm",
       "status": "ok",
-      "started_at": 1788248435.9583158,
-      "duration_ms": 1,
+      "started_at": 1788249550.69309,
+      "duration_ms": 0,
       "input_summary": {
         "distinct_codes": 48,
         "failures": 131
@@ -95,7 +95,7 @@
       "node": "human_review",
       "kind": "deterministic",
       "status": "skipped",
-      "started_at": 1788248435.9613132,
+      "started_at": 1788249550.6940842,
       "duration_ms": 0,
       "input_summary": {},
       "output_summary": {
@@ -119,8 +119,8 @@
       "node": "bank_health",
       "kind": "deterministic",
       "status": "ok",
-      "started_at": 1788248435.9623127,
-      "duration_ms": 4,
+      "started_at": 1788249550.695083,
+      "duration_ms": 1,
       "input_summary": {},
       "output_summary": {
         "banks_examined": 10,
@@ -248,8 +248,8 @@
       "node": "decompose",
       "kind": "deterministic",
       "status": "ok",
-      "started_at": 1788248435.968311,
-      "duration_ms": 642,
+      "started_at": 1788249550.6970823,
+      "duration_ms": 290,
       "input_summary": {},
       "output_summary": {
         "gap_pts": 2.007,
@@ -319,8 +319,8 @@
       "node": "hypothesise",
       "kind": "llm",
       "status": "ok",
-      "started_at": 1788248436.611751,
-      "duration_ms": 17,
+      "started_at": 1788249550.989166,
+      "duration_ms": 11,
       "input_summary": {},
       "output_summary": {
         "tool_calls": [
@@ -428,8 +428,8 @@
       "node": "plan",
       "kind": "deterministic",
       "status": "ok",
-      "started_at": 1788248436.6308906,
-      "duration_ms": 4,
+      "started_at": 1788249551.0022697,
+      "duration_ms": 2,
       "input_summary": {},
       "output_summary": {
         "actions": 43,
@@ -492,8 +492,8 @@
       "node": "gate",
       "kind": "deterministic",
       "status": "ok",
-      "started_at": 1788248436.6359212,
-      "duration_ms": 11,
+      "started_at": 1788249551.0052812,
+      "duration_ms": 8,
       "input_summary": {},
       "output_summary": {
         "decisions": {
@@ -527,8 +527,8 @@
       "node": "execute",
       "kind": "deterministic",
       "status": "ok",
-      "started_at": 1788248436.6489203,
-      "duration_ms": 6,
+      "started_at": 1788249551.0138066,
+      "duration_ms": 3,
       "input_summary": {},
       "output_summary": {
         "executed": 3,
@@ -558,8 +558,8 @@
       "node": "report",
       "kind": "deterministic",
       "status": "ok",
-      "started_at": 1788248436.6559706,
-      "duration_ms": 8,
+      "started_at": 1788249551.0185513,
+      "duration_ms": 6,
       "input_summary": {},
       "output_summary": {
         "measured_keys": [
@@ -1677,7 +1677,7 @@
     "ledger": [
       {
         "sequence": 0,
-        "timestamp": "2026-09-01T07:40:36.648920+00:00",
+        "timestamp": "2026-09-01T07:59:11.013806+00:00",
         "txn_id": "merchant:techbazaar",
         "proposed_action": {
           "action_type": "flag_for_investigation",
@@ -1693,11 +1693,11 @@
         "outcome": "escalated",
         "actor": "agent",
         "prev_hash": "0000000000000000000000000000000000000000000000000000000000000000",
-        "entry_hash": "57098e94e06af9791553038c7dc26e479ce468af703d46789bb453ec5dba15a1"
+        "entry_hash": "b3243672358f27f89d3738c3f3b6e6d8bf51bb0710cb6540541c13138b295cdb"
       },
       {
         "sequence": 1,
-        "timestamp": "2026-09-01T07:40:36.650433+00:00",
+        "timestamp": "2026-09-01T07:59:11.013806+00:00",
         "txn_id": "merchant:techbazaar",
         "proposed_action": {
           "action_type": "update_payment_method",
@@ -1712,12 +1712,12 @@
         "gate_reason": "OK_MERCHANT_ACTION",
         "outcome": "merchant_action",
         "actor": "agent",
-        "prev_hash": "57098e94e06af9791553038c7dc26e479ce468af703d46789bb453ec5dba15a1",
-        "entry_hash": "f35eb10cedef1ec6cd204a10426e0728c52fa9a62dd1aec61797c0681e598a39"
+        "prev_hash": "b3243672358f27f89d3738c3f3b6e6d8bf51bb0710cb6540541c13138b295cdb",
+        "entry_hash": "99a47213e862dbd55ba41b4252d905f28e85744dd924c98558727a0d0cf09117"
       },
       {
         "sequence": 2,
-        "timestamp": "2026-09-01T07:40:36.650433+00:00",
+        "timestamp": "2026-09-01T07:59:11.013806+00:00",
         "txn_id": "merchant:techbazaar",
         "proposed_action": {
           "action_type": "flag_for_investigation",
@@ -1732,12 +1732,12 @@
         "gate_reason": "OK_ESCALATION",
         "outcome": "escalated",
         "actor": "agent",
-        "prev_hash": "f35eb10cedef1ec6cd204a10426e0728c52fa9a62dd1aec61797c0681e598a39",
-        "entry_hash": "cda361990ba5a02216782072fbf8740402bb0c2dd01af89abf7ca06a7bde3f09"
+        "prev_hash": "99a47213e862dbd55ba41b4252d905f28e85744dd924c98558727a0d0cf09117",
+        "entry_hash": "6353ac2b926398048821ffd74ed3a0c077713cc0940d9dee8acf0f8721640649"
       },
       {
         "sequence": 3,
-        "timestamp": "2026-09-01T07:40:36.650433+00:00",
+        "timestamp": "2026-09-01T07:59:11.013806+00:00",
         "txn_id": "merchant:techbazaar",
         "proposed_action": {
           "action_type": "flag_for_investigation",
@@ -1752,12 +1752,12 @@
         "gate_reason": "OK_ESCALATION",
         "outcome": "escalated",
         "actor": "agent",
-        "prev_hash": "cda361990ba5a02216782072fbf8740402bb0c2dd01af89abf7ca06a7bde3f09",
-        "entry_hash": "15b799d358fffd85a64d9f81dc474d63cb5f5b9f70ba11bc9351548cf193c104"
+        "prev_hash": "6353ac2b926398048821ffd74ed3a0c077713cc0940d9dee8acf0f8721640649",
+        "entry_hash": "f1be94701d549dd29c7d9fa8fdaf64a95f4608422855a92ed8e2b51ff1621ce2"
       },
       {
         "sequence": 4,
-        "timestamp": "2026-09-01T07:40:36.650433+00:00",
+        "timestamp": "2026-09-01T07:59:11.015541+00:00",
         "txn_id": "pay_techbazaar_0538",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1772,12 +1772,12 @@
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
         "actor": "agent",
-        "prev_hash": "15b799d358fffd85a64d9f81dc474d63cb5f5b9f70ba11bc9351548cf193c104",
-        "entry_hash": "ddfc753cb482e8bf50a98a2cb36e97350fef6bc7199834a62647aa135f4c5fc7"
+        "prev_hash": "f1be94701d549dd29c7d9fa8fdaf64a95f4608422855a92ed8e2b51ff1621ce2",
+        "entry_hash": "fd15d56896e5ab903903449066d05cffb8169db3e4a9c7fc41b918e49b04a9f2"
       },
       {
         "sequence": 5,
-        "timestamp": "2026-09-01T07:40:36.650433+00:00",
+        "timestamp": "2026-09-01T07:59:11.015541+00:00",
         "txn_id": "pay_techbazaar_0369",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1792,12 +1792,12 @@
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
         "actor": "agent",
-        "prev_hash": "ddfc753cb482e8bf50a98a2cb36e97350fef6bc7199834a62647aa135f4c5fc7",
-        "entry_hash": "eba1d56b31459861b9d9b9be3d7a9d45306912b421a1232205888ee93385a809"
+        "prev_hash": "fd15d56896e5ab903903449066d05cffb8169db3e4a9c7fc41b918e49b04a9f2",
+        "entry_hash": "1eaecd4f9297e6ffff8bc93f7b1f52c26416457be7a4d782047c2a144146135e"
       },
       {
         "sequence": 6,
-        "timestamp": "2026-09-01T07:40:36.650433+00:00",
+        "timestamp": "2026-09-01T07:59:11.015541+00:00",
         "txn_id": "pay_techbazaar_0334",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1812,12 +1812,12 @@
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
         "actor": "agent",
-        "prev_hash": "eba1d56b31459861b9d9b9be3d7a9d45306912b421a1232205888ee93385a809",
-        "entry_hash": "b821fe83e9dabb1227d45697c28833444c592bdcb512a9fa3c5805bc82ea6da1"
+        "prev_hash": "1eaecd4f9297e6ffff8bc93f7b1f52c26416457be7a4d782047c2a144146135e",
+        "entry_hash": "679aa2a02f6914679fd5045eb0c7638143969195e10a5a5aa761deb206892365"
       },
       {
         "sequence": 7,
-        "timestamp": "2026-09-01T07:40:36.650433+00:00",
+        "timestamp": "2026-09-01T07:59:11.015541+00:00",
         "txn_id": "pay_techbazaar_0465",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1832,12 +1832,12 @@
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
         "actor": "agent",
-        "prev_hash": "b821fe83e9dabb1227d45697c28833444c592bdcb512a9fa3c5805bc82ea6da1",
-        "entry_hash": "bd139e89a1daf33b3fdc018950bad48f6bdbe063b3a2c313257b9ee8dab3e24a"
+        "prev_hash": "679aa2a02f6914679fd5045eb0c7638143969195e10a5a5aa761deb206892365",
+        "entry_hash": "e1b664b147f0904133e0448d0d56a980aad5c22bd88850e2205bf6955269b279"
       },
       {
         "sequence": 8,
-        "timestamp": "2026-09-01T07:40:36.650433+00:00",
+        "timestamp": "2026-09-01T07:59:11.015541+00:00",
         "txn_id": "pay_techbazaar_0186",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1852,12 +1852,12 @@
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
         "actor": "agent",
-        "prev_hash": "bd139e89a1daf33b3fdc018950bad48f6bdbe063b3a2c313257b9ee8dab3e24a",
-        "entry_hash": "414e212fb9b8d5e1407026d21b40408484232509e24b5619d6a870240e80c408"
+        "prev_hash": "e1b664b147f0904133e0448d0d56a980aad5c22bd88850e2205bf6955269b279",
+        "entry_hash": "eb733c4a0f58ee3493c384833a7a541ab7041ca67524dfce57781d6be37aa4eb"
       },
       {
         "sequence": 9,
-        "timestamp": "2026-09-01T07:40:36.650433+00:00",
+        "timestamp": "2026-09-01T07:59:11.015541+00:00",
         "txn_id": "pay_techbazaar_0331",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1872,12 +1872,12 @@
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
         "actor": "agent",
-        "prev_hash": "414e212fb9b8d5e1407026d21b40408484232509e24b5619d6a870240e80c408",
-        "entry_hash": "bfc329b8d94a705bdf6a2e0f0231a25da81ea1dcb3d503f0c13f47370cb5ba8f"
+        "prev_hash": "eb733c4a0f58ee3493c384833a7a541ab7041ca67524dfce57781d6be37aa4eb",
+        "entry_hash": "991c8f29f111e9154ee31c1afd42419bdb20093f4df3d64983c162b1c7483ead"
       },
       {
         "sequence": 10,
-        "timestamp": "2026-09-01T07:40:36.650433+00:00",
+        "timestamp": "2026-09-01T07:59:11.015541+00:00",
         "txn_id": "pay_techbazaar_0286",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1892,12 +1892,12 @@
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
         "actor": "agent",
-        "prev_hash": "bfc329b8d94a705bdf6a2e0f0231a25da81ea1dcb3d503f0c13f47370cb5ba8f",
-        "entry_hash": "4203e2b6206c5ec72d3febcd3d831bdb4008b82755a609486fd37b52c73edaee"
+        "prev_hash": "991c8f29f111e9154ee31c1afd42419bdb20093f4df3d64983c162b1c7483ead",
+        "entry_hash": "9942a9ed420260bbbcd0bdfe75cfdbe76e81a566f7daf8f5d3b1993f19593331"
       },
       {
         "sequence": 11,
-        "timestamp": "2026-09-01T07:40:36.650433+00:00",
+        "timestamp": "2026-09-01T07:59:11.015541+00:00",
         "txn_id": "pay_techbazaar_0251",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1912,12 +1912,12 @@
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
         "actor": "agent",
-        "prev_hash": "4203e2b6206c5ec72d3febcd3d831bdb4008b82755a609486fd37b52c73edaee",
-        "entry_hash": "2ebf3a7f70cea34f16760a05ffafe3423ed6f1f0d05f9f07ab6b69e7ebbb8979"
+        "prev_hash": "9942a9ed420260bbbcd0bdfe75cfdbe76e81a566f7daf8f5d3b1993f19593331",
+        "entry_hash": "5a793a592edce8ccd7815c60598b2ced11251cb319f307e8f5ecc08c0e6b44c1"
       },
       {
         "sequence": 12,
-        "timestamp": "2026-09-01T07:40:36.650433+00:00",
+        "timestamp": "2026-09-01T07:59:11.015541+00:00",
         "txn_id": "pay_techbazaar_0776",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1932,12 +1932,12 @@
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
         "actor": "agent",
-        "prev_hash": "2ebf3a7f70cea34f16760a05ffafe3423ed6f1f0d05f9f07ab6b69e7ebbb8979",
-        "entry_hash": "1b7adc44a593df7eeb129c39cee5d01eb8786d7c00f4d0e8eacf460971e43707"
+        "prev_hash": "5a793a592edce8ccd7815c60598b2ced11251cb319f307e8f5ecc08c0e6b44c1",
+        "entry_hash": "b014c26547f6268eed17852ab0f403176db9826b0b2a252ab734119bafa3605f"
       },
       {
         "sequence": 13,
-        "timestamp": "2026-09-01T07:40:36.650433+00:00",
+        "timestamp": "2026-09-01T07:59:11.015541+00:00",
         "txn_id": "pay_techbazaar_0058",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1952,12 +1952,12 @@
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
         "actor": "agent",
-        "prev_hash": "1b7adc44a593df7eeb129c39cee5d01eb8786d7c00f4d0e8eacf460971e43707",
-        "entry_hash": "e2e7ae6b3cc8ab90b61073b742ff80af312b82681b16ae0fb407a7e97b61f4cf"
+        "prev_hash": "b014c26547f6268eed17852ab0f403176db9826b0b2a252ab734119bafa3605f",
+        "entry_hash": "cd6607aa270adea47355c46915c52d811c53e4d79d13bc76e5c60c597d72e077"
       },
       {
         "sequence": 14,
-        "timestamp": "2026-09-01T07:40:36.650433+00:00",
+        "timestamp": "2026-09-01T07:59:11.015541+00:00",
         "txn_id": "pay_techbazaar_0157",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1972,12 +1972,12 @@
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
         "actor": "agent",
-        "prev_hash": "e2e7ae6b3cc8ab90b61073b742ff80af312b82681b16ae0fb407a7e97b61f4cf",
-        "entry_hash": "783c3776f86f39e7e694b449f3eae3b1e73c8ef828ffd88c624e5fb4e89d8393"
+        "prev_hash": "cd6607aa270adea47355c46915c52d811c53e4d79d13bc76e5c60c597d72e077",
+        "entry_hash": "7a0466f35bf10d11936297fb0f445e7409c0f7ff4efbb3793d32f861c00ad54d"
       },
       {
         "sequence": 15,
-        "timestamp": "2026-09-01T07:40:36.651448+00:00",
+        "timestamp": "2026-09-01T07:59:11.015541+00:00",
         "txn_id": "pay_techbazaar_0746",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -1992,12 +1992,12 @@
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
         "actor": "agent",
-        "prev_hash": "783c3776f86f39e7e694b449f3eae3b1e73c8ef828ffd88c624e5fb4e89d8393",
-        "entry_hash": "c7faca8fbfa5aeaf7833e3d85fa8e8fb98a306ee7680510f98cfb4e330637cf0"
+        "prev_hash": "7a0466f35bf10d11936297fb0f445e7409c0f7ff4efbb3793d32f861c00ad54d",
+        "entry_hash": "04b213df4955a0397747c9fee650f5b8750e921c98ceb1db6f1634ef838ce2f3"
       },
       {
         "sequence": 16,
-        "timestamp": "2026-09-01T07:40:36.651448+00:00",
+        "timestamp": "2026-09-01T07:59:11.015541+00:00",
         "txn_id": "pay_techbazaar_0815",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -2012,12 +2012,12 @@
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
         "actor": "agent",
-        "prev_hash": "c7faca8fbfa5aeaf7833e3d85fa8e8fb98a306ee7680510f98cfb4e330637cf0",
-        "entry_hash": "b1964a7ade4da8a3bab7ccd78e46fc8622a4a405baf3b76cea96bf66064f8a2d"
+        "prev_hash": "04b213df4955a0397747c9fee650f5b8750e921c98ceb1db6f1634ef838ce2f3",
+        "entry_hash": "1c87f888b700a71e87e5aafb6fc6d3cad472c115328e99aeeadbc6dea2fdb04b"
       },
       {
         "sequence": 17,
-        "timestamp": "2026-09-01T07:40:36.651448+00:00",
+        "timestamp": "2026-09-01T07:59:11.015541+00:00",
         "txn_id": "pay_techbazaar_0046",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -2032,12 +2032,12 @@
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
         "actor": "agent",
-        "prev_hash": "b1964a7ade4da8a3bab7ccd78e46fc8622a4a405baf3b76cea96bf66064f8a2d",
-        "entry_hash": "31675638ddf7513517eefb38936cc076337a851aee9929d250b2d3e4b8d9e099"
+        "prev_hash": "1c87f888b700a71e87e5aafb6fc6d3cad472c115328e99aeeadbc6dea2fdb04b",
+        "entry_hash": "984f707aeb6bb2e37e1de39473e096d67cfa9c87edf288685fa58b6e312878be"
       },
       {
         "sequence": 18,
-        "timestamp": "2026-09-01T07:40:36.651448+00:00",
+        "timestamp": "2026-09-01T07:59:11.015541+00:00",
         "txn_id": "pay_techbazaar_0018",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -2052,12 +2052,12 @@
         "gate_reason": "STEP_UP_ABOVE_AUTO_LIMIT",
         "outcome": "merchant_action",
         "actor": "agent",
-        "prev_hash": "31675638ddf7513517eefb38936cc076337a851aee9929d250b2d3e4b8d9e099",
-        "entry_hash": "8ad07f1858977dd60c9cd8ceb1bd12348f6f13b051389dbd367658bef81fe417"
+        "prev_hash": "984f707aeb6bb2e37e1de39473e096d67cfa9c87edf288685fa58b6e312878be",
+        "entry_hash": "a33928d08bcefcbd9f6b1a9ceef5f3caccc1095bdd4c060b6632bcdfc6968b8c"
       },
       {
         "sequence": 19,
-        "timestamp": "2026-09-01T07:40:36.651448+00:00",
+        "timestamp": "2026-09-01T07:59:11.015541+00:00",
         "txn_id": "pay_techbazaar_0354",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -2072,12 +2072,12 @@
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
         "actor": "agent",
-        "prev_hash": "8ad07f1858977dd60c9cd8ceb1bd12348f6f13b051389dbd367658bef81fe417",
-        "entry_hash": "2b0a73246a155c489bf5c3da3ac6bbeea19d1240f40f78f52358c10a981f3003"
+        "prev_hash": "a33928d08bcefcbd9f6b1a9ceef5f3caccc1095bdd4c060b6632bcdfc6968b8c",
+        "entry_hash": "61c9961ee2eb6d86ac6ab87b906581e6fd91dea28ecf848bc59db266e5fe36cd"
       },
       {
         "sequence": 20,
-        "timestamp": "2026-09-01T07:40:36.651448+00:00",
+        "timestamp": "2026-09-01T07:59:11.015541+00:00",
         "txn_id": "pay_techbazaar_0770",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -2092,12 +2092,12 @@
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
         "actor": "agent",
-        "prev_hash": "2b0a73246a155c489bf5c3da3ac6bbeea19d1240f40f78f52358c10a981f3003",
-        "entry_hash": "d7718c499611898e83654792b5eea72748632353eed0ee8ba8fd398d32f9f41a"
+        "prev_hash": "61c9961ee2eb6d86ac6ab87b906581e6fd91dea28ecf848bc59db266e5fe36cd",
+        "entry_hash": "12546443eac1603b9db6a94efbcf1843b47938eadfca6c35fecc6fefb9bb9c06"
       },
       {
         "sequence": 21,
-        "timestamp": "2026-09-01T07:40:36.651448+00:00",
+        "timestamp": "2026-09-01T07:59:11.015541+00:00",
         "txn_id": "pay_techbazaar_0635",
         "proposed_action": {
           "action_type": "retry_soft_decline",
@@ -2112,12 +2112,12 @@
         "gate_reason": "OK_WITHIN_MANDATE",
         "outcome": "exception",
         "actor": "agent",
-        "prev_hash": "d7718c499611898e83654792b5eea72748632353eed0ee8ba8fd398d32f9f41a",
-        "entry_hash": "1127d637093cc791b2a00c39354ab74b575b88d31788509546c9e912970ccc87"
+        "prev_hash": "12546443eac1603b9db6a94efbcf1843b47938eadfca6c35fecc6fefb9bb9c06",
+        "entry_hash": "653364a751304f956f57fa6ea60183e864adb67df8d9cbfc7478ec53f64ba096"
       },
       {
         "sequence": 22,
-        "timestamp": "2026-09-01T07:40:36.651448+00:00",
+        "timestamp": "2026-09-01T07:59:11.015541+00:00",
         "txn_id": "pay_techbazaar_0596",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2132,12 +2132,12 @@
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
         "actor": "agent",
-        "prev_hash": "1127d637093cc791b2a00c39354ab74b575b88d31788509546c9e912970ccc87",
-        "entry_hash": "5655897b07c63d14747da4618c358d8363c0aa6c35ce14bdf106104664f5b7df"
+        "prev_hash": "653364a751304f956f57fa6ea60183e864adb67df8d9cbfc7478ec53f64ba096",
+        "entry_hash": "c29c93032b39168f08b04f02776028387252deaa85fbba76a4c1a5a3a7b302cd"
       },
       {
         "sequence": 23,
-        "timestamp": "2026-09-01T07:40:36.651448+00:00",
+        "timestamp": "2026-09-01T07:59:11.015541+00:00",
         "txn_id": "pay_techbazaar_0844",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2152,12 +2152,12 @@
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
         "actor": "agent",
-        "prev_hash": "5655897b07c63d14747da4618c358d8363c0aa6c35ce14bdf106104664f5b7df",
-        "entry_hash": "9c0dd3162beb8012978e9096e0786bcd41d536f6748f85dbe85437df49a218c6"
+        "prev_hash": "c29c93032b39168f08b04f02776028387252deaa85fbba76a4c1a5a3a7b302cd",
+        "entry_hash": "9f663f5ab5c5e2df88ddec73f5c2da34debbc2bee6bf8c2bb6857b40cb962ccf"
       },
       {
         "sequence": 24,
-        "timestamp": "2026-09-01T07:40:36.651448+00:00",
+        "timestamp": "2026-09-01T07:59:11.015541+00:00",
         "txn_id": "pay_techbazaar_0013",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2172,12 +2172,12 @@
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
         "actor": "agent",
-        "prev_hash": "9c0dd3162beb8012978e9096e0786bcd41d536f6748f85dbe85437df49a218c6",
-        "entry_hash": "68cdbd6895600a4442a16cae384541d8018c9f0fadbe42fac2f977860ee57343"
+        "prev_hash": "9f663f5ab5c5e2df88ddec73f5c2da34debbc2bee6bf8c2bb6857b40cb962ccf",
+        "entry_hash": "e364355461eef284e63b0861451b0fc0a7026636794e2794c89ca4492608c45f"
       },
       {
         "sequence": 25,
-        "timestamp": "2026-09-01T07:40:36.651448+00:00",
+        "timestamp": "2026-09-01T07:59:11.015541+00:00",
         "txn_id": "pay_techbazaar_0297",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2192,12 +2192,12 @@
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
         "actor": "agent",
-        "prev_hash": "68cdbd6895600a4442a16cae384541d8018c9f0fadbe42fac2f977860ee57343",
-        "entry_hash": "8ba203327184bfce3fa413e668d23cb9ce8d5c0d0a878eb46f9adbeb774e3d19"
+        "prev_hash": "e364355461eef284e63b0861451b0fc0a7026636794e2794c89ca4492608c45f",
+        "entry_hash": "4e6ce20b46fc8bf274860563b7859dacdd5c2c3a8befcb74b25705dc7c91aeb6"
       },
       {
         "sequence": 26,
-        "timestamp": "2026-09-01T07:40:36.651448+00:00",
+        "timestamp": "2026-09-01T07:59:11.015541+00:00",
         "txn_id": "pay_techbazaar_0666",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2212,12 +2212,12 @@
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
         "actor": "agent",
-        "prev_hash": "8ba203327184bfce3fa413e668d23cb9ce8d5c0d0a878eb46f9adbeb774e3d19",
-        "entry_hash": "80b70f22da3ec1901eb09b629f59e4e65d025e9b7be2104e3bf0d6e1cc71a8ba"
+        "prev_hash": "4e6ce20b46fc8bf274860563b7859dacdd5c2c3a8befcb74b25705dc7c91aeb6",
+        "entry_hash": "4e625f37a8f6e4969237318f5793d1fe5f115ebe9c3505e52c7eb3331a1ac16d"
       },
       {
         "sequence": 27,
-        "timestamp": "2026-09-01T07:40:36.651448+00:00",
+        "timestamp": "2026-09-01T07:59:11.016552+00:00",
         "txn_id": "pay_techbazaar_0716",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2232,12 +2232,12 @@
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
         "actor": "agent",
-        "prev_hash": "80b70f22da3ec1901eb09b629f59e4e65d025e9b7be2104e3bf0d6e1cc71a8ba",
-        "entry_hash": "b22026015065061069cb046f2fcd870bf608ccd6d871a0e59a422299fae5f358"
+        "prev_hash": "4e625f37a8f6e4969237318f5793d1fe5f115ebe9c3505e52c7eb3331a1ac16d",
+        "entry_hash": "5c3685c439c95bb2d4e0a35d38c1774ef6799e2ee6c506ae4466374b534fa5e9"
       },
       {
         "sequence": 28,
-        "timestamp": "2026-09-01T07:40:36.652446+00:00",
+        "timestamp": "2026-09-01T07:59:11.016552+00:00",
         "txn_id": "pay_techbazaar_0509",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2252,12 +2252,12 @@
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
         "actor": "agent",
-        "prev_hash": "b22026015065061069cb046f2fcd870bf608ccd6d871a0e59a422299fae5f358",
-        "entry_hash": "e6e710a101de7b0c4a5da4549db8a25d5589209c7845b9c3938ca6c22dcaf226"
+        "prev_hash": "5c3685c439c95bb2d4e0a35d38c1774ef6799e2ee6c506ae4466374b534fa5e9",
+        "entry_hash": "d53353d505b1861b7e69c87e2b4c7e076ebcd5181999d5eadcf05b984e18a807"
       },
       {
         "sequence": 29,
-        "timestamp": "2026-09-01T07:40:36.652446+00:00",
+        "timestamp": "2026-09-01T07:59:11.016552+00:00",
         "txn_id": "pay_techbazaar_0689",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2272,12 +2272,12 @@
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
         "actor": "agent",
-        "prev_hash": "e6e710a101de7b0c4a5da4549db8a25d5589209c7845b9c3938ca6c22dcaf226",
-        "entry_hash": "041a6c586f8cc3ffec1e126737bef37309da2d0653abdb2aafa74a6399d38772"
+        "prev_hash": "d53353d505b1861b7e69c87e2b4c7e076ebcd5181999d5eadcf05b984e18a807",
+        "entry_hash": "b7c9bfea52541355293692070a21b6ddbec8a89c819f6979cb8131c01e8662e0"
       },
       {
         "sequence": 30,
-        "timestamp": "2026-09-01T07:40:36.652446+00:00",
+        "timestamp": "2026-09-01T07:59:11.016552+00:00",
         "txn_id": "pay_techbazaar_0425",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2292,12 +2292,12 @@
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
         "actor": "agent",
-        "prev_hash": "041a6c586f8cc3ffec1e126737bef37309da2d0653abdb2aafa74a6399d38772",
-        "entry_hash": "4f28eb2a2b4344cd7b18d9e4c29a9569430305a40bbf15425f089bdc01afeb8a"
+        "prev_hash": "b7c9bfea52541355293692070a21b6ddbec8a89c819f6979cb8131c01e8662e0",
+        "entry_hash": "e0b3966b9e89ed26be341f08f73185c78610af0b2aa12a8e254616c5d5df4d30"
       },
       {
         "sequence": 31,
-        "timestamp": "2026-09-01T07:40:36.652446+00:00",
+        "timestamp": "2026-09-01T07:59:11.016552+00:00",
         "txn_id": "pay_techbazaar_0821",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2312,12 +2312,12 @@
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
         "actor": "agent",
-        "prev_hash": "4f28eb2a2b4344cd7b18d9e4c29a9569430305a40bbf15425f089bdc01afeb8a",
-        "entry_hash": "dae114468a85ff7044af609c343efa3c9b71fedb44d8da6ab307b888a29c669e"
+        "prev_hash": "e0b3966b9e89ed26be341f08f73185c78610af0b2aa12a8e254616c5d5df4d30",
+        "entry_hash": "87667fa6da623f8ca1dbe37ad5048b797b8551b17fc2465c4adc96459ae48de0"
       },
       {
         "sequence": 32,
-        "timestamp": "2026-09-01T07:40:36.652446+00:00",
+        "timestamp": "2026-09-01T07:59:11.016552+00:00",
         "txn_id": "pay_techbazaar_0426",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2332,12 +2332,12 @@
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
         "actor": "agent",
-        "prev_hash": "dae114468a85ff7044af609c343efa3c9b71fedb44d8da6ab307b888a29c669e",
-        "entry_hash": "0d6c44cef2ae4b33f91b331a1d6c23c9b8d99ad9e448221c7c941be980702974"
+        "prev_hash": "87667fa6da623f8ca1dbe37ad5048b797b8551b17fc2465c4adc96459ae48de0",
+        "entry_hash": "659c88031c92f8a94719cb220c81084f090de790de41702d9599060cf23e0abc"
       },
       {
         "sequence": 33,
-        "timestamp": "2026-09-01T07:40:36.652446+00:00",
+        "timestamp": "2026-09-01T07:59:11.016552+00:00",
         "txn_id": "pay_techbazaar_0045",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2352,12 +2352,12 @@
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
         "actor": "agent",
-        "prev_hash": "0d6c44cef2ae4b33f91b331a1d6c23c9b8d99ad9e448221c7c941be980702974",
-        "entry_hash": "bca928fd5b69c48a34a24f2e8e04735d217491bb6eceec1f0b71cb70b37e3fa8"
+        "prev_hash": "659c88031c92f8a94719cb220c81084f090de790de41702d9599060cf23e0abc",
+        "entry_hash": "7ba801b574763ea9c01a9b4787abdb1bb15471e9c93c28dae98b510bb58550c6"
       },
       {
         "sequence": 34,
-        "timestamp": "2026-09-01T07:40:36.652446+00:00",
+        "timestamp": "2026-09-01T07:59:11.016552+00:00",
         "txn_id": "pay_techbazaar_0839",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2372,12 +2372,12 @@
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
         "actor": "agent",
-        "prev_hash": "bca928fd5b69c48a34a24f2e8e04735d217491bb6eceec1f0b71cb70b37e3fa8",
-        "entry_hash": "a82d94d02b0b89402f1c8a9267229b92816d623efcf62405c33f52a85acc2059"
+        "prev_hash": "7ba801b574763ea9c01a9b4787abdb1bb15471e9c93c28dae98b510bb58550c6",
+        "entry_hash": "038f8596a651821896d9977790a1c650c803e2d7d6d3757c8b891438be8128c7"
       },
       {
         "sequence": 35,
-        "timestamp": "2026-09-01T07:40:36.652446+00:00",
+        "timestamp": "2026-09-01T07:59:11.016552+00:00",
         "txn_id": "pay_techbazaar_0705",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2392,12 +2392,12 @@
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
         "actor": "agent",
-        "prev_hash": "a82d94d02b0b89402f1c8a9267229b92816d623efcf62405c33f52a85acc2059",
-        "entry_hash": "76210126289f659a15c9239bb56ae42c2c2c463e272325a492aa636c70286097"
+        "prev_hash": "038f8596a651821896d9977790a1c650c803e2d7d6d3757c8b891438be8128c7",
+        "entry_hash": "e606c6c6a77a88c9f9d67279fe792b5bf69336198cf338b403df4bc67bdd7380"
       },
       {
         "sequence": 36,
-        "timestamp": "2026-09-01T07:40:36.652446+00:00",
+        "timestamp": "2026-09-01T07:59:11.016552+00:00",
         "txn_id": "pay_techbazaar_0636",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2412,12 +2412,12 @@
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
         "actor": "agent",
-        "prev_hash": "76210126289f659a15c9239bb56ae42c2c2c463e272325a492aa636c70286097",
-        "entry_hash": "1c2506c4f0a18dd7bf13ca9663a07d3fdc563c5868428ea6af24acc7e29508d6"
+        "prev_hash": "e606c6c6a77a88c9f9d67279fe792b5bf69336198cf338b403df4bc67bdd7380",
+        "entry_hash": "fdb725aa8e84db1315b0fbd6b1b2d8b577accc760526bd054cf40d12be4420db"
       },
       {
         "sequence": 37,
-        "timestamp": "2026-09-01T07:40:36.652446+00:00",
+        "timestamp": "2026-09-01T07:59:11.016552+00:00",
         "txn_id": "pay_techbazaar_0820",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2432,12 +2432,12 @@
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
         "actor": "agent",
-        "prev_hash": "1c2506c4f0a18dd7bf13ca9663a07d3fdc563c5868428ea6af24acc7e29508d6",
-        "entry_hash": "05598f90cc20e96a2362fd713d62a12a72c24dc09717382021b5ef65d9c41c23"
+        "prev_hash": "fdb725aa8e84db1315b0fbd6b1b2d8b577accc760526bd054cf40d12be4420db",
+        "entry_hash": "13ddcc5b671e2caba48c7cf977fd6f4ecee8566c1273b76403db84c9538fdc98"
       },
       {
         "sequence": 38,
-        "timestamp": "2026-09-01T07:40:36.652446+00:00",
+        "timestamp": "2026-09-01T07:59:11.016552+00:00",
         "txn_id": "pay_techbazaar_0325",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2452,12 +2452,12 @@
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
         "actor": "agent",
-        "prev_hash": "05598f90cc20e96a2362fd713d62a12a72c24dc09717382021b5ef65d9c41c23",
-        "entry_hash": "8e7fee0a32e97ad4e576a8cbae6715147f7f3ca93afbd9e223e6d858ae390128"
+        "prev_hash": "13ddcc5b671e2caba48c7cf977fd6f4ecee8566c1273b76403db84c9538fdc98",
+        "entry_hash": "ef48ff059d9f5dd4f5d4e140d980408aaad5317aaec81dfcdd1563d2b6a36a96"
       },
       {
         "sequence": 39,
-        "timestamp": "2026-09-01T07:40:36.652446+00:00",
+        "timestamp": "2026-09-01T07:59:11.016552+00:00",
         "txn_id": "pay_techbazaar_0888",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2472,12 +2472,12 @@
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
         "actor": "agent",
-        "prev_hash": "8e7fee0a32e97ad4e576a8cbae6715147f7f3ca93afbd9e223e6d858ae390128",
-        "entry_hash": "97d6159471ceb6fbaf208eb53061d10c41847c4a7e3bce19a1fb95597c75377a"
+        "prev_hash": "ef48ff059d9f5dd4f5d4e140d980408aaad5317aaec81dfcdd1563d2b6a36a96",
+        "entry_hash": "839b7e2ec4975d73dbdc82c6680fde01a975ebc36538fe3c61deee51af7be854"
       },
       {
         "sequence": 40,
-        "timestamp": "2026-09-01T07:40:36.652446+00:00",
+        "timestamp": "2026-09-01T07:59:11.016552+00:00",
         "txn_id": "pay_techbazaar_0837",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2492,12 +2492,12 @@
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
         "actor": "agent",
-        "prev_hash": "97d6159471ceb6fbaf208eb53061d10c41847c4a7e3bce19a1fb95597c75377a",
-        "entry_hash": "939cc691b75088ad2d1ae6fb4e16a645e59bd78acc5e518b2eb2129b0c277c3c"
+        "prev_hash": "839b7e2ec4975d73dbdc82c6680fde01a975ebc36538fe3c61deee51af7be854",
+        "entry_hash": "0af76d215ff582682e98e02063c1ec05bde1fe31cafd97314e941794e59a7be9"
       },
       {
         "sequence": 41,
-        "timestamp": "2026-09-01T07:40:36.652446+00:00",
+        "timestamp": "2026-09-01T07:59:11.016552+00:00",
         "txn_id": "pay_techbazaar_0625",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2512,12 +2512,12 @@
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
         "actor": "agent",
-        "prev_hash": "939cc691b75088ad2d1ae6fb4e16a645e59bd78acc5e518b2eb2129b0c277c3c",
-        "entry_hash": "48992dcbf424a3fd76b4ec31a7f2a60c2ddace286f2631b55ce9db0b199dfcbd"
+        "prev_hash": "0af76d215ff582682e98e02063c1ec05bde1fe31cafd97314e941794e59a7be9",
+        "entry_hash": "74eac2f9f36da7fb8c19996b8e08b213076673e11b53bc0ffea19a905254e140"
       },
       {
         "sequence": 42,
-        "timestamp": "2026-09-01T07:40:36.652446+00:00",
+        "timestamp": "2026-09-01T07:59:11.016552+00:00",
         "txn_id": "pay_techbazaar_0496",
         "proposed_action": {
           "action_type": "reissue_payment_link",
@@ -2532,8 +2532,8 @@
         "gate_reason": "STEP_UP_MERCHANT_APPROVAL_REQUESTED",
         "outcome": "merchant_action",
         "actor": "agent",
-        "prev_hash": "48992dcbf424a3fd76b4ec31a7f2a60c2ddace286f2631b55ce9db0b199dfcbd",
-        "entry_hash": "7986d9b739de538aabce271c2240e5890e56c7636b437b36d6f36ecceb514fa0"
+        "prev_hash": "74eac2f9f36da7fb8c19996b8e08b213076673e11b53bc0ffea19a905254e140",
+        "entry_hash": "d5ee97ac63957023c82b4aa1bcc4440b756e6d66174eff5a51b0f19651431767"
       }
     ],
     "exceptions": {

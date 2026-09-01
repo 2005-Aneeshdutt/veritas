@@ -48,6 +48,27 @@ The free tier's disk is ephemeral, so new runs and sealed challenges last until
 the instance restarts and then the committed state returns. For a demo that is
 a feature: the deployed copy always resets to a clean book.
 
+## What is on screen
+
+Five numbered steps down the left, in the order the story is told, and three
+rooms you go to when you stop believing it.
+
+| | |
+|---|---|
+| **1 · Book** | Every merchant at once, ranked by money on the table, with the funnel from proposed to acted-on. |
+| **2 · Watch** | Payments arriving, and a bank degrading in real time with the hold that follows. |
+| **3 · Diagnose** | The agent working one case: the sixteen-coalition lattice filling in, the Shapley values converging on the whole. |
+| **4 · Authorise** | What the mandate permits, what the kernel held, and per-payment approve or reject. |
+| **5 · Prove** | A sealed challenge nobody has seen, diagnosed blind, then marked. |
+| **Whose fault** | The write-off attributed to whoever Razorpay's own `next_steps` line addresses. The platform's own share is a defect backlog no merchant is standing anywhere to compute. |
+| **Evidence** | Whether the forecasts came true after the fix landed, every decision with its chain re-hashed from genesis on each load, and the model bill. |
+| **Your own data** | Upload a month of payments, or swap the NPCI table every baseline is measured against. Two bundled samples if you have neither. |
+
+**Reset the demo** is in the sidebar. It re-runs each merchant rather than
+stripping the approval keys, so it reproduces the starting record instead of
+hand-cleaning it, and it reuses each `run_id` so bookmarks and already-emailed
+approval links still resolve.
+
 ## Read these three first
 
 If you only have five minutes, these are the files that answer the questions
@@ -453,8 +474,8 @@ ingest ──▶ classify ──low confidence──▶ human_review ──┐
 ```
 
 **Deterministic wherever correctness is checkable; a model only where judgement
-is required.** The gate, the decomposition, the retry list and all six stopping
-rules never consult a model. See [`ARCHITECTURE.md`](ARCHITECTURE.md).
+is required.** The gate, the decomposition, the retry list and all ten of the kernel's
+checks never consult a model. See [`ARCHITECTURE.md`](ARCHITECTURE.md).
 
 ---
 
@@ -463,7 +484,7 @@ rules never consult a model. See [`ARCHITECTURE.md`](ARCHITECTURE.md).
 ```bash
 make setup      # python + frontend dependencies
 make demo       # backend :8000 + frontend :3000
-make test       # 63 tests
+make test       # 420 tests
 make verify     # regenerate everything, fail if any committed number moved
 ```
 
@@ -485,7 +506,7 @@ python evals/run_npci_finding.py
 python evals/run_backtest.py               # out-of-sample, real NPCI data
 python evals/run_outcome_eval.py           # forecast accuracy after a fix
 python evals/run_scale_benchmark.py        # throughput at book scale
-pytest -q                                  # 63 tests
+pytest -q                                  # 420 tests
 ```
 
 The LLM evals need a key **once** to populate the cache; after that they

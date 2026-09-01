@@ -664,7 +664,7 @@ export default function AuditPage({ params }: { params: { runId: string } }) {
           <SectionHeader
             eyebrow="The part that is not about revenue recovery"
             title="This kernel does not know what a payment is"
-            sub="Everything above — the signed mandate, the seven rules, the hash chain, the actor on each entry — is a general answer to 'what may this agent do on someone's behalf, and who says so'. Recovery is the first thing it was pointed at, not the only thing it fits."
+            sub="Everything above — the signed mandate, the ten checks, the hash chain, the actor on each entry — is a general answer to 'what may this agent do on someone's behalf, and who says so'. Recovery is the first thing it was pointed at, not the only thing it fits."
           />
 
           <div className="grid sm:grid-cols-3 gap-3">
