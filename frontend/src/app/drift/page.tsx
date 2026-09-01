@@ -350,15 +350,43 @@ function Intervention({ report }: { report: any }) {
   const [sim, setSim] = useState<any>(null);
   const [busy, setBusy] = useState(false);
 
+  /**
+   * Read this merchant's banks — without running a diagnosis to get them.
+   *
+   * This used to POST /api/run, which executes the entire graph, purely to
+   * populate a dropdown. Rendering a select is not a reason to run the engine:
+   * it cost a full run on every mount of this page, and before run ids were
+   * reused it left a new record on disk each time, which is how six orphan
+   * runs appeared during a single test session.
+   *
+   * It reads the merchant's existing committed run instead. Same data, no
+   * write, no work.
+   */
   useEffect(() => {
-    fetch(`/api/run?merchant=${merchant}`, { method: "POST" })
+    let cancelled = false;
+
+    fetch("/api/portfolio")
       .then((r) => r.json())
+      .then((pf) => {
+        const row = (pf.merchants ?? []).find(
+          (m: { merchant_id: string }) => m.merchant_id === merchant
+        );
+        if (!row?.run_id) throw new Error("no run for this merchant");
+        return fetch(`/api/run/${row.run_id}`).then((r) => r.json());
+      })
       .then((rec) => {
+        if (cancelled) return;
         const bs = (rec.report?.bank_health?.banks ?? []).map((b: any) => b.bank);
         setBanks(bs);
         setBank(bs[0] ?? "");
       })
-      .catch(() => setBanks([]));
+      .catch(() => {
+        if (!cancelled) setBanks([]);
+      });
+
+    return () => {
+      cancelled = true;
+    };
   }, [merchant]);
 
   async function run() {

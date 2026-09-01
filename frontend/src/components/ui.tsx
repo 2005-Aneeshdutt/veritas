@@ -244,7 +244,7 @@ export function Figure({
   return (
     <div
       onClick={onClick}
-      className={`pt-5 sm:pt-0 sm:pl-8 sm:first:pl-0 ${
+      className={`min-w-0 pt-5 sm:pt-0 sm:pl-8 sm:first:pl-0 ${
         onClick ? "cursor-pointer group" : ""
       }`}
     >

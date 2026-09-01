@@ -33,6 +33,10 @@ export function Logo({ size = "sm" }: { size?: "sm" | "lg" }) {
  */
 const DEMO_MERCHANT = "cloudsync";
 
+//: Where the resolved run is remembered for the rest of the session, so the
+//: walkthrough's steps are never briefly dead on a fresh page.
+const RUN_CACHE = "rd.run.canonical";
+
 interface Item {
   href: string | null;
   label: string;
@@ -95,9 +99,31 @@ export function Sidebar({ runHref }: { runHref?: string | null }) {
    * Clicking a merchant in the Book is untouched and still opens whichever
    * merchant was clicked.
    */
+  /**
+   * Resolve once per session, then never wait again.
+   *
+   * The destination was fetched on every mount, and the sidebar remounts on
+   * every navigation — so on each new page there was a window where Diagnose
+   * and Authorise had no run yet and rendered as disabled spans. A person
+   * clicking in that window pressed a control that looked like a nav item and
+   * did nothing, which is the worst kind of broken: it fails silently and
+   * intermittently, so it looks like the click was missed.
+   *
+   * The resolved run is cached in sessionStorage and read synchronously on
+   * first render, so the window exists only on the very first page load of a
+   * session and never again. It is cleared by Reset, which is the only thing
+   * that can change the answer.
+   */
   useEffect(() => {
     if (runHref) return;
     let cancelled = false;
+
+    try {
+      const cached = sessionStorage.getItem(RUN_CACHE);
+      if (cached) setFallback(cached);
+    } catch {
+      /* private mode: fall through to the fetch */
+    }
 
     fetch("/api/portfolio")
       .then((r) => r.json())
@@ -107,13 +133,27 @@ export function Sidebar({ runHref }: { runHref?: string | null }) {
           (m: { merchant_id: string }) => m.merchant_id === DEMO_MERCHANT
         );
         if (demo?.run_id) {
-          setFallback(`/run/${demo.run_id}`);
+          const href = `/run/${demo.run_id}`;
+          setFallback(href);
+          try {
+            sessionStorage.setItem(RUN_CACHE, href);
+          } catch {
+            /* nothing to cache into; the fetch still worked */
+          }
           return null;
         }
         return fetch("/api/run-latest").then((r) => r.json());
       })
       .then((d) => {
-        if (!cancelled && d?.run_id) setFallback(`/run/${d.run_id}`);
+        if (!cancelled && d?.run_id) {
+          const href = `/run/${d.run_id}`;
+          setFallback(href);
+          try {
+            sessionStorage.setItem(RUN_CACHE, href);
+          } catch {
+            /* nothing to cache into */
+          }
+        }
       })
       .catch(() => {});
 
@@ -325,6 +365,11 @@ function ResetDemo() {
     try {
       const r = await fetch("/api/demo/reset", { method: "POST" });
       if (!r.ok) throw new Error();
+      try {
+        sessionStorage.removeItem(RUN_CACHE);
+      } catch {
+        /* nothing cached to clear */
+      }
       setState("done");
       setTimeout(() => window.location.reload(), 500);
     } catch {

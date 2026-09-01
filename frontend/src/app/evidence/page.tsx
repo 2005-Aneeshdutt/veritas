@@ -361,11 +361,13 @@ export default function EvidencePage() {
             <Figure
               label="acted by"
               value={
-                <span className="flex items-baseline gap-3">
+                /* Three pairs on one line pushed 31px past the viewport at
+                   1366. They wrap now, and each pair is allowed to shrink. */
+                <span className="flex items-baseline flex-wrap gap-x-3 gap-y-0.5">
                   {(["agent", "platform", "merchant"] as const).map((who) => (
-                    <span key={who} className="flex items-baseline gap-1">
+                    <span key={who} className="flex items-baseline gap-1 min-w-0">
                       {(a.by_actor?.[who] ?? 0).toLocaleString("en-IN")}
-                      <span className="text-[11px] text-faint font-normal">
+                      <span className="text-[11px] text-faint font-normal truncate">
                         {ACTOR_LABEL[who]}
                       </span>
                     </span>
