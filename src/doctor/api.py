@@ -1391,6 +1391,30 @@ async def stream(merchant: str, calibration: str = "central", pace_ms: float = 0
     if merchant not in MERCHANTS:
         raise HTTPException(400, "unknown merchant: %s" % merchant)
 
+    # Reuse this merchant's existing run_id, exactly as `start_run` does.
+    #
+    # Minting a fresh id per stream meant every press of "Run diagnosis" left
+    # another record on disk. The new one is NEWER than the committed run, so
+    # the portfolio switched to it, which changed the assistant's grounding
+    # context and invalidated the answers it has pre-cached to work without an
+    # API key -- a few presses could take the deployed assistant from
+    # answering to refusing.
+    #
+    # The runs are deterministic, so re-running into the same id reproduces
+    # the record rather than replacing it with something different. Nothing
+    # else here changes: same graph, same nodes, same traces, same stream.
+    keep = None
+    mine = sorted(
+        (
+            (path.stat().st_mtime, path.stem)
+            for path in RUNS.glob("run_*.json")
+            if _read_json(path).get("merchant_id") == merchant
+        ),
+        reverse=True,
+    )
+    if mine:
+        keep = mine[0][1]
+
     q: queue.Queue = queue.Queue()
     m = load_merchant(merchant)
     mandate = load_mandate(merchant)
@@ -1420,6 +1444,7 @@ async def stream(merchant: str, calibration: str = "central", pace_ms: float = 0
                 rec = run_diagnosis(
                     m.profile, m.transactions, mandate,
                     baseline=Baseline(), calibration=Calibration(calibration),
+                    run_id=keep,
                 )
                 q.put(("done", json.loads(rec.model_dump_json())))
             finally:

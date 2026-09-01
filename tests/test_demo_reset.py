@@ -139,3 +139,72 @@ def test_nothing_outside_the_runs_directory_was_touched(restored):
         d = ROOT / "data" / sub
         if d.exists():
             assert any(d.iterdir()), "%s was emptied by a reset" % sub
+
+
+class TestRunningNeverAccumulatesRuns:
+    """Pressing "Run diagnosis" must not quietly re-ground the whole product.
+
+    Both entry points into the engine -- the synchronous POST and the live SSE
+    stream the console watches -- used to mint a fresh run_id each time. The
+    new record is newer than the committed one, so the portfolio switches to
+    it, which changes the assistant's grounding context and invalidates the
+    answers pre-cached to work without an API key. A few presses during a demo
+    could take the deployed assistant from answering to refusing.
+
+    Both reuse the merchant's existing id now. These tests are what stop that
+    regressing, because the symptom appears three screens away from the cause.
+    """
+
+    def _runs(self):
+        return {p.stem for p in RUNS.glob("run_*.json")}
+
+    def test_the_synchronous_path_reuses_the_id(self):
+        from fastapi.testclient import TestClient
+
+        from doctor.api import app
+
+        c = TestClient(app)
+        before = self._runs()
+        ids = {c.post("/api/run?merchant=cloudsync").json()["run_id"] for _ in range(3)}
+        assert len(ids) == 1, "three presses produced %d ids" % len(ids)
+        assert self._runs() == before, "a run file was created"
+
+    def test_the_live_stream_reuses_the_id(self):
+        """The path the console's Run diagnosis button opens."""
+        from fastapi.testclient import TestClient
+
+        from doctor.api import app
+
+        c = TestClient(app)
+        before = self._runs()
+        seen = set()
+        for _ in range(2):
+            with c.stream(
+                "GET", "/api/run/cloudsync/stream?pace_ms=0"
+            ) as r:
+                assert r.status_code == 200
+                for line in r.iter_lines():
+                    if line.startswith("data:"):
+                        d = json.loads(line[5:])
+                        if d.get("run_id"):
+                            seen.add(d["run_id"])
+        assert len(seen) == 1, "the stream minted %d ids: %s" % (len(seen), seen)
+        assert self._runs() == before, "the stream left an orphan run behind"
+
+    def test_both_paths_land_on_the_same_run(self):
+        """So the portfolio, the assistant and a bookmarked URL all agree."""
+        from fastapi.testclient import TestClient
+
+        from doctor.api import app
+
+        c = TestClient(app)
+        sync = c.post("/api/run?merchant=cloudsync").json()["run_id"]
+        streamed = None
+        with c.stream("GET", "/api/run/cloudsync/stream?pace_ms=0") as r:
+            for line in r.iter_lines():
+                if line.startswith("data:"):
+                    d = json.loads(line[5:])
+                    if d.get("run_id"):
+                        streamed = d["run_id"]
+                        break
+        assert sync == streamed
