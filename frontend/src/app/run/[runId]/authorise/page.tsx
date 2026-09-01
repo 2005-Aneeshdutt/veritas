@@ -7,7 +7,7 @@ import { BarStrip } from "@/components/BarStrip";
 import { ChainView, VerifyProgress } from "@/components/ChainView";
 import { RetrySchedule } from "@/components/RetrySchedule";
 import { Card, Detail, Eyebrow, Figure, Figures, Info, Loading, Notes, PageHead, Panel, SectionHeader, Stagger, Ticker } from "@/components/ui";
-import { GLOSSARY } from "@/lib/explain";
+import { GLOSSARY, NEXT_STEP } from "@/lib/explain";
 import { RunRecord, inr } from "@/lib/types";
 
 /** Must match chitragupta/canonical.py: sorted keys, no whitespace. */
@@ -1034,6 +1034,7 @@ function Outcomes({ rec, runId }: { rec: any; runId: string }) {
                   <th>action</th>
                   <th className="text-right">amount</th>
                   <th>reason</th>
+                  <th>what to do about it</th>
                 </tr>
               </thead>
               <tbody>
@@ -1060,6 +1061,20 @@ function Outcomes({ rec, runId }: { rec: any; runId: string }) {
                         : "—"}
                     </td>
                     <td className="num text-[10px] text-faint">{e.gate_reason}</td>
+                    {/* A reason code says why it stopped. This says whether
+                        anything can be done, and by whom. */}
+                    <td className="text-[11px] text-muted max-w-[22rem]">
+                      {NEXT_STEP[e.gate_reason] ? (
+                        <>
+                          <span className="text-ink">
+                            {NEXT_STEP[e.gate_reason].who}
+                          </span>{" "}
+                          — {NEXT_STEP[e.gate_reason].do_}
+                        </>
+                      ) : (
+                        "—"
+                      )}
+                    </td>
                   </tr>
                 ))}
               </tbody>

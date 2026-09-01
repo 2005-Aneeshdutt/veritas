@@ -38,6 +38,9 @@ export function useDiagnosis(merchant: string | null, paceMs = 55) {
   const [running, setRunning] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const es = useRef<EventSource | null>(null);
+  //: Nodes that have finished, counted outside React state so the activity
+  //: bus can be told without doing work inside an updater.
+  const doneRef = useRef<Set<string>>(new Set());
 
   const stop = useCallback(() => {
     es.current?.close();
@@ -50,6 +53,7 @@ export function useDiagnosis(merchant: string | null, paceMs = 55) {
 
   const start = useCallback(() => {
     if (!merchant || es.current) return;
+    doneRef.current = new Set();
     setTraces([]);
     setSteps([]);
     setRecord(null);
@@ -63,28 +67,31 @@ export function useDiagnosis(merchant: string | null, paceMs = 55) {
 
     src.addEventListener("trace", (e) => {
       const t = JSON.parse((e as MessageEvent).data) as NodeTrace;
+
       // Keep the newest per node: a node arrives twice, once running and once
       // with its outcome, and the outcome is what should be shown.
-      setTraces((prev) => {
-        const out = prev.filter((p) => p.node !== t.node);
-        const next = [...out, t];
-        const finished = next.filter(
-          (x) => x.status !== "running"
-        ).length;
-        reportActivity({
-          active: true,
-          label: `${t.node.replace(/_/g, " ")} — ${merchant}`,
-          stage: t.node,
-          done: finished,
-          total: 10,
-        });
-        return next;
+      //
+      // The running tally is kept in a ref rather than derived inside the
+      // updater. A state updater has to be pure -- React may call it more than
+      // once -- and publishing to the activity bus from inside one meant
+      // setting state on another component mid-update, which lost the traces
+      // entirely and left every node showing "queued" under an ACTIVE header.
+      if (t.status !== "running") doneRef.current.add(t.node);
+      setTraces((prev) => [...prev.filter((p) => p.node !== t.node), t]);
+
+      reportActivity({
+        active: true,
+        label: `${t.node.replace(/_/g, " ")} — ${merchant}`,
+        stage: t.node,
+        done: doneRef.current.size,
+        total: 10,
       });
     });
 
     src.addEventListener("step", (e) => {
       const st = JSON.parse((e as MessageEvent).data) as LiveStep;
       setSteps((prev) => [...prev, st]);
+      // Same rule: publish after the update is queued, never from inside it.
       // The bus carries only what the engine reported: the node it is inside
       // and that node's own i-of-n.
       reportActivity({

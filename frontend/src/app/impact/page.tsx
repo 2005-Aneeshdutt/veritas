@@ -98,6 +98,11 @@ export default function ImpactPage() {
   const hi = 94;
   const x = (pct: number) => ((Math.min(hi, Math.max(lo, pct)) - lo) / (hi - lo)) * 100;
 
+  // merchant_id -> its committed run, so a fix can link to the run that
+  // actually exists rather than to its merchant's name.
+  const runFor: Record<string, string> = {};
+  for (const m of book) runFor[m.merchant_id] = m.run_id;
+
   const gained = fixes.reduce((n, f) => n + Math.max(0, f.measured_value_paise), 0);
   const promised = fixes.reduce((n, f) => n + f.predicted_value_paise, 0);
   const held = fixes.filter((f) => f.within_error_bar).length;
@@ -161,12 +166,20 @@ export default function ImpactPage() {
             return (
               <div key={i}>
                 <div className="flex items-baseline gap-2 flex-wrap text-[12px]">
-                  <Link
-                    href={`/run/${f.merchant_id}`}
-                    className="font-medium text-ink hover:text-brand transition-colors"
-                  >
-                    {f.merchant_name}
-                  </Link>
+                  {/* The scored fix carries a merchant_id, not a run_id.
+                      Linking straight to /run/{merchant_id} sent the run page
+                      looking for a run called "quickmart" and threw a
+                      client-side exception. The book already knows the run. */}
+                  {runFor[f.merchant_id] ? (
+                    <Link
+                      href={`/run/${runFor[f.merchant_id]}`}
+                      className="font-medium text-ink hover:text-brand transition-colors"
+                    >
+                      {f.merchant_name}
+                    </Link>
+                  ) : (
+                    <span className="font-medium text-ink">{f.merchant_name}</span>
+                  )}
                   <span className="text-faint">
                     {f.cause_fixed.replace(/_/g, " ")}
                   </span>

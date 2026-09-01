@@ -36,6 +36,7 @@ const FACTOR_COLOR: Record<string, string> = {
 
 export default function Overview({ params }: { params: { runId: string } }) {
   const [rec, setRec] = useState<RunRecord | null>(null);
+  const [missing, setMissing] = useState(false);
   const [sens, setSens] = useState<any>(null);
   //: How far the retry model is from a known truth. Measured, so the
   //: PROJECTED label above can carry a figure instead of only a caveat.
@@ -45,7 +46,13 @@ export default function Overview({ params }: { params: { runId: string } }) {
   const [copied, setCopied] = useState(false);
 
   useEffect(() => {
-    fetch(`/api/run/${params.runId}`).then((r) => r.json()).then(setRec);
+    // A 404 body is still JSON, so feeding it straight to setRec left `rec`
+    // truthy with no `report` on it and the page threw a client-side
+    // exception. A missing run is a state to render, not a crash.
+    fetch(`/api/run/${params.runId}`)
+      .then((r) => (r.ok ? r.json() : Promise.reject(new Error("not found"))))
+      .then(setRec)
+      .catch(() => setMissing(true));
     fetch("/api/evals")
       .then((r) => r.json())
       .then((e) => {
@@ -54,6 +61,29 @@ export default function Overview({ params }: { params: { runId: string } }) {
       })
       .catch(() => {});
   }, [params.runId]);
+
+  if (missing)
+    return (
+      <div className="space-y-4">
+        <PageHead
+          title="No such run"
+          sub="Nothing on disk matches this address. Runs are identified by a run id, not by a merchant name — a link built from the merchant would land here."
+        />
+        <Panel tone="warn">
+          <div className="text-[13px] font-medium">
+            <span className="num">{params.runId}</span> is not a run on this
+            instance
+          </div>
+          <p className="text-[13px] text-muted mt-1.5 leading-relaxed">
+            Open the book and pick a merchant — every row there carries the run
+            that actually exists for it.
+          </p>
+          <Link href="/portfolio" className="btn-secondary mt-3 inline-flex">
+            Back to the book
+          </Link>
+        </Panel>
+      </div>
+    );
 
   if (!rec) return <Loading label="running the agent" />;
 

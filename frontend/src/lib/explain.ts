@@ -215,3 +215,72 @@ export const FACTOR_DOCS: Record<
     fix: "Reported rather than redistributed.",
   },
 };
+
+
+/**
+ * What to actually DO about a decision.
+ *
+ * A reason code tells you why the kernel stopped something. It does not tell
+ * you whether anything can be done, or by whom — so a denied queue reads as a
+ * dead end when several of these are one conversation away from being
+ * recoverable.
+ *
+ * These are the real remedies for each rule, and they are deliberately blunt
+ * about the ones that have none: an expired mandate is fixed by re-signing it,
+ * and a payment already collected must never be chased however much anyone
+ * wants the money.
+ */
+export const NEXT_STEP: Record<string, { who: string; do_: string }> = {
+  DENY_AMOUNT_ABOVE_CEILING: {
+    who: "the merchant",
+    do_: "Raise the ceiling in the mandate and re-sign it, or collect this one by hand. Nobody can approve it as it stands.",
+  },
+  DENY_ALREADY_SETTLED: {
+    who: "nobody",
+    do_: "Leave it. The payment already went through — chasing it costs a refund, a chargeback risk and the customer.",
+  },
+  DENY_ACTION_NOT_PERMITTED: {
+    who: "the merchant",
+    do_: "Add this action type to the mandate if you want it done, then re-sign.",
+  },
+  DENY_MAX_ATTEMPTS: {
+    who: "the merchant",
+    do_: "Already tried the maximum times. Raise the attempt cap or accept the loss — a further retry only burns the customer.",
+  },
+  DENY_OUTSIDE_RECOVERY_WINDOW: {
+    who: "nobody",
+    do_: "Older than seven days. Too late to retry into; recover it through a fresh payment link instead.",
+  },
+  DENY_MANDATE_EXPIRED: {
+    who: "the merchant",
+    do_: "Re-sign the mandate. Expiry is absolute and nothing runs until it is renewed.",
+  },
+  DENY_MANDATE_NOT_YET_VALID: {
+    who: "nobody",
+    do_: "The mandate has not started yet. This becomes retryable on its own.",
+  },
+  DENY_SIGNATURE_INVALID: {
+    who: "you",
+    do_: "The mandate did not verify. Re-issue it before anything else is trusted.",
+  },
+  DENY_BANK_DEGRADED_HOLD: {
+    who: "nobody",
+    do_: "The bank is under a four-hour hold. It clears itself, then this is retryable.",
+  },
+  STEP_UP_ABOVE_AUTO_LIMIT: {
+    who: "you or the merchant",
+    do_: "Approve it here on their behalf, or email it so they decide. Either way it re-gates.",
+  },
+  STEP_UP_MERCHANT_APPROVAL_REQUESTED: {
+    who: "the merchant",
+    do_: "The planner asked for sign-off on this action type whatever the amount. Send it to them.",
+  },
+  OK_MERCHANT_ACTION: {
+    who: "the merchant",
+    do_: "A settings change only they can make. The agent has recorded the recommendation.",
+  },
+  OK_ESCALATION: {
+    who: "a reviewer",
+    do_: "Flagged for a human to look at. Nothing was moved.",
+  },
+};

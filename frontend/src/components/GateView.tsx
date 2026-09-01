@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { NEXT_STEP } from "@/lib/explain";
 import { inr } from "@/lib/types";
 
 /**
@@ -199,6 +200,20 @@ export function GateView({
               </>
             )}
           </p>
+
+          {/* A refusal that offers no next step reads as a dead end, and
+              several of these are one conversation away from recoverable. */}
+          {NEXT_STEP[reason] && (
+            <div className="mt-3 pt-3 border-t border-line">
+              <div className="ui text-[10px] uppercase tracking-[0.1em] text-faint">
+                What to do about it
+              </div>
+              <p className="text-[12px] mt-1 leading-relaxed max-w-2xl">
+                <span className="text-ink">{NEXT_STEP[reason].who}</span>{" "}
+                <span className="text-muted">— {NEXT_STEP[reason].do_}</span>
+              </p>
+            </div>
+          )}
         </div>
       )}
     </div>
