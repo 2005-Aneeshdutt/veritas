@@ -5,7 +5,7 @@
 const v = (name) => `rgb(var(${name}) / <alpha-value>)`;
 
 module.exports = {
-  darkMode: "class",
+  darkMode: ["selector", ":root:not(.light)"],
   content: ["./src/**/*.{ts,tsx}"],
   theme: {
     extend: {

@@ -4,8 +4,9 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { AuthorityPanel } from "@/components/AuthorityPanel";
 import { BarStrip } from "@/components/BarStrip";
+import { ChainView, VerifyProgress } from "@/components/ChainView";
 import { RetrySchedule } from "@/components/RetrySchedule";
-import { Card, Detail, Eyebrow, Figure, Figures, Info, Loading, Notes, PageHead, Panel, SectionHeader, Stagger } from "@/components/ui";
+import { Card, Detail, Eyebrow, Figure, Figures, Info, Loading, Notes, PageHead, Panel, SectionHeader, Stagger, Ticker } from "@/components/ui";
 import { GLOSSARY } from "@/lib/explain";
 import { RunRecord, inr } from "@/lib/types";
 
@@ -35,6 +36,10 @@ export default function AuditPage({ params }: { params: { runId: string } }) {
   const [entries, setEntries] = useState<any[]>([]);
   const [result, setResult] = useState<{ ok: boolean; msg: string } | null>(null);
   const [brokenAt, setBrokenAt] = useState<number | null>(null);
+  //: How many entries the running check has confirmed. Display only — the
+  //: verification below is unchanged, this just counts what it already does
+  //: so an audience watches entries confirm instead of a boolean turning green.
+  const [verified, setVerified] = useState(0);
   const [busy, setBusy] = useState(false);
   const [filter, setFilter] = useState<string>("all");
   const [openRow, setOpenRow] = useState<number | null>(null);
@@ -145,6 +150,7 @@ export default function AuditPage({ params }: { params: { runId: string } }) {
   async function verify(list = entries) {
     setBusy(true);
     setResult(null);
+    setVerified(0);
     let prev = "0".repeat(64);
     for (let i = 0; i < list.length; i++) {
       const e = list[i];
@@ -162,6 +168,7 @@ export default function AuditPage({ params }: { params: { runId: string } }) {
         return;
       }
       prev = entry_hash;
+      setVerified(i + 1);
     }
     setBrokenAt(null);
     setResult({ ok: true, msg: `${list.length} entries recomputed from genesis` });
@@ -222,6 +229,13 @@ export default function AuditPage({ params }: { params: { runId: string } }) {
         />
       </Stagger>
 
+      {/* Three outcomes, three counts, each one opening the payments behind
+          it. The numbers are the ledger's own, counted per action rather than
+          per row so a held action later confirmed is not counted twice. */}
+      <Stagger i={1}>
+        <Outcomes rec={rec} runId={params.runId} />
+      </Stagger>
+
       {/* ─────────────────────────────── verification */}
       <Stagger i={1}>
         <BarStrip rec={rec} runId={params.runId} />
@@ -270,6 +284,18 @@ export default function AuditPage({ params }: { params: { runId: string } }) {
               </div>
             )}
           </div>
+
+          {(busy || verified > 0 || brokenAt !== null) && (
+            <div className="grid lg:grid-cols-[minmax(0,20rem)_minmax(0,1fr)] gap-4 items-start mt-4">
+              <VerifyProgress
+                total={entries.length}
+                verified={verified}
+                running={busy}
+                broken={brokenAt}
+              />
+              <ChainView entries={entries as any} verifiedTo={verified} limit={8} />
+            </div>
+          )}
 
           {brokenAt !== null && (
             <p className="text-xs text-rose mt-3 leading-relaxed animate-rise">
@@ -912,6 +938,140 @@ function SendToMerchant({ runId, held }: { runId: string; held: number }) {
           close
         </button>
       </div>
+    </div>
+  );
+}
+
+/**
+ * Allowed, held, denied — as three counts you can open.
+ *
+ * The ledger is append-only, so a held action that was later confirmed
+ * appears twice and must not be counted twice. The final word per action is
+ * what these three numbers report, which is why they sum to the number of
+ * decisions rather than to the number of rows.
+ */
+function Outcomes({ rec, runId }: { rec: any; runId: string }) {
+  const [open, setOpen] = useState<string | null>(null);
+
+  const final = new Map<string, any>();
+  for (const e of rec.report.ledger ?? []) {
+    final.set(`${e.txn_id}|${e.proposed_action?.action_type}`, e);
+  }
+  const rows = [...final.values()];
+
+  const groups = [
+    {
+      key: "allow",
+      label: "Allowed",
+      tone: "text-mint",
+      dot: "bg-mint",
+      blurb: "inside every limit the merchant signed",
+      rows: rows.filter((e) => e.gate_decision === "allow"),
+    },
+    {
+      key: "step_up",
+      label: "Held",
+      tone: "text-amber",
+      dot: "bg-amber",
+      blurb: "permitted, but waiting on a person",
+      rows: rows.filter((e) => e.gate_decision === "step_up"),
+    },
+    {
+      key: "deny",
+      label: "Denied",
+      tone: "text-rose",
+      dot: "bg-rose",
+      blurb: "refused by the mandate — no approval overrides this",
+      rows: rows.filter((e) => e.gate_decision === "deny"),
+    },
+  ];
+
+  const shown = groups.find((g) => g.key === open);
+
+  return (
+    <div>
+      <div className="grid sm:grid-cols-3 gap-px bg-line rounded-xl overflow-hidden">
+        {groups.map((g) => (
+          <button
+            key={g.key}
+            onClick={() => setOpen(open === g.key ? null : g.key)}
+            className={`bg-surface p-4 text-left transition-colors hover:bg-raised ${
+              open === g.key ? "bg-raised" : ""
+            }`}
+          >
+            <div className="flex items-center gap-2">
+              <span className={`w-1.5 h-1.5 rounded-full ${g.dot}`} />
+              <span className="ui text-[10.5px] uppercase tracking-[0.12em] text-faint">
+                {g.label}
+              </span>
+              <span className="text-[10px] text-faint ml-auto">
+                {open === g.key ? "hide" : "open"}
+              </span>
+            </div>
+            <div className={`num text-3xl font-semibold leading-none mt-2 ${g.tone}`}>
+              <Ticker value={g.rows.length} />
+            </div>
+            <div className="text-[11px] text-faint mt-2 leading-tight">{g.blurb}</div>
+          </button>
+        ))}
+      </div>
+
+      {shown && (
+        <div className="mt-4 animate-rise">
+          <div className="flex items-baseline gap-2 mb-2">
+            <h3>
+              {shown.rows.length} {shown.label.toLowerCase()}
+            </h3>
+            <span className="text-[12px] text-muted">
+              with the rule that decided each one
+            </span>
+          </div>
+          <div className="overflow-x-auto max-h-80 overflow-y-auto">
+            <table className="tbl min-w-[38rem]">
+              <thead>
+                <tr>
+                  <th>payment</th>
+                  <th>action</th>
+                  <th className="text-right">amount</th>
+                  <th>reason</th>
+                </tr>
+              </thead>
+              <tbody>
+                {shown.rows.slice(0, 60).map((e: any, i: number) => (
+                  <tr key={`${e.txn_id}-${i}`}>
+                    <td className="num text-[11px]">
+                      {String(e.txn_id).startsWith("merchant:") ? (
+                        e.txn_id
+                      ) : (
+                        <Link
+                          href={`/run/${runId}/journey?txn=${encodeURIComponent(e.txn_id)}`}
+                          className="link-quiet"
+                        >
+                          {e.txn_id}
+                        </Link>
+                      )}
+                    </td>
+                    <td className="text-muted whitespace-nowrap">
+                      {String(e.proposed_action?.action_type ?? "").replace(/_/g, " ")}
+                    </td>
+                    <td className="num text-right whitespace-nowrap">
+                      {e.proposed_action?.amount_paise
+                        ? inr(e.proposed_action.amount_paise)
+                        : "—"}
+                    </td>
+                    <td className="num text-[10.5px] text-faint">{e.gate_reason}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          {shown.rows.length > 60 && (
+            <p className="text-[11px] text-faint mt-2">
+              showing 60 of {shown.rows.length}
+            </p>
+          )}
+        </div>
+      )}
     </div>
   );
 }

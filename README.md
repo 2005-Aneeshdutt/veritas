@@ -174,7 +174,7 @@ Every run here reports ₹0 because each model answer was bought once and
 committed — and a bare zero would quietly claim the model steps are free. Spent
 and saved are counted separately and never netted: the book made **45 model
 calls over 75,630 tokens** and spent nothing, avoiding **₹41.74**; the whole
-committed cache is **360 answers, 660,100 tokens, ₹440.79** to rebuild from
+committed cache is **362 answers, 662,822 tokens, ₹441.08** to rebuild from
 empty. The figure that matters is the *billable* one — **₹5.22 per merchant**,
 what the second merchant costs and the millionth. That is ₹0.52 Cr across a
 million if every model step runs nightly, which is the expensive way and not

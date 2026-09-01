@@ -178,26 +178,61 @@ export default function PortfolioPage() {
         />
       </Stagger>
 
-      {/* ── the one number, and the row of facts under it ── */}
+      {/* ── the two numbers, side by side, never blurred ──
+          Projected and measured are the one distinction the whole product
+          rests on, so they get equal billing and opposite colour rather than
+          one headline with a caveat under it. */}
       <Stagger>
         <div className="space-y-7">
-          <Hero
-            label="Recoverable this month"
-            kind="projected"
-            value={
-              <Ticker value={pf.total_recoverable_central_paise / 100} prefix="₹" />
-            }
-            sub={
-              <>
+          <div className="grid sm:grid-cols-2 gap-px bg-line rounded-xl overflow-hidden">
+            <div className="bg-surface p-5">
+              <div className="flex items-center gap-2">
+                <span className="ui text-[10.5px] uppercase tracking-[0.12em] text-faint">
+                  Revenue opportunity
+                </span>
+                <span className="chip-projected">projected</span>
+              </div>
+              <div className="num text-[38px] font-semibold leading-none mt-2.5 text-amber">
+                <Ticker value={pf.total_recoverable_central_paise / 100} prefix="₹" />
+              </div>
+              <div className="text-[12px] text-muted mt-2.5 leading-relaxed">
                 Central estimate. The published range is{" "}
                 <span className="num">
                   {inr(pf.total_recoverable_low_paise, { compact: true })}–
                   {inr(pf.total_recoverable_high_paise, { compact: true })}
                 </span>
-                , and it is the range rather than this figure that the
-                validation brackets.
-              </>
-            }
+                , and it is the range the validation brackets, not this figure.
+              </div>
+            </div>
+
+            <div className="bg-surface p-5">
+              <div className="flex items-center gap-2">
+                <span className="ui text-[10.5px] uppercase tracking-[0.12em] text-faint">
+                  Actually won back
+                </span>
+                <span className="chip-measured">measured</span>
+              </div>
+              <div className="num text-[38px] font-semibold leading-none mt-2.5 text-mint">
+                <Ticker value={pf.total_measured_paise / 100} prefix="₹" />
+              </div>
+              <div className="text-[12px] text-muted mt-2.5 leading-relaxed">
+                <span className="num">{pf.total_converted}</span> of{" "}
+                <span className="num">{pf.total_attempted}</span> executed
+                retries truly converted, marked against an outcome the engine
+                never saw.
+              </div>
+            </div>
+          </div>
+
+          {/* the book, as a flow rather than four unrelated tiles */}
+          <Flow
+            steps={[
+              { k: "payments examined", v: pf.total_transactions.toLocaleString("en-IN") },
+              { k: "failures", v: pf.total_failures.toLocaleString("en-IN"), tone: "text-rose" },
+              { k: "projected recoverable", v: inr(pf.total_recoverable_central_paise, { compact: true }), tone: "text-amber" },
+              { k: "retries", v: `${pf.total_attempted} → ${pf.total_converted}`, tone: "text-muted" },
+              { k: "actually recovered", v: inr(pf.total_measured_paise, { compact: true }), tone: "text-mint" },
+            ]}
           />
 
           <Figures>
@@ -416,5 +451,37 @@ function BandTab({
       {dot && <span className={`w-1.5 h-1.5 rounded-full ${dot}`} />}
       {children}
     </button>
+  );
+}
+
+/**
+ * The book as a flow, not four unrelated tiles.
+ *
+ * Payments narrow to failures, failures to what is recoverable, and only some
+ * of that is actually won back. Four boxes in a grid state those as separate
+ * facts; an arrow between them states the one thing that matters, which is
+ * that each number is a subset of the one before it.
+ */
+function Flow({ steps }: { steps: { k: string; v: string; tone?: string }[] }) {
+  return (
+    <div className="flex items-stretch gap-0 overflow-x-auto no-scrollbar">
+      {steps.map((s, i) => (
+        <div key={s.k} className="flex items-center shrink-0">
+          <div className="px-4 first:pl-0">
+            <div className="ui text-[10px] uppercase tracking-[0.1em] text-faint whitespace-nowrap">
+              {s.k}
+            </div>
+            <div className={`num text-lg font-semibold mt-1 ${s.tone ?? ""}`}>
+              {s.v}
+            </div>
+          </div>
+          {i < steps.length - 1 && (
+            <span className="text-faint text-sm px-1 select-none" aria-hidden>
+              →
+            </span>
+          )}
+        </div>
+      ))}
+    </div>
   );
 }

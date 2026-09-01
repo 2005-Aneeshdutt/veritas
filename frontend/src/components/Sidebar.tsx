@@ -98,9 +98,9 @@ export function Sidebar({ runHref }: { runHref?: string | null }) {
     // Evidence is the numeric record; this is the same eight fixes as a
     // picture. Different jobs -- one is for checking, one is for seeing --
     // and the picture was buried in a column called forecast_error_pts.
-    { href: "/impact", label: "Before / after", match: ["/impact"] },
+    { href: "/impact", label: "Impact", match: ["/impact"] },
     { href: "/evidence", label: "Evidence", match: ["/evidence"] },
-    { href: "/data", label: "Your own data", match: ["/data"] },
+    { href: "/data", label: "Data", match: ["/data"] },
   ];
 
   const onAuthorise = path.includes("/authorise");
@@ -176,7 +176,7 @@ export function Sidebar({ runHref }: { runHref?: string | null }) {
         </div>
 
         <nav aria-label="Main" className="flex-1 overflow-y-auto no-scrollbar px-2.5 py-3 space-y-6">
-          <Group title="Walkthrough">
+          <Group title="Pipeline">
             {steps.map((it, i) => (
               <Row key={it.label} it={it} n={i + 1} on={lit(it, i === 1)} />
             ))}
@@ -189,6 +189,7 @@ export function Sidebar({ runHref }: { runHref?: string | null }) {
         </nav>
 
         <div className="px-2.5 py-2.5 border-t border-line shrink-0">
+          <SystemStatus />
           <ResetDemo />
           <div className="flex items-center justify-between mt-1">
             <Account />
@@ -219,21 +220,30 @@ function Group({ title, children }: { title: string; children: React.ReactNode }
 function Row({ it, n, on }: { it: Item; n?: number; on: boolean }) {
   const body = (
     <>
+      {/* The active row is marked by a purple rail, not a filled block:
+          purple means the system is doing something here. */}
+      <span
+        className={`absolute left-0 top-1.5 bottom-1.5 w-[2px] rounded-full transition-colors ${
+          on ? "bg-brand" : "bg-transparent"
+        }`}
+      />
       {n !== undefined && (
         <span
-          className={`w-4 text-[11px] num shrink-0 ${on ? "text-brand" : "text-faint"}`}
+          className={`w-5 text-[10.5px] num shrink-0 tracking-tight ${
+            on ? "text-brand" : "text-faint"
+          }`}
         >
-          {n}
+          {String(n).padStart(2, "0")}
         </span>
       )}
       <span className="truncate">{it.label}</span>
     </>
   );
-  const cls = `w-full flex items-center gap-2 px-2.5 py-1.5 rounded text-[13px]
-               transition-colors ${
+  const cls = `relative w-full flex items-center gap-2 pl-3.5 pr-2.5 py-[7px]
+               rounded-md text-[13px] transition-colors ${
                  on
-                   ? "bg-surface text-ink font-medium shadow-xs"
-                   : "text-muted hover:text-ink hover:bg-surface/60"
+                   ? "bg-raised text-ink font-medium"
+                   : "text-muted hover:text-ink hover:bg-raised/60"
                }`;
   return it.href ? (
     <Link href={it.href} className={cls} aria-current={on ? "page" : undefined}>
@@ -289,6 +299,47 @@ function ResetDemo() {
     >
       {label}
     </button>
+  );
+}
+
+/**
+ * Is the engine reachable, and is the evidence intact.
+ *
+ * Reads /api/health, which reports the commit it is serving and whether the
+ * validation sweep is present. A console that cannot tell you it is healthy is
+ * asking you to assume it, and this product does not ask anyone to assume
+ * anything.
+ */
+function SystemStatus() {
+  const [ok, setOk] = useState<boolean | null>(null);
+  const [commit, setCommit] = useState<string>("");
+
+  useEffect(() => {
+    fetch("/api/health")
+      .then((r) => r.json())
+      .then((d) => {
+        setOk(Boolean(d.ok));
+        setCommit(d.commit ?? "");
+      })
+      .catch(() => setOk(false));
+  }, []);
+
+  return (
+    <div className="flex items-center gap-2 px-2.5 py-1.5" title={commit && "commit " + commit}>
+      <span
+        className={`w-1.5 h-1.5 rounded-full shrink-0 ${
+          ok === null ? "bg-faint" : ok ? "bg-mint" : "bg-rose"
+        }`}
+      />
+      <span className="text-[11px] text-muted truncate">
+        {ok === null
+          ? "checking…"
+          : ok
+          ? "All systems operational"
+          : "API unreachable"}
+      </span>
+      {commit && <span className="num text-[10px] text-faint ml-auto">{commit}</span>}
+    </div>
   );
 }
 

@@ -8,24 +8,28 @@ const KEY = "rd-theme";
 
 /**
  * Runs before paint, inlined in <head>, so the page never renders in the wrong
- * theme and then snaps. Falls back to the OS preference when nothing is stored.
+ * theme and then snaps.
+ *
+ * Dark is the product's own ground now rather than an alternative to it, so
+ * the class this stamps is `light` and the default is to stamp nothing. A
+ * viewer who has chosen light keeps it; a viewer whose OS says light gets it;
+ * everyone else gets the console.
  */
 export const themeBootstrap = `
 (function () {
   try {
     var s = localStorage.getItem('${KEY}');
-    var m = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    if (s === 'dark' || (!s && m)) document.documentElement.classList.add('dark');
+    if (s === 'light') document.documentElement.classList.add('light');
   } catch (e) {}
 })();
 `;
 
 export function useTheme(): [Theme, (t: Theme) => void] {
-  const [theme, setThemeState] = useState<Theme>("light");
+  const [theme, setThemeState] = useState<Theme>("dark");
 
   useEffect(() => {
     setThemeState(
-      document.documentElement.classList.contains("dark") ? "dark" : "light"
+      document.documentElement.classList.contains("light") ? "light" : "dark"
     );
   }, []);
 
@@ -33,7 +37,7 @@ export function useTheme(): [Theme, (t: Theme) => void] {
     const root = document.documentElement;
     // Only animate colours for the toggle itself, not on every route change.
     root.classList.add("theme-transition");
-    root.classList.toggle("dark", t === "dark");
+    root.classList.toggle("light", t === "light");
     try {
       localStorage.setItem(KEY, t);
     } catch {

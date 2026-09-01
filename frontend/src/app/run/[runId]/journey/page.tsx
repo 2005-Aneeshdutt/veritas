@@ -11,6 +11,7 @@ import {
   Panel,
   Stagger,
 } from "@/components/ui";
+import { GateView } from "@/components/GateView";
 import { inr } from "@/lib/types";
 
 interface Candidate {
@@ -320,6 +321,19 @@ export default function JourneyPage({ params }: { params: { runId: string } }) {
                   </div>
                 )}
               </div>
+
+              {/* ── the gate, with its verdict ── */}
+              {done && j.checks.length > 0 && (
+                <GateView
+                  rules={j.checks}
+                  decision={j.raw_entry?.gate_decision ?? ""}
+                  reason={j.final_reason}
+                  amountPaise={j.amount_paise}
+                  ceilingPaise={j.mandate?.max_amount_paise}
+                  autoLimitPaise={j.mandate?.auto_execute_limit_paise}
+                  paced={false}
+                />
+              )}
 
               {/* ── the telemetry panel ── */}
               {done && (

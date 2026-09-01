@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap");
 
 @tailwind base;
 @tailwind components;
@@ -8,78 +8,92 @@
 /* Light is the default, the way Stripe's own surfaces are. Dark is a full
    re-map rather than an inversion, so contrast stays deliberate in both. */
 
+/* An operations console, not a document.
+   The ground is near-black navy; panels and elevated panels step up from it
+   by a few points of lightness rather than by a border, so density reads as
+   depth. Purple is reserved for one thing -- the system doing work -- and
+   every other hue carries a fixed meaning it never lends out:
+
+     green   recovered, allowed, verified
+     amber   projected, held, awaiting a person
+     red     denied, blocked, failed
+     blue    system and data
+     white   a measured number
+
+   Light stays a complete, supported theme: the toggle is existing
+   functionality and removing it would be removing a feature. */
+
 :root {
-  --canvas: 255 255 255;
-  --subtle: 250 250 251;
+  --canvas:  8 10 15;
+  --subtle:  11 14 20;
+  --surface: 15 19 27;
+  --raised:  20 25 35;
+  --line:    30 37 51;
+  --edge:    45 54 72;
+
+  --brand:      139 108 255;
+  --brand-soft: 27 22 56;
+  --brand-ink:  255 255 255;
+
+  --mint:      52 211 153;
+  --mint-soft: 8 42 38;
+  --rose:      248 113 113;
+  --rose-soft: 48 20 25;
+  --sky:       96 165 250;
+  --sky-soft:  14 31 56;
+  --amber:     251 191 36;
+  --amber-soft:47 34 12;
+  --iris:      167 139 250;
+  --iris-soft: 32 26 60;
+
+  --ink:   242 244 248;
+  --muted: 155 163 180;
+  --faint: 107 115 131;
+
+  --shadow: 0 0 0;
+
+  --grad-a: 60 40 140;
+  --grad-b: 30 60 130;
+  --grad-c: 90 40 110;
+
+  color-scheme: dark;
+}
+
+/* The light theme, kept whole. */
+.light {
+  --canvas:  255 255 255;
+  --subtle:  250 250 251;
   --surface: 255 255 255;
-  --raised: 249 250 251;
-  --line: 232 233 237;
-  --edge: 214 216 222;
+  --raised:  249 250 251;
+  --line:    232 233 237;
+  --edge:    214 216 222;
 
-  --brand: 79 70 229;
-  --brand-soft: 238 238 253;
-  --brand-ink: 255 255 255;
+  --brand:      99 71 235;
+  --brand-soft: 240 238 254;
+  --brand-ink:  255 255 255;
 
-  --mint: 9 121 105;
+  --mint:      9 121 105;
   --mint-soft: 236 248 245;
-  --rose: 190 42 42;
+  --rose:      190 42 42;
   --rose-soft: 253 242 242;
-  --sky: 21 94 179;
-  --sky-soft: 240 246 254;
-  --amber: 156 96 12;
-  --amber-soft: 253 248 238;
-  --iris: 109 64 199;
+  --sky:       21 94 179;
+  --sky-soft:  240 246 254;
+  --amber:     156 96 12;
+  --amber-soft:253 248 238;
+  --iris:      109 64 199;
   --iris-soft: 244 242 253;
 
-  /* Near-neutral, a touch warm. The old ink was #0A2540 -- a blue that made
-     every page read as a marketing site rather than a console. */
-  --ink: 24 25 30;
+  --ink:   24 25 30;
   --muted: 94 98 108;
   --faint: 143 147 158;
 
-  --shadow: 10 37 64;
+  --shadow: 24 25 30;
 
   --grad-a: 111 214 255;
   --grad-b: 138 124 255;
   --grad-c: 255 138 190;
 
   color-scheme: light;
-}
-
-.dark {
-  --canvas: 12 13 16;
-  --subtle: 17 18 22;
-  --surface: 17 18 22;
-  --raised: 22 24 29;
-  --line: 38 40 47;
-  --edge: 55 58 67;
-
-  --brand: 139 132 250;
-  --brand-soft: 30 29 58;
-  --brand-ink: 12 13 16;
-
-  --mint: 62 197 160;
-  --mint-soft: 15 38 34;
-  --rose: 242 122 122;
-  --rose-soft: 46 24 26;
-  --sky: 116 171 246;
-  --sky-soft: 20 32 52;
-  --amber: 226 168 76;
-  --amber-soft: 45 36 20;
-  --iris: 164 141 245;
-  --iris-soft: 34 29 54;
-
-  --ink: 237 238 242;
-  --muted: 155 159 170;
-  --faint: 111 116 128;
-
-  --shadow: 0 0 0;
-
-  --grad-a: 32 96 140;
-  --grad-b: 78 68 168;
-  --grad-c: 138 60 105;
-
-  color-scheme: dark;
 }
 
 /* -------------------------------------------------------------- base */

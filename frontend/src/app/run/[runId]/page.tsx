@@ -21,6 +21,7 @@ import {
   Wall,
 } from "@/components/ui";
 import { ApplyFix } from "@/components/ApplyFix";
+import { RunDiagnosis } from "@/components/RunDiagnosis";
 import { EmailPanel } from "@/components/EmailPanel";
 import { FACTOR_DOCS, GLOSSARY } from "@/lib/explain";
 import { RunRecord, inr, pts } from "@/lib/types";
@@ -103,6 +104,25 @@ export default function Overview({ params }: { params: { runId: string } }) {
           sub={`${m.transactions.toLocaleString("en-IN")} payments · ${m.failures} failed · ${gate.allow} actions executed under a signed mandate.`}
           right={<ChainBadge ok={m.chain_verified} violations={m.mandate_violations} />}
         />
+      </Stagger>
+
+      {/* ── run it live ──────────────────────────────────────────────
+          The same merchant, through the real stream, so an audience watches
+          the nine stages happen rather than reading what they produced. */}
+      <Stagger>
+        <div className="border-t border-line pt-5">
+          <div className="flex items-baseline gap-3 flex-wrap mb-3">
+            <h2>Watch it work</h2>
+            <span className="text-[12px] text-muted">
+              Live stream, not a replay. Pacing throttles the feed, never the
+              engine.
+            </span>
+          </div>
+          <RunDiagnosis
+            merchant={rec.merchant_id}
+            merchantName={rec.merchant_name}
+          />
+        </div>
       </Stagger>
 
       {/* what the batch won back */}
