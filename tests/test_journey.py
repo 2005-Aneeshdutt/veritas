@@ -206,3 +206,123 @@ def test_every_reason_the_kernel_can_return_has_plain_words():
     assert not missing, "the kernel can return these with no explanation: %s" % (
         ", ".join(missing)
     )
+
+
+class TestTheKernelsChecks:
+    """The rule sequence shown for one payment, and the values it quotes.
+
+    The point of showing checks per payment is that a reader can disagree with
+    them. "Rs 24,816 against a ceiling of Rs 15,000" is a claim about two
+    numbers; "amount checked against ceiling" is a description of a rule and
+    cannot be wrong. So the tests are about the numbers being the real ones and
+    the sequence stopping where the stored decision says it stopped.
+    """
+
+    def test_the_sequence_matches_the_kernels_own_reason_codes(self, run_id):
+        """Every code the kernel can emit has a place in the sequence, or a
+        payment carrying it would render with nothing marked."""
+        from chitragupta.policy import ReasonCode
+        from doctor.journey import _ORDER
+
+        placed = {code for _, _, code in _ORDER}
+        # These two are decided on the ladder rather than by a numbered rule.
+        placed |= {"OK_ESCALATION", "OK_WITHIN_MANDATE"}
+        codes = {v for k, v in vars(ReasonCode).items() if not k.startswith("_")}
+        assert not (codes - placed), "no rule row for: %s" % sorted(codes - placed)
+
+    def test_it_stops_at_the_rule_the_ledger_blames(self, run_id):
+        from doctor.journey import _ORDER
+
+        by_code = {code: i for i, (_, _, code) in enumerate(_ORDER)}
+        for row in candidates(run_id, 60):
+            j = build(run_id, row["txn_id"])
+            if not j.checks:
+                continue
+            stopped = [c for c in j.checks if c.status == "stopped"]
+            expect = by_code.get(j.final_reason)
+            if expect is None:
+                # OK_WITHIN_MANDATE passes everything.
+                if j.final_reason == "OK_WITHIN_MANDATE":
+                    assert not stopped
+                continue
+            assert len(stopped) == 1
+            assert stopped[0].n == expect + 1, (
+                "%s says %s but the sequence stopped at %s"
+                % (row["txn_id"], j.final_reason, stopped[0].label)
+            )
+
+    def test_nothing_after_the_stop_claims_to_have_run(self, run_id):
+        for row in candidates(run_id, 40):
+            j = build(run_id, row["txn_id"])
+            seen_stop = False
+            for c in j.checks:
+                if seen_stop:
+                    assert c.status == "not_reached", (
+                        "%s ran %s after already stopping" % (row["txn_id"], c.label)
+                    )
+                if c.status == "stopped":
+                    seen_stop = True
+
+    def test_the_quoted_limits_are_the_mandates_own(self, run_id, rec):
+        """Not restated numbers -- the ones in the signed file."""
+        from doctor.run import load_mandate
+
+        m = load_mandate(rec["merchant_id"]).mandate
+        ceiling = "Rs %s" % format(m.max_amount_paise // 100, ",d")
+        auto = "Rs %s" % format(m.auto_execute_limit_paise // 100, ",d")
+
+        j = build(run_id, candidates(run_id, 1)[0]["txn_id"])
+        by_key = {c.key: c for c in j.checks}
+        assert ceiling in by_key["ceiling"].compared
+        assert auto in by_key["auto_limit"].compared
+        assert str(m.max_attempts_per_payment) in by_key["attempts"].compared
+        assert m.not_after[:10] in by_key["validity"].compared
+
+    def test_the_amount_quoted_is_the_payments_own(self, run_id):
+        for row in candidates(run_id, 30):
+            j = build(run_id, row["txn_id"])
+            if not j.checks or not row["amount_paise"]:
+                continue
+            shown = "Rs %s" % format(row["amount_paise"] // 100, ",d")
+            by_key = {c.key: c for c in j.checks}
+            assert shown in by_key["ceiling"].compared, row["txn_id"]
+
+
+class TestTheHashIsCheckable:
+    """The published preimage has to actually be the preimage.
+
+    A page that says "these are the bytes we hashed" and ships bytes that do
+    not hash to the stored value would be worse than showing nothing -- it
+    invites a reader to check, and rewards them with a mismatch they cannot
+    interpret. This is the test that keeps that promise honest.
+    """
+
+    def test_sha256_of_the_published_bytes_is_the_stored_hash(self, run_id):
+        import hashlib
+
+        checked = 0
+        for row in candidates(run_id, 40):
+            j = build(run_id, row["txn_id"])
+            if not j.hash_preimage:
+                continue
+            digest = hashlib.sha256(j.hash_preimage.encode("utf-8")).hexdigest()
+            assert digest == j.raw_entry["entry_hash"], row["txn_id"]
+            checked += 1
+        assert checked > 5, "nothing was actually checked"
+
+    def test_the_preimage_excludes_only_the_hash_itself(self, run_id):
+        j = build(run_id, candidates(run_id, 1)[0]["txn_id"])
+        payload = json.loads(j.hash_preimage)
+        assert "entry_hash" not in payload
+        assert set(j.raw_entry) - set(payload) == {"entry_hash"}
+
+    def test_a_tampered_preimage_stops_matching(self, run_id):
+        """The property is worth nothing if a changed field still hashes the
+        same, so the test edits one and requires the digest to move."""
+        import hashlib
+
+        j = build(run_id, candidates(run_id, 1)[0]["txn_id"])
+        payload = json.loads(j.hash_preimage)
+        payload["sequence"] = payload["sequence"] + 1
+        bumped = json.dumps(payload, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
+        assert hashlib.sha256(bumped.encode("utf-8")).hexdigest() != j.raw_entry["entry_hash"]

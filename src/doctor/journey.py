@@ -54,6 +54,23 @@ class Beat(BaseModel):
     facts: list[dict[str, str]] = []
 
 
+class Check(BaseModel):
+    """One of the kernel's checks, as it applied to THIS payment.
+
+    `compared` is the actual pair of values the rule weighed, not a
+    description of the rule. "Rs 14,745 against a ceiling of Rs 15,000" is
+    something a reader can disagree with; "amount checked against ceiling" is
+    not.
+    """
+
+    n: int
+    key: str
+    label: str
+    compared: str
+    #: "pass" | "stopped" | "not_reached"
+    status: str
+
+
 class Journey(BaseModel):
     found: bool
     txn_id: str
@@ -81,6 +98,18 @@ class Journey(BaseModel):
     would_have_converted: bool | None = None
     truth_note: str = ""
     detail: str = ""
+    #: The kernel's checks in the order they run, with the mandate's real
+    #: limits and this payment's real values.
+    checks: list[Check] = []
+    #: The stored ledger entry, verbatim.
+    raw_entry: dict = {}
+    #: Exactly what SHA-256 was taken over to produce entry_hash. Published so
+    #: the verification is something a reader can repeat rather than a claim
+    #: they have to accept -- the entry minus its own hash, canonically
+    #: encoded, which is the one field a hash cannot commit to.
+    hash_preimage: str = ""
+    #: Mandate limits, so the checks above can be read against them.
+    mandate: dict = {}
 
 
 def _taxonomy() -> dict[str, dict]:
@@ -123,6 +152,89 @@ _TONE = {
     "escalated": "held",
     "exception": "bad",
 }
+
+
+#: The kernel's checks, in the order policy.evaluate runs them, and the reason
+#: code each one emits when it stops something. Kept parallel to that function
+#: so the page narrates the real sequence rather than a plausible-looking one.
+_ORDER = [
+    ("signature", "Verify the merchant's signature", "DENY_SIGNATURE_INVALID"),
+    ("validity", "Check the mandate is in force", "DENY_MANDATE_EXPIRED"),
+    ("validity_early", "Check the mandate has started", "DENY_MANDATE_NOT_YET_VALID"),
+    ("scope", "Check the action type is permitted", "DENY_ACTION_NOT_PERMITTED"),
+    ("ceiling", "Check the amount against the hard ceiling", "DENY_AMOUNT_ABOVE_CEILING"),
+    ("settled", "Check the payment was not already collected", "DENY_ALREADY_SETTLED"),
+    ("attempts", "Check the attempt cap", "DENY_MAX_ATTEMPTS"),
+    ("window", "Check the recovery window", "DENY_OUTSIDE_RECOVERY_WINDOW"),
+    ("degraded", "Check the bank is not under a degradation hold", "DENY_BANK_DEGRADED_HOLD"),
+    ("ladder", "Route anything the agent may not execute itself", "OK_MERCHANT_ACTION"),
+    ("signoff", "Check whether the planner asked for sign-off", "STEP_UP_MERCHANT_APPROVAL_REQUESTED"),
+    ("auto_limit", "Check the amount against the auto-execute limit", "STEP_UP_ABOVE_AUTO_LIMIT"),
+]
+
+#: The action types the agent may carry out unattended. Imported rather than
+#: restated so this page cannot drift from the kernel's own set.
+def _auto_types() -> set[str]:
+    from chitragupta.types import AUTO_EXECUTABLE
+
+    return {a.value for a in AUTO_EXECUTABLE}
+
+
+def _checks(action: dict, reason: str, mandate) -> list[Check]:
+    """The kernel's checks as they applied to one payment.
+
+    Derived from the mandate's real limits and this payment's real amount, and
+    stopped at whichever rule the STORED reason code says stopped it. Nothing
+    is re-decided here -- the recorded outcome stays authoritative, and this
+    only explains which rule produced it and on what numbers.
+    """
+    amount = int(action.get("amount_paise") or 0)
+    kind = str(action.get("action_type") or "")
+    stop_at = next((i for i, (_, _, code) in enumerate(_ORDER) if code == reason), None)
+
+    # Escalation is decided on the ladder: flagging something for a human is
+    # always permitted and never consumes an attempt.
+    if reason == "OK_ESCALATION":
+        stop_at = next(i for i, (k, _, _) in enumerate(_ORDER) if k == "ladder")
+
+    detail = {
+        "signature": "Ed25519, against the public key inside the mandate itself",
+        "validity": "now is before %s" % mandate.not_after[:10],
+        "validity_early": "now is after %s" % mandate.not_before[:10],
+        "scope": "%s is %sin the %d types the merchant authorised"
+        % (kind, "" if kind in set(mandate.permitted_actions) else "NOT ",
+           len(mandate.permitted_actions)),
+        "ceiling": "%s against a ceiling of %s" % (_rs(amount), _rs(mandate.max_amount_paise)),
+        "settled": "this payment has not since been collected",
+        "attempts": "at most %d attempts per payment, counting the merchant's own"
+        % mandate.max_attempts_per_payment,
+        "window": "nothing remediated more than 7 days after it failed",
+        "degraded": "the target bank is not inside a 4-hour degradation hold",
+        "ladder": "%s is %san action type the agent may carry out unattended"
+        % (kind, "" if kind in _auto_types() else "NOT "),
+        "signoff": (
+            "the planner marked this one as needing the merchant, whatever the amount"
+            if reason == "STEP_UP_MERCHANT_APPROVAL_REQUESTED"
+            else "the planner did not ask for sign-off on this one"
+        ),
+        "auto_limit": "%s against an auto-execute limit of %s"
+        % (_rs(amount), _rs(mandate.auto_execute_limit_paise)),
+    }
+
+    out: list[Check] = []
+    for i, (key, label, _code) in enumerate(_ORDER):
+        if stop_at is None:
+            status = "pass"
+        elif i < stop_at:
+            status = "pass"
+        elif i == stop_at:
+            status = "stopped"
+        else:
+            status = "not_reached"
+        out.append(
+            Check(n=i + 1, key=key, label=label, compared=detail.get(key, ""), status=status)
+        )
+    return out
 
 
 def build(run_id: str, txn_id: str) -> Journey:
@@ -316,6 +428,42 @@ def build(run_id: str, txn_id: str) -> Journey:
             )
         )
 
+    # The kernel's checks, the stored entry, and the exact bytes its hash was
+    # taken over. Assembled last because they all describe `last`.
+    checks: list[Check] = []
+    raw_entry: dict = {}
+    preimage = ""
+    mandate_dump: dict = {}
+    if last:
+        raw_entry = dict(last)
+        try:
+            from chitragupta.canonical import canonical_json
+
+            payload = {k: v for k, v in raw_entry.items() if k != "entry_hash"}
+            preimage = canonical_json(payload).decode("utf-8")
+        except Exception:
+            preimage = ""
+        try:
+            from .run import load_mandate
+
+            signed = load_mandate(mid)
+            checks = _checks(
+                last.get("proposed_action") or {}, last.get("gate_reason", ""), signed.mandate
+            )
+            mandate_dump = {
+                "mandate_id": signed.mandate.mandate_id,
+                "max_amount_paise": signed.mandate.max_amount_paise,
+                "auto_execute_limit_paise": signed.mandate.auto_execute_limit_paise,
+                "max_attempts_per_payment": signed.mandate.max_attempts_per_payment,
+                "not_before": signed.mandate.not_before,
+                "not_after": signed.mandate.not_after,
+                "permitted_actions": list(signed.mandate.permitted_actions),
+                "signature_verifies": signed.verify(),
+            }
+        except (FileNotFoundError, SystemExit, ValueError):
+            # A missing mandate is a fact about this checkout, not a crash.
+            checks = []
+
     return Journey(
         found=True,
         txn_id=txn_id,
@@ -338,6 +486,10 @@ def build(run_id: str, txn_id: str) -> Journey:
         recovered_paise=recovered,
         would_have_converted=truth,
         truth_note=note,
+        checks=checks,
+        raw_entry=raw_entry,
+        hash_preimage=preimage,
+        mandate=mandate_dump,
     )
 
 
