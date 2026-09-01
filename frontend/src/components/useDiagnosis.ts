@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Stage, stagesFrom } from "@/components/AgentPipeline";
+import { clearActivity, reportActivity } from "@/lib/activity";
 import { NodeTrace, RunRecord } from "@/lib/types";
 
 export interface LiveStep {
@@ -42,6 +43,7 @@ export function useDiagnosis(merchant: string | null, paceMs = 55) {
     es.current?.close();
     es.current = null;
     setRunning(false);
+    clearActivity();
   }, []);
 
   useEffect(() => () => stop(), [stop]);
@@ -65,12 +67,33 @@ export function useDiagnosis(merchant: string | null, paceMs = 55) {
       // with its outcome, and the outcome is what should be shown.
       setTraces((prev) => {
         const out = prev.filter((p) => p.node !== t.node);
-        return [...out, t];
+        const next = [...out, t];
+        const finished = next.filter(
+          (x) => x.status !== "running"
+        ).length;
+        reportActivity({
+          active: true,
+          label: `${t.node.replace(/_/g, " ")} — ${merchant}`,
+          stage: t.node,
+          done: finished,
+          total: 10,
+        });
+        return next;
       });
     });
 
     src.addEventListener("step", (e) => {
-      setSteps((prev) => [...prev, JSON.parse((e as MessageEvent).data)]);
+      const st = JSON.parse((e as MessageEvent).data) as LiveStep;
+      setSteps((prev) => [...prev, st]);
+      // The bus carries only what the engine reported: the node it is inside
+      // and that node's own i-of-n.
+      reportActivity({
+        active: true,
+        label: `${st.node.replace(/_/g, " ")} — ${merchant}`,
+        stage: st.node,
+        i: st.i,
+        n: st.n,
+      });
     });
 
     src.addEventListener("done", (e) => {

@@ -3,8 +3,10 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { BookLenses } from "@/components/BookLenses";
+import { ErrorClass, LaneLegend, PaymentLane } from "@/components/PaymentLane";
 import { TopBar } from "@/components/Chrome";
 import { Card, Eyebrow, PageHead, Stagger } from "@/components/ui";
+import { clearActivity, reportActivity } from "@/lib/activity";
 import { Merchant, inr } from "@/lib/types";
 
 interface Payment {
@@ -64,6 +66,8 @@ export default function LivePage() {
   const [running, setRunning] = useState(false);
   const [tape, setTape] = useState<Payment[]>([]);
   const [alerts, setAlerts] = useState<Alert[]>([]);
+  //: Payments whose arrival is what tripped the detector. Rare on purpose.
+  const [signalledIds, setSignalled] = useState<Set<string>>(new Set());
   const [stats, setStats] = useState<Stats | null>(null);
   const [total, setTotal] = useState(0);
   const [finished, setFinished] = useState(false);
@@ -81,6 +85,8 @@ export default function LivePage() {
   >("idle");
   const esRef = useRef<EventSource | null>(null);
   const lastAt = useRef<number>(0);
+  const seenRef = useRef(0);
+  const totalRef = useRef(0);
   const tapeRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -99,6 +105,7 @@ export default function LivePage() {
     esRef.current?.close();
     setTape([]);
     setAlerts([]);
+    setSignalled(new Set());
     setStats(null);
     setFinished(false);
     setRunning(true);
@@ -109,7 +116,10 @@ export default function LivePage() {
     esRef.current = es;
 
     es.addEventListener("start", (e: any) => {
-      setTotal(JSON.parse(e.data).total);
+      const d = JSON.parse(e.data);
+      totalRef.current = d.total;
+      seenRef.current = 0;
+      setTotal(d.total);
       lastAt.current = Date.now();
       setConn("live");
     });
@@ -124,17 +134,26 @@ export default function LivePage() {
     es.addEventListener("alert", (e: any) => {
       const a: Alert = JSON.parse(e.data);
       setAlerts((prev) => [a, ...prev]);
+      // The detector reports which payment number tipped it. Mark that exact
+      // payment on the tape rather than lighting the whole bank.
+      setTape((prev) => {
+        const hit = prev[0];
+        if (hit) setSignalled((s) => new Set(s).add(hit.txn_id));
+        return prev;
+      });
     });
     es.addEventListener("done", (e: any) => {
       setStats(JSON.parse(e.data));
       setRunning(false);
       setFinished(true);
       setConn("idle");
+      clearActivity();
       es.close();
     });
     es.onerror = () => {
       setRunning(false);
       setConn("failed");
+      clearActivity();
       es.close();
     };
   }
@@ -153,6 +172,7 @@ export default function LivePage() {
     esRef.current?.close();
     setRunning(false);
     setConn("idle");
+    clearActivity();
   }
 
   async function diagnose() {
@@ -345,10 +365,10 @@ export default function LivePage() {
         {/* ───────────────────────────────────── the tape */}
         <Stagger i={3}>
           <Card className="!p-0 overflow-hidden">
-            <div className="px-4 py-2.5 border-b border-line flex items-center gap-3">
+            <div className="px-4 py-2.5 border-b border-line flex items-center gap-3 flex-wrap">
               <span className="eyebrow">payment tape</span>
               <ConnBadge conn={conn} />
-              <span className="ml-auto text-[11px] text-faint">newest first</span>
+              <span className="ml-auto"><LaneLegend /></span>
             </div>
             <div
               ref={tapeRef}
@@ -378,11 +398,17 @@ export default function LivePage() {
                     {inr(p.amount_paise)}
                   </span>
                   <span
-                    className={`truncate ${
+                    className={`truncate flex-1 ${
                       p.succeeded ? "text-mint" : "text-rose"
                     }`}
                   >
                     {p.succeeded ? "ok" : p.error_code ?? "failed"}
+                  </span>
+                  <ErrorClass cls={p.error_class} />
+                  {/* What was done to this payment, on arrival. Only the
+                      stages that really ran light up. */}
+                  <span className="shrink-0">
+                    <PaymentLane p={p} signalled={signalledIds.has(p.txn_id)} />
                   </span>
                 </div>
               ))}

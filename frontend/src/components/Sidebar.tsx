@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+import { SystemPulse, ActivityLine } from "@/components/SystemPulse";
 import { ThemeToggle } from "@/components/Theme";
 
 export function Logo({ size = "sm" }: { size?: "sm" | "lg" }) {
@@ -140,6 +141,8 @@ export function Sidebar({ runHref }: { runHref?: string | null }) {
 
   return (
     <>
+      <ActivityLine />
+
       {/* the bar that exists only when the sidebar is hidden */}
       <div
         className="lg:hidden sticky top-0 z-30 h-12 px-4 flex items-center gap-3
@@ -187,6 +190,10 @@ export function Sidebar({ runHref }: { runHref?: string | null }) {
             ))}
           </Group>
         </nav>
+
+        <div className="border-t border-line shrink-0">
+          <SystemPulse />
+        </div>
 
         <div className="px-2.5 py-2.5 border-t border-line shrink-0">
           <SystemStatus />
