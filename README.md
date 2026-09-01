@@ -50,7 +50,7 @@ a feature: the deployed copy always resets to a clean book.
 
 ## What is on screen
 
-Five numbered steps down the left, in the order the story is told, and two
+Five numbered steps down the left, in the order the story is told, and three
 rooms you go to when you stop believing it.
 
 | | |
@@ -60,8 +60,9 @@ rooms you go to when you stop believing it.
 | **3 · Authorise** | What the mandate permits, what the kernel held, and per-payment approve or reject. Click any payment to read its whole file. |
 | **4 · Platform** | The write-off attributed to whoever Razorpay's own `next_steps` line addresses. The platform's own share is a defect backlog no merchant is standing anywhere to compute. |
 | **5 · Prove** | A sealed challenge nobody has seen, diagnosed blind, then marked. |
+| **Before / after** | Every scored fix drawn as the merchant's success rate moving, with the band published beforehand laid over the distance it actually travelled. |
 | **Evidence** | Whether the forecasts came true after the fix landed, every decision with its chain re-hashed from genesis on each load, and the model bill. |
-| **Your own data** | Upload a month of payments, or swap the NPCI table every baseline is measured against. Two bundled samples if you have neither. |
+| **Your own data** | Upload a month of payments, or swap the NPCI table every baseline is measured against. Three bundled files if you have neither, including a real NPCI slice that moves the achievable rate six points. |
 
 Left and right arrows move through the walkthrough. **Reset the demo** is in
 the sidebar: it re-runs each merchant rather than stripping the approval keys,
@@ -484,7 +485,7 @@ checks never consult a model. See [`ARCHITECTURE.md`](ARCHITECTURE.md).
 ```bash
 make setup      # python + frontend dependencies
 make demo       # backend :8000 + frontend :3000
-make test       # 420 tests
+make test       # 428 tests
 make verify     # regenerate everything, fail if any committed number moved
 ```
 
@@ -506,7 +507,7 @@ python evals/run_npci_finding.py
 python evals/run_backtest.py               # out-of-sample, real NPCI data
 python evals/run_outcome_eval.py           # forecast accuracy after a fix
 python evals/run_scale_benchmark.py        # throughput at book scale
-pytest -q                                  # 420 tests
+pytest -q                                  # 428 tests
 ```
 
 The LLM evals need a key **once** to populate the cache; after that they

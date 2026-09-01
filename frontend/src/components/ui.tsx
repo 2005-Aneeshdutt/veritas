@@ -468,41 +468,6 @@ export function Bar({
   );
 }
 
-export function Spark({
-  values,
-  color = "rgb(var(--brand))",
-  height = 28,
-}: {
-  values: number[];
-  color?: string;
-  height?: number;
-}) {
-  if (!values.length) return null;
-  const min = Math.min(...values);
-  const max = Math.max(...values);
-  const span = max - min || 1;
-  const pts = values
-    .map((v, i) => {
-      const x = (i / (values.length - 1 || 1)) * 100;
-      const y = height - ((v - min) / span) * height;
-      return `${x},${y}`;
-    })
-    .join(" ");
-  return (
-    <svg viewBox={`0 0 100 ${height}`} preserveAspectRatio="none"
-         className="w-full" style={{ height }}>
-      <polyline
-        points={pts}
-        fill="none"
-        stroke={color}
-        strokeWidth="1.6"
-        vectorEffect="non-scaling-stroke"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
 /** A quiet segmented control. Lenses on one object, not separate pages. */
 export function Segmented<T extends string>({
   options,

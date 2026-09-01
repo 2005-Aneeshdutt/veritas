@@ -6,7 +6,6 @@ import { TopBar } from "@/components/Chrome";
 import {
   Detail,
   Empty,
-  Eyebrow,
   Figure,
   Figures,
   Loading,
