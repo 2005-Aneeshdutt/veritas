@@ -50,6 +50,7 @@ from doctor.graph import git_commit, run_diagnosis
 from doctor.helpdesk import ask as helpdesk_ask
 from doctor.cohort import build_cohort
 from doctor.ingest_npci import Rejected, baseline_from, parse as parse_npci
+from doctor.ingest_txns import Rejected as TxnRejected, diagnose as diagnose_txns, parse as parse_txns
 from doctor.shapley import ShapleyDecomposer
 from doctor.live import LiveMonitor, in_arrival_order
 from doctor.prove import (
@@ -465,6 +466,37 @@ def run_email_send(run_id: str, to: str) -> dict:
     # The record goes through so the HTML report can carry a signed Approve
     # and Reject button for each proposed fix.
     return json.loads(send(compose(rec), to, rec).model_dump_json())
+
+
+@app.post("/api/txns/diagnose")
+async def txns_diagnose(
+    mcc: str = "5411",
+    file: UploadFile = File(...),
+) -> dict:
+    """Diagnose a month of payments the engine has never seen.
+
+    Returns a diagnosis and nothing else. There is no ground truth for an
+    uploaded file, so nothing here can be MEASURED -- and acting on it would
+    need a mandate signed by the merchant's own key, which this process does
+    not hold. A file upload is not authorisation.
+
+    Nothing is written. The payments live for the length of this request.
+    """
+    try:
+        txns, summary = parse_txns(await file.read(), mcc=mcc)
+    except TxnRejected as e:
+        raise HTTPException(400, str(e))
+
+    return {
+        "summary": json.loads(summary.model_dump_json()),
+        "diagnosis": diagnose_txns(txns, mcc),
+        "mcc": mcc,
+        "note": (
+            "Projected only. Recovery cannot be measured on an uploaded file "
+            "because there is no known outcome to mark against, and no action "
+            "is proposed because a file is not a signed mandate."
+        ),
+    }
 
 
 @app.post("/api/npci/preview")

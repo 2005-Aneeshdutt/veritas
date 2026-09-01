@@ -346,3 +346,29 @@ def test_the_http_client_is_reused_across_calls():
     from doctor import llm
 
     assert "self._http" in inspect.getsource(llm.LLMClient._call_openrouter)
+
+
+# ──────────────────────────────────────── what a merchant can make it say
+
+def test_injection_in_a_merchant_note_never_reaches_the_assistant():
+    """Merchant free text goes to a model to have claims extracted from it.
+    If that text then became part of the assistant's context, anything a
+    merchant wrote would be quoted back as if it were a finding."""
+    import inspect
+
+    from doctor import assistant, helpdesk
+
+    for mod in (assistant, helpdesk):
+        assert "merchant_note" not in inspect.getsource(mod.build_context), mod.__name__
+
+
+def test_an_ungrounded_figure_cannot_be_talked_into_the_answer():
+    """The output guardrail is the one that matters. Whatever a prompt says,
+    a number that is not in the context is refused rather than repeated."""
+    import inspect
+
+    from doctor import assistant
+
+    src = inspect.getsource(assistant._audit)
+    assert "_grounded" in src
+    assert "context" in src

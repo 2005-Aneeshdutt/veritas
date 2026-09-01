@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { TopBar } from "@/components/Chrome";
 import { Budget } from "@/components/Budget";
-import { NpciUpload } from "@/components/NpciUpload";
+import Link from "next/link";
 import { Card, Detail, Eyebrow, Stagger } from "@/components/ui";
 import { FACTOR_DOCS } from "@/lib/explain";
 import { inr } from "@/lib/types";
@@ -613,8 +613,26 @@ export default function ProvePage() {
           </Stagger>
         )}
 
-        {/* The other way to break it: give it numbers it has never seen. */}
-        <NpciUpload merchants={merchants} />
+        {/* The other way to break it now has its own page. It is a tool you
+            reach for when you stop believing the walkthrough, not a step in
+            it, and it was buried at the bottom of this one. */}
+        <Link
+          href="/data"
+          className="card p-5 flex items-center gap-4 hover:border-brand/40
+                     transition-colors group"
+        >
+          <div className="min-w-0 flex-1">
+            <Eyebrow>Or stop trusting this book entirely</Eyebrow>
+            <div className="text-lg font-semibold mt-1">
+              Run it on your own data →
+            </div>
+            <p className="text-sm text-muted mt-1.5 leading-relaxed max-w-2xl">
+              Upload a month of your payments and get the same decomposition
+              these merchants get, or swap the NPCI bank table it measures
+              against and watch every baseline move.
+            </p>
+          </div>
+        </Link>
 
         {/* And the question that decides whether any of it ships. */}
         <Budget />
