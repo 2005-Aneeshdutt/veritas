@@ -50,24 +50,24 @@ a feature: the deployed copy always resets to a clean book.
 
 ## What is on screen
 
-Five numbered steps down the left, in the order the story is told, and three
+Five numbered steps down the left, in the order the story is told, and two
 rooms you go to when you stop believing it.
 
 | | |
 |---|---|
-| **1 · Book** | Every merchant at once, ranked by money on the table, with the funnel from proposed to acted-on. |
-| **2 · Watch** | Payments arriving, and a bank degrading in real time with the hold that follows. |
-| **3 · Diagnose** | The agent working one case: the sixteen-coalition lattice filling in, the Shapley values converging on the whole. |
-| **4 · Authorise** | What the mandate permits, what the kernel held, and per-payment approve or reject. |
+| **1 · Book** | Every merchant at once, ranked by money on the table, with the funnel from proposed to acted-on. Three lenses on the same object: *ranked*, *live* — payments arriving and a bank degrading in real time — and *bank drift*. |
+| **2 · Diagnose** | The agent working one case: the sixteen-coalition lattice filling in, the Shapley values converging on the whole. A second lens shows every node, prompt and gate decision. |
+| **3 · Authorise** | What the mandate permits, what the kernel held, and per-payment approve or reject. Click any payment to read its whole file. |
+| **4 · Platform** | The write-off attributed to whoever Razorpay's own `next_steps` line addresses. The platform's own share is a defect backlog no merchant is standing anywhere to compute. |
 | **5 · Prove** | A sealed challenge nobody has seen, diagnosed blind, then marked. |
-| **Whose fault** | The write-off attributed to whoever Razorpay's own `next_steps` line addresses. The platform's own share is a defect backlog no merchant is standing anywhere to compute. |
 | **Evidence** | Whether the forecasts came true after the fix landed, every decision with its chain re-hashed from genesis on each load, and the model bill. |
 | **Your own data** | Upload a month of payments, or swap the NPCI table every baseline is measured against. Two bundled samples if you have neither. |
 
-**Reset the demo** is in the sidebar. It re-runs each merchant rather than
-stripping the approval keys, so it reproduces the starting record instead of
-hand-cleaning it, and it reuses each `run_id` so bookmarks and already-emailed
-approval links still resolve.
+Left and right arrows move through the walkthrough. **Reset the demo** is in
+the sidebar: it re-runs each merchant rather than stripping the approval keys,
+so it reproduces the starting record instead of hand-cleaning it, and it
+reuses each `run_id` so bookmarks and already-emailed approval links still
+resolve.
 
 ## Read these three first
 
