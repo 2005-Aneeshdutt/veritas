@@ -31,6 +31,14 @@ services:
         value: src
       - key: DOCTOR_SEED
         value: "20260824"
+      # Approve/reject links inside an emailed report are built from this.
+      # Unset, they fall back to http://localhost:3000, which is right for a
+      # laptop and wrong for a deployment -- so if you ever turn SMTP on here,
+      # set it to the web service's public URL in the dashboard. Left unset
+      # rather than guessed at: no mail credential is configured on this plan,
+      # so nothing sends and no link is emitted today.
+      # - key: DOCTOR_PUBLIC_URL
+      #   value: https://revenue-doctor-web.onrender.com
 
   - type: web
     name: revenue-doctor-web
