@@ -720,20 +720,6 @@ def txns_diagnose_sample(name: str = "northwind", mcc: str = "") -> dict:
     }
 
 
-@app.post("/api/npci/preview")
-async def npci_preview(file: UploadFile = File(...), period: str = "") -> dict:
-    """Read an uploaded NPCI table and say what is in it.
-
-    Deliberately separate from running anything: a merchant hands over a file
-    and finds out whether it parsed before they find out what it changes.
-    """
-    try:
-        stats, summary = parse_npci(await file.read(), period or None)
-    except Rejected as e:
-        raise HTTPException(400, str(e))
-    return json.loads(summary.model_dump_json())
-
-
 @app.post("/api/npci/rerun")
 async def npci_rerun(
     merchant: str = "cloudsync",

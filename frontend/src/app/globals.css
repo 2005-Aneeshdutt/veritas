@@ -319,15 +319,22 @@ h3 { @apply text-[13px] font-semibold; }
   background: var(--hd-head);
   border-color: var(--hd-line);
 }
+/* The panel follows the same discipline the app does: only MEASURED and
+   PROJECTED keep a fill, and everything else is quiet text. These used to
+   paint a background and a border-colour on chips that still had padding and
+   a border-width to hang them on; when the base chips gave those up, the
+   overrides were left painting a tight block of colour behind bare text. */
 .hd .chip-measured {
   background: #e8f5ee; color: #1b7048; border-color: #b9e0cb;
 }
-.hd .chip-neutral {
-  background: var(--hd-head); color: var(--hd-muted); border-color: var(--hd-line);
+.hd .chip-projected {
+  background: #fdf6e9; color: #8c5e00; border-color: #ecd9b0;
 }
-.hd .chip-warn {
-  background: #fdeceb; color: #a2382f; border-color: #f3c7c3;
-}
+.hd .chip-neutral { color: var(--hd-faint); }
+.hd .chip-warn { color: #a2382f; }
+.hd .chip-llm,
+.hd .chip-det,
+.hd .chip-brand { color: var(--hd-muted); }
 
 /* The Ask button and the mic keep the brand, stated rather than inherited. */
 .hd .btn-primary {

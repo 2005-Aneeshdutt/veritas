@@ -19,6 +19,14 @@ interface Summary {
   notes: string[];
 }
 
+interface Sample {
+  key: string;
+  filename: string;
+  mcc: string;
+  about: string;
+  bytes: number;
+}
+
 interface Diagnosis {
   observed_pct: number;
   achievable_pct: number;
@@ -65,6 +73,7 @@ export default function DataPage() {
   const [summary, setSummary] = useState<Summary | null>(null);
   const [diag, setDiag] = useState<Diagnosis | null>(null);
   const [sample, setSample] = useState<string | null>(null);
+  const [samples, setSamples] = useState<Sample[]>([]);
   const fileRef = useRef<HTMLInputElement>(null);
   const held = useRef<File | null>(null);
 
@@ -72,6 +81,13 @@ export default function DataPage() {
     fetch("/api/merchants")
       .then((r) => r.json())
       .then(setMerchants)
+      .catch(() => {});
+    // The buttons came from a hardcoded pair, so a file added to samples/
+    // would ship without a way to run it. The server already knows what is
+    // on disk; asking it means the two cannot drift.
+    fetch("/api/samples")
+      .then((r) => r.json())
+      .then((d) => setSamples(d.samples ?? []))
       .catch(() => {});
   }, []);
 
@@ -206,30 +222,26 @@ export default function DataPage() {
                 samples are worth a click, and the second one is worth more:
                 a system that only ever walks the happy path is not
                 demonstrating restraint. */}
-            <div className="flex flex-wrap items-center gap-2 mt-3">
-              <span className="text-[12px] text-faint">
-                or run one that ships with this repo —
-              </span>
-              <button
-                onClick={() => runSample("northwind", "northwind_payments.csv", mcc)}
-                disabled={busy}
-                className={`btn-secondary h-8 px-3 text-xs ${
-                  sample === "northwind" ? "border-brand text-brand" : ""
-                }`}
-              >
-                2,400 payments, foreign column names
-              </button>
-              <button
-                onClick={() => runSample("too_small", "too_small_to_diagnose.csv", mcc)}
-                disabled={busy}
-                className={`btn-quiet h-8 px-3 text-xs ${
-                  sample === "too_small" ? "border-brand text-brand" : ""
-                }`}
-                title="This one is meant to be refused"
-              >
-                140 payments — watch it refuse
-              </button>
-            </div>
+            {samples.length > 0 && (
+              <div className="flex flex-wrap items-center gap-2 mt-3">
+                <span className="text-[12px] text-faint">
+                  or run one that ships with this repo —
+                </span>
+                {samples.map((sm) => (
+                  <button
+                    key={sm.key}
+                    onClick={() => runSample(sm.key, sm.filename, mcc)}
+                    disabled={busy}
+                    className={`btn-secondary h-8 text-[12px] ${
+                      sample === sm.key ? "border-brand text-brand" : ""
+                    }`}
+                    title={sm.about}
+                  >
+                    {sm.filename}
+                  </button>
+                ))}
+              </div>
+            )}
 
             <Detail summary="what the file needs">
               <p>
