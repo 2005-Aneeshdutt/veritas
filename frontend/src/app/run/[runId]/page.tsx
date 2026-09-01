@@ -21,7 +21,9 @@ import {
   Wall,
 } from "@/components/ui";
 import { ApplyFix } from "@/components/ApplyFix";
-import { RunDiagnosis } from "@/components/RunDiagnosis";
+import { DiagnoseHead } from "@/components/DiagnoseHead";
+import { Attribution, RootCause } from "@/components/Investigation";
+import { useDiagnosis } from "@/components/useDiagnosis";
 import { EmailPanel } from "@/components/EmailPanel";
 import { FACTOR_DOCS, GLOSSARY } from "@/lib/explain";
 import { RunRecord, inr, pts } from "@/lib/types";
@@ -37,6 +39,7 @@ const FACTOR_COLOR: Record<string, string> = {
 export default function Overview({ params }: { params: { runId: string } }) {
   const [rec, setRec] = useState<RunRecord | null>(null);
   const [missing, setMissing] = useState(false);
+  const [everRan, setEverRan] = useState(false);
   const [sens, setSens] = useState<any>(null);
   //: How far the retry model is from a known truth. Measured, so the
   //: PROJECTED label above can carry a figure instead of only a caveat.
@@ -61,6 +64,15 @@ export default function Overview({ params }: { params: { runId: string } }) {
       })
       .catch(() => {});
   }, [params.runId]);
+
+  // The investigation is driven from here so the hero, the pipeline and the
+  // event feed all read one source. Nothing is recomputed in the browser: the
+  // record that arrives on `done` is the one the engine produced.
+  const live = useDiagnosis(rec?.merchant_id ?? null);
+
+  useEffect(() => {
+    if (live.running) setEverRan(true);
+  }, [live.running]);
 
   if (missing)
     return (
@@ -118,6 +130,7 @@ export default function Overview({ params }: { params: { runId: string } }) {
     positive.reduce((a: number, f: any) => a + f.points, 0) +
     Math.max(d.residual_pts, 0);
 
+
   function copyCmd() {
     navigator.clipboard.writeText(
       `python -m doctor.run --merchant ${rec!.merchant_id} --seed ${rec!.seed}`
@@ -126,34 +139,112 @@ export default function Overview({ params }: { params: { runId: string } }) {
     setTimeout(() => setCopied(false), 1600);
   }
 
+  // Prefer the run that just happened; fall back to the stored record.
+  const liveDec = (live.record?.report?.decomposition ?? d) as any;
+  const top = [...(liveDec.factors ?? [])].sort(
+    (a: any, b: any) => Math.abs(b.points) - Math.abs(a.points)
+  )[0];
+
   return (
-    <div className="space-y-7">
+    <div className="space-y-8">
+      {/* ── 1. who, how far behind, and what the engine is doing ──
+          The gap is the hero. On the page this replaces it sat at y=669
+          inside a mid-page comparison while a recovery total held the top,
+          so a viewer met the answer before the question. */}
       <Stagger>
-        <PageHead
-          title={rec.merchant_name}
-          sub={`${m.transactions.toLocaleString("en-IN")} payments · ${m.failures} failed · ${gate.allow} actions executed under a signed mandate.`}
-          right={<ChainBadge ok={m.chain_verified} violations={m.mandate_violations} />}
+        <DiagnoseHead
+          merchant={rec.merchant_name}
+          observedPct={100 * liveDec.s_obs}
+          achievablePct={100 * liveDec.s_star}
+          gapPts={liveDec.gap_pts}
+          stages={live.stages}
+          steps={live.steps}
+          live={live.running}
+          finished={Boolean(live.record)}
+          everRan={everRan}
+          onRun={live.start}
+          onStop={live.stop}
         />
       </Stagger>
 
-      {/* ── run it live ──────────────────────────────────────────────
-          The same merchant, through the real stream, so an audience watches
-          the nine stages happen rather than reading what they produced. */}
-      <Stagger>
+      {/* ── 2. why the gap is happening ──
+          Dominant once the investigation is done: this is the answer the
+          whole thing exists to produce. */}
+      <Stagger i={1}>
         <div className="border-t border-line pt-5">
-          <div className="flex items-baseline gap-3 flex-wrap mb-3">
-            <h2>Watch it work</h2>
+          <div className="flex items-baseline gap-3 flex-wrap mb-4">
+            <h2>Why the gap is happening</h2>
             <span className="text-[12px] text-muted">
-              Live stream, not a replay. Pacing throttles the feed, never the
-              engine.
+              All sixteen coalitions of four factors, split by Shapley value.
             </span>
           </div>
-          <RunDiagnosis
-            merchant={rec.merchant_id}
-            merchantName={rec.merchant_name}
+
+          <div className="grid lg:grid-cols-[minmax(0,1fr)_minmax(0,22rem)] gap-6 items-start">
+            <Attribution
+              factors={liveDec.factors ?? []}
+              gapPts={liveDec.gap_pts}
+              residual={liveDec.residual_pts}
+            />
+            {top && (
+              <RootCause
+                factor={top.factor}
+                points={top.points}
+                mae={top.mae}
+                summary={r.diagnosis?.summary}
+              />
+            )}
+          </div>
+        </div>
+      </Stagger>
+
+
+      {/* ───────────────────────────────────────────── fixes */}
+      <Stagger i={3}>
+        <div>
+          <SectionHeader
+            eyebrow="Close the loop"
+            title="Approve a fix and watch the mandate check it"
+            sub="Nothing here has run yet. Applying a fix re-checks every action against your signed mandate, executes only what is permitted, and writes the audit entry."
+          />
+          <ApplyFix
+            runId={params.runId}
+            groups={rec.pending_actions ?? []}
+            onApplied={() =>
+              fetch(`/api/run/${params.runId}`).then((r) => r.json()).then(setRec)
+            }
           />
         </div>
       </Stagger>
+
+      {/* ── 5. everything a technical judge wants, and nobody else ──
+          Collapsed by default. Nothing here was removed; it stopped being
+          three screens a reader has to scroll past to reach the end. */}
+      <Stagger i={4}>
+        <details className="group border-t border-line pt-4">
+          <summary className="cursor-pointer list-none flex items-baseline gap-2 text-[13px] text-muted hover:text-ink transition-colors">
+            <span className="transition-transform group-open:rotate-90">›</span>
+            Technical details — the batch, the wall, sensitivity, provenance
+          </summary>
+          <div className="mt-5 space-y-8">
+            {/* Provenance first, and not behind a second disclosure. A
+                technical judge opening this is looking for the run id; making
+                them open another fold to reach it is one click of theatre. */}
+            <div className="flex flex-wrap gap-x-6 gap-y-1.5 text-[11px]">
+              <Prov k="run id" v={rec.run_id} />
+              <Prov k="merchant" v={rec.merchant_id} />
+              <Prov k="seed" v={String(rec.seed)} />
+              <Prov k="commit" v={rec.commit} />
+              <Prov k="models" v={`${rec.models.fast} + ${rec.models.reasoning}`} />
+              <Prov k="temperature" v="0" />
+              <Prov k="npci" v={r.run.npci_period} />
+              <Prov k="duration" v={`${rec.duration_ms} ms`} />
+              <Prov
+                k="cache"
+                v={`${(rec.cache_hit_rate * 100).toFixed(0)}% served`}
+              />
+              <Prov k="coalitions" v={String(Object.keys(d.coalition_values ?? {}).length)} />
+            </div>
+
 
       {/* what the batch won back */}
       <Stagger i={1}>
@@ -237,206 +328,6 @@ export default function Overview({ params }: { params: { runId: string } }) {
               inspect the ledger →
             </Link>
           </div>
-        </div>
-      </Stagger>
-
-      {/* ───────────────────────────────────────────── before / after */}
-      <Stagger i={2}>
-        <Card>
-          <SectionHeader
-            eyebrow="What the recovery was aimed at"
-            title="The gap nobody else shows you"
-            sub="What a dashboard shows today, versus the same data diagnosed."
-            right={
-              <div className="flex rounded-lg border border-line overflow-hidden text-xs font-mono">
-                {(["today", "doctor"] as const).map((k) => (
-                  <button
-                    key={k}
-                    onClick={() => setMode(k)}
-                    className={`px-3 py-1.5 transition-colors ${
-                      mode === k
-                        ? "bg-brand text-brand-ink font-semibold"
-                        : "text-muted hover:text-ink"
-                    }`}
-                  >
-                    {k === "today" ? "TODAY" : "REVENUE DOCTOR"}
-                  </button>
-                ))}
-              </div>
-            }
-          />
-
-          {mode === "today" ? (
-            <div className="py-4 space-y-5">
-              <div className="grid sm:grid-cols-4 gap-3">
-                <TodayTile label="Success rate" v={`${m.observed_success_pct}%`} big />
-                <TodayTile label="Payments" v={m.transactions.toLocaleString()} />
-                <TodayTile label="Failed" v={m.failures.toLocaleString()} />
-                <TodayTile
-                  label="Captured"
-                  v={inr(
-                    Math.round(
-                      (p.monthly_gmv_paise * m.observed_success_pct) / 100
-                    ),
-                    { compact: true }
-                  )}
-                />
-              </div>
-
-              <div>
-                <div className="eyebrow mb-2">
-                  success rate by day &middot; measured from this batch
-                </div>
-                <div className="h-24 flex items-end gap-[3px]">
-                  {daily.map((d) => (
-                    <div
-                      key={d.day}
-                      className="flex-1 bg-muted/30 rounded-md hover:bg-brand/50
-                                 transition-colors relative group min-h-[3px]"
-                      style={{
-                        height: `${12 + ((d.success_pct - dayLo) / daySpan) * 88}%`,
-                      }}
-                    >
-                      <span className="absolute -top-7 left-1/2 -translate-x-1/2 hidden
-                                       group-hover:block num text-[10px] text-muted
-                                       whitespace-nowrap bg-surface px-1.5 py-0.5
-                                       rounded border border-line z-10">
-                        day {d.day} · {d.success_pct.toFixed(1)}% · {d.payments}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-                <div className="flex justify-between eyebrow mt-1.5">
-                  <span>day 1</span>
-                  <span className="num">
-                    {dayLo.toFixed(1)}% – {dayHi.toFixed(1)}%
-                  </span>
-                  <span>day {daily.length ? daily[daily.length - 1].day : 28}</span>
-                </div>
-              </div>
-
-              <p className="text-sm text-muted max-w-2xl leading-relaxed pt-1">
-                All correct, all useless. It never says what the number{" "}
-                <em>should</em> be, which of your choices cost you the difference,
-                or what that difference is worth.
-              </p>
-            </div>
-          ) : (
-            <div className="space-y-6 py-2">
-              <div className="flex items-center gap-4">
-                <div className="text-right shrink-0">
-                  <div className="text-[24px] font-display font-bold">
-                    {m.observed_success_pct}%
-                  </div>
-                  <div className="eyebrow mt-0.5">you</div>
-                </div>
-
-                <div className="flex-1 h-9 rounded-lg bg-raised relative overflow-hidden border border-line">
-                  <div
-                    className="absolute inset-y-0 left-0 bg-gradient-to-r from-mint-dim/70 to-mint/70"
-                    style={{ width: `${m.observed_success_pct}%` }}
-                  />
-                  <div
-                    className="absolute inset-y-0 hatched border-l border-amber/50"
-                    style={{
-                      left: `${m.observed_success_pct}%`,
-                      width: `${p.cohort_achievable_pct - m.observed_success_pct}%`,
-                    }}
-                  />
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <span className="num text-sm font-semibold text-ink drop-shadow">
-                      gap {p.gap_pts} pts = {inr(p.gap_value_paise)}/month
-                    </span>
-                  </div>
-                </div>
-
-                <div className="shrink-0">
-                  <div className="text-[24px] font-display font-bold text-amber">
-                    {p.cohort_achievable_pct}%
-                  </div>
-                  <div className="eyebrow mt-0.5">your category</div>
-                </div>
-              </div>
-
-              <div className="flex justify-between text-[11px] text-muted font-mono">
-                <span>
-                  95% CI {m.observed_success_ci_pct[0]}–{m.observed_success_ci_pct[1]}
-                </span>
-                <span className="flex items-center">
-                  cohort achievable
-                  <Info text={GLOSSARY.s_star} />
-                </span>
-              </div>
-
-              {/* stacked decomposition */}
-              <div className="space-y-3 pt-2">
-                <div className="eyebrow">where the gap comes from</div>
-                <div className="flex h-11 w-full rounded-lg overflow-hidden border border-line">
-                  {positive.map((f: any) => (
-                    <Link
-                      key={f.factor}
-                      href={`/run/${params.runId}/diagnosis`}
-                      className="relative group transition-all hover:brightness-125"
-                      style={{
-                        width: `${(f.points / stackTotal) * 100}%`,
-                        background: FACTOR_COLOR[f.factor] ?? "rgb(var(--faint))",
-                        opacity: f.identified ? 1 : 0.3,
-                      }}
-                      title={`${FACTOR_DOCS[f.factor]?.label}: ${pts(f.points)} pts`}
-                    >
-                      <span className="absolute inset-0 flex items-center justify-center
-                                       text-xs num font-semibold text-canvas">
-                        {f.points >= 0.45 ? f.points.toFixed(1) : ""}
-                      </span>
-                    </Link>
-                  ))}
-                  {d.residual_pts > 0 && (
-                    <div
-                      className="hatched bg-raised border-l border-line"
-                      style={{ width: `${(d.residual_pts / stackTotal) * 100}%` }}
-                      title={`Unexplained residual: ${pts(d.residual_pts)} pts`}
-                    />
-                  )}
-                </div>
-
-                <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-2">
-                  {d.factors.map((f: any) => (
-                    <FactorChip key={f.factor} f={f} runId={params.runId} />
-                  ))}
-                </div>
-
-                <div className="flex flex-wrap gap-4 pt-1 text-[11px] font-mono text-muted">
-                  <span className="flex items-center gap-1.5">
-                    <i className="w-2.5 h-2.5 rounded-md hatched border border-line inline-block" />
-                    residual {pts(d.residual_pts)} — unexplained
-                    <Info text={GLOSSARY.residual} />
-                  </span>
-                  <span className="flex items-center gap-1.5">
-                    process gap {pts(d.process_gap_pts)} — computed directly
-                    <Info text={GLOSSARY.process_gap} />
-                  </span>
-                </div>
-              </div>
-            </div>
-          )}
-        </Card>
-      </Stagger>
-
-      {/* ───────────────────────────────────────────── fixes */}
-      <Stagger i={3}>
-        <div>
-          <SectionHeader
-            eyebrow="Close the loop"
-            title="Approve a fix and watch the mandate check it"
-            sub="Nothing here has run yet. Applying a fix re-checks every action against your signed mandate, executes only what is permitted, and writes the audit entry."
-          />
-          <ApplyFix
-            runId={params.runId}
-            groups={rec.pending_actions ?? []}
-            onApplied={() =>
-              fetch(`/api/run/${params.runId}`).then((r) => r.json()).then(setRec)
-            }
-          />
         </div>
       </Stagger>
 
@@ -622,6 +513,11 @@ export default function Overview({ params }: { params: { runId: string } }) {
           </Card>
         </Stagger>
       )}
+
+          </div>
+        </details>
+      </Stagger>
+
 
       {/* ───────────────────────────────────────────── evidence */}
       {/* Four link cards pointing at pages the sidebar already names, plus
@@ -825,5 +721,15 @@ function Evidence({
       <div className="num text-[11px] text-muted mt-1.5">{detail}</div>
       <div className="text-[11px] text-faint mt-2 leading-snug">{hint}</div>
     </Link>
+  );
+}
+
+/** One provenance field. Monospace, because every value here is an identifier. */
+function Prov({ k, v }: { k: string; v: string }) {
+  return (
+    <span>
+      <span className="text-faint">{k} </span>
+      <span className="num text-muted">{v}</span>
+    </span>
   );
 }
