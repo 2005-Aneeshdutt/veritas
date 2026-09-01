@@ -372,3 +372,37 @@ def test_an_ungrounded_figure_cannot_be_talked_into_the_answer():
     src = inspect.getsource(assistant._audit)
     assert "_grounded" in src
     assert "context" in src
+
+
+# ────────────────────────────── rounding is not fabrication
+
+def test_a_rounded_figure_is_accepted_at_the_precision_shown():
+    """An answer where six of seven figures were exact was refused for the
+    one that wrote 58 where the context said 58.5. A refusal that fires on
+    rounding teaches a reader that refusals mean nothing."""
+    from doctor.verify import _grounded
+
+    ctx = [58.5, 0.573, 97.52]
+    assert _grounded(58, ctx, 0), "58 is 58.5 rounded to no decimals"
+    assert _grounded(0.57, ctx, 2)
+    assert _grounded(0.6, ctx, 1)
+
+
+def test_rounding_is_not_a_licence_to_be_wrong():
+    """Half a unit at the precision shown, and no more. A figure written to
+    three places still has to be right to three places."""
+    from doctor.verify import _grounded
+
+    ctx = [58.5]
+    assert not _grounded(59.5, ctx, 0)
+    assert not _grounded(58.0, ctx, 3)
+    assert not _grounded(12, ctx, 0)
+
+
+def test_the_precision_comes_from_what_was_written():
+    from doctor.verify import _decimals
+
+    dp = _decimals("58% and 0.573 pts and 1,234")
+    assert dp[58.0] == 0
+    assert dp[0.573] == 3
+    assert dp[1234.0] == 0

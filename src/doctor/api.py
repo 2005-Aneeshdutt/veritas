@@ -693,6 +693,73 @@ def start_run(merchant: str = "quickmart", calibration: str = "central") -> dict
     return json.loads(rec.model_dump_json())
 
 
+@app.post("/api/run/{run_id}/action")
+def decide_one_action(run_id: str, txn_id: str, decision: str = "approve") -> dict:
+    """Approve or reject a single held payment.
+
+    Deliberately routed through the same apply_group the whole-fix button
+    uses, narrowed to one payment. One payment and fifty must be decided by
+    identical rules, and the surest way to guarantee that is for there to be
+    only one place where deciding happens.
+    """
+    if decision not in ("approve", "reject"):
+        raise HTTPException(400, "decision must be approve or reject")
+
+    p = RUNS / (run_id + ".json")
+    if not p.exists():
+        raise HTTPException(404, "no such run: %s" % run_id)
+    rec = _read_json(p)
+
+    # Which fix this payment belongs to.
+    idx = next(
+        (
+            i
+            for i, g in enumerate(rec.get("pending_actions") or [])
+            if any(a["txn_id"] == txn_id for a in g["actions"])
+        ),
+        None,
+    )
+    if idx is None:
+        raise HTTPException(404, "that payment is not in any proposed fix")
+
+    if decision == "reject":
+        # Recorded against the payment, not executed. A rejection that left
+        # no trace would make the button decoration.
+        rec.setdefault("rejected_txns", [])
+        if txn_id not in rec["rejected_txns"]:
+            rec["rejected_txns"].append(txn_id)
+            p.write_text(json.dumps(rec, indent=2), encoding="utf-8", newline=chr(10))
+        return {
+            "ok": True,
+            "decision": "reject",
+            "txn_id": txn_id,
+            "headline": "Rejected. Nothing was sent for this payment.",
+        }
+
+    try:
+        res = apply_group(
+            run_id,
+            idx,
+            load_mandate(rec["merchant_id"]),
+            confirmed=True,
+            only_txns={txn_id},
+        )
+    except (IndexError, FileNotFoundError, ValueError) as e:
+        raise HTTPException(400, str(e))
+
+    return {
+        "ok": res.ok,
+        "decision": "approve",
+        "txn_id": txn_id,
+        "headline": res.headline,
+        "executed": res.executed,
+        "denied": res.denied,
+        "recovered_paise": res.recovered_paise,
+        "chain_verified": res.chain_verified,
+        "actions": [json.loads(a.model_dump_json()) for a in res.actions],
+    }
+
+
 @app.post("/api/run/{run_id}/apply")
 def apply_fix(
     run_id: str,

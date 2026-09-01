@@ -78,6 +78,29 @@ def parse(raw: bytes, period: str | None = None) -> tuple[dict[str, BankStats], 
     cols = set(reader.fieldnames or [])
     missing = [c for c in REQUIRED if c not in cols]
     if missing:
+        # The two upload panels take different files and look alike, so the
+        # commonest failure is dropping a payments export in here. Naming the
+        # absent columns is technically correct and useless -- what the person
+        # needs is to be told which box to use.
+        looks_like_payments = bool(
+            cols
+            & {
+                "payment_id", "txn_id", "transaction_id", "order_id",
+                "issuer", "payment_method", "method", "status",
+                "succeeded", "error_code", "error_reason", "amount",
+                "amount_inr", "amount_paise",
+            }
+        )
+        if looks_like_payments:
+            raise Rejected(
+                "This looks like a payments export, not a bank table -- it has "
+                "columns like %s. Use the 'Diagnose a month of your own "
+                "transactions' panel above; this one takes NPCI's published "
+                "bank performance table."
+                % ", ".join(sorted(cols & {"payment_id", "issuer", "status",
+                                           "payment_method", "amount_inr",
+                                           "error_reason"})[:3])
+            )
         raise Rejected(
             "missing column%s: %s. Expected NPCI's remitter shape: %s"
             % (

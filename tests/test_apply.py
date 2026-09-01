@@ -319,3 +319,70 @@ def test_the_do_it_link_runs_the_fix_rather_than_pointing_at_it():
     ui = open("frontend/src/components/ApplyFix.tsx", encoding="utf-8").read()
     assert "autoRan" in ui
     assert "apply(highlight)" in ui
+
+
+def test_one_payment_can_be_decided_on_its_own(tmp_path):
+    """"Confirm all 58" was the only control, which is an all-or-nothing
+    choice about other people's money."""
+    import glob
+    import json
+    import shutil
+
+    from doctor.apply import apply_group
+    from doctor.run import load_mandate
+
+    target = None
+    for f in sorted(glob.glob("data/runs/*.json")):
+        rec = json.load(open(f, encoding="utf-8"))
+        if rec.get("pending_actions") and not rec.get("applied"):
+            target = (f, rec)
+            break
+    if not target:
+        pytest.skip("no unapplied queue")
+
+    path, rec = target
+    bak = tmp_path / "b.json"
+    shutil.copy(path, bak)
+    try:
+        # A payment that is genuinely still waiting. Picking the first one
+        # blindly lands on something the diagnosis already settled, which the
+        # filter correctly refuses to touch a second time.
+        final = {}
+        for e in rec["report"]["ledger"]:
+            pa = e.get("proposed_action") or {}
+            final[(e["txn_id"], pa.get("action_type"))] = e
+        waiting = {
+            k[0] for k, e in final.items() if e.get("outcome") == "merchant_action"
+        }
+        idx, one = next(
+            (
+                (i, a["txn_id"])
+                for i, g in enumerate(rec["pending_actions"])
+                for a in g["actions"]
+                if a["txn_id"] in waiting
+            ),
+            (None, None),
+        )
+        if one is None:
+            pytest.skip("nothing waiting on this run")
+
+        res = apply_group(
+            rec["run_id"], idx, load_mandate(rec["merchant_id"]),
+            confirmed=True, only_txns={one},
+        )
+        assert len(res.actions) == 1, "exactly one payment should be decided"
+        assert res.actions[0].txn_id == one
+    finally:
+        shutil.copy(bak, path)
+
+
+def test_deciding_one_uses_the_same_gate_as_deciding_fifty():
+    """One payment and fifty must be decided by identical rules, and the
+    surest way to guarantee that is one place where deciding happens."""
+    import inspect
+
+    from doctor import api
+
+    src = inspect.getsource(api.decide_one_action)
+    assert "apply_group" in src
+    assert "only_txns" in src

@@ -198,6 +198,7 @@ def apply_group(
     *,
     confirmed: bool = False,
     calibration: Calibration = Calibration.CENTRAL,
+    only_txns: set[str] | None = None,
 ) -> ApplyResult:
     """Approve one grouped fix. Every underlying action is gated individually.
 
@@ -288,6 +289,15 @@ def apply_group(
             if settled.get((a.txn_id, a.action_type.value))
             in (None, "merchant_action")
         ]
+
+    # Approving one payment rather than a whole fix.
+    #
+    # Narrowed here rather than in a second endpoint with its own gate: one
+    # payment and fifty payments must be decided by exactly the same rules,
+    # and the surest way to guarantee that is for there to be only one place
+    # where deciding happens.
+    if only_txns is not None:
+        actions = [a for a in actions if a.txn_id in only_txns]
         if not actions:
             return ApplyResult(
                 ok=False,

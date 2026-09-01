@@ -110,6 +110,36 @@ export default function AuditPage({ params }: { params: { runId: string } }) {
     await load();
   }
 
+  /**
+   * Decide one payment rather than a whole fix.
+   *
+   * "Confirm all 58" is the only control the page offered, which is an
+   * all-or-nothing choice about other people's money. The endpoint routes
+   * through the same apply_group the bulk button uses, narrowed to one
+   * payment, so one and fifty are decided by identical rules.
+   */
+  const [deciding, setDeciding] = useState<string | null>(null);
+  const [decided, setDecided] = useState<Record<string, string>>({});
+
+  async function decideOne(txnId: string, decision: "approve" | "reject") {
+    if (deciding) return;
+    setDeciding(txnId);
+    try {
+      const r = await fetch(
+        `/api/run/${params.runId}/action?txn_id=${encodeURIComponent(txnId)}&decision=${decision}`,
+        { method: "POST" }
+      );
+      const d = await r.json();
+      setDecided((m) => ({
+        ...m,
+        [txnId]: r.ok ? (decision === "approve" ? "approved" : "rejected") : "failed",
+      }));
+      if (r.ok) await load();
+    } finally {
+      setDeciding(null);
+    }
+  }
+
   async function verify(list = entries) {
     setBusy(true);
     setResult(null);
@@ -157,9 +187,25 @@ export default function AuditPage({ params }: { params: { runId: string } }) {
   if (!rec) return <Loading label="loading ledger" />;
 
   const r = rec.report;
-  const pendingStepUps = entries.filter(
-    (e: any) => e.gate_decision === "step_up" && e.outcome === "merchant_action"
-  ).length;
+
+  /**
+   * What is still genuinely waiting on a person.
+   *
+   * Counted per ACTION, not per ledger row. The ledger is append-only, so an
+   * action that was held and then confirmed leaves its old merchant_action
+   * entry behind for ever -- and counting rows meant the card still offered
+   * "Confirm all 58" after all 58 had been confirmed, then reported "Already
+   * applied, 0 executed" when you pressed it. The work had happened; the
+   * page was describing the past.
+   */
+  const finalPerAction = new Map<string, any>();
+  for (const e of entries as any[]) {
+    finalPerAction.set(`${e.txn_id}|${e.proposed_action?.action_type}`, e);
+  }
+  const waiting = [...finalPerAction.values()].filter(
+    (e: any) => e.outcome === "merchant_action"
+  );
+  const pendingStepUps = waiting.length;
   const m = r.measured;
   const shown = entries.filter(
     (e) => filter === "all" || e.gate_decision === filter
@@ -335,6 +381,72 @@ export default function AuditPage({ params }: { params: { runId: string } }) {
               >
                 {confirming ? "gating…" : `Confirm all ${pendingStepUps} →`}
               </button>
+            </div>
+
+            {/* One at a time, for anyone who does not want to say yes to
+                fifty payments in a single press. */}
+            <div className="mt-4 border-t border-line pt-3">
+              <Eyebrow>or decide them one at a time</Eyebrow>
+              <div className="mt-2 max-h-72 overflow-y-auto divide-y divide-line/60">
+                {waiting.slice(0, 40).map((e: any) => {
+                  const state = decided[e.txn_id];
+                  return (
+                    <div
+                      key={e.txn_id}
+                      className="flex items-center gap-3 py-2 font-mono text-[11px]"
+                    >
+                      <span className="text-faint w-40 truncate shrink-0">
+                        {e.txn_id}
+                      </span>
+                      <span className="num w-20 text-right shrink-0">
+                        {inr(e.proposed_action?.amount_paise ?? 0)}
+                      </span>
+                      <span className="text-muted truncate flex-1">
+                        {String(e.gate_reason ?? "")
+                          .replace(/_/g, " ")
+                          .toLowerCase()}
+                      </span>
+                      {state ? (
+                        <span
+                          className={
+                            state === "approved"
+                              ? "chip-measured shrink-0"
+                              : state === "rejected"
+                              ? "chip-neutral shrink-0"
+                              : "chip-warn shrink-0"
+                          }
+                        >
+                          {state}
+                        </span>
+                      ) : (
+                        <span className="flex items-center gap-1.5 shrink-0">
+                          <button
+                            onClick={() => decideOne(e.txn_id, "approve")}
+                            disabled={deciding === e.txn_id}
+                            className="px-2 py-0.5 rounded bg-brand text-brand-ink
+                                       text-[11px] disabled:opacity-50"
+                          >
+                            {deciding === e.txn_id ? "…" : "approve"}
+                          </button>
+                          <button
+                            onClick={() => decideOne(e.txn_id, "reject")}
+                            disabled={deciding === e.txn_id}
+                            className="px-2 py-0.5 rounded card-raised text-[11px]
+                                       disabled:opacity-50"
+                          >
+                            reject
+                          </button>
+                        </span>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+              {waiting.length > 40 && (
+                <p className="text-[11px] text-faint mt-2">
+                  showing 40 of {waiting.length} — use Confirm all for the rest
+                </p>
+              )}
             </div>
 
             {confirmed && (

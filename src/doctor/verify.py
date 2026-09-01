@@ -70,15 +70,50 @@ def _numbers(text: str) -> list[float]:
     return out
 
 
-def _grounded(value: float, context_numbers: list[float]) -> bool:
+def _decimals(text: str) -> dict[float, int]:
+    """How many decimal places each figure was actually written with.
+
+    A model that writes "58%" for a context figure of 58.5 has rounded, not
+    invented. Knowing what precision it displayed is what separates the two,
+    and that information is in the string rather than the float.
+    """
+    out: dict[float, int] = {}
+    for m in _NUM.finditer(text or ""):
+        raw = m.group(0).replace(",", "")
+        try:
+            v = float(raw)
+        except ValueError:
+            continue
+        dp = len(raw.split(".")[1]) if "." in raw else 0
+        # If the same figure appears twice at different precisions, the
+        # coarser one is the claim that has to be defensible.
+        out[v] = min(out.get(v, dp), dp)
+    return out
+
+
+def _grounded(value: float, context_numbers: list[float], decimals: int | None = None) -> bool:
     """Is this figure present in what the model was shown?
 
     Absolute tolerance, so 2.76 matches a context 2.7551. Also accepts the
     value's own negation, because a model quoting "a 2.76 point shortfall" for
     a context figure of -2.76 is describing the same quantity.
+
+    And it accepts a correct ROUNDING of a context figure, to the precision
+    the model actually displayed. "58%" for a context 58.5 is a rounding, not
+    a fabrication, and refusing it threw away answers where six of seven
+    figures were exact -- which teaches a reader that the refusal means
+    nothing.
+
+    The rule is tight rather than a widened fudge: an integer may stand for
+    anything within half a unit, one decimal place for anything within half a
+    tenth. A figure written to three places still has to be right to three
+    places. You may round, but only to the precision you chose to show.
     """
+    tol = _TOL
+    if decimals is not None:
+        tol = max(_TOL, 0.5 * (10 ** -decimals))
     for c in context_numbers:
-        if abs(c - value) <= _TOL or abs(abs(c) - abs(value)) <= _TOL:
+        if abs(c - value) <= tol or abs(abs(c) - abs(value)) <= tol:
             return True
     return False
 

@@ -32,7 +32,7 @@ from typing import Any
 from pydantic import BaseModel
 
 from .llm import MODEL_FAST, LLMClient
-from .verify import _grounded, _numbers
+from .verify import _decimals, _grounded, _numbers
 
 SYSTEM = """You are a payments analyst explaining ONE merchant's diagnosis.
 
@@ -156,9 +156,21 @@ def _answer_of(res) -> str:
 
 
 def _audit(text: str, context: str) -> list[Citation]:
+    """Check every figure in an answer against the context it came from.
+
+    The precision the model wrote each figure at is carried through, so a
+    correct rounding passes and an invention still does not. Without it an
+    answer where six of seven figures were exact was refused for the one that
+    said 58 where the context said 58.5 -- and a refusal that fires on
+    rounding teaches a reader that refusals mean nothing.
+    """
     ctx = _numbers(context)
+    dp = _decimals(text)
     return [
-        Citation(value=v, grounded=v in _FREE or _grounded(v, ctx))
+        Citation(
+            value=v,
+            grounded=v in _FREE or _grounded(v, ctx, dp.get(v)),
+        )
         for v in _numbers(text)
     ]
 
