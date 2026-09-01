@@ -102,7 +102,7 @@ export default function PortfolioPage() {
   // The chrome renders immediately, so the theme toggle and re-scan button are
   // there while the book is still loading rather than appearing after it.
   const shell = (body: React.ReactNode) => (
-    <div className="min-h-screen bg-canvas">
+    <div className="min-h-screen bg-canvas lg:pl-60">
       <TopBar
         right={
           <>

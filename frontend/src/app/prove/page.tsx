@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState } from "react";
 import { TopBar } from "@/components/Chrome";
-import { Budget } from "@/components/Budget";
 import Link from "next/link";
 import { Card, Detail, Eyebrow, Stagger } from "@/components/ui";
 import { FACTOR_DOCS } from "@/lib/explain";
@@ -204,7 +203,7 @@ export default function ProvePage() {
   }
 
   return (
-    <div className="min-h-screen bg-canvas">
+    <div className="min-h-screen bg-canvas lg:pl-60">
       <TopBar />
       <main className="max-w-[1400px] mx-auto px-6 py-8 space-y-6">
         <Stagger>
@@ -634,8 +633,27 @@ export default function ProvePage() {
           </div>
         </Link>
 
-        {/* And the question that decides whether any of it ships. */}
-        <Budget />
+        {/* What this cost, what it decided, and whether the forecasts came
+            true all moved to one page. They answer one question between them
+            and none of them answers it alone. */}
+        <Link
+          href="/evidence"
+          className="card p-5 flex items-center gap-4 hover:border-brand/40
+                     transition-colors group"
+        >
+          <div className="min-w-0 flex-1">
+            <Eyebrow>Or check the receipts</Eyebrow>
+            <div className="text-lg font-semibold mt-1">
+              Evidence: did the fixes work, and what did this cost? &rarr;
+            </div>
+            <p className="text-sm text-muted mt-1.5 leading-relaxed max-w-2xl">
+              Every forecast scored against what actually happened after the
+              fix landed, every decision the kernel took with its hash chain
+              re-verified from genesis, and the model bill priced as if
+              nothing were cached.
+            </p>
+          </div>
+        </Link>
       </main>
     </div>
   );

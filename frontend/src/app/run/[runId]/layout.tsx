@@ -52,7 +52,7 @@ export default function RunLayout({
   }
 
   return (
-    <div className="min-h-screen bg-canvas">
+    <div className="min-h-screen bg-canvas lg:pl-60">
       <TopBar
         right={
           <>

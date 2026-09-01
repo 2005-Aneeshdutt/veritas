@@ -26,7 +26,7 @@ from typing import Any
 
 from pydantic import BaseModel
 
-from chitragupta.ledger import Ledger, LedgerEntry
+from chitragupta.ledger import Ledger
 from chitragupta.mandate import SignedMandate, parse_iso
 from chitragupta.policy import RECOVERY_WINDOW, GateContext, evaluate
 from chitragupta.rails.mock_rail import Calibration, execute as rail_execute
@@ -349,10 +349,7 @@ def apply_group(
     )
     steps = _walkthrough(actions[0], signed, ctx)
 
-    led = Ledger()
-    led._entries = [
-        LedgerEntry.model_validate(e) for e in rec["report"].get("ledger", [])
-    ]
+    led = Ledger.from_entries(rec["report"].get("ledger", []))
     before = len(led)
 
     # Error class per payment, so the rail models the right recovery curve.

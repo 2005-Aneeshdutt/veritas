@@ -109,6 +109,21 @@ class Ledger:
         self._entries.append(entry)
         return entry
 
+    @classmethod
+    def from_entries(cls, entries) -> Ledger:
+        """Rehydrate a chain that was serialised into a run record.
+
+        Deliberately does NOT re-hash anything: the stored hashes are the
+        evidence, and recomputing them on the way in would quietly repair
+        exactly the tampering `verify` exists to catch.
+        """
+        led = cls()
+        led._entries = [
+            e if isinstance(e, LedgerEntry) else LedgerEntry.model_validate(e)
+            for e in entries
+        ]
+        return led
+
     def verify(self) -> ChainVerification:
         """Recompute the whole chain from genesis."""
         prev = GENESIS

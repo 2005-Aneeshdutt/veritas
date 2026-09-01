@@ -42,6 +42,7 @@ from doctor.authority import draft as authority_draft, review as authority_revie
 from doctor.claims import read_note
 from doctor.baseline import Baseline
 from doctor.budget import build_budget
+from doctor.defects import build_backlog
 from doctor.drift import build_drift_report, simulate_exposure
 from doctor.outreach import as_eml, compose, send, smtp_configured, verify as smtp_verify
 from doctor.portfolio import build_portfolio, ledger_csv, portfolio_csv
@@ -214,6 +215,98 @@ def portfolio_approve(confirm: bool = False) -> dict:
         m["measured_paise"] for m in out["merchants"]
     )
     return out
+
+
+@app.get("/api/audit")
+def audit(limit: int = 60) -> dict:
+    """Every decision the system took, across the book, newest first.
+
+    The per-run pages each show their own ledger, which is the right scope for
+    a merchant and the wrong one for anybody asking whether this can be
+    trusted at all. That question is about the whole book: how many chains,
+    whether every one of them still verifies, and what the decisions were.
+
+    The chain check is re-run here rather than read off the stored flag. A
+    stored "verified: true" is a claim; recomputing the hashes is a check, and
+    the difference is the entire point of keeping a hash chain.
+    """
+    from chitragupta.ledger import Ledger
+
+    chains: list[dict] = []
+    rows: list[dict] = []
+    counts: dict[str, int] = {}
+    reasons: dict[str, int] = {}
+    total = 0
+
+    for path in sorted(RUNS.glob("run_*.json")):
+        rec = _read_json(path)
+        rid, mid = rec.get("run_id"), rec.get("merchant_id")
+        if not rid or rec.get("used_stubs"):
+            continue
+        entries = rec.get("report", {}).get("ledger", []) or []
+        total += len(entries)
+
+        try:
+            led = Ledger.from_entries(entries)
+            v = led.verify()
+            ok, detail = bool(v.ok), getattr(v, "detail", "")
+        except Exception as e:  # a malformed ledger is a finding, not a crash
+            ok, detail = False, str(e)[:160]
+
+        chains.append(
+            {
+                "run_id": rid,
+                "merchant_id": mid,
+                "merchant_name": rec.get("merchant_name") or mid,
+                "entries": len(entries),
+                "verified": ok,
+                "detail": detail,
+                "head": entries[-1]["entry_hash"] if entries else None,
+            }
+        )
+
+        for e in entries:
+            counts[e.get("outcome", "?")] = counts.get(e.get("outcome", "?"), 0) + 1
+            reasons[e.get("gate_reason", "?")] = reasons.get(e.get("gate_reason", "?"), 0) + 1
+            rows.append(
+                {
+                    "run_id": rid,
+                    "merchant": rec.get("merchant_name") or mid,
+                    "sequence": e.get("sequence"),
+                    "timestamp": e.get("timestamp"),
+                    "txn_id": e.get("txn_id"),
+                    "action_type": (e.get("proposed_action") or {}).get("action_type"),
+                    "amount_paise": (e.get("proposed_action") or {}).get("amount_paise", 0),
+                    "gate_decision": e.get("gate_decision"),
+                    "gate_reason": e.get("gate_reason"),
+                    "outcome": e.get("outcome"),
+                    "entry_hash": e.get("entry_hash"),
+                }
+            )
+
+    rows.sort(key=lambda r: (r["timestamp"] or "", r["sequence"] or 0), reverse=True)
+    return {
+        "chains": sorted(chains, key=lambda c: -c["entries"]),
+        "chains_verified": sum(1 for c in chains if c["verified"]),
+        "chains_total": len(chains),
+        "entries_total": total,
+        "by_outcome": dict(sorted(counts.items(), key=lambda kv: -kv[1])),
+        "by_reason": dict(sorted(reasons.items(), key=lambda kv: -kv[1])),
+        "recent": rows[: max(1, min(limit, 400))],
+    }
+
+
+@app.get("/api/defects")
+def defects() -> dict:
+    """The write-off, across the book, sorted by who has to act.
+
+    A merchant cannot compute this. They see their own failures and nothing
+    else, so a code hitting six of them looks like six unrelated bad months.
+    Only the platform can see the same code twice, which makes a defect
+    backlog the one artefact here that is worth more to Razorpay than to any
+    merchant on it.
+    """
+    return json.loads(build_backlog().model_dump_json())
 
 
 @app.get("/api/portfolio.csv")
@@ -691,6 +784,66 @@ def start_run(merchant: str = "quickmart", calibration: str = "central") -> dict
         baseline=Baseline(), calibration=Calibration(calibration),
     )
     return json.loads(rec.model_dump_json())
+
+
+@app.post("/api/demo/reset")
+def reset_demo() -> dict:
+    """Put the book back to the state it starts a demo in.
+
+    Approving writes to disk, so the second take of a walkthrough opens on the
+    wreckage of the first: queues empty, headline already moved, the one
+    moment worth filming already spent. Doing this from a terminal between
+    takes is a thing to forget with a camera running.
+
+    It re-runs each merchant's diagnosis rather than deleting the approvals,
+    which matters for two reasons. The runs are deterministic and their model
+    calls are cached, so a re-run reproduces the original record exactly
+    instead of approximating it -- and reusing each merchant's existing run_id
+    means every link, bookmark and emailed approval URL still resolves
+    afterwards.
+
+    Nothing outside data/runs is touched. The ledger lives inside the run, so
+    it is rebuilt with it; the mandates, the NPCI tables and the merchant
+    files are read-only here and stay exactly as committed.
+    """
+    out: list[dict] = []
+    for mid in MERCHANTS:
+        # Keep the newest run's id so existing links survive, and clear the
+        # older ones -- otherwise every reset leaves another orphan behind for
+        # the portfolio to sift by mtime.
+        mine = sorted(
+            (
+                (p.stat().st_mtime, p)
+                for p in RUNS.glob("run_*.json")
+                if _read_json(p).get("merchant_id") == mid
+            ),
+            reverse=True,
+        )
+        keep = mine[0][1].stem if mine else None
+        for _, stale in mine[1:]:
+            stale.unlink(missing_ok=True)
+
+        try:
+            m = load_merchant(mid)
+            rec = run_diagnosis(
+                m.profile,
+                m.transactions,
+                load_mandate(mid),
+                baseline=Baseline(),
+                run_id=keep,
+            )
+        except (FileNotFoundError, SystemExit, ValueError) as e:
+            out.append({"merchant_id": mid, "ok": False, "error": str(e)[:120]})
+            continue
+        out.append({"merchant_id": mid, "ok": True, "run_id": rec.run_id})
+
+    ok = sum(1 for r in out if r["ok"])
+    return {
+        "ok": ok == len(out),
+        "merchants": out,
+        "headline": "%d of %d merchants back to their starting state."
+        % (ok, len(out)),
+    }
 
 
 @app.post("/api/run/{run_id}/action")

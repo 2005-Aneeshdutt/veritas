@@ -101,7 +101,7 @@ export default function DataPage() {
   }
 
   return (
-    <div className="min-h-screen bg-canvas">
+    <div className="min-h-screen bg-canvas lg:pl-60">
       <TopBar />
       <main className="max-w-[1400px] mx-auto px-6 py-8 space-y-6">
         <Stagger>
