@@ -34,6 +34,20 @@ Outcome = Literal[
 ]
 
 
+#: Who caused this entry to be written.
+#:
+#: The distinction is not bookkeeping. "The agent did it inside the mandate"
+#: and "a Razorpay operator approved it on the merchant's behalf" and "the
+#: merchant approved it themselves from the emailed link" are three different
+#: events with three different people answerable for them, and a ledger that
+#: recorded them identically could not tell you which had happened.
+#:
+#: It lives INSIDE the hash rather than beside it, which costs a rebuild of
+#: every committed chain and is worth it: an actor that could be edited after
+#: the fact would be a signature nobody signed.
+Actor = Literal["agent", "platform", "merchant"]
+
+
 class LedgerEntry(BaseModel):
     model_config = {"frozen": True}
 
@@ -44,6 +58,9 @@ class LedgerEntry(BaseModel):
     gate_decision: PolicyDecision
     gate_reason: str
     outcome: Outcome
+    #: Defaulted so a chain written before this field existed still loads;
+    #: every entry this code writes sets it explicitly.
+    actor: Actor = "agent"
     prev_hash: str
     entry_hash: str
 
@@ -91,6 +108,7 @@ class Ledger:
         gate_decision: PolicyDecision,
         gate_reason: str,
         outcome: Outcome,
+        actor: Actor = "agent",
         timestamp: str | None = None,
     ) -> LedgerEntry:
         seq = len(self._entries)
@@ -102,6 +120,7 @@ class Ledger:
             gate_decision=gate_decision,
             gate_reason=gate_reason,
             outcome=outcome,
+            actor=actor,
             prev_hash=self.head_hash,
             entry_hash="",
         )

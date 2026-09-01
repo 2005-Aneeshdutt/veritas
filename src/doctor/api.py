@@ -44,7 +44,14 @@ from doctor.baseline import Baseline
 from doctor.budget import build_budget
 from doctor.defects import build_backlog
 from doctor.drift import build_drift_report, simulate_exposure
-from doctor.outreach import as_eml, compose, send, smtp_configured, verify as smtp_verify
+from doctor.outreach import (
+    as_eml,
+    compose,
+    default_recipient,
+    send,
+    smtp_configured,
+    verify as smtp_verify,
+)
 from doctor.portfolio import build_portfolio, ledger_csv, portfolio_csv
 from doctor.generator import GeneratedMerchant
 from doctor.graph import git_commit, run_diagnosis
@@ -262,6 +269,7 @@ def audit(limit: int = 60) -> dict:
     rows: list[dict] = []
     counts: dict[str, int] = {}
     reasons: dict[str, int] = {}
+    actors: dict[str, int] = {}
     total = 0
 
     for path in sorted(RUNS.glob("run_*.json")):
@@ -294,6 +302,7 @@ def audit(limit: int = 60) -> dict:
         for e in entries:
             counts[e.get("outcome", "?")] = counts.get(e.get("outcome", "?"), 0) + 1
             reasons[e.get("gate_reason", "?")] = reasons.get(e.get("gate_reason", "?"), 0) + 1
+            actors[e.get("actor", "agent")] = actors.get(e.get("actor", "agent"), 0) + 1
             rows.append(
                 {
                     "run_id": rid,
@@ -306,6 +315,7 @@ def audit(limit: int = 60) -> dict:
                     "gate_decision": e.get("gate_decision"),
                     "gate_reason": e.get("gate_reason"),
                     "outcome": e.get("outcome"),
+                    "actor": e.get("actor", "agent"),
                     "entry_hash": e.get("entry_hash"),
                 }
             )
@@ -318,6 +328,10 @@ def audit(limit: int = 60) -> dict:
         "entries_total": total,
         "by_outcome": dict(sorted(counts.items(), key=lambda kv: -kv[1])),
         "by_reason": dict(sorted(reasons.items(), key=lambda kv: -kv[1])),
+        # Who caused each entry. Three different people are answerable for
+        # these three numbers, and a ledger that could not separate them would
+        # be crediting a console operator with the merchant's own decisions.
+        "by_actor": dict(sorted(actors.items(), key=lambda kv: -kv[1])),
         "recent": rows[: max(1, min(limit, 400))],
     }
 
@@ -368,7 +382,13 @@ def run_email(run_id: str) -> dict:
     p = RUNS / (run_id + ".json")
     if not p.exists():
         raise HTTPException(404, "no such run: %s" % run_id)
-    return json.loads(compose(json.loads(p.read_text(encoding="utf-8"))).model_dump_json())
+    out = json.loads(compose(json.loads(p.read_text(encoding="utf-8"))).model_dump_json())
+    # Where a send goes if nobody types an address. Every merchant here is
+    # invented, so their addresses are too, and an empty box is something to
+    # fill in on stage with a typo.
+    out["default_to"] = default_recipient()
+    out["smtp_configured"] = smtp_configured()
+    return out
 
 
 @app.get("/api/run/{run_id}/email.eml")
@@ -544,7 +564,15 @@ def decide(token: str) -> dict:
 
     try:
         res = apply_group(
-            grant.run_id, grant.group_index, load_mandate(merchant_id), confirmed=True
+            grant.run_id,
+            grant.group_index,
+            load_mandate(merchant_id),
+            confirmed=True,
+            # This link was mailed to the merchant and signed for them alone.
+            # It is the one path in the product where the merchant is the one
+            # deciding, and the ledger records that rather than crediting the
+            # console operator with it.
+            actor="merchant",
         )
     except (IndexError, FileNotFoundError, ValueError) as e:
         raise HTTPException(400, str(e))

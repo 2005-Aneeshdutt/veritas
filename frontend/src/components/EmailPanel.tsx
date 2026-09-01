@@ -23,7 +23,15 @@ export function EmailPanel({ runId }: { runId: string }) {
 
   useEffect(() => {
     if (open && !email) {
-      fetch(`/api/run/${runId}/email`).then((r) => r.json()).then(setEmail);
+      fetch(`/api/run/${runId}/email`)
+        .then((r) => r.json())
+        .then((d) => {
+          setEmail(d);
+          // Prefill rather than leave a box to fill in on stage. The address
+          // comes from the server's own configuration, so a deployment is not
+          // stuck mailing whoever set this up.
+          if (d.default_to) setTo((cur) => cur || d.default_to);
+        });
     }
   }, [open, email, runId]);
 
@@ -122,10 +130,14 @@ export function EmailPanel({ runId }: { runId: string }) {
                     setSending(false);
                   }}
                   disabled={sending || !to}
-                  className="px-3 py-1.5 rounded-lg card-raised text-xs
-                             hover:border-brand/40 transition-colors disabled:opacity-50"
+                  className="btn-primary h-[30px] px-3 text-xs disabled:opacity-50"
+                  title={
+                    email?.smtp_configured
+                      ? `Send the report to ${to}`
+                      : "SMTP is not configured — this will say so rather than fail quietly"
+                  }
                 >
-                  {sending ? "sending…" : "Send via SMTP"}
+                  {sending ? "sending…" : "Send the report"}
                 </button>
 
                 {/* Check the credentials without mailing a real merchant.

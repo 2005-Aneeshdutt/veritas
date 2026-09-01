@@ -363,16 +363,30 @@ export default function AuditPage({ params }: { params: { runId: string } }) {
           <Card className="border-l-2 border-l-amber">
             <div className="flex items-center gap-4 flex-wrap">
               <div className="min-w-0 flex-1">
-                <Eyebrow>Waiting on you</Eyebrow>
+                <Eyebrow>Waiting on a person</Eyebrow>
                 <h2 className="text-lg font-semibold mt-1">
-                  {pendingStepUps} actions the kernel held for your approval
+                  {pendingStepUps} actions the kernel held for approval
                 </h2>
                 <p className="text-sm text-muted mt-1.5 max-w-2xl leading-relaxed">
-                  Some are above your auto-execute limit; the rest are actions
-                  the planner marked as needing your sign-off, which wait for you
-                  at any limit. Confirming re-gates every one individually —
-                  anything over the hard ceiling stays denied however many times
-                  you confirm it.
+                  Some are above the merchant&rsquo;s auto-execute limit; the
+                  rest are actions the planner marked as needing sign-off,
+                  which wait at any limit. Approving re-gates every one
+                  individually — anything over the hard ceiling stays denied
+                  however many times it is approved.
+                </p>
+                {/* The question this page kept inviting: why can this console
+                    approve at all, when the same fix is emailed to the
+                    merchant with its own buttons? Because they are two
+                    different people, and the ledger says which. */}
+                <p className="text-[12px] text-faint mt-2 max-w-2xl leading-relaxed">
+                  This is Razorpay&rsquo;s console, so approving here is
+                  recorded as <strong>the platform acting on the
+                  merchant&rsquo;s behalf</strong> — an account manager
+                  clearing a queue after a phone call. The same fix goes to
+                  the merchant by email with its own signed buttons, and a
+                  decision made there is recorded as theirs. Both paths run
+                  the identical kernel; the ledger keeps them apart, inside
+                  the hash.
                 </p>
               </div>
               <button
@@ -380,7 +394,9 @@ export default function AuditPage({ params }: { params: { runId: string } }) {
                 disabled={confirming}
                 className="btn-primary shrink-0"
               >
-                {confirming ? "gating…" : `Confirm all ${pendingStepUps} →`}
+                {confirming
+                  ? "gating…"
+                  : `Approve all ${pendingStepUps} on their behalf →`}
               </button>
             </div>
 
@@ -452,7 +468,7 @@ export default function AuditPage({ params }: { params: { runId: string } }) {
               </div>
               {waiting.length > 40 && (
                 <p className="text-[11px] text-faint mt-2">
-                  showing 40 of {waiting.length} — use Confirm all for the rest
+                  showing 40 of {waiting.length} — use Approve all for the rest
                 </p>
               )}
             </div>

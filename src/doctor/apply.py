@@ -26,7 +26,7 @@ from typing import Any
 
 from pydantic import BaseModel
 
-from chitragupta.ledger import Ledger
+from chitragupta.ledger import Actor, Ledger
 from chitragupta.mandate import SignedMandate, parse_iso
 from chitragupta.policy import RECOVERY_WINDOW, GateContext, evaluate
 from chitragupta.rails.mock_rail import Calibration, execute as rail_execute
@@ -199,12 +199,21 @@ def apply_group(
     confirmed: bool = False,
     calibration: Calibration = Calibration.CENTRAL,
     only_txns: set[str] | None = None,
+    actor: Actor = "platform",
 ) -> ApplyResult:
     """Approve one grouped fix. Every underlying action is gated individually.
 
-    `confirmed` is the merchant clicking through a STEP_UP. It does not widen
-    the mandate: an action the kernel DENIES stays denied however many times
-    it is confirmed.
+    `confirmed` is somebody clicking through a STEP_UP. It does not widen the
+    mandate: an action the kernel DENIES stays denied however many times it is
+    confirmed.
+
+    `actor` is WHO clicked, and it is written into the hash of every entry
+    this call appends. A step-up approved in the console is a Razorpay
+    operator acting on the merchant's behalf; the same step-up approved
+    through the emailed link is the merchant themselves. Both are legitimate
+    and they are not the same event, so the ledger has to be able to tell them
+    apart afterwards. It defaults to "platform" because the console is the
+    only caller that could forget to say.
     """
     path = RUNS / (run_id + ".json")
     if not path.exists():
@@ -406,6 +415,7 @@ def apply_group(
             gate_decision=gate.decision,
             gate_reason=gate.reason_code,
             outcome=outcome,  # type: ignore[arg-type]
+            actor=actor,
         )
         gated.append(
             GatedAction(
@@ -518,6 +528,7 @@ def apply_group(
             "stepped_up": stepped,
             "denied": denied,
             "recovered_paise": recovered,
+            "actor": actor,
             "at": datetime.now(timezone.utc).isoformat(),
         }
     )

@@ -103,6 +103,16 @@ def _rs(paise: int) -> str:
     return "Rs %s" % format(int(paise) // 100, ",d")
 
 
+#: Who each entry says caused it. The wording matters: approving in the
+#: console is a Razorpay operator acting FOR the merchant, not as them, and
+#: the emailed link is the only path where the merchant decides for
+#: themselves.
+_ACTOR = {
+    "agent": "the agent, inside its mandate",
+    "platform": "Razorpay, on the merchant's behalf",
+    "merchant": "the merchant, from the emailed link",
+}
+
 #: How each recorded outcome should read. Taken from the ledger's own
 #: vocabulary so a new outcome shows up as itself rather than being quietly
 #: bucketed into the nearest existing one.
@@ -232,6 +242,7 @@ def build(run_id: str, txn_id: str) -> Journey:
                 facts=[
                     {"k": "reason code", "v": e.get("gate_reason", "?")},
                     {"k": "outcome", "v": outcome},
+                    {"k": "acted by", "v": _ACTOR.get(e.get("actor", "agent"), "?")},
                     {"k": "ledger entry", "v": "#%s" % e.get("sequence")},
                     {"k": "hash", "v": (e.get("entry_hash") or "")[:16]},
                 ],
@@ -245,7 +256,8 @@ def build(run_id: str, txn_id: str) -> Journey:
                 Beat(
                     key="approved",
                     at=group.get("at"),
-                    title="A person approved it, and it ran",
+                    title="Approved by %s, and it ran"
+                    % _ACTOR.get(group.get("actor", "platform"), "a person"),
                     detail="Part of '%s'." % group.get("title", ""),
                     tone="good",
                 )

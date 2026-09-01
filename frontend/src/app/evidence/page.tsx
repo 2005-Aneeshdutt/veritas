@@ -60,6 +60,7 @@ interface Entry {
   gate_decision: string;
   gate_reason: string;
   outcome: string;
+  actor: string;
   entry_hash: string;
 }
 
@@ -70,8 +71,21 @@ interface Audit {
   entries_total: number;
   by_outcome: Record<string, number>;
   by_reason: Record<string, number>;
+  by_actor: Record<string, number>;
   recent: Entry[];
 }
+
+const ACTOR_LABEL: Record<string, string> = {
+  agent: "the agent",
+  platform: "Razorpay",
+  merchant: "the merchant",
+};
+
+const ACTOR_NOTE: Record<string, string> = {
+  agent: "acting alone, inside the signed mandate",
+  platform: "an operator approving on the merchant's behalf",
+  merchant: "deciding for themselves, from the emailed link",
+};
 
 const DECISION_CHIP: Record<string, string> = {
   allow: "chip-measured",
@@ -297,6 +311,32 @@ export default function EvidencePage() {
             />
           </div>
 
+          {/* Three different people are answerable for these three numbers.
+              A ledger that recorded them identically would be crediting a
+              console operator with the merchant's own decisions. */}
+          <div className="mt-4">
+            <Eyebrow>who caused each entry</Eyebrow>
+            <div className="grid sm:grid-cols-3 gap-3 mt-2">
+              {(["agent", "platform", "merchant"] as const).map((who) => (
+                <div key={who} className="card-raised p-3.5">
+                  <div className="num text-xl font-semibold">
+                    {(a.by_actor?.[who] ?? 0).toLocaleString("en-IN")}
+                  </div>
+                  <div className="text-[12px] mt-0.5">{ACTOR_LABEL[who]}</div>
+                  <div className="text-[11px] text-faint mt-1 leading-tight">
+                    {ACTOR_NOTE[who]}
+                  </div>
+                </div>
+              ))}
+            </div>
+            <p className="text-[11px] text-faint mt-2 leading-relaxed">
+              The actor is inside the hash, not beside it. Adding it cost a
+              rebuild of every chain in the book, which is the price of an
+              answer to &ldquo;who approved this&rdquo; that cannot be edited
+              afterwards.
+            </p>
+          </div>
+
           <div className="mt-5">
             <Eyebrow>why each decision went the way it did</Eyebrow>
             <div className="space-y-1.5 mt-2">
@@ -336,6 +376,7 @@ export default function EvidencePage() {
                     <Th right>amount</Th>
                     <Th>gate</Th>
                     <Th>reason</Th>
+                    <Th>by</Th>
                     <Th>hash</Th>
                   </tr>
                 </thead>
@@ -373,6 +414,9 @@ export default function EvidencePage() {
                       </td>
                       <td className="py-1.5 px-2 num text-[10px] text-faint whitespace-nowrap">
                         {e.gate_reason}
+                      </td>
+                      <td className="py-1.5 px-2 text-[11px] whitespace-nowrap">
+                        {ACTOR_LABEL[e.actor] ?? e.actor}
                       </td>
                       <td className="py-1.5 px-2 num text-[10px] text-faint">
                         {e.entry_hash?.slice(0, 10)}…

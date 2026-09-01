@@ -188,6 +188,17 @@ def _password() -> str:
     return squashed if _APP_PASSWORD.match(squashed) else raw
 
 
+def default_recipient() -> str:
+    """Where a demo send goes unless somebody types an address.
+
+    Every merchant in the book is invented, so their addresses are too, and a
+    blank box on stage is a thing to fill in under a camera with a typo. The
+    address is read from the environment rather than compiled in, so a
+    deployment is not stuck mailing whoever set this up.
+    """
+    return os.environ.get("DEMO_EMAIL_TO", "").strip()
+
+
 def smtp_configured() -> bool:
     import os
 
