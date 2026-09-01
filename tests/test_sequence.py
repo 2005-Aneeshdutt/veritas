@@ -160,3 +160,77 @@ def test_an_unrecoverable_class_falls_back_rather_than_crashing():
         NAIVE_HOURS,
         *ladder_for("soft_decline"),
     )
+
+
+class TestTheScheduleReachesTheScreen:
+    """The ladder is planned per error class and was invisible for weeks.
+
+    Only the first slot's hours ever leaked out, inside an action's reason
+    string. These tests are about the endpoint that surfaces it telling the
+    truth in both directions -- including the direction that flatters nobody.
+    """
+
+    def _get(self, run_id="run_beec9668"):
+        from fastapi.testclient import TestClient
+
+        from doctor.api import app
+
+        r = TestClient(app).get("/api/run/%s/schedule" % run_id)
+        assert r.status_code == 200, r.text
+        return r.json()
+
+    def test_it_counts_retries_by_their_real_error_class(self):
+        """The first cut read the report's unrecoverable list, where a payment
+        the agent chose to RETRY can never appear -- so every retry defaulted
+        to soft_decline and a run full of technical failures reported zero."""
+        d = self._get()
+        by = {c["error_class"]: c for c in d["classes"]}
+        assert by["technical"]["payments"] > 0, "technical retries went missing again"
+        assert by["soft_decline"]["payments"] > 0
+        assert by["technical"]["value_paise"] > 0
+
+    def test_the_two_classes_are_scheduled_differently(self):
+        """If both ladders came out the same the whole module is decoration."""
+        d = self._get()
+        by = {c["error_class"]: c for c in d["classes"]}
+        tech = [a["hours_after_failure"] for a in by["technical"]["attempts"]]
+        soft = [a["hours_after_failure"] for a in by["soft_decline"]["attempts"]]
+        assert tech != soft
+        assert tech[0] < soft[0], "a technical failure must be retried sooner"
+
+    def test_it_reports_the_case_where_sequencing_earns_nothing(self):
+        """The honest half. A soft decline's flat 36h already sat in its good
+        window, and claiming a lift there would make the technical number
+        worthless."""
+        d = self._get()
+        by = {c["error_class"]: c for c in d["classes"]}
+        assert by["soft_decline"]["lift_pts"] == 0
+        assert by["technical"]["lift_pts"] > 5
+
+    def test_every_slot_survives_the_kernels_own_constraints(self):
+        """A schedule proposing an attempt the gate would refuse is not a
+        schedule."""
+        from chitragupta.policy import RECOVERY_WINDOW
+
+        d = self._get()
+        for c in d["classes"]:
+            assert len(c["attempts"]) <= 3, "over the mandate's attempt cap"
+            for a in c["attempts"]:
+                hours = a["hours_after_failure"]
+                assert hours <= RECOVERY_WINDOW.total_seconds() / 3600, (
+                    "%s attempt %d falls outside the recovery window"
+                    % (c["error_class"], a["n"])
+                )
+
+    def test_the_lift_is_the_difference_it_claims_to_be(self):
+        d = self._get()
+        for c in d["classes"]:
+            expect = round(100 * (c["cumulative_p"] - c["naive_p"]), 2)
+            assert abs(c["lift_pts"] - expect) < 0.01
+
+    def test_an_unknown_run_refuses(self):
+        from fastapi.testclient import TestClient
+
+        from doctor.api import app
+
+        assert TestClient(app).get("/api/run/nope/schedule").status_code == 404

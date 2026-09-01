@@ -225,6 +225,91 @@ def portfolio_approve(confirm: bool = False) -> dict:
     return out
 
 
+@app.get("/api/run/{run_id}/schedule")
+def retry_schedule(run_id: str) -> dict:
+    """WHEN each retry is scheduled, and what the timing is worth.
+
+    Every dunning tool ships a fixed cooldown -- "retry in 30 minutes, three
+    times". The rail's own curve says the two error classes want opposite
+    treatment, so a single delay for both throws away the one thing the rail
+    models well. This plans the whole ladder per class and prices it against
+    the flat schedule it replaces.
+
+    The comparison is reported in both directions. On soft declines the
+    sequencing earns almost nothing, because the old fixed delay already sat
+    in that class's good window -- and saying so is the reason the technical
+    number is worth anything.
+    """
+    path = RUNS / (run_id + ".json")
+    if not path.exists():
+        raise HTTPException(404, "no such run: %s" % run_id)
+    rec = _read_json(path)
+
+    from datetime import datetime, timezone
+
+    from doctor.sequence import plan_retries
+
+    # How many payments of each class this run actually proposed a retry for,
+    # so the ladders are weighted by the book rather than shown as a leaflet.
+    counts: dict[str, int] = {}
+    value: dict[str, int] = {}
+    # Read from the merchant's own payments, not from the report's
+    # unrecoverable list -- a payment the agent chose to RETRY is by
+    # definition not in that list, so looking there defaulted every retry to
+    # soft_decline and reported zero technical failures on a run full of them.
+    from doctor.journey import _merchant_file
+
+    error_class = {
+        t["txn_id"]: (t.get("error_class") or "soft_decline")
+        for t in _merchant_file(rec.get("merchant_id", "")).get("transactions", [])
+        if not t.get("succeeded")
+    }
+    for e in rec.get("report", {}).get("ledger", []):
+        a = e.get("proposed_action") or {}
+        if not str(a.get("action_type", "")).startswith("retry"):
+            continue
+        cls = error_class.get(e.get("txn_id"), "soft_decline")
+        counts[cls] = counts.get(cls, 0) + 1
+        value[cls] = value.get(cls, 0) + int(a.get("amount_paise") or 0)
+
+    failed = datetime(2026, 8, 20, 9, 0, tzinfo=timezone.utc)
+    now = datetime(2026, 8, 20, 10, 0, tzinfo=timezone.utc)
+
+    out = []
+    for cls in ("technical", "soft_decline"):
+        sched = plan_retries("schedule:%s" % cls, cls, failed, now=now)
+        out.append(
+            {
+                "error_class": cls,
+                "payments": counts.get(cls, 0),
+                "value_paise": value.get(cls, 0),
+                "headline": sched.headline,
+                "cumulative_p": round(sched.cumulative_p, 4),
+                "naive_p": round(sched.naive_p, 4),
+                "lift_pts": round(100 * (sched.cumulative_p - sched.naive_p), 2),
+                "attempts": [
+                    {
+                        "n": a.n,
+                        "hours_after_failure": a.hours_after_failure,
+                        "p_success": round(a.p_success, 4),
+                        "reason": a.reason,
+                    }
+                    for a in sched.attempts
+                ],
+            }
+        )
+
+    return {
+        "run_id": run_id,
+        "merchant_name": rec.get("merchant_name", ""),
+        "classes": out,
+        "note": (
+            "Both figures are upper bounds. A customer short of money once is "
+            "likelier to be short again, and neither number accounts for that."
+        ),
+    }
+
+
 @app.get("/api/run/{run_id}/journeys")
 def journeys(run_id: str, limit: int = 40) -> dict:
     """Payments in this run worth opening, most interesting first.

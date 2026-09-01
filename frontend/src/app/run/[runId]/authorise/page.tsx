@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { AuthorityPanel } from "@/components/AuthorityPanel";
 import { BarStrip } from "@/components/BarStrip";
+import { RetrySchedule } from "@/components/RetrySchedule";
 import { Card, Detail, Eyebrow, Figure, Figures, Info, Loading, Notes, PageHead, Panel, SectionHeader, Stagger } from "@/components/ui";
 import { GLOSSARY } from "@/lib/explain";
 import { RunRecord, inr } from "@/lib/types";
@@ -348,6 +349,13 @@ export default function AuditPage({ params }: { params: { runId: string } }) {
             ))}
           </div>
         </Card>
+      </Stagger>
+
+      {/* When each approved retry actually fires. The ladder has been
+          planned since sequence.py landed and only its first slot ever
+          reached the screen. */}
+      <Stagger i={3}>
+        <RetrySchedule runId={params.runId} />
       </Stagger>
 
       {/* ──────────────────── what that authority cost them */}
