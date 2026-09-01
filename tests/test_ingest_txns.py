@@ -205,3 +205,78 @@ def test_the_undersized_sample_is_still_refused():
     with pytest.raises(Rejected) as e:
         parse(open("samples/too_small_to_diagnose.csv", "rb").read(), mcc="5411")
     assert "would be noise" in str(e.value)
+
+
+class TestBundledSamples:
+    """The files that ship so "run it on your data" can be tried without any.
+
+    Somebody watching a demo has no month of payments to hand, and asking
+    them to go and export one is asking them to stop watching. Two properties
+    make the button worth having rather than merely present: it must reach
+    the same code the upload reaches, and the sample that is supposed to be
+    refused must still be refused.
+    """
+
+    def _client(self):
+        from fastapi.testclient import TestClient
+
+        from doctor.api import app
+
+        return TestClient(app)
+
+    def test_the_sample_finds_the_fault_that_was_injected(self):
+        r = self._client().post("/api/txns/diagnose/sample?name=northwind")
+        assert r.status_code == 200
+        d = r.json()
+        assert d["summary"]["used"] == 2400
+        # The whole point of this file: its columns are named the way another
+        # system would name them, and the engine still finds the hour effect.
+        assert d["diagnosis"]["primary_cause"] == "hour"
+
+    def test_a_bundled_button_cannot_take_a_special_path(self):
+        """Same parse, same decomposition -- a different door, not a shortcut."""
+        from pathlib import Path
+
+        from doctor.api import ROOT
+        from doctor.ingest_txns import diagnose, parse
+
+        raw = (ROOT / "samples" / "northwind_payments.csv").read_bytes()
+        txns, summary = parse(raw, mcc="5411")
+        direct = diagnose(txns, "5411")
+
+        served = self._client().post("/api/txns/diagnose/sample?name=northwind").json()
+        assert served["summary"]["used"] == summary.used
+        assert served["diagnosis"]["gap_pts"] == direct["gap_pts"]
+        assert served["diagnosis"]["factors"] == direct["factors"]
+
+    def test_the_refusal_sample_is_still_refused(self):
+        r = self._client().post("/api/txns/diagnose/sample?name=too_small")
+        assert r.status_code == 400
+        assert "140 usable payments" in r.json()["detail"]
+
+    def test_a_name_off_the_wire_cannot_read_the_repository(self):
+        """Names are matched against a list, never joined onto a path."""
+        c = self._client()
+        for probe in ("../../.env", r"..\..\.env", "/etc/passwd", "README"):
+            assert c.post("/api/txns/diagnose/sample?name=%s" % probe).status_code == 404
+
+    def test_the_listing_describes_what_is_actually_on_disk(self):
+        from doctor.api import ROOT
+
+        for s in self._client().get("/api/samples").json()["samples"]:
+            p = ROOT / "samples" / s["filename"]
+            assert p.exists()
+            assert s["bytes"] == p.stat().st_size
+            assert s["about"]
+
+    def test_a_sample_gets_a_diagnosis_and_no_authority(self):
+        """A file is not a signed mandate, and there is no outcome to mark."""
+        d = self._client().post("/api/txns/diagnose/sample?name=northwind").json()
+        assert "Projected only" in d["note"]
+        assert "actions" not in d["diagnosis"]
+        # No recovery figure anywhere: quoting one beside the marked numbers
+        # on the rest of the app would blur the distinction the project rests
+        # on. The note explaining its absence is the only mention allowed.
+        for key, value in d["diagnosis"].items():
+            assert "recover" not in key, key
+            assert "measured" not in key, key

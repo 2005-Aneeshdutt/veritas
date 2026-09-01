@@ -618,6 +618,80 @@ async def txns_diagnose(
     }
 
 
+#: Files shipped in samples/, so "run it on your own data" can be tried by
+#: somebody who has not brought any. Names are matched against this list
+#: rather than joined onto a path -- a filename off the wire must never be
+#: able to read anything the repository did not intend to publish.
+SAMPLES = {
+    "northwind": (
+        "northwind_payments.csv",
+        "5411",
+        "2,400 payments from a ninth merchant the engine has never seen, "
+        "written the way somebody else's system would write it.",
+    ),
+    "too_small": (
+        "too_small_to_diagnose.csv",
+        "5411",
+        "140 payments, which is not enough. This one is meant to be refused.",
+    ),
+}
+
+
+@app.get("/api/samples")
+def samples() -> dict:
+    """What a visitor can try without bringing a file of their own."""
+    root = ROOT / "samples"
+    return {
+        "samples": [
+            {
+                "key": key,
+                "filename": name,
+                "mcc": mcc,
+                "about": about,
+                "bytes": (root / name).stat().st_size if (root / name).exists() else 0,
+            }
+            for key, (name, mcc, about) in SAMPLES.items()
+        ]
+    }
+
+
+@app.post("/api/txns/diagnose/sample")
+def txns_diagnose_sample(name: str = "northwind", mcc: str = "") -> dict:
+    """Run a bundled sample through the upload path.
+
+    Deliberately the same parse and the same decomposition the upload takes,
+    reached by a different door. A demo button that ran a special code path
+    would be demonstrating the button.
+    """
+    if name not in SAMPLES:
+        raise HTTPException(404, "no sample called %r" % name)
+    filename, default_mcc, _ = SAMPLES[name]
+    path = ROOT / "samples" / filename
+    if not path.exists():
+        raise HTTPException(404, "%s is not in this checkout" % filename)
+
+    use = mcc or default_mcc
+    try:
+        txns, summary = parse_txns(path.read_bytes(), mcc=use)
+    except TxnRejected as e:
+        # A refusal is one of the two things the samples exist to show, so it
+        # comes back the same way an uploaded file's refusal does.
+        raise HTTPException(400, str(e))
+
+    return {
+        "sample": name,
+        "filename": filename,
+        "summary": json.loads(summary.model_dump_json()),
+        "diagnosis": diagnose_txns(txns, use),
+        "mcc": use,
+        "note": (
+            "Projected only. Recovery cannot be measured on an uploaded file "
+            "because there is no known outcome to mark against, and no action "
+            "is proposed because a file is not a signed mandate."
+        ),
+    }
+
+
 @app.post("/api/npci/preview")
 async def npci_preview(file: UploadFile = File(...), period: str = "") -> dict:
     """Read an uploaded NPCI table and say what is in it.

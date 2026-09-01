@@ -68,6 +68,14 @@ function speechEngine(): SpeechRec | null {
  */
 const DOCK_KEY = "rd.helpdesk.dock";
 const PANEL_KEY = "rd.helpdesk.panel";
+//: The conversation itself. It used to die on every navigation, which meant
+//: the answer somebody just asked for was gone the moment they clicked
+//: through to look at what it said -- and re-asking costs a model call for a
+//: question that has already been answered.
+const TURNS_KEY = "rd.helpdesk.turns";
+//: Enough to hold a demo's worth of questions without the panel becoming an
+//: archive, and small enough that a full localStorage is not a risk.
+const TURNS_KEPT = 30;
 const EDGE = 16;
 const DRAG_SLOP = 4;
 const PANEL_W = 400;
@@ -106,6 +114,9 @@ export function Helpdesk() {
   const [open, setOpen] = useState(false);
   const [q, setQ] = useState("");
   const [turns, setTurns] = useState<Turn[]>([]);
+  //: Nothing is written until the stored conversation has been read, or the
+  //: first render would save its own empty state over it.
+  const loaded = useRef(false);
   const [busy, setBusy] = useState(false);
 
   const [listening, setListening] = useState(false);
@@ -131,6 +142,41 @@ export function Helpdesk() {
   const winRef = useRef<HTMLElement>(null);
   const winLive = useRef<{ x: number; y: number } | null>(null);
   const winDrag = useRef<{ dx: number; dy: number } | null>(null);
+
+  /**
+   * The conversation survives navigation.
+   *
+   * It lives in this component, which unmounts on every page change, so an
+   * answer disappeared the moment somebody clicked through to check what it
+   * had told them -- and asking again spends another model call on a question
+   * already answered. A pending turn is dropped on the way out: a question
+   * whose request died with the page would come back as a spinner that never
+   * resolves.
+   */
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem(TURNS_KEY);
+      if (raw) {
+        const saved = JSON.parse(raw);
+        if (Array.isArray(saved)) setTurns(saved.filter((t: Turn) => t?.q && t?.a));
+      }
+    } catch {
+      // A blocked or corrupt store is not a reason to lose the panel.
+    }
+    loaded.current = true;
+  }, []);
+
+  useEffect(() => {
+    if (!loaded.current) return;
+    try {
+      localStorage.setItem(
+        TURNS_KEY,
+        JSON.stringify(turns.filter((t) => t.a).slice(-TURNS_KEPT))
+      );
+    } catch {
+      // Full or private-mode storage: the panel still works for this page.
+    }
+  }, [turns]);
 
   useEffect(() => {
     if (!open || win) return;
@@ -471,9 +517,23 @@ export function Helpdesk() {
               </button>
             )}
 
+            {/* Answers now outlive the page, so there has to be a way to
+                end a conversation rather than only to hide it. */}
+            {turns.length > 0 && (
+              <button
+                onClick={() => setTurns([])}
+                className={`${canHear ? "" : "ml-auto"} text-[11px] px-2 py-1
+                            rounded text-faint hover:text-muted transition-colors`}
+                title="Forget this conversation"
+              >
+                clear
+              </button>
+            )}
+
             <button
               onClick={() => setOpen(false)}
-              className={`${canHear ? "" : "ml-auto"} text-muted hover:text-ink
+              className={`${canHear || turns.length > 0 ? "" : "ml-auto"}
+                          text-muted hover:text-ink
                           transition-colors text-lg leading-none`}
               aria-label="Close"
             >

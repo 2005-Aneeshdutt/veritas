@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { TopBar } from "@/components/Chrome";
 import Link from "next/link";
+import { ShapleyLive } from "@/components/ShapleyLive";
 import { Card, Detail, Eyebrow, Stagger } from "@/components/ui";
 import { FACTOR_DOCS } from "@/lib/explain";
 import { inr } from "@/lib/types";
@@ -176,7 +177,10 @@ export default function ProvePage() {
     setEstimate(null);
     setStage("running");
     const es = new EventSource(
-      `/api/prove/${challenge.challenge_id}/diagnose?pace_ms=45`
+      // 45ms put all sixteen on screen inside a second, which reads as a
+      // page loading rather than as a computation happening. This is the
+      // drain being throttled, never the work -- the values are identical.
+      `/api/prove/${challenge.challenge_id}/diagnose?pace_ms=150`
     );
     esRef.current = es;
     es.addEventListener("coalition", (e: any) =>
@@ -421,25 +425,20 @@ export default function ProvePage() {
                 </span>
               </div>
 
-              <div className="grid sm:grid-cols-4 md:grid-cols-8 gap-1.5 mt-4">
-                {Array.from({ length: 16 }).map((_, i) => {
-                  const c = coalitions[i];
-                  return (
-                    <div
-                      key={i}
-                      className={`card-raised px-2 py-1.5 transition-colors ${
-                        c ? "" : "opacity-30"
-                      }`}
-                    >
-                      <div className="text-[9px] text-faint truncate">
-                        {c ? c.label : "—"}
-                      </div>
-                      <div className="num text-[11px] mt-0.5">
-                        {c ? `${c.value > 0 ? "+" : ""}${c.value.toFixed(2)}` : "·"}
-                      </div>
-                    </div>
-                  );
-                })}
+              {/* The same lattice the diagnosis draws, on a batch nobody
+                  has seen. It was sixteen grey boxes here; the difference is
+                  that this one recomputes the four Shapley values in the
+                  browser from the subsets that have arrived, so a viewer can
+                  watch the parts converge on the whole rather than being
+                  handed the answer. */}
+              <div className="mt-4">
+                <ShapleyLive
+                  coalitions={coalitions.map((c) => ({
+                    label: String(c.label),
+                    value: Number(c.value),
+                  }))}
+                  gapPts={estimate?.gap_pts}
+                />
               </div>
 
               {estimate && (

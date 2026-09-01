@@ -64,6 +64,7 @@ export default function DataPage() {
   const [name, setName] = useState<string | null>(null);
   const [summary, setSummary] = useState<Summary | null>(null);
   const [diag, setDiag] = useState<Diagnosis | null>(null);
+  const [sample, setSample] = useState<string | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
   const held = useRef<File | null>(null);
 
@@ -77,6 +78,7 @@ export default function DataPage() {
   async function send(f: File, category: string) {
     setBusy(true);
     setErr(null);
+    setSample(null); // an uploaded file replaces whichever sample was loaded
     try {
       const fd = new FormData();
       fd.append("file", f);
@@ -87,6 +89,40 @@ export default function DataPage() {
       const d = await r.json();
       if (!r.ok) {
         setErr(d.detail ?? "That file could not be read.");
+        setSummary(null);
+        setDiag(null);
+      } else {
+        setSummary(d.summary);
+        setDiag(d.diagnosis);
+      }
+    } catch {
+      setErr("Could not reach the API.");
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  /**
+   * Run a file that ships with the repository.
+   *
+   * "Would this work on our numbers?" is the question, and answering it
+   * needs numbers. Somebody watching a demo has none to hand, and asking
+   * them to go and export a month of payments first is asking them to stop
+   * watching. Same parse, same decomposition, different door.
+   */
+  async function runSample(key: string, label: string, category: string) {
+    setBusy(true);
+    setErr(null);
+    setSample(key);
+    setName(label);
+    held.current = null;
+    try {
+      const r = await fetch(`/api/txns/diagnose/sample?name=${key}&mcc=${category}`, {
+        method: "POST",
+      });
+      const d = await r.json();
+      if (!r.ok) {
+        setErr(d.detail ?? "That sample could not be read.");
         setSummary(null);
         setDiag(null);
       } else {
@@ -128,8 +164,13 @@ export default function DataPage() {
               <select
                 value={mcc}
                 onChange={(e) => {
-                  setMcc(e.target.value);
-                  if (held.current) send(held.current, e.target.value);
+                  const next = e.target.value;
+                  setMcc(next);
+                  // Whichever source is loaded, re-run it against the new
+                  // cohort rather than leaving a result on screen that was
+                  // computed against the old one.
+                  if (held.current) send(held.current, next);
+                  else if (sample) runSample(sample, name ?? sample, next);
                 }}
                 disabled={busy}
                 className="field h-9 py-0 text-sm max-w-[15rem]"
@@ -164,6 +205,35 @@ export default function DataPage() {
               {name && (
                 <span className="text-[13px] text-muted truncate">{name}</span>
               )}
+            </div>
+
+            {/* Nobody arrives at a demo carrying a month of payments. Both
+                samples are worth a click, and the second one is worth more:
+                a system that only ever walks the happy path is not
+                demonstrating restraint. */}
+            <div className="flex flex-wrap items-center gap-2 mt-3">
+              <span className="text-[12px] text-faint">
+                or run one that ships with this repo —
+              </span>
+              <button
+                onClick={() => runSample("northwind", "northwind_payments.csv", mcc)}
+                disabled={busy}
+                className={`btn-secondary h-8 px-3 text-xs ${
+                  sample === "northwind" ? "border-brand text-brand" : ""
+                }`}
+              >
+                2,400 payments, foreign column names
+              </button>
+              <button
+                onClick={() => runSample("too_small", "too_small_to_diagnose.csv", mcc)}
+                disabled={busy}
+                className={`btn-quiet h-8 px-3 text-xs ${
+                  sample === "too_small" ? "border-brand text-brand" : ""
+                }`}
+                title="This one is meant to be refused"
+              >
+                140 payments — watch it refuse
+              </button>
             </div>
 
             <Detail summary="what the file needs">
