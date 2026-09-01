@@ -479,7 +479,7 @@ function Counter({
         {label}
         {live && <span className="w-1 h-1 rounded-full bg-brand animate-breathe" />}
       </div>
-      <div className={`num text-2xl font-semibold mt-1 ${tone ?? ""}`}>{v}</div>
+      <div className={`num text-[20px] font-semibold mt-1 ${tone ?? ""}`}>{v}</div>
       {sub && <div className="text-[11px] text-faint mt-0.5">{sub}</div>}
     </div>
   );

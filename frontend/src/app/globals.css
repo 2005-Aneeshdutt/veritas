@@ -105,6 +105,10 @@ html {
 body {
   @apply bg-canvas text-ink font-body antialiased;
   -webkit-font-smoothing: antialiased;
+  /* Wide content scrolls inside its own container. If anything ever escapes
+     one, the page must still not scroll sideways -- a console that slides
+     under the cursor reads as broken on a projector. */
+  overflow-x: hidden;
 }
 
 h1, h2, h3, h4 {
@@ -140,6 +144,9 @@ h3 { @apply text-[13px] font-semibold; }
   .panel {
     @apply bg-surface border border-line rounded-lg;
   }
+  /* Section spacing, stated once instead of guessed per page. */
+  .stack   { @apply space-y-8; }
+  .stack-s { @apply space-y-4; }
   .card-raised {
     @apply bg-raised border border-line rounded-lg;
   }
@@ -230,8 +237,10 @@ h3 { @apply text-[13px] font-semibold; }
            border-b border-line;
   }
   .tbl tbody td {
-    @apply py-2 px-3 first:pl-0 last:pr-0 border-b border-line/60;
+    @apply py-2.5 px-3 first:pl-0 last:pr-0 border-b border-line/60 align-middle;
   }
+  /* Figures line up in columns wherever they appear in a table. */
+  .tbl td.num, .tbl td .num { font-variant-numeric: tabular-nums; }
   .tbl tbody tr:last-child td { @apply border-0; }
   .tbl tbody tr { @apply transition-colors; }
   .tbl tbody tr:hover { @apply bg-raised/60; }
@@ -240,10 +249,29 @@ h3 { @apply text-[13px] font-semibold; }
 /* "we don't know what this is", without needing a caption */
 .hatched { @apply bg-hatch; }
 
-:where(a, button, input, select, [tabindex]):focus-visible {
-  @apply outline-none ring-2 ring-brand/50 ring-offset-2 rounded;
-  --tw-ring-offset-color: rgb(var(--canvas));
+/* Keyboard focus, everywhere, and visible on the dark ground.
+ *
+ * :where() carries zero specificity, so a component rule could quietly beat
+ * it and leave an element focusable but unmarked. This is a plain selector
+ * list at normal specificity, and it covers summary and role=button too --
+ * both are used here and neither was matched before. */
+a:focus-visible,
+button:focus-visible,
+summary:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+[tabindex]:focus-visible,
+[role="button"]:focus-visible {
+  outline: none;
+  border-radius: 6px;
+  box-shadow:
+    0 0 0 2px rgb(var(--canvas)),
+    0 0 0 4px rgb(var(--brand) / 0.85);
 }
+
+/* A row you can click should say so before you hover it. */
+tr[role="button"], tr.clickable, .row-click { cursor: pointer; }
 
 .shimmer {
   background: linear-gradient(

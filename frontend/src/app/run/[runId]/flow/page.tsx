@@ -194,7 +194,7 @@ export default function FlowPage({ params }: { params: { runId: string } }) {
     setSelected(rec.traces[next].node);
   }
 
-  if (!rec) return <Loading label="loading trace" />;
+  if (!rec) return <Loading label="replaying the run" />;
 
   const sel = byNode[selected] ?? rec.traces.find((t) => t.node === selected) ?? null;
   const doc = NODE_DOCS[selected];
@@ -214,7 +214,7 @@ export default function FlowPage({ params }: { params: { runId: string } }) {
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div>
             <Eyebrow>The agent, actually running</Eyebrow>
-            <h1 className="text-2xl font-semibold mt-1">Ten nodes, nothing hidden</h1>
+            <h1 className="text-[20px] font-semibold mt-1">Ten nodes, nothing hidden</h1>
             <p className="text-sm text-muted mt-1.5 max-w-2xl leading-relaxed">
               Purple nodes are where a model makes a judgement call. Blue nodes are
               deterministic — arithmetic, lookups and policy, with a checkable answer.
@@ -709,7 +709,7 @@ export default function FlowPage({ params }: { params: { runId: string } }) {
                   {mine.map((x, k) => (
                     <div
                       key={k}
-                      className="pl-8 pr-2 py-[1px] text-[10.5px] flex items-baseline gap-2"
+                      className="pl-8 pr-2 py-[1px] text-[10px] flex items-baseline gap-2"
                     >
                       <span className="text-faint w-14 shrink-0 text-right">
                         {x.n ? `${x.i}/${x.n}` : ""}

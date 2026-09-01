@@ -184,15 +184,15 @@ export default function PortfolioPage() {
           one headline with a caveat under it. */}
       <Stagger>
         <div className="space-y-7">
-          <div className="grid sm:grid-cols-2 gap-px bg-line rounded-xl overflow-hidden">
+          <div className="grid sm:grid-cols-2 gap-px bg-line rounded-lg overflow-hidden">
             <div className="bg-surface p-5">
               <div className="flex items-center gap-2">
-                <span className="ui text-[10.5px] uppercase tracking-[0.12em] text-faint">
+                <span className="ui text-[10px] uppercase tracking-[0.12em] text-faint">
                   Revenue opportunity
                 </span>
                 <span className="chip-projected">projected</span>
               </div>
-              <div className="num text-[38px] font-semibold leading-none mt-2.5 text-amber">
+              <div className="num text-[34px] font-semibold leading-none mt-2.5 text-amber">
                 <Ticker value={pf.total_recoverable_central_paise / 100} prefix="₹" />
               </div>
               <div className="text-[12px] text-muted mt-2.5 leading-relaxed">
@@ -207,12 +207,12 @@ export default function PortfolioPage() {
 
             <div className="bg-surface p-5">
               <div className="flex items-center gap-2">
-                <span className="ui text-[10.5px] uppercase tracking-[0.12em] text-faint">
+                <span className="ui text-[10px] uppercase tracking-[0.12em] text-faint">
                   Actually won back
                 </span>
                 <span className="chip-measured">measured</span>
               </div>
-              <div className="num text-[38px] font-semibold leading-none mt-2.5 text-mint">
+              <div className="num text-[34px] font-semibold leading-none mt-2.5 text-mint">
                 <Ticker value={pf.total_measured_paise / 100} prefix="₹" />
               </div>
               <div className="text-[12px] text-muted mt-2.5 leading-relaxed">

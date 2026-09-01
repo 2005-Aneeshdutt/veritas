@@ -132,7 +132,7 @@ export function ShapleyLive({
               }`}
               title={c.label}
             >
-              <div className="text-[9px] text-faint truncate leading-tight">
+              <div className="text-[10px] text-faint truncate leading-tight">
                 {c.label === "{}"
                   ? "∅"
                   : c.label

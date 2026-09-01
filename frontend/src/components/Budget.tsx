@@ -166,7 +166,7 @@ function Fig({
   return (
     <div className="px-5 py-4">
       <div className="eyebrow">{k}</div>
-      <div className={`num text-2xl font-semibold mt-1 ${tone}`}>{v}</div>
+      <div className={`num text-[20px] font-semibold mt-1 ${tone}`}>{v}</div>
       <div className="text-[11px] text-faint mt-0.5 leading-snug">{sub}</div>
     </div>
   );

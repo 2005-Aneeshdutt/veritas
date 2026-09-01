@@ -261,7 +261,7 @@ export function AgentPipeline({
 
                 {/* the sub-step the node is on right now — real work, never a spinner */}
                 {s.phase === "running" && s.step && !compact && (
-                  <span className="block num text-[10.5px] text-muted mt-1 truncate">
+                  <span className="block num text-[10px] text-muted mt-1 truncate">
                     {s.step}
                   </span>
                 )}

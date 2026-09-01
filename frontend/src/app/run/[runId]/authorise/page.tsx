@@ -193,7 +193,7 @@ export default function AuditPage({ params }: { params: { runId: string } }) {
     setBrokenAt(null);
   }
 
-  if (!rec) return <Loading label="loading ledger" />;
+  if (!rec) return <Loading label="reading the ledger" />;
 
   const r = rec.report;
 
@@ -361,7 +361,7 @@ export default function AuditPage({ params }: { params: { runId: string } }) {
                   {k === "step_up" && <Info text={GLOSSARY.step_up} />}
                 </div>
                 <div
-                  className={`text-2xl font-display font-bold mt-1 ${
+                  className={`text-[20px] font-display font-bold mt-1 ${
                     k === "allow"
                       ? "text-mint"
                       : k === "step_up"
@@ -825,7 +825,7 @@ function Sum({
         {info && <Info text={info} />}
       </div>
       <div
-        className={`text-2xl font-display font-bold mt-1 ${
+        className={`text-[20px] font-display font-bold mt-1 ${
           tone === "good" ? "text-mint" : tone === "bad" ? "text-rose" : "text-ink"
         }`}
       >
@@ -990,7 +990,7 @@ function Outcomes({ rec, runId }: { rec: any; runId: string }) {
 
   return (
     <div>
-      <div className="grid sm:grid-cols-3 gap-px bg-line rounded-xl overflow-hidden">
+      <div className="grid sm:grid-cols-3 gap-px bg-line rounded-lg overflow-hidden">
         {groups.map((g) => (
           <button
             key={g.key}
@@ -1001,14 +1001,14 @@ function Outcomes({ rec, runId }: { rec: any; runId: string }) {
           >
             <div className="flex items-center gap-2">
               <span className={`w-1.5 h-1.5 rounded-full ${g.dot}`} />
-              <span className="ui text-[10.5px] uppercase tracking-[0.12em] text-faint">
+              <span className="ui text-[10px] uppercase tracking-[0.12em] text-faint">
                 {g.label}
               </span>
               <span className="text-[10px] text-faint ml-auto">
                 {open === g.key ? "hide" : "open"}
               </span>
             </div>
-            <div className={`num text-3xl font-semibold leading-none mt-2 ${g.tone}`}>
+            <div className={`num text-[24px] font-semibold leading-none mt-2 ${g.tone}`}>
               <Ticker value={g.rows.length} />
             </div>
             <div className="text-[11px] text-faint mt-2 leading-tight">{g.blurb}</div>
@@ -1059,7 +1059,7 @@ function Outcomes({ rec, runId }: { rec: any; runId: string }) {
                         ? inr(e.proposed_action.amount_paise)
                         : "—"}
                     </td>
-                    <td className="num text-[10.5px] text-faint">{e.gate_reason}</td>
+                    <td className="num text-[10px] text-faint">{e.gate_reason}</td>
                   </tr>
                 ))}
               </tbody>

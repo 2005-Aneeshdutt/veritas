@@ -196,7 +196,7 @@ function Attribution({ dec }: { dec: any }) {
         const acts = f.mae ? Math.abs(f.points) > 2 * f.mae : false;
         return (
           <div key={f.factor} className="flex items-center gap-3">
-            <span className="text-[11.5px] text-muted w-24 shrink-0 truncate">
+            <span className="text-[11px] text-muted w-24 shrink-0 truncate">
               {f.factor.replace(/_/g, " ")}
             </span>
             <span className="relative flex-1 h-2 rounded-full bg-raised overflow-hidden min-w-[60px]">
@@ -218,7 +218,7 @@ function Attribution({ dec }: { dec: any }) {
                 />
               )}
             </span>
-            <span className="num text-[11.5px] w-24 text-right shrink-0">
+            <span className="num text-[11px] w-24 text-right shrink-0">
               {f.points >= 0 ? "+" : ""}
               {f.points.toFixed(2)}
               {f.mae ? (
@@ -259,12 +259,12 @@ function Fig({
       </div>
       <div
         className={`num font-semibold leading-none mt-1 ${
-          big ? "text-2xl" : "text-lg"
+          big ? "text-[20px]" : "text-lg"
         } ${tone ?? ""}`}
       >
         {value}
       </div>
-      {sub && <div className="text-[10.5px] text-faint mt-1">{sub}</div>}
+      {sub && <div className="text-[10px] text-faint mt-1">{sub}</div>}
     </div>
   );
 }

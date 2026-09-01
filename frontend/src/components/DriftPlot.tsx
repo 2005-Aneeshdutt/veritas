@@ -82,7 +82,7 @@ export function DriftPlot({
                             on ? "bg-raised" : "hover:bg-raised/60"
                           }`}
             >
-              <span className="text-[12.5px] truncate">{b.bank}</span>
+              <span className="text-[12px] truncate">{b.bank}</span>
 
               <span className="relative h-4">
                 {/* the ground the banks sit on */}
@@ -147,7 +147,7 @@ export function DriftDetail({ b }: { b: Bank }) {
   const worse = b.delta_pts > 0;
   return (
     <div className={`panel p-4 border-l-2 ${worse ? "border-l-rose" : "border-l-mint"}`}>
-      <div className="ui text-[10.5px] uppercase tracking-[0.12em] text-faint">
+      <div className="ui text-[10px] uppercase tracking-[0.12em] text-faint">
         {worse ? "Bank drift detected" : "Improving"}
       </div>
       <div className="text-[15px] font-semibold mt-1">{b.bank}</div>

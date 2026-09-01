@@ -255,7 +255,7 @@ export function Figure({
         {kind && <Tag kind={kind} />}
         {info && <Info text={info} />}
       </div>
-      <div className={`num text-[22px] font-semibold leading-none mt-1.5 ${toneCls}`}>
+      <div className={`num text-[24px] font-semibold leading-none mt-1.5 ${toneCls}`}>
         {value}
         {error != null && (
           <span className="text-[13px] num font-normal text-faint ml-1.5">
@@ -298,7 +298,7 @@ export function Info({ text, children }: { text: string; children?: ReactNode })
       {children ?? (
         <span
           className="w-3.5 h-3.5 inline-flex items-center justify-center rounded-full
-                     border border-line text-[9px] text-faint hover:text-brand
+                     border border-line text-[10px] text-faint hover:text-brand
                      hover:border-brand/50 transition-colors cursor-help"
         >
           ?

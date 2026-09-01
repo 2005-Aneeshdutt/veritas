@@ -525,7 +525,7 @@ export function Helpdesk() {
               : { right: 20, bottom: 76, width: PANEL_W, height: PANEL_H, visibility: "hidden" }
           }
           className="hd fixed z-50 max-w-[calc(100vw-2rem)] max-h-[calc(100vh-2rem)]
-                     rounded-xl shadow-2xl flex flex-col animate-rise overflow-hidden"
+                     rounded-lg shadow-2xl flex flex-col animate-rise overflow-hidden"
           aria-label="System questions"
         >
           <div
@@ -730,7 +730,7 @@ function ChainPreview({ links, note }: { links: ChainLink[]; note: string }) {
       <div className="mt-2 space-y-0">
         {links.map((l, i) => (
           <div key={l.entry_hash}>
-            <div className="font-mono text-[9px] text-faint pl-2">
+            <div className="font-mono text-[10px] text-faint pl-2">
               {i === 0 ? "genesis " : "prev "}
               {l.prev_hash.slice(0, 20)}…
             </div>
@@ -750,7 +750,7 @@ function ChainPreview({ links, note }: { links: ChainLink[]; note: string }) {
                   {l.gate_decision}
                 </span>
               </div>
-              <div className="font-mono text-[9px] mt-0.5" style={{ color: "#5b5bd6" }}>
+              <div className="font-mono text-[10px] mt-0.5" style={{ color: "#5b5bd6" }}>
                 hash {l.entry_hash.slice(0, 20)}…
               </div>
             </div>

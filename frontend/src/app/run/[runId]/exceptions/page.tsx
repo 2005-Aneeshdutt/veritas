@@ -79,7 +79,7 @@ export default function ExceptionsPage({ params }: { params: { runId: string } }
     fetch(`/api/run/${params.runId}`).then((r) => r.json()).then(setRec);
   }, [params.runId]);
 
-  if (!rec) return <Loading label="loading exceptions" />;
+  if (!rec) return <Loading label="reading what could not be fixed" />;
 
   const r = rec.report;
   const ex = r.exceptions;
@@ -108,7 +108,7 @@ export default function ExceptionsPage({ params }: { params: { runId: string } }
       <Stagger>
         <div>
           <Eyebrow>The honest denominator</Eyebrow>
-          <h1 className="text-2xl font-semibold mt-1">What it could not do</h1>
+          <h1 className="text-[20px] font-semibold mt-1">What it could not do</h1>
           <p className="text-sm text-muted mt-1.5 max-w-3xl leading-relaxed">
             Two lists. The second is ordinary. The first is unusual — it is the
             exception list for the <em>method itself</em>.
@@ -132,7 +132,7 @@ export default function ExceptionsPage({ params }: { params: { runId: string } }
             </div>
             <div className="text-right">
               <div
-                className={`text-3xl font-display font-bold ${
+                className={`text-[24px] font-display font-bold ${
                   ex.method_failures.length ? "text-amber" : "text-mint"
                 }`}
               >
@@ -200,7 +200,7 @@ export default function ExceptionsPage({ params }: { params: { runId: string } }
               </Detail>
             </div>
             <div className="text-right">
-              <div className="text-3xl font-display font-bold text-rose">
+              <div className="text-[24px] font-display font-bold text-rose">
                 ₹<Ticker value={p.unrecoverable_paise / 100} decimals={0} />
               </div>
               <div className="eyebrow">{p.unrecoverable_count} payments</div>

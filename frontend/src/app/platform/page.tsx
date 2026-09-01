@@ -110,15 +110,15 @@ export default function WhoseFaultPage() {
         <div className="grid lg:grid-cols-[minmax(0,20rem)_minmax(0,1fr)] gap-8 items-start">
           <div>
             <div className="flex items-center gap-2">
-              <span className="ui text-[10.5px] uppercase tracking-[0.12em] text-faint">
+              <span className="ui text-[10px] uppercase tracking-[0.12em] text-faint">
                 Unrecoverable
               </span>
               <span className="chip-measured">measured</span>
             </div>
-            <div className="num text-[40px] font-semibold leading-none mt-2.5">
+            <div className="num text-[34px] font-semibold leading-none mt-2.5">
               <Ticker value={b.total_paise / 100} prefix="₹" />
             </div>
-            <div className="text-[12.5px] text-muted mt-2.5 leading-relaxed">
+            <div className="text-[12px] text-muted mt-2.5 leading-relaxed">
               <span className="num">{b.total_count.toLocaleString("en-IN")}</span>{" "}
               payments across{" "}
               <span className="num">{b.merchants}</span> merchants failed for
@@ -128,7 +128,7 @@ export default function WhoseFaultPage() {
           </div>
 
           <div>
-            <div className="ui text-[10.5px] uppercase tracking-[0.12em] text-faint mb-2.5">
+            <div className="ui text-[10px] uppercase tracking-[0.12em] text-faint mb-2.5">
               Who has to act
             </div>
             <div className="flex h-3 rounded-full overflow-hidden bg-raised">

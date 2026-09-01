@@ -297,7 +297,7 @@ export default function DataPage() {
                             ok ? "bg-mint" : "bg-line"
                           }`}
                         />
-                        <span className="num text-[11.5px] text-muted">{k}</span>
+                        <span className="num text-[11px] text-muted">{k}</span>
                       </span>
                     ))}
                   </div>

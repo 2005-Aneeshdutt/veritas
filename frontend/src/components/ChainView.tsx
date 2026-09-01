@@ -104,7 +104,7 @@ export function ChainView({
                   <span className="num text-[11px] truncate max-w-[11rem]">
                     {e.txn_id}
                   </span>
-                  <span className="text-muted text-[11.5px] truncate">
+                  <span className="text-muted text-[11px] truncate">
                     {String(e.proposed_action?.action_type ?? "").replace(/_/g, " ")}
                   </span>
                   {e.gate_decision && (
@@ -191,7 +191,7 @@ export function VerifyProgress({
         />
       </div>
 
-      <p className="text-[11.5px] text-muted mt-2.5 leading-relaxed">
+      <p className="text-[11px] text-muted mt-2.5 leading-relaxed">
         {failed
           ? `Entry ${broken} does not match the hash recorded for it. Every entry after it is unverifiable.`
           : running

@@ -524,7 +524,7 @@ function CheckRow({ c }: { c: Check }) {
     >
       <span
         className={`absolute left-0 top-1.5 w-2.5 h-2.5 rounded-full grid place-items-center
-                    text-[7px] font-bold ${
+                    text-[10px] font-bold ${
                       stopped ? "bg-rose text-white" : "bg-mint/30 text-mint"
                     }`}
       >

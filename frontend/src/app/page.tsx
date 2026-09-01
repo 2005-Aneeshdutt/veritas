@@ -46,7 +46,7 @@ export default function SignIn() {
 
         <div className="flex-1 flex items-center">
           <div className="w-full max-w-sm mx-auto lg:mx-0 animate-rise">
-            <h1 className="text-3xl font-semibold tracking-tightest">
+            <h1 className="text-[24px] font-semibold tracking-tightest">
               Sign in
             </h1>
             <p className="text-sm text-muted mt-2 leading-relaxed">
@@ -113,7 +113,7 @@ export default function SignIn() {
         <div className="relative h-full flex flex-col justify-center px-8 py-14 lg:px-16 lg:py-0">
           <div className="max-w-lg">
             <div className="eyebrow">What it does</div>
-            <h2 className="text-3xl font-semibold tracking-tightest mt-3 leading-[1.15]">
+            <h2 className="text-[24px] font-semibold tracking-tightest mt-3 leading-[1.15]">
               Every merchant can see their success rate.
               <br />
               Nobody tells them what it should be.
@@ -137,7 +137,7 @@ export default function SignIn() {
             <div className="mt-10 pt-6 border-t border-line">
               <div className="flex flex-wrap items-end gap-x-8 gap-y-3">
                 <div>
-                  <div className="text-3xl font-semibold tracking-tightest text-brand">
+                  <div className="text-[24px] font-semibold tracking-tightest text-brand">
                     ₹5.56L
                   </div>
                   <div className="text-xs text-muted mt-0.5">
@@ -145,7 +145,7 @@ export default function SignIn() {
                   </div>
                 </div>
                 <div>
-                  <div className="text-3xl font-semibold tracking-tightest text-mint">
+                  <div className="text-[24px] font-semibold tracking-tightest text-mint">
                     ₹1.94L
                   </div>
                   <div className="text-xs text-muted mt-0.5">

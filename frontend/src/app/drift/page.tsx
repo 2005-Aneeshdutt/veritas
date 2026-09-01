@@ -149,10 +149,10 @@ export default function DriftPage() {
                   <DriftDetail b={picked} />
                 ) : (
                   <div className="panel p-4">
-                    <div className="ui text-[10.5px] uppercase tracking-[0.12em] text-faint">
+                    <div className="ui text-[10px] uppercase tracking-[0.12em] text-faint">
                       Pick an issuer
                     </div>
-                    <p className="text-[12.5px] text-muted mt-2 leading-relaxed">
+                    <p className="text-[12px] text-muted mt-2 leading-relaxed">
                       The system noticed these moving before any merchant
                       complained. Select one to see what it cost and whether it
                       looks like an incident or like customers with less money.

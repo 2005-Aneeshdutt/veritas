@@ -236,7 +236,7 @@ function Row({ it, n, on }: { it: Item; n?: number; on: boolean }) {
       />
       {n !== undefined && (
         <span
-          className={`w-5 text-[10.5px] num shrink-0 tracking-tight ${
+          className={`w-5 text-[10px] num shrink-0 tracking-tight ${
             on ? "text-brand" : "text-faint"
           }`}
         >

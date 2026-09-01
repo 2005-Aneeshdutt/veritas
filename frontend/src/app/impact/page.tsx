@@ -191,7 +191,7 @@ export default function ImpactPage() {
 
                   {/* what did happen */}
                   <div
-                    className={`absolute inset-y-1.5 rounded-sm ${
+                    className={`absolute inset-y-1.5 rounded-md ${
                       up ? "bg-mint" : "bg-rose"
                     }`}
                     style={{ left: `${a}%`, width: `${Math.max(0.5, b - a)}%` }}
@@ -234,10 +234,10 @@ export default function ImpactPage() {
 
         <div className="flex flex-wrap gap-x-5 gap-y-1 mt-3 text-[11px] text-faint">
           <span className="flex items-center gap-1.5">
-            <i className="w-3 h-2 rounded-sm bg-mint inline-block" /> the rate moved up
+            <i className="w-3 h-2 rounded-md bg-mint inline-block" /> the rate moved up
           </span>
           <span className="flex items-center gap-1.5">
-            <i className="w-3 h-2 rounded-sm bg-rose inline-block" /> it moved down
+            <i className="w-3 h-2 rounded-md bg-rose inline-block" /> it moved down
           </span>
           <span className="flex items-center gap-1.5">
             <i className="w-3 h-3 bg-amber/20 border-x border-amber/40 inline-block" />{" "}

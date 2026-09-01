@@ -36,7 +36,7 @@ export default function ValidationPage() {
       <Stagger>
         <div>
           <Eyebrow>The part nobody else ships</Eyebrow>
-          <h1 className="text-2xl font-semibold mt-1">How often is this wrong?</h1>
+          <h1 className="text-[20px] font-semibold mt-1">How often is this wrong?</h1>
           <p className="text-sm text-muted mt-1.5 max-w-3xl leading-relaxed">
             200 synthetic merchants, each carrying a <strong>known</strong> cause of a{" "}
             <strong>known</strong> size. Ground truth is not a guess — it is the same
@@ -85,7 +85,7 @@ export default function ValidationPage() {
               {Object.entries(mae).map(([k, v]: any) => (
                 <div key={k} className="card-raised p-4">
                   <div className="eyebrow">{FACTOR_DOCS[k]?.label ?? k}</div>
-                  <div className="text-2xl font-display font-bold text-brand mt-1.5">
+                  <div className="text-[20px] font-display font-bold text-brand mt-1.5">
                     ± {v.mae}
                   </div>
                   <div className="text-[11px] text-muted mt-1">points, mean abs error</div>
@@ -614,7 +614,7 @@ function Stat({ label, v }: { label: string; v: string }) {
   return (
     <div className="card-raised p-4">
       <div className="eyebrow">{label}</div>
-      <div className="text-2xl font-display font-bold mt-1">{v}</div>
+      <div className="text-[20px] font-display font-bold mt-1">{v}</div>
     </div>
   );
 }
@@ -622,7 +622,7 @@ function Stat({ label, v }: { label: string; v: string }) {
 function BigStat({ value, label, ci }: { value: string; label: string; ci: string }) {
   return (
     <div className="flex items-baseline gap-3">
-      <span className="text-4xl font-display font-bold text-brand">{value}</span>
+      <span className="text-[34px] font-display font-bold text-brand">{value}</span>
       <div>
         <div className="text-sm">{label}</div>
         <div className="eyebrow mt-0.5">{ci}</div>

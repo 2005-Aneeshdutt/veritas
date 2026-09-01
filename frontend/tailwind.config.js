@@ -33,8 +33,28 @@ module.exports = {
         body: ["Inter", "system-ui", "sans-serif"],
         mono: ["JetBrains Mono", "ui-monospace", "monospace"],
       },
+      /**
+       * One scale, two spellings.
+       *
+       * The app had grown two type systems side by side: 158 arbitrary
+       * `text-[11px]` and friends, and 141 `text-sm` / 88 `text-xs` from
+       * Tailwind's defaults, which resolve to different values. Anything
+       * visually equivalent was therefore a coin flip between 12px and 13px.
+       *
+       * Rewriting five hundred call sites would have been a redesign. Instead
+       * the named sizes are redefined onto the px values the arbitrary ones
+       * already use, so `text-xs` IS `text-[11px]` and `text-sm` IS
+       * `text-[13px]`. Both spellings now land on the same scale.
+       */
       fontSize: {
-        "2xs": ["0.6875rem", { lineHeight: "1rem" }],
+        "2xs": ["10px", { lineHeight: "14px" }],
+        xs: ["11px", { lineHeight: "16px" }],
+        sm: ["13px", { lineHeight: "20px" }],
+        base: ["15px", { lineHeight: "23px" }],
+        lg: ["20px", { lineHeight: "26px" }],
+        xl: ["24px", { lineHeight: "30px" }],
+        "2xl": ["32px", { lineHeight: "36px" }],
+        "3xl": ["38px", { lineHeight: "42px" }],
       },
       letterSpacing: {
         tightest: "-0.035em",

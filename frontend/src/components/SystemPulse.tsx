@@ -41,7 +41,7 @@ export function SystemPulse() {
                   ? "bg-brand"
                   : running
                   ? "bg-brand/60 animate-breathe"
-                  : "bg-line"
+                  : "bg-line/70"
               }`}
             />
           );
@@ -49,12 +49,20 @@ export function SystemPulse() {
       </div>
 
       <div className="flex items-baseline gap-1.5 mt-1.5">
+        {/* Idle is a healthy state, not an absent one. A console that reads
+            as blank when nothing is running looks broken; READY says the
+            engine is there and waiting. */}
         <span
-          className={`text-[10.5px] truncate ${
-            a.active ? "text-brand" : "text-faint"
+          className={`w-1 h-1 rounded-full shrink-0 self-center ${
+            a.active ? "bg-brand" : "bg-mint"
+          }`}
+        />
+        <span
+          className={`text-[10px] truncate ${
+            a.active ? "text-brand" : "text-muted"
           }`}
         >
-          {a.active ? a.label : "Engine idle"}
+          {a.active ? a.label : "System ready"}
         </span>
         {a.active && a.n ? (
           <span className="num text-[10px] text-faint ml-auto shrink-0">

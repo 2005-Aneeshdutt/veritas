@@ -261,7 +261,7 @@ export default function Overview({ params }: { params: { runId: string } }) {
                   {daily.map((d) => (
                     <div
                       key={d.day}
-                      className="flex-1 bg-muted/30 rounded-sm hover:bg-brand/50
+                      className="flex-1 bg-muted/30 rounded-md hover:bg-brand/50
                                  transition-colors relative group min-h-[3px]"
                       style={{
                         height: `${12 + ((d.success_pct - dayLo) / daySpan) * 88}%`,
@@ -295,7 +295,7 @@ export default function Overview({ params }: { params: { runId: string } }) {
             <div className="space-y-6 py-2">
               <div className="flex items-center gap-4">
                 <div className="text-right shrink-0">
-                  <div className="text-3xl font-display font-bold">
+                  <div className="text-[24px] font-display font-bold">
                     {m.observed_success_pct}%
                   </div>
                   <div className="eyebrow mt-0.5">you</div>
@@ -321,7 +321,7 @@ export default function Overview({ params }: { params: { runId: string } }) {
                 </div>
 
                 <div className="shrink-0">
-                  <div className="text-3xl font-display font-bold text-amber">
+                  <div className="text-[24px] font-display font-bold text-amber">
                     {p.cohort_achievable_pct}%
                   </div>
                   <div className="eyebrow mt-0.5">your category</div>
@@ -377,7 +377,7 @@ export default function Overview({ params }: { params: { runId: string } }) {
 
                 <div className="flex flex-wrap gap-4 pt-1 text-[11px] font-mono text-muted">
                   <span className="flex items-center gap-1.5">
-                    <i className="w-2.5 h-2.5 rounded-sm hatched border border-line inline-block" />
+                    <i className="w-2.5 h-2.5 rounded-md hatched border border-line inline-block" />
                     residual {pts(d.residual_pts)} — unexplained
                     <Info text={GLOSSARY.residual} />
                   </span>
@@ -558,7 +558,7 @@ export default function Overview({ params }: { params: { runId: string } }) {
               <div className="grid md:grid-cols-3 gap-5 mt-5">
                 <div className="card-raised p-4">
                   <div className="eyebrow">gap moves</div>
-                  <div className="text-2xl font-display font-bold mt-1">
+                  <div className="text-[20px] font-display font-bold mt-1">
                     {atShift.gap_pts} <span className="text-sm text-muted">pts</span>
                   </div>
                   <div className="text-xs text-amber num mt-1">
@@ -657,7 +657,7 @@ function TodayTile({
     <div className="card-raised p-4">
       <div className="eyebrow">{label}</div>
       <div
-        className={`font-display font-bold mt-1 ${big ? "text-3xl" : "text-xl"}`}
+        className={`font-display font-bold mt-1 ${big ? "text-[24px]" : "text-xl"}`}
       >
         {v}
       </div>

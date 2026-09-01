@@ -134,7 +134,7 @@ export function GateView({
               <span className="num text-[10px] text-faint w-4 shrink-0">{r.n}</span>
               <span className="min-w-0 flex-1">
                 <span
-                  className={`block text-[12.5px] ${
+                  className={`block text-[12px] ${
                     isStop ? "text-ink font-medium" : "text-muted"
                   }`}
                 >
@@ -173,7 +173,7 @@ export function GateView({
             {amountPaise ? (
               <span className="num text-lg font-semibold">{inr(amountPaise)}</span>
             ) : null}
-            <span className="num text-[10.5px] text-faint ml-auto">{reason}</span>
+            <span className="num text-[10px] text-faint ml-auto">{reason}</span>
           </div>
 
           {/* The two numbers, side by side, when a limit is what stopped it. */}

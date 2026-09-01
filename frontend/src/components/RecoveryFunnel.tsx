@@ -63,7 +63,7 @@ export function RecoveryFunnel({ pf, onApproved }: { pf: any; onApproved?: () =>
       <div className="px-6 pb-5">
         <div className="flex flex-wrap items-end gap-x-10 gap-y-4">
           <div>
-            <div className="text-5xl font-display font-bold text-mint leading-none">
+            <div className="text-[34px] font-display font-bold text-mint leading-none">
               {inr(won)}
             </div>
             <div className="text-sm text-muted mt-2">
@@ -81,7 +81,7 @@ export function RecoveryFunnel({ pf, onApproved }: { pf: any; onApproved?: () =>
           <div className="h-12 w-px bg-line hidden md:block" />
 
           <div>
-            <div className="text-2xl font-display font-bold">
+            <div className="text-[20px] font-display font-bold">
               {converted}
               <span className="text-muted text-lg"> / {attempted}</span>
             </div>
@@ -94,7 +94,7 @@ export function RecoveryFunnel({ pf, onApproved }: { pf: any; onApproved?: () =>
             <>
               <div className="h-12 w-px bg-line hidden md:block" />
               <div>
-                <div className="text-2xl font-display font-bold text-amber">
+                <div className="text-[20px] font-display font-bold text-amber">
                   {optimism.toFixed(2)}×
                 </div>
                 <div className="text-sm text-muted mt-1">
@@ -138,7 +138,7 @@ export function RecoveryFunnel({ pf, onApproved }: { pf: any; onApproved?: () =>
           <div className="flex items-start gap-5 flex-wrap">
             <div className="min-w-0 flex-1">
               <Eyebrow>waiting on a person</Eyebrow>
-              <div className="text-2xl font-display font-bold mt-1">
+              <div className="text-[20px] font-display font-bold mt-1">
                 {inr(pf.pending_projected_low_paise, { compact: true })} –{" "}
                 {inr(pf.pending_projected_high_paise, { compact: true })}
                 <span className="chip-projected ml-2 align-middle">projected</span>

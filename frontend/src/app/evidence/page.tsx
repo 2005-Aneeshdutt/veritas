@@ -166,7 +166,7 @@ export default function EvidencePage() {
       {/* The scoreboard. One row, five numbers, each one the answer to a
           question the brief asked by name. */}
       <Stagger i={0}>
-        <div className="grid grid-cols-2 lg:grid-cols-5 gap-px bg-line rounded-xl overflow-hidden">
+        <div className="grid grid-cols-2 lg:grid-cols-5 gap-px bg-line rounded-lg overflow-hidden">
           <Score
             label="measured recovery"
             value={inr(recovered)}
@@ -543,10 +543,10 @@ function Score({
           </span>
         )}
       </div>
-      <div className={`num text-2xl font-semibold leading-none mt-2 ${tone ?? ""}`}>
+      <div className={`num text-[20px] font-semibold leading-none mt-2 ${tone ?? ""}`}>
         {value}
       </div>
-      {sub && <div className="text-[10.5px] text-faint mt-1.5 leading-tight">{sub}</div>}
+      {sub && <div className="text-[10px] text-faint mt-1.5 leading-tight">{sub}</div>}
     </div>
   );
 }

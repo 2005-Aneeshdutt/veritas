@@ -20,7 +20,7 @@ export default function DiagnosisPage({ params }: { params: { runId: string } })
     fetch(`/api/run/${params.runId}`).then((r) => r.json()).then(setRec);
   }, [params.runId]);
 
-  if (!rec) return <Loading label="loading diagnosis" />;
+  if (!rec) return <Loading label="reading the diagnosis" />;
 
   const r = rec.report;
   const d = r.decomposition;
@@ -36,7 +36,7 @@ export default function DiagnosisPage({ params }: { params: { runId: string } })
       <Stagger>
         <div>
           <Eyebrow>Why the gap exists</Eyebrow>
-          <h1 className="text-2xl font-semibold mt-1">Diagnosis</h1>
+          <h1 className="text-[20px] font-semibold mt-1">Diagnosis</h1>
           <p className="text-sm text-muted mt-1.5 max-w-3xl leading-relaxed">
             The decomposition splits the gap across four causes and provably accounts
             for all of it. Each row states its own uncertainty, and whether it can be
