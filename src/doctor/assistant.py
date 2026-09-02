@@ -41,12 +41,26 @@ Rules, in order of importance:
    figures, do not convert between units, do not round to a value that is not
    there, and do not estimate. If the context does not contain a number that
    answers the question, say so in words instead.
-2. Prefer quoting a figure exactly as it appears.
-3. Be brief. Three or four sentences. No preamble, no bullet lists, no
+2. Every money figure carries its provenance, and you must carry it too.
+   - A figure labelled MEASURED is money that actually moved, confirmed after
+     the fact against a known outcome. Only these may be called "recovered".
+   - A figure labelled PROJECTED is a forecast. Never say a projected figure
+     "was recovered", "has been recovered", or "we recovered". Say it is
+     projected, expected, or forecast.
+   - Asked "how much was recovered", answer from RECOVERED / MEASURED. Do not
+     answer it with EXPECTED RECOVERY / PROJECTED, which is a different and
+     smaller thing.
+   - If RECOVERED / MEASURED says UNAVAILABLE, say it is unavailable. Do not
+     substitute the projected figure for it.
+   - This holds even when asked for one number with no caveats. The label is
+     part of the number, not a caveat on it. Give the figure and its
+     provenance in the same breath: "Rs X recovered (measured)".
+3. Prefer quoting a figure exactly as it appears.
+4. Be brief. Three or four sentences. No preamble, no bullet lists, no
    markdown headings.
-4. If the question cannot be answered from the context, say what is missing.
+5. If the question cannot be answered from the context, say what is missing.
    That is a good answer, not a failure.
-5. You cannot take any action. If asked to fix, retry, send or apply anything,
+6. You cannot take any action. If asked to fix, retry, send or apply anything,
    say that actions go through the mandate on the Fixes panel, not through you.
 
 Reply with JSON and nothing else: {"answer": "your reply here"}
@@ -125,10 +139,50 @@ def build_context(rec: dict) -> str:
         "  summary: %s" % r["diagnosis"]["summary"],
         "",
         "MONEY",
-        "  recovered in this run: Rs %d (PROJECTED)" % (p["recovered_this_run_paise"] // 100),
-        "  still recoverable: Rs %d to Rs %d (PROJECTED range across 3 calibrations)"
+    ]
+
+    # -- MEASURED first, and separated, because it is the answer to the one
+    #    question a merchant actually asks.
+    #
+    # This block was missing entirely. The context carried only PROJECTED
+    # figures, so when asked "how much has this merchant recovered?" the
+    # assistant quoted `recovered in this run: Rs 2168 (PROJECTED)` and
+    # dropped the qualifier -- stating a forecast as an accomplished fact.
+    # Worse, Rs 2,168 was the wrong number for the question: the measured
+    # answer is Rs 4,741, and it was not in front of the model at all. It
+    # could not have answered correctly however it was prompted, which is why
+    # this is a context fix and not only a prompt fix.
+    #
+    # Emitted only where the figure genuinely exists. An unscored run says so
+    # rather than showing a zero that reads like a measurement.
+    rv = meas.get("recovery_vs_truth") or {}
+    if rv.get("scored"):
+        lines += [
+            "  RECOVERED / MEASURED: Rs %d" % (rv.get("measured_paise", 0) // 100),
+            "    ^ this is the answer to \"how much was recovered\". It is the",
+            "      value of the retries that truly converted, marked against a",
+            "      known outcome after the fact.",
+            "  ATTEMPTED / MEASURED: %d retries executed" % rv.get("attempted", 0),
+            "  CONVERTED / MEASURED: %d of those truly converted"
+            % rv.get("truly_converted", 0),
+        ]
+    else:
+        lines += [
+            "  RECOVERED / MEASURED: UNAVAILABLE for this run.",
+            "    ^ %s" % (rv.get("detail")
+                          or "this run executed no retries, so there is "
+                             "nothing to mark against a known outcome."),
+            "      Do not substitute a projected figure for this.",
+        ]
+
+    lines += [
+        "  EXPECTED RECOVERY / PROJECTED: Rs %d"
+        % (p["recovered_this_run_paise"] // 100),
+        "    ^ what the retry model FORECAST for the same retries. A forecast,",
+        "      not money. Never describe this as recovered.",
+        "  STILL RECOVERABLE / PROJECTED: Rs %d to Rs %d (range across 3 calibrations)"
         % (p["recoverable"]["low_paise"] // 100, p["recoverable"]["high_paise"] // 100),
-        "  unrecoverable: Rs %d across %d payments"
+        "  UNRECOVERABLE: Rs %d across %d payments"
         % (p["unrecoverable_paise"] // 100, p["unrecoverable_count"]),
         "",
         "WHAT THE AGENT DID",

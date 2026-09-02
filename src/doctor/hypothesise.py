@@ -23,9 +23,9 @@ statistic, which in a project about honest measurement would be fatal.
 from __future__ import annotations
 
 from enum import Enum
-from typing import Literal
+from typing import Annotated, Literal
 
-from pydantic import BaseModel, Field
+from pydantic import AllowInfNan, BaseModel, Field
 
 from .baseline import Baseline
 from .features import MerchantProfile
@@ -46,11 +46,31 @@ class RootCauseLabel(str, Enum):
     NONE_OF_THE_ABOVE = "none_of_the_above"
 
 
+#: A float a MODEL supplied, which therefore may not be NaN or infinite.
+#:
+#: `json.loads` accepts the bare tokens NaN, Infinity and -Infinity as a JSON
+#: extension, so a model can emit one and it parses. A plain `float` field
+#: then accepts it, and every downstream comparison against it is False --
+#: which is the wrong direction for a safety gate. `plan._tier_for` computed
+#: `ratio = abs(attribution_pts) / mae`, found `nan < WITHHOLD_RATIO` and
+#: `nan < AUTO_RATIO` both False, and fell through to auto_execute.
+#:
+#: The effect was that a model emitting garbage got MORE autonomy than one
+#: emitting an honest weak signal: 0.2 points against a 0.57 error bar is
+#: correctly withheld to investigation, while NaN was auto-executed.
+#:
+#: Rejected at the boundary rather than sanitised, because there is no
+#: sensible finite value to substitute for "the model did not give us a
+#: number" -- and silently substituting one would put a fabricated
+#: attribution into the audit trail.
+FiniteFloat = Annotated[float, AllowInfNan(False)]
+
+
 class Hypothesis(BaseModel):
     model_config = {"frozen": True}
 
     factor: str
-    attribution_pts: float
+    attribution_pts: FiniteFloat
     root_cause_label: RootCauseLabel
     hypothesis: str
     evidence: list[str] = Field(default_factory=list)

@@ -33,6 +33,7 @@ uniquely good for.
 from __future__ import annotations
 
 import json
+import math
 import time
 from pathlib import Path
 from typing import Any, Sequence
@@ -392,9 +393,22 @@ def compose_adversarial(client=None) -> AdversarialSpec:
     )
     d = res.parsed if isinstance(res.parsed, dict) else {}
 
-    raw_n = int(d.get("n_txns") or 900)
-    raw_mag = float(d.get("magnitude_pts") or 2.0)
-    raw_rho = float(d.get("rho") or 0.0)
+    # Model-supplied numbers, so they may be NaN or infinite: `json.loads`
+    # accepts those tokens and this is a raw dict rather than a validated
+    # model. The clamps below happen to survive a NaN today -- `max(0.3, nan)`
+    # keeps 0.3 because the comparison is False -- but that is an accident of
+    # argument order, not a property, and `int(nan)` raises outright. Made
+    # explicit so a reordering cannot quietly turn it into a fail-open.
+    def _finite(value, fallback: float) -> float:
+        try:
+            v = float(value)
+        except (TypeError, ValueError):
+            return fallback
+        return v if math.isfinite(v) else fallback
+
+    raw_n = int(_finite(d.get("n_txns"), 900.0))
+    raw_mag = _finite(d.get("magnitude_pts"), 2.0)
+    raw_rho = _finite(d.get("rho"), 0.0)
     causes = [c for c in (d.get("causes") or []) if c in CAUSES] or [
         "midnight_billing_penalty"
     ]

@@ -2,7 +2,7 @@
 #
 #   make setup     install everything
 #   make demo      run the app (backend + frontend)
-#   make test      642 tests
+#   make test      669 tests
 #   make verify    regenerate and fail if any committed number moved
 #
 # Nothing here needs an API key. Every LLM response is cached and committed.

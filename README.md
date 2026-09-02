@@ -177,7 +177,7 @@ Every run here reports ₹0 because each model answer was bought once and
 committed — and a bare zero would quietly claim the model steps are free. Spent
 and saved are counted separately and never netted: the book made **45 model
 calls over 75,630 tokens** and spent nothing, avoiding **₹41.74**; the whole
-committed cache is **367 answers, 668,961 tokens, ₹441.73** to rebuild from
+committed cache is **371 answers, 673,338 tokens, ₹442.21** to rebuild from
 empty. The figure that matters is the *billable* one — **₹5.22 per merchant**,
 what the second merchant costs and the millionth. That is ₹0.52 Cr across a
 million if every model step runs nightly, which is the expensive way and not
@@ -1100,7 +1100,7 @@ checks never consult a model. See [`ARCHITECTURE.md`](ARCHITECTURE.md).
 ```bash
 make setup      # python + frontend dependencies
 make demo       # backend :8000 + frontend :3000
-make test       # 642 tests
+make test       # 669 tests
 make verify     # regenerate everything, fail if any committed number moved
 ```
 
@@ -1122,7 +1122,7 @@ python evals/run_npci_finding.py
 python evals/run_backtest.py               # out-of-sample, real NPCI data
 python evals/run_outcome_eval.py           # forecast accuracy after a fix
 python evals/run_scale_benchmark.py        # throughput at book scale
-pytest -q                                  # 642 tests
+pytest -q                                  # 669 tests
 ```
 
 The LLM evals need a key **once** to populate the cache; after that they

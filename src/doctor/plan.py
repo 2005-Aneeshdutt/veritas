@@ -23,6 +23,7 @@ exceed the mandate.
 from __future__ import annotations
 
 import json
+import math
 import os
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
@@ -140,6 +141,39 @@ def _tier_for(
         return proposed, None
 
     ratio = abs(h.attribution_pts) / mae if mae > 0 else float("inf")
+
+    # Defence in depth: a ratio that is not a finite number cannot clear a
+    # threshold, so it must not be allowed to fall past one.
+    #
+    # Both ways of producing a non-finite ratio failed OPEN. A NaN
+    # attribution_pts -- which `json.loads` accepts as a bare token and a
+    # plain float field used to admit -- made every `ratio < X` comparison
+    # False and dropped straight through to `proposed`, so a model emitting
+    # garbage got MORE autonomy than one emitting an honest 0.2 points
+    # against a 0.57 error bar. A non-positive MAE took the `float("inf")`
+    # branch above and did the same thing, on the reading that no measured
+    # error means infinite confidence -- which is backwards: an error bar of
+    # zero is a missing measurement, not a perfect one.
+    #
+    # `Hypothesis.attribution_pts` now rejects non-finite values at the
+    # boundary, so the first route is closed. This is the second lock, and it
+    # is here because a gate whose safe behaviour depends on a validator two
+    # modules away is one refactor from being unsafe again.
+    if not math.isfinite(ratio):
+        return "investigation", Withholding(
+            factor=factor,
+            label=h.root_cause_label.value,
+            attribution_pts=h.attribution_pts,
+            mae=mae,
+            downgraded_from=proposed,
+            downgraded_to="investigation",
+            reason=(
+                "the ratio of this attribution to its own measured error is "
+                "not a finite number, so it cannot be said to clear any "
+                "threshold. Nothing is acted on from a comparison that has no "
+                "answer"
+            ),
+        )
 
     if ratio < WITHHOLD_RATIO:
         return "investigation", Withholding(
