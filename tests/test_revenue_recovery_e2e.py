@@ -677,37 +677,45 @@ def test_BG_prove_keeps_projection_and_measurement_apart():
         c["challenge_id"], c["seal"][:16])
 
 
-@pytest.mark.xfail(
-    strict=True,
-    reason=(
-        "KNOWN PRE-EXISTING DEFECT, found by this E2E test. "
-        "`report.gate.decisions` is a snapshot of what the DIAGNOSIS decided, "
-        "while the ledger grows as approvals execute -- and neither "
-        "apply.apply_group (the Authorise button) nor recovery._append_ledger "
-        "nor control_tower._append_review_entry updates the snapshot. "
-        "reconcile.py compares the two, so approving anything makes Evidence "
-        "report a failed invariant: on run_beec9668, apply_group leaves "
-        "'gate step_up claims 51, ledger has 68'. "
-        "SEVERITY P2: the money partition still closes and the chain still "
-        "verifies, so no rupee is misstated -- but the page whose job is to "
-        "be believable cries wolf. "
-        "Not fixed here: this task was to build the test, not to change "
-        "production code. Fix is to recompute gate.decisions from the ledger "
-        "in reconcile.py, or to update the snapshot on every append. "
-        "This test is strict=True so it fails loudly the day it is fixed."
-    ),
-)
-def test_BY_gate_counts_drift_from_the_ledger_after_an_approval(target):
+def test_BY_gate_counts_reflect_the_ledger_after_an_approval(target):
+    """Was an xfail. The defect this E2E found, now fixed.
+
+    `report.gate.decisions` is a diagnosis-time snapshot; the ledger grows as
+    approvals execute and no execution path updates the snapshot. reconcile.py
+    used to assert the two were EQUAL, so approving anything made Evidence
+    report a failed invariant on a run where nothing was wrong -- the money
+    still partitioned, the chain still verified.
+
+    The counts reported as current are now recomputed from the ledger, and the
+    snapshot is held to the only thing true of it: an append-only ledger can
+    never afterwards contain FEWER of a decision than the diagnosis recorded.
+    Deleting entries is still caught -- see
+    tests/test_gate_reconciliation.py::test_deleting_entries_is_still_caught.
+
+    This test was `xfail(strict=True)` precisely so it would fail the day
+    somebody fixed it. It did.
+    """
     run_id = _run_id_for(target["merchant_id"])
     st, rec = api("/api/reconcile/%s" % run_id)
+    assert st == 200
+
     gate = [c for c in rec["checks"] if c["key"].startswith("gate_")]
     assert gate, "the gate checks disappeared"
     drifted = [c for c in gate if not c["ok"]]
-    LINEAGE["known_defect_gate_drift"] = (
-        "%s" % [(c["label"], c["claimed"], c["recomputed"]) for c in drifted]
-        if drifted else "none")
     assert not drifted, "gate counts drifted: %s" % [
         (c["label"], c["claimed"], c["recomputed"]) for c in drifted]
+
+    # the two figures are both reported, and the ledger has moved past the
+    # snapshot because this test executed a recovery
+    snap = rec["gate_decisions_at_diagnosis"]
+    now = rec["gate_decisions_now"]
+    assert snap and now
+    for d in ("allow", "step_up", "deny"):
+        assert now.get(d, 0) >= snap.get(d, 0), (
+            "the ledger lost a %s decision the diagnosis recorded" % d)
+
+    LINEAGE["gate_at_diagnosis"] = snap
+    LINEAGE["gate_now_from_ledger"] = now
 
 
 # ── security ─────────────────────────────────────────────────────────────

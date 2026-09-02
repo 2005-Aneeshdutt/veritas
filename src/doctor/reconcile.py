@@ -83,6 +83,14 @@ class Reconciliation(BaseModel):
     at_risk_payments: int
     buckets: list[Bucket]
 
+    #: Gate decisions RECOMPUTED from the ledger -- current truth, as against
+    #: `report.gate.decisions`, which is the diagnosis-time snapshot and does
+    #: not move when an approval appends.
+    gate_decisions_now: dict[str, int] = {}
+    #: What the diagnosis recorded, kept alongside so the two are never
+    #: confused for one another.
+    gate_decisions_at_diagnosis: dict[str, int] = {}
+
     #: Ledger entries that are about the ACCOUNT rather than one payment
     #: (routing changes, investigation flags). Worth Rs 0, so outside the
     #: money partition -- reported so no entry is silently dropped.
@@ -226,16 +234,58 @@ def reconcile(rec: dict) -> Reconciliation:
         detail="No payment appears twice and none is dropped.",
     ))
 
-    # gate counts against the ledger they came from
-    gate = rec["report"].get("gate", {}).get("decisions", {})
+    # -- gate decisions: the LEDGER is current truth, the snapshot is history
+    #
+    # `report.gate.decisions` is what the gate decided AT DIAGNOSIS. The ledger
+    # keeps growing after that -- every approval, every Control Tower review,
+    # every executed recovery appends to it -- and no execution path updates
+    # the snapshot, because the snapshot is a record of a moment rather than a
+    # running total.
+    #
+    # This used to assert the two were EQUAL, which held only until somebody
+    # pressed Apply. One approval on run_beec9668 took step_up from 51 to 68
+    # and Evidence started reporting a failed invariant on a run where nothing
+    # was wrong: the money still partitioned, the chain still verified. A page
+    # whose whole job is to be believable was crying wolf.
+    #
+    # So the counts reported as current are recomputed from the ledger, and
+    # the snapshot is held to the only thing that is actually true of it: the
+    # ledger is append-only, so a decision recorded at diagnosis can never
+    # afterwards be absent. Fewer entries than the diagnosis recorded means
+    # entries were deleted, which is exactly the corruption this file exists
+    # to catch -- and that check survives, sharper than before.
     from collections import Counter
 
-    seen = Counter(e.get("gate_decision") for e in ledger)
+    snapshot = rec["report"].get("gate", {}).get("decisions", {})
+    current = Counter(e.get("gate_decision") for e in ledger)
+
+    # Only entries that actually carry a decision count. Summing every bucket
+    # including the None one would make the total equal the entry count no
+    # matter what, and the check could never fire.
+    decided = sum(n for k, n in current.items() if k)
+    checks.append(Check(
+        key="gate_total",
+        label="Every ledger entry carries a gate decision",
+        ok=decided == len(ledger),
+        claimed=len(ledger),
+        recomputed=decided,
+        detail="An entry with no gate decision would be an action nobody ruled on.",
+    ))
+
     for d in ("allow", "step_up", "deny"):
+        snap_n = int(snapshot.get(d, 0))
+        now_n = current.get(d, 0)
         checks.append(Check(
-            key="gate_%s" % d, label="Gate %s count matches the ledger" % d,
-            ok=int(gate.get(d, 0)) == seen.get(d, 0),
-            claimed=int(gate.get(d, 0)), recomputed=seen.get(d, 0),
+            key="gate_%s" % d,
+            label="Gate %s: the diagnosis snapshot survives in the ledger" % d,
+            ok=snap_n <= now_n,
+            claimed=snap_n,
+            recomputed=now_n,
+            detail=(
+                "%d at diagnosis, %d in the ledger now. The ledger only grows, "
+                "so the second may exceed the first -- approvals append. It may "
+                "never be smaller." % (snap_n, now_n)
+            ),
         ))
 
     checks.append(Check(
@@ -309,6 +359,10 @@ def reconcile(rec: dict) -> Reconciliation:
         at_risk_paise=at_risk_paise,
         at_risk_payments=len(batch),
         buckets=buckets,
+        gate_decisions_now={k: v for k, v in current.items() if k},
+        gate_decisions_at_diagnosis={
+            k: int(v) for k, v in (snapshot or {}).items()
+        },
         account_actions=account_actions,
         checks=checks,
         ok=all(c.ok for c in checks),
