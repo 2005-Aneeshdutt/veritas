@@ -50,7 +50,7 @@ a feature: the deployed copy always resets to a clean book.
 
 ## What is on screen
 
-Seven numbered steps down the left, in the order the story is told, and three
+Eight numbered steps down the left, in the order the story is told, and three
 rooms you go to when you stop believing it.
 
 | | |
@@ -59,9 +59,10 @@ rooms you go to when you stop believing it.
 | **2 · Diagnose** | The agent working one case: the sixteen-coalition lattice filling in, the Shapley values converging on the whole. A second lens shows every node, prompt and gate decision. |
 | **3 · Compare** | The Counterfactual Recovery Lab. The same batch under four policies, all marked against outcomes none of them could see, plus the autonomy frontier. The one page where the product is willing to lose: the naive loop recovers more, and the two columns next to it say what that cost. |
 | **4 · Authorise** | What the mandate permits, what the kernel held, and per-payment approve or reject. Click any payment to read its whole file. |
-| **5 · Recover** | Which channel actually reaches the customer, and the finding that on this book it never has to. The voice demo, its guardrails, and one payment traced from the batch row to its audit entry. |
-| **6 · Platform** | The write-off attributed to whoever Razorpay's own `next_steps` line addresses. The platform's own share is a defect backlog no merchant is standing anywhere to compute. |
-| **7 · Prove** | A sealed challenge nobody has seen, diagnosed blind, then marked. |
+| **5 · Control Tower** | The operations console: which decisions need a person, ranked, with a review drawer carrying the diagnosis, the evidence, the counterfactual, the policy rule and exactly what would execute. Approve/hold/deny/escalate where policy permits, refused where it does not. |
+| **6 · Recover** | Which channel actually reaches the customer, and the finding that on this book it never has to. The voice demo, its guardrails, and one payment traced from the batch row to its audit entry. |
+| **7 · Platform** | The write-off attributed to whoever Razorpay's own `next_steps` line addresses. The platform's own share is a defect backlog no merchant is standing anywhere to compute. |
+| **8 · Prove** | A sealed challenge nobody has seen, diagnosed blind, then marked. |
 | **Before / after** | Every scored fix drawn as the merchant's success rate moving, with the band published beforehand laid over the distance it actually travelled. |
 | **Evidence** | Where the recovered number came from: every failed payment in one of six buckets that sum to the money at risk, each clickable down to the payments, the rule that decided them and the hash of the entry that recorded it. Plus whether the forecasts came true, the chain re-hashed from genesis on each load, and the model bill. |
 | **Your own data** | The Recovery Data Room: every source behind a recovery number, with its completeness, duplicates and unresolved references. Then upload a month of payments, or swap the NPCI table every baseline is measured against. Three bundled files if you have neither, including a real NPCI slice that moves the achievable rate six points. |
@@ -478,6 +479,103 @@ A test-mode outcome that cannot be verified reports
 
 ---
 
+## Control Tower — what needs a person
+
+`policy.evaluate` answers **"is this allowed?"**. That is a question about
+authority, and it is correctly blind to how good the evidence is. So an action
+can clear the mandate on a diagnosis whose attribution sits inside its own
+error bar, on an underpowered batch, on an error code the classifier was
+unsure about — permitted, and not obviously a good idea.
+
+Control Tower asks the second question: **given that it is allowed, is it
+justified?**
+
+    Automate what can be justified. Escalate what cannot.
+
+### Five states, over one kernel
+
+It is not a second policy engine. `chitragupta/policy.py` is called, not
+reimplemented, and a test asserts the reported result is byte-identical to
+what a direct `evaluate()` returns for the same action and mandate.
+
+| State | Means |
+|---|---|
+| **AUTO-ALLOW** | Permitted, and the evidence clears its own error bar. No person needed. |
+| **HUMAN REVIEW** | Permitted — and the evidence does not justify doing it unattended. **This is the state that did not exist before.** |
+| **HOLD** | Above the auto-execute limit, or the issuer is degraded. Waiting on a person or a clock. |
+| **DENY** | The signed mandate refuses it. Unappealable. |
+| **ESCALATE** | No channel is both permitted and available. |
+
+Across the book: 645 human review · 764 escalate · 372 auto-allow · 214 hold ·
+95 deny.
+
+### Evidence quality is measured, not asserted
+
+Four signals the pipeline already produces, none invented:
+
+* the classifier's own confidence on this payment's error code, and whether it
+  came from the published taxonomy or from a model
+* whether the primary factor's attribution clears its **own measured error** —
+  the same `AUTO_RATIO = 2.0` that `plan.py` gates auto-execution on, so the
+  product cannot disagree with itself about what "strong enough" means
+* whether the decomposition is reliable and the batch adequately powered
+* whether the factor is identified at all, or degenerate
+
+Where a signal genuinely does not exist it is `None` and renders as
+**unavailable** — never as a plausible number.
+
+**A bug this caught in its first run.** TechBazaar's top factor clears its
+error bar 2.6×, and the classifier was 100% sure of the error code, so a card
+read `CONFIDENCE 1.00` next to `EVIDENCE WEAK`. Both halves were individually
+correct and the pair was nonsense: that factor is **degenerate** — the merchant
+has effectively one value for it, so there is nothing to reweight toward and
+the ratio is not measuring anything. An unidentified factor does not lower
+confidence, it *invalidates the thing confidence was computed from*. So there
+is now no number, and the card says so.
+
+### The boundary is the server, not the button
+
+A denied decision offers **escalate and nothing else** — escalating a refusal
+is not an override, it is the correct thing to do with one. The UI disables
+the rest, and the API refuses them anyway with a 403:
+
+```
+POST /api/control-tower/decisions/{id}/review?human_decision=approve
+→ 403  'approve' is not available on this decision. The policy kernel denied
+       this action. Approving it is not available at any level of authority:
+       the mandate is signed and this system cannot widen it.
+```
+
+A disabled button is a courtesy. The browser audit asserts the UI disables it
+**and** calls the API directly to confirm the refusal, because a client is not
+a security boundary.
+
+An override requires a structured reason code; `other` requires an
+explanation, and `other` with a blank note is a 400.
+
+### One audit chain, not two
+
+A human decision goes into the **same** hash chain as everything else, using
+fields already inside the hash: `actor` records who, and
+`proposed_action.reason` carries the structured override. `LedgerEntry` is
+unchanged, so every committed chain still verifies. A test tampers with that
+reason and asserts the chain breaks — the override is as tamper-evident as the
+gate decision beside it.
+
+Approving runs the **existing** `recovery.execute_recovery`, so its idempotency
+and stopping rules are the ones already in force. Approving twice returns
+`already_executed` and does not act twice.
+
+### Missing evidence is actionable
+
+Every request maps to something the system can genuinely go and get — a
+classification table, a longer batch, the merchant's own account of what
+changed. Nothing asks a model to fill the hole. Re-evaluating re-derives the
+decision from whatever the data says now; if nothing underneath changed, the
+decision does not change either, and a test asserts that.
+
+---
+
 ## Which channel, and how rarely
 
 `src/doctor/channels.py` chooses between `NO_ACTION · RETRY · EMAIL ·
@@ -842,7 +940,7 @@ remitter bank-months. Full write-up: [`docs/npci_finding.md`](docs/npci_finding.
 
 ## What broke
 
-**Seventeen things. Fifteen found by a measurement disagreeing with me, not by
+**Nineteen things. Seventeen found by a measurement disagreeing with me, not by
 a crash** — the last one by a check I wrote to prove the others were safe. Full write-up: **[`docs/what_broke.md`](docs/what_broke.md)** — the
 best 10 minutes you can spend in this repo.
 
@@ -896,6 +994,27 @@ full of DENIED rows looks like the safety working. Fixing it turned a broken
 feature into the most interesting finding in the section: under a mandate that
 permits both retrying and asking, **the contact channels are unreachable and
 the policy never phones anybody.**
+
+Two from Control Tower, and the second is the best argument in this README for
+browser tests that refuse to skip.
+
+**A card read `CONFIDENCE 1.00` next to `EVIDENCE WEAK`.** Both halves were
+individually correct. TechBazaar's top factor clears its error bar 2.6x and the
+classifier was certain of the error code — but that factor is *degenerate*, so
+there is nothing to reweight toward and the ratio is measuring nothing. An
+unidentified factor does not lower confidence, it invalidates the quantity
+confidence was computed from. It reports **unavailable** now, which is the
+answer the rest of this product already gives everywhere else.
+
+**The audit passed while skipping four assertions.** The deny-specific drawer
+checks ran only `if` a denied decision happened to be on screen, and when none
+was, the audit printed a clean sheet. Turning that skip into a FAIL
+immediately exposed a real prioritisation bug: a **refused** payment of
+Rs 24,973 ranked below a routine Rs 14,769 hold, so the highest-value mandate
+refusal on the book sat at rank 30 where nobody would find it. A hold needs a
+click; a refusal needs somebody to decide whether to raise a signed limit, and
+the bigger the payment the more that decision is worth making. Refusals rank
+above holds now. The green tick had been hiding it.
 
 ---
 
@@ -958,7 +1077,7 @@ checks never consult a model. See [`ARCHITECTURE.md`](ARCHITECTURE.md).
 ```bash
 make setup      # python + frontend dependencies
 make demo       # backend :8000 + frontend :3000
-make test       # 600 tests
+make test       # 638 tests
 make verify     # regenerate everything, fail if any committed number moved
 ```
 
@@ -980,7 +1099,7 @@ python evals/run_npci_finding.py
 python evals/run_backtest.py               # out-of-sample, real NPCI data
 python evals/run_outcome_eval.py           # forecast accuracy after a fix
 python evals/run_scale_benchmark.py        # throughput at book scale
-pytest -q                                  # 600 tests
+pytest -q                                  # 638 tests
 ```
 
 The LLM evals need a key **once** to populate the cache; after that they

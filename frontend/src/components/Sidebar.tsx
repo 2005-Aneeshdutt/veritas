@@ -181,6 +181,10 @@ export function Sidebar({ runHref }: { runHref?: string | null }) {
       label: "Authorise",
       match: run ? [`${run}/authorise`] : [],
     },
+    // Authorise answers "is this allowed?". This answers "which of the
+    // allowed and uncertain ones needs me?" -- a different question, and the
+    // one an operator actually has. It follows Authorise for that reason.
+    { href: "/control-tower", label: "Control Tower", match: ["/control-tower"] },
     // How the recovery actually reaches a customer, and how rarely it has
     // to. Sits after Authorise because it is what the authorised action
     // turns into.

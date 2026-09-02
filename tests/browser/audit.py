@@ -483,6 +483,159 @@ def main() -> int:
         safe("sidebar", "mode banner", "does not also claim the other mode",
              lambda: page.get_by_text(other).count() == 0)
 
+        # -- CONTROL TOWER ----------------------------------------------------
+        #
+        # The queue is a convenience; the enforcement is the feature. So this
+        # checks the drawer renders every section a person needs, and then
+        # checks the two things that must be impossible: approving a payment
+        # the mandate denied, and overriding with no reason.
+        print("\nCONTROL TOWER")
+        page.goto(BASE + "/control-tower", wait_until="networkidle")
+
+        safe("/control-tower", "page", "renders the queue",
+             lambda: page.get_by_text("Decisions requiring attention").count() > 0)
+        safe("/control-tower", "attention count", "says how many need a person",
+             lambda: page.get_by_text("need attention", exact=False).count() > 0)
+
+        for f in ("Urgent", "High value", "Uncertain", "Policy", "All"):
+            safe("/control-tower", "filter: %s" % f, "present",
+                 lambda x=f: page.get_by_role("button", name=re.compile(x, re.I))
+                 .count() > 0)
+
+        # A filter must actually re-query, not just restyle a button.
+        before = page.inner_text("body")[:5000]
+        page.get_by_role("button", name=re.compile("^Policy", re.I)).first.click()
+        page.wait_for_timeout(2500)
+        safe("/control-tower", "filter switch", "re-queries the queue",
+             lambda: page.inner_text("body")[:5000] != before)
+
+        # -- the drawer -------------------------------------------------------
+        #
+        # Open a DENIED decision specifically. Clicking whichever card is
+        # first meant the deny-specific assertions below ran only when the
+        # queue happened to order one to the top, and silently did not when it
+        # did not -- a clean sheet that had skipped four checks.
+        cards = page.locator("div.panel").filter(
+            has=page.get_by_role("button", name="Review")
+        )
+        review_btn = None
+        for i in range(cards.count()):
+            card = cards.nth(i)
+            if card.get_by_text("deny", exact=True).count():
+                review_btn = card.get_by_role("button", name="Review").first
+                break
+        if review_btn is None:
+            record("/control-tower", "find a denied decision",
+                   "none in the Policy filter", "FAIL")
+            review_btn = page.get_by_role("button", name="Review").first
+
+        if not review_btn.count():
+            record("/control-tower", "Review", "no decisions to open", "FAIL")
+        else:
+            review_btn.click()
+            page.wait_for_timeout(2500)
+            for section in ("Decision", "Why", "Evidence", "Counterfactual",
+                            "Policy", "What would execute", "Your decision"):
+                safe("/control-tower", "drawer: %s" % section, "present",
+                     lambda x=section: page.get_by_text(x, exact=True).count() > 0)
+
+            safe("/control-tower", "drawer", "shows the policy rule",
+                 lambda: page.get_by_text("DENY_", exact=False).count() > 0
+                 or page.get_by_text("OK_", exact=False).count() > 0
+                 or page.get_by_text("STEP_UP_", exact=False).count() > 0)
+            safe("/control-tower", "drawer", "requires a structured reason",
+                 lambda: page.get_by_text("Reason (required)").count() > 0)
+            safe("/control-tower", "drawer", "states policy is deterministic",
+                 lambda: page.get_by_text("deterministic policy kernel",
+                                          exact=False).count() > 0)
+
+            # A DENY must offer escalate and nothing else. The Policy filter
+            # was selected above precisely so a denied item is in reach.
+            blocked = page.get_by_text("not available at any level of authority",
+                                       exact=False)
+            safe("/control-tower", "denied decision",
+                 "the drawer says why it cannot be approved",
+                 lambda: blocked.count() > 0)
+            if blocked.count():
+                for a in ("approve", "hold", "deny"):
+                    safe("/control-tower", "deny: %s disabled" % a,
+                         "the UI does not offer it",
+                         lambda x=a: page.get_by_role(
+                             "button", name=re.compile("^%s$" % x, re.I)
+                         ).first.is_disabled())
+                safe("/control-tower", "deny: escalate offered",
+                     "handing it to a person is not an override",
+                     lambda: not page.get_by_role(
+                         "button", name=re.compile("^escalate$", re.I)
+                     ).first.is_disabled())
+
+            page.get_by_role("button", name="Close").first.click()
+            page.wait_for_timeout(600)
+            safe("/control-tower", "drawer close", "returns to the queue",
+                 lambda: page.get_by_text("Your decision", exact=True).count() == 0)
+
+        # -- the server is the boundary, not the button -----------------------
+        #
+        # Everything above is the UI being polite. This asks the API directly
+        # for the thing the UI will not offer, because a client is not a
+        # security boundary and only the server's answer proves anything.
+        import urllib.error
+        import urllib.request
+
+        def deny_is_refused_by_the_api():
+            with urllib.request.urlopen(
+                "http://localhost:8000/api/control-tower/decisions"
+                "?filter=policy&limit=60"
+            ) as r:
+                q = json.load(r)
+            denied = [d for d in q["decisions"] if d["state"] == "deny"]
+            if not denied:
+                raise AssertionError("no denied decision to probe")
+            d = denied[0]
+            url = (
+                "http://localhost:8000/api/control-tower/decisions/%s/review"
+                "?merchant_id=%s&human_decision=approve&reason_code=policy_exception"
+                % (d["decision_id"], d["merchant_id"])
+            )
+            try:
+                urllib.request.urlopen(
+                    urllib.request.Request(url, method="POST", data=b"")
+                )
+            except urllib.error.HTTPError as e:
+                return e.code == 403
+            raise AssertionError("the API ACCEPTED an approve on a DENY")
+
+        safe("api", "approve a DENY", "refused with 403",
+             deny_is_refused_by_the_api)
+
+        def other_without_a_note_is_refused():
+            with urllib.request.urlopen(
+                "http://localhost:8000/api/control-tower/decisions"
+                "?filter=all&limit=40"
+            ) as r:
+                q = json.load(r)
+            d = next(
+                (x for x in q["decisions"] if "approve" in x["permitted_human_actions"]),
+                None,
+            )
+            if d is None:
+                raise AssertionError("no reviewable decision to probe")
+            url = (
+                "http://localhost:8000/api/control-tower/decisions/%s/review"
+                "?merchant_id=%s&human_decision=hold&reason_code=other&note="
+                % (d["decision_id"], d["merchant_id"])
+            )
+            try:
+                urllib.request.urlopen(
+                    urllib.request.Request(url, method="POST", data=b"")
+                )
+            except urllib.error.HTTPError as e:
+                return e.code == 400
+            raise AssertionError("the API accepted 'other' with no explanation")
+
+        safe("api", "override with no reason", "refused with 400",
+             other_without_a_note_is_refused)
+
         # -- RECOVERY CHANNELS AND VOICE -------------------------------------
         print("\nRECOVER")
         page.goto(BASE + "/recover", wait_until="networkidle")
@@ -622,8 +775,8 @@ def main() -> int:
         for w, h in ((1366, 768), (1440, 900), (1920, 1080)):
             page.set_viewport_size({"width": w, "height": h})
             for path in ("/portfolio", diag_url, diag_url + "/authorise",
-                         "/lab", "/recover", "/platform", "/prove",
-                         "/evidence", "/data"):
+                         "/lab", "/control-tower", "/recover", "/platform",
+                         "/prove", "/evidence", "/data"):
                 def no_overflow(path=path, w=w):
                     page.goto(BASE + path if path.startswith("/") else path,
                               wait_until="networkidle")

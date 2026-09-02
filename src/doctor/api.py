@@ -54,6 +54,7 @@ from doctor.outreach import (
 )
 from doctor import events as ev
 from doctor.channels import decide as decide_channel
+from doctor import control_tower as ct
 from doctor.counterfactual import run_lab
 from doctor.dataroom import build_dataroom, lineage
 from doctor.mode import status as mode_status, webhook_secret
@@ -1353,6 +1354,122 @@ def payment_lineage(merchant_id: str, txn_id: str) -> dict:
     if out is None:
         raise HTTPException(404, "no such payment: %s" % txn_id)
     return json.loads(out.model_dump_json()) | mode_stamp()
+
+
+@app.get("/api/control-tower/decisions")
+def control_tower_queue(
+    filter: str = "all", merchant_id: str | None = None, limit: int = 40
+) -> dict:
+    """What needs a person right now, most important first.
+
+    Built from the same batches, the same diagnosis runs and the same policy
+    kernel the rest of the product uses. Nothing here is a second opinion on
+    what is permitted -- `policy.evaluate` decides that and this reports it.
+    """
+    if filter not in ct.FILTERS and filter not in (
+        "auto_allow", "human_review", "hold", "deny", "escalate"
+    ):
+        raise HTTPException(404, "no such filter: %s" % filter)
+    return json.loads(
+        ct.build_queue(
+            merchant_id=merchant_id, filt=filter, limit=max(1, min(limit, 200))
+        ).model_dump_json()
+    )
+
+
+@app.get("/api/control-tower/decisions/{decision_id}")
+def control_tower_decision(decision_id: str, merchant_id: str) -> dict:
+    """One decision, with the counterfactual the queue does not carry.
+
+    The Recovery Lab result is attached here rather than in the list because
+    it is batch-level, identical for every payment of a merchant, and
+    computing it eight times over cost more than everything else on the page
+    put together.
+    """
+    from doctor.run import load_mandate
+
+    try:
+        decisions = ct.build_for(merchant_id, load_mandate(merchant_id))
+    except (SystemExit, FileNotFoundError):
+        raise HTTPException(404, "no such merchant: %s" % merchant_id)
+    d = next((x for x in decisions if x.decision_id == decision_id), None)
+    if d is None:
+        raise HTTPException(404, "no such decision: %s" % decision_id)
+
+    out = json.loads(d.model_dump_json())
+    out["counterfactual"] = ct._lab_for(merchant_id) or {
+        "available": False,
+        "note": "COUNTERFACTUAL UNAVAILABLE -- no Recovery Lab result for "
+                "this merchant's batch.",
+    }
+    out["evidence_available"] = ct.evidence_requests_for(d)
+    out["override_reasons"] = ct.OVERRIDE_REASONS
+    return out | mode_stamp()
+
+
+@app.post("/api/control-tower/decisions/{decision_id}/review")
+def control_tower_review(
+    decision_id: str,
+    merchant_id: str,
+    human_decision: str,
+    reason_code: str,
+    note: str = "",
+    actor: str = "platform",
+) -> dict:
+    """Record a human decision. THE ENFORCEMENT POINT.
+
+    The UI disables controls it should not offer, but a disabled button is a
+    suggestion and this is the rule: an approve on a DENIED decision is
+    refused here whatever the client sends. An approval runs through the
+    EXISTING recovery execution path, so its idempotency and stopping rules
+    are the ones already in force.
+    """
+    if actor not in ("platform", "merchant"):
+        raise HTTPException(400, "actor must be platform or merchant")
+    try:
+        rv = ct.review(
+            merchant_id, decision_id,
+            human_decision=human_decision, reason_code=reason_code,
+            note=note, actor=actor,
+        )
+    except ct.ReviewRefused as e:
+        # 403, not 400: the request was well formed and is not allowed.
+        raise HTTPException(403, str(e))
+    except ValueError as e:
+        raise HTTPException(400, str(e))
+    except FileNotFoundError as e:
+        raise HTTPException(404, str(e))
+    return json.loads(rv.model_dump_json()) | mode_stamp()
+
+
+@app.post("/api/control-tower/decisions/{decision_id}/evidence-request")
+def control_tower_evidence_request(
+    decision_id: str, merchant_id: str, key: str
+) -> dict:
+    """Raise a request for evidence that would move this decision.
+
+    It does not invent the evidence. Every request maps to something the
+    system can genuinely go and get -- a classification table, a longer
+    batch, the merchant's own account of what changed.
+    """
+    try:
+        return ct.request_evidence(merchant_id, decision_id, key)
+    except ValueError as e:
+        raise HTTPException(400, str(e))
+
+
+@app.post("/api/control-tower/decisions/{decision_id}/reevaluate")
+def control_tower_reevaluate(decision_id: str, merchant_id: str) -> dict:
+    """Re-derive this decision from whatever the state is now.
+
+    If nothing underneath has changed the decision does not change either,
+    which is the correct outcome rather than a disappointing one.
+    """
+    try:
+        d = ct.reevaluate(merchant_id, decision_id)
+    except (FileNotFoundError, SystemExit) as e:
+        raise HTTPException(404, str(e))
+    return json.loads(d.model_dump_json()) | mode_stamp()
 
 
 @app.get("/api/lab/{merchant_id}")

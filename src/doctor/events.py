@@ -167,15 +167,43 @@ class _Store:
 
     def __init__(self) -> None:
         self._lock = threading.RLock()
+        self._memo: dict[tuple, list[Event]] = {}
         STORE.mkdir(parents=True, exist_ok=True)
 
     def _path(self, source: str) -> Path:
         return STORE / ("%s.jsonl" % source)
 
+    def _stamp(self, srcs: list[str]) -> tuple:
+        """Identity of the files on disk right now: path, size, mtime."""
+        out = []
+        for s in srcs:
+            p = self._path(s)
+            try:
+                st = p.stat()
+                out.append((s, st.st_size, st.st_mtime_ns))
+            except OSError:
+                out.append((s, -1, 0))
+        return tuple(out)
+
     def all(self, source: str | None = None) -> list[Event]:
-        out: list[Event] = []
+        """Every event, newest last.
+
+        Memoised on (size, mtime) of the files it reads. Callers ask this
+        question far more often than the answer changes -- building the
+        Control Tower queue called it 3,122 times for one page, once per
+        payment through `channels.downtime_from_events`, re-parsing every
+        JSONL line each time. The cache key is the files' own size and
+        modification time, so any append or rewrite invalidates it and a
+        stale read is not possible.
+        """
         srcs = [source] if source else ["synthetic", "razorpay_test", "internal"]
+        key = (tuple(srcs), self._stamp(srcs))
         with self._lock:
+            hit = self._memo.get(key)
+            if hit is not None:
+                return list(hit)
+
+            out: list[Event] = []
             for s in srcs:
                 p = self._path(s)
                 if not p.exists():
@@ -187,8 +215,11 @@ class _Store:
                         out.append(Event.model_validate_json(line))
                     except ValueError:
                         continue
-        out.sort(key=lambda e: (e.received_at, e.event_id))
-        return out
+            out.sort(key=lambda e: (e.received_at, e.event_id))
+            # One entry per distinct file state; the old one is dead the
+            # moment anything is written, so this does not grow.
+            self._memo = {key: out}
+            return list(out)
 
     def seen_ids(self, source: str) -> set[str]:
         return {e.event_id for e in self.all(source)}
