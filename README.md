@@ -50,7 +50,7 @@ a feature: the deployed copy always resets to a clean book.
 
 ## What is on screen
 
-Six numbered steps down the left, in the order the story is told, and three
+Seven numbered steps down the left, in the order the story is told, and three
 rooms you go to when you stop believing it.
 
 | | |
@@ -59,11 +59,12 @@ rooms you go to when you stop believing it.
 | **2 · Diagnose** | The agent working one case: the sixteen-coalition lattice filling in, the Shapley values converging on the whole. A second lens shows every node, prompt and gate decision. |
 | **3 · Compare** | The Counterfactual Recovery Lab. The same batch under four policies, all marked against outcomes none of them could see, plus the autonomy frontier. The one page where the product is willing to lose: the naive loop recovers more, and the two columns next to it say what that cost. |
 | **4 · Authorise** | What the mandate permits, what the kernel held, and per-payment approve or reject. Click any payment to read its whole file. |
-| **5 · Platform** | The write-off attributed to whoever Razorpay's own `next_steps` line addresses. The platform's own share is a defect backlog no merchant is standing anywhere to compute. |
-| **6 · Prove** | A sealed challenge nobody has seen, diagnosed blind, then marked. |
+| **5 · Recover** | Which channel actually reaches the customer, and the finding that on this book it never has to. The voice demo, its guardrails, and one payment traced from the batch row to its audit entry. |
+| **6 · Platform** | The write-off attributed to whoever Razorpay's own `next_steps` line addresses. The platform's own share is a defect backlog no merchant is standing anywhere to compute. |
+| **7 · Prove** | A sealed challenge nobody has seen, diagnosed blind, then marked. |
 | **Before / after** | Every scored fix drawn as the merchant's success rate moving, with the band published beforehand laid over the distance it actually travelled. |
 | **Evidence** | Where the recovered number came from: every failed payment in one of six buckets that sum to the money at risk, each clickable down to the payments, the rule that decided them and the hash of the entry that recorded it. Plus whether the forecasts came true, the chain re-hashed from genesis on each load, and the model bill. |
-| **Your own data** | Upload a month of payments, or swap the NPCI table every baseline is measured against. Three bundled files if you have neither, including a real NPCI slice that moves the achievable rate six points. |
+| **Your own data** | The Recovery Data Room: every source behind a recovery number, with its completeness, duplicates and unresolved references. Then upload a month of payments, or swap the NPCI table every baseline is measured against. Three bundled files if you have neither, including a real NPCI slice that moves the achievable rate six points. |
 
 Left and right arrows move through the walkthrough. **Reset the demo** is in
 the sidebar: it re-runs each merchant rather than stripping the approval keys,
@@ -378,6 +379,251 @@ derived from it in the UI.
 
 ---
 
+## Razorpay-native, without pretending
+
+The product runs in one of exactly two modes, and never blurs them.
+
+| | |
+|---|---|
+| **SYNTHETIC EVALUATION** | Generated batches, deterministic rail, ground truth on file. Every rupee is a replay. **This is the default and needs no credentials — the entire demo works here.** |
+| **RAZORPAY TEST MODE** | A real `rzp_test_` account answered. No real money moves, but the gateway is genuinely in the loop. |
+
+The mode is one function (`src/doctor/mode.py`), read from the environment,
+surfaced on `/api/mode`, and printed in the sidebar on every page. It is not a
+flag threaded through call sites where somebody can forget it.
+
+**A `rzp_live_` key is refused outright**, not downgraded. This is a submission
+that proposes retrying customers' failed payments; the distance between "test
+mode" and "charged a real person" is one environment variable, and the correct
+number of ways to cross that line accidentally is zero. Silent degradation is
+also refused — that is how somebody demos something they believe is live.
+
+```bash
+# optional. Nothing below is required for the demo.
+RAZORPAY_KEY_ID=rzp_test_xxxx
+RAZORPAY_KEY_SECRET=xxxx
+RAZORPAY_WEBHOOK_SECRET=xxxx
+pip install razorpay
+```
+
+### The adapter boundary
+
+`src/doctor/rzp.py` is the only file that imports the SDK, reads the key, or
+knows the API's shape. Without credentials **every method raises
+`NotConfigured`.** It does not return a plausible-looking payment link and let
+the UI say "created".
+
+That negative is the most important test in this repo:
+
+```python
+def test_the_adapter_raises_rather_than_faking_without_credentials():
+    ...  # fetch_payment, create_payment_link, verify_payment_state, all of them
+```
+
+A stub that returns success is how a demo ends up claiming a gateway confirmed
+something no gateway ever saw.
+
+### Event ingestion, and two kinds of idempotency
+
+`src/doctor/events.py` normalises Razorpay-shaped webhooks into one internal
+event model — `event_id · source · event_type · payment_id · order_id ·
+merchant · timestamp · amount · currency · previous_state · new_state ·
+ingestion_status · processing_status`.
+
+Two keys, doing two different jobs:
+
+* **`event_id`** — the gateway's own id. Seeing it twice is a duplicate
+  *delivery*: stored once, counted, never reprocessed. Gateways redeliver on
+  timeout, so this is normal traffic, not an edge case.
+* **`(payment_id, action_type)`** — seeing it twice is a duplicate *action*:
+  refused, whatever the event stream did. This is the one that matters. A
+  gateway can invent a fresh `event_id` for a redelivery, and a retry proposed
+  from a fresh event is still a second charge against the same payment.
+
+The webhook **fails closed**: with no `RAZORPAY_WEBHOOK_SECRET` it rejects
+everything rather than accepting everything. An unauthenticated webhook would
+let anybody on the internet tell this system a payment was recovered, which is
+the one lie the whole product is built to make impossible.
+
+### "Recovered" has exactly one definition
+
+```
+intervention.launched   is not a recovery
+payment_link.created    is not a recovery
+customer says yes       is not a recovery
+payment_link.paid       IS a recovery
+payment.captured        IS a recovery
+order.paid              IS a recovery
+```
+
+`recovered_paise` stays at zero until an event in `events.OUTCOME_TYPES` names
+that payment. In test mode it is then **additionally verified against the
+gateway** before it counts — an event says a thing happened; we go and check.
+A test-mode outcome that cannot be verified reports
+`event_received_but_unverifiable` and contributes nothing.
+
+---
+
+## Which channel, and how rarely
+
+`src/doctor/channels.py` chooses between `NO_ACTION · RETRY · EMAIL ·
+PAYMENT_LINK · VOICE · ESCALATE` by rule, from structured facts: attempt
+budget, error class, amount, issuer health, contactability, the signed
+mandate, the stopping rules.
+
+**The cheapest channel that can plausibly work wins.** A payment that can still
+be retried silently is retried silently. The customer is only contacted when
+the machine has run out of ways to fix it without them.
+
+On CloudSync's 227 failures:
+
+```
+retry        103    the customer does nothing
+no action     90    hard declines and auth failures — nothing converts these
+escalate      34    no channel is both permitted and available
+email          0
+payment link   0
+voice          0    ← the policy contacts a customer zero times
+```
+
+That is the finding, and it is a negative one. **A recovery product that
+phones people is a nuisance**, and this one has to run out of quieter options
+before it will.
+
+### Payment downtime: knowing when *not* to recover
+
+Grounded in real data rather than a fabricated feed. `npci_td_pct` is the
+technical-decline share published in the NPCI monthly tables this project
+already ingests. Above 1.0% the issuer is treated as degraded:
+
+```
+ROOT CAUSE         payment infrastructure degradation
+DECISION           HOLD — no channel is eligible
+WHY                a retry into a degraded issuer only burns an attempt
+RESUME CONDITION   issuer technical-decline rate back under 1.0%
+                   (or a payment.downtime.resolved event, which takes precedence)
+```
+
+The policy kernel already had a four-hour bank-degraded hold
+(`DENY_BANK_DEGRADED_HOLD`). This connects it to the diagnosis.
+
+---
+
+## Voice: a channel, not an intelligence
+
+**There is no telephony in this environment and no live voice model.** Rather
+than pretend, `src/doctor/voice.py` runs a **DETERMINISTIC VOICE DEMO**: the
+same state machine, the same guardrails, the same audit trail, driven by a
+scripted customer instead of a microphone. Every transcript is labelled
+`simulated` in the payload and on screen.
+
+Wiring real telephony means replacing the scripted customer with a
+speech-to-text classifier restricted to the same closed intent set. The state
+machine, the guardrails and the audit path do not change. That is the point of
+writing it this way.
+
+### What it structurally cannot do
+
+Enforced by construction, not by prompt. There is no model behind it — five
+states, a closed intent set, and a fixed line table.
+
+| It cannot | Because |
+|---|---|
+| Decide to call | It receives a `ChannelDecision` and raises if it is not `voice`. Five tests, one per other channel. |
+| Call twice | The mandate caps remediation attempts per payment and a call is one. `max_contact_attempts` is 1. |
+| Ask for a card number, CVV, OTP, PIN or password | Every outbound line is checked against a pattern list before it is emitted. A match **raises** rather than being logged and shipped — a guardrail that fails open is decoration. |
+| Offer a discount or waive anything | Same check, same list. |
+| Report money | A customer saying yes authorises a link and nothing else. `recovered_paise` is 0 in every scenario, in every language. |
+| Improvise | There is no free-text generation anywhere in the module. |
+
+### The finding that made this feature honest
+
+**No payment in the committed book reaches the voice branch, and working out
+why was the most useful thing that happened while building it.**
+
+`REISSUE_PAYMENT_LINK` is in `AUTO_EXECUTABLE`, so the kernel applies the
+per-payment attempt cap and the hard ceiling to a payment link *exactly* as it
+does to a retry. Under a mandate that permits both, **every condition that
+blocks a retry blocks a link too** — so the contact channels are structurally
+unreachable and the policy never needs to phone anybody.
+
+The first version of `channels.py` did not know that. It proposed calls and
+links, and the kernel denied every single one. The layering was correct and
+the proposal was impossible, which is a worse failure than an unsafe one
+because it looks like it works.
+
+The case where a call *is* the right answer is a mandate that permits **asking**
+the customer but not **charging** them: *"do not auto-retry my customers' cards,
+but you may send them a link."* That is a realistic and rather thoughtful
+merchant policy, and under it the contact channels are the only channels there
+are. So the demo constructs that mandate — **re-signed with the merchant's own
+Ed25519 key**, because `policy.evaluate` refuses an unverifiable mandate before
+it checks anything else — and runs it through the same `channels.decide`, the
+same kernel and the same state machine. Nothing is bypassed. What is
+constructed is the payment and the merchant's choice of permissions, and both
+are named on screen.
+
+### The demo, and the two failures worth showing
+
+₹12,400 · soft decline · contact on file · mandate permits asking, not charging
+
+```
+1  Revenue Doctor decides    VOICE
+2  The kernel rules          STEP_UP · STEP_UP_ABOVE_AUTO_LIMIT
+                             Rs 12,400 is above the Rs 3,000 auto-execute
+                             limit, so a person says yes before the call
+3  The channel executes      one attempt, then stops
+```
+
+**Customer accepts** → link authorised → `₹0 recovered, awaiting a
+payment_link.paid event`. The call did not recover anything; it authorised an
+ask.
+
+**Customer disputes it** — *"I don't recognise this payment."*
+
+> Understood. I will not proceed with the payment recovery. I am stopping here
+> and escalating this for review. No payment action will be taken.
+
+→ `ESCALATED · no payment action taken · ₹0`
+
+**Customer offers a card number** — the agent refuses and continues the
+permitted flow:
+
+> I cannot ask you for any payment details, and I never take them over the
+> phone. All I can do is send a secure link for you to complete yourself.
+
+Hinglish is one alternate line table over the identical state machine, so a
+language cannot introduce a branch the English path does not have. A test
+walks every line of both tables through every guardrail.
+
+---
+
+## Recovery Data Room and lineage
+
+`/data` reports every source a recovery number depends on — records, origin,
+ingestion state, completeness, duplicates refused, invalid rows, and
+**unresolved references**. That last column is the one that earns its place: an
+outcome event naming a payment no batch contains means the loop has a hole in
+it, and it surfaces as a warning rather than as a total that is quietly a bit
+small.
+
+`/api/lineage/{merchant}/{txn}` walks one payment all the way down:
+
+```
+PAYMENT     pay_cloudsync_1065 · HDFC Bank · hour 3 · payment_pending
+DECISION    retry_soft_decline proposed
+POLICY      allow · OK_WITHIN_MANDATE
+EXECUTION   executed, by platform
+EVENT       payment.captured · failed → captured  (synthetic)
+AUDIT       entry 4f2a… chained to 91be…
+RECOVERED   Rs 2,858 — confirmed by outcome event
+```
+
+Rendered as a drawer on `/recover`, not a graph: the relationship is a
+sequence, and a sequence drawn as a node graph is harder to read for no gain.
+
+---
+
 ## Money reconciliation
 
 `src/doctor/reconcile.py` exists because the UI must never show a number that
@@ -582,8 +828,8 @@ remitter bank-months. Full write-up: [`docs/npci_finding.md`](docs/npci_finding.
 
 ## What broke
 
-**Fifteen things. Thirteen found by a measurement disagreeing with me, not by a
-crash** — the last one by a check I wrote to prove the others were safe. Full write-up: **[`docs/what_broke.md`](docs/what_broke.md)** — the
+**Seventeen things. Fifteen found by a measurement disagreeing with me, not by
+a crash** — the last one by a check I wrote to prove the others were safe. Full write-up: **[`docs/what_broke.md`](docs/what_broke.md)** — the
 best 10 minutes you can spend in this repo.
 
 The short version: my best slide didn't reproduce · a test failed with the
@@ -612,6 +858,30 @@ claims payments — an invariant one level below the one I thought was
 sufficient. Account-level entries are now excluded from the partition and
 reported separately, because silently dropping a ledger entry is the exact
 failure mode `reconcile.py` exists to prevent.
+
+Two more from the recovery-channel work, both of the same shape — code that
+was wrong while looking like it worked.
+
+**The idempotency key was being erased by the thing that stored it.**
+`events.ingest` overwrote `processing_note` for any event type it did not
+recognise, and that note is exactly where `record_action` puts the
+`(payment, action)` key. Our own event types were not in `KNOWN_TYPES`, so
+every duplicate-action check silently returned `False`. The layer whose entire
+purpose is to stop a redelivered webhook producing a second charge was not
+stopping anything, and nothing failed — the second execution just quietly
+happened. Caught by driving the loop twice through the API and looking at what
+came back rather than at whether it errored.
+
+**The channel policy proposed calls the kernel could never permit.**
+`REISSUE_PAYMENT_LINK` is in `AUTO_EXECUTABLE`, so the attempt cap and the hard
+ceiling bind a payment link exactly as they bind a retry. The channel layer did
+not know that and offered voice and links for above-ceiling payments; the
+kernel denied all 25. The layering was correct and the proposal was
+structurally impossible — which is worse than an unsafe bug, because a page
+full of DENIED rows looks like the safety working. Fixing it turned a broken
+feature into the most interesting finding in the section: under a mandate that
+permits both retrying and asking, **the contact channels are unreachable and
+the policy never phones anybody.**
 
 ---
 
@@ -674,7 +944,7 @@ checks never consult a model. See [`ARCHITECTURE.md`](ARCHITECTURE.md).
 ```bash
 make setup      # python + frontend dependencies
 make demo       # backend :8000 + frontend :3000
-make test       # 521 tests
+make test       # 600 tests
 make verify     # regenerate everything, fail if any committed number moved
 ```
 
@@ -696,7 +966,7 @@ python evals/run_npci_finding.py
 python evals/run_backtest.py               # out-of-sample, real NPCI data
 python evals/run_outcome_eval.py           # forecast accuracy after a fix
 python evals/run_scale_benchmark.py        # throughput at book scale
-pytest -q                                  # 521 tests
+pytest -q                                  # 600 tests
 ```
 
 The LLM evals need a key **once** to populate the cache; after that they
@@ -719,8 +989,9 @@ data actually produces — nothing is staged.
 | 1:50 | The gap | 80.76% → 87.35%, **6.59 pts**, ₹1,09,595/month opportunity. |
 | 2:00 | Root cause | Hour-of-day degradation, **+3.79 ± 0.57 pts**, ACTIONABLE — it cleared 2× its own measured error. Two fixes withheld because theirs did not. |
 | 2:30 | **Compare** | The Lab. Replayed over the same batch, naive retry gets ₹2,11,258 and this policy gets ₹16,026 — and the loop breaches the signed mandate 247 times and wastes 594 attempts getting there. Both are counterfactual; the row marked **measured** is what the live run actually did. The frontier prices raising the ₹3,000 auto-limit: ₹78,781 recovered, but ₹4,73,665 moved with nobody watching. |
-| 3:30 | **Authorise** | AI proposes, policy decides: 14 allowed, 51 held, 16 denied. |
+| 3:20 | **Authorise** | AI proposes, policy decides: 14 allowed, 51 held, 16 denied. |
 | 4:00 | One payment | `pay_cloudsync_0060`, ₹24,816, ceiling ₹15,000 → rule 5, `DENY_AMOUNT_ABOVE_CEILING`, **DENIED**. The AI asked; the policy refused; the money was protected. |
+| 3:50 | **Recover** | Which channel reaches the customer — and that on this book it never has to: 103 retries, 90 no-action, 34 escalations, **zero customer contacts**. Then the voice demo: constructed, labelled, gated by a STEP_UP, and it reports ₹0 because a call cannot confirm a payment. |
 | 4:20 | Retry ladder | Not "retry 3× every 30 minutes". Slots at +30h/+48h/+68h for a funding decline, all inside the 24–72h plateau, all inside the 7-day window and the attempt cap. When a stopping rule fires, execution stops. |
 | 4:35 | **Evidence** | Click ₹4,741 → the three payments, each with its rule, outcome and audit hash. Eleven invariants hold; the chain re-hashes from genesis. |
 | 4:45 | **Prove** | Sealed → blind → revealed → verified. |

@@ -68,6 +68,12 @@ export const CHAIN: Link_[] = [
     kind: "deterministic",
   },
   {
+    href: "/recover",
+    match: (p) => p.startsWith("/recover"),
+    answers: "How does the fix reach the customer, and how rarely must it?",
+    kind: "deterministic",
+  },
+  {
     href: "/evidence",
     match: (p) => p.startsWith("/evidence"),
     answers: "Was every decision recorded, and does the record hold?",

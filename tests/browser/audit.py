@@ -457,6 +457,96 @@ def main() -> int:
         else:
             record("/evidence", "click Refused", "bucket button missing", "FAIL")
 
+        # -- MODE -----------------------------------------------------------
+        #
+        # The distinction this checks is the one a demo is most tempted to
+        # blur: a recovered rupee from a deterministic replay and one from a
+        # real gateway render identically. If the banner ever stops saying
+        # which, this audit has to fail.
+        print("\nMODE")
+        page.goto(BASE + "/portfolio", wait_until="networkidle")
+        safe("sidebar", "mode banner", "says which world the numbers came from",
+             lambda: page.get_by_text("SYNTHETIC EVALUATION").count() > 0)
+        safe("sidebar", "mode banner", "does not claim a gateway was involved",
+             lambda: page.get_by_text("RAZORPAY TEST MODE").count() == 0)
+
+        # -- RECOVERY CHANNELS AND VOICE -------------------------------------
+        print("\nRECOVER")
+        page.goto(BASE + "/recover", wait_until="networkidle")
+
+        safe("/recover", "page", "renders the channel mix",
+             lambda: page.get_by_text("What the policy chose").count() > 0)
+        safe("/recover", "headline finding", "states how rarely it contacts anyone",
+             lambda: page.get_by_text("contacts a customer", exact=False).count() > 0)
+
+        for label in ("Retry", "No action", "Escalate", "Payment link", "Voice"):
+            safe("/recover", "channel: %s" % label, "present",
+                 lambda l=label: page.get_by_text(l, exact=False).count() > 0)
+
+        # The voice demo must be labelled constructed, every time.
+        safe("/recover", "voice provenance", "labelled a constructed scenario",
+             lambda: page.get_by_text("CONSTRUCTED SCENARIO", exact=False).count() > 0)
+        safe("/recover", "voice provenance", "labelled a simulated call",
+             lambda: page.get_by_text("deterministic voice demo", exact=False).count() > 0)
+        safe("/recover", "voice gate", "the call needed a person to confirm it",
+             lambda: page.get_by_text("STEP_UP_ABOVE_AUTO_LIMIT", exact=False).count() > 0)
+        safe("/recover", "voice claim", "the call reports no recovered money",
+             lambda: page.get_by_text("not recovered", exact=False).count() > 0)
+        safe("/recover", "voice identity", "identifies itself as not a person",
+             lambda: page.get_by_text("I am not a person", exact=False).count() > 0)
+
+        # The scenario switcher must actually re-run the state machine.
+        sels = page.locator("select")
+        if sels.count() >= 2:
+            before = page.inner_text("body")[:6000]
+            sels.nth(0).select_option("disputes")
+            page.wait_for_timeout(1400)
+            safe("/recover", "scenario switch", "re-runs the call",
+                 lambda: page.inner_text("body")[:6000] != before)
+            safe("/recover", "graceful failure", "escalates and takes no action",
+                 lambda: page.get_by_text("escalating this for review",
+                                          exact=False).count() > 0)
+
+            sels.nth(0).select_option("asks_for_card")
+            page.wait_for_timeout(1400)
+            safe("/recover", "sensitive request", "the agent refuses on the call",
+                 lambda: page.get_by_text("never take them over the phone",
+                                          exact=False).count() > 0)
+
+            # Hinglish must not introduce a branch English does not have.
+            sels.nth(1).select_option("hinglish")
+            page.wait_for_timeout(1400)
+            safe("/recover", "hinglish", "same machine, different strings",
+                 lambda: page.get_by_text("insaan nahi", exact=False).count() > 0)
+            sels.nth(1).select_option("en")
+            page.wait_for_timeout(1000)
+        else:
+            record("/recover", "scenario switch", "selects missing", "FAIL")
+
+        # -- LINEAGE ---------------------------------------------------------
+        trace = page.locator("select").last
+        if trace.count():
+            opts = trace.locator("option")
+            if opts.count() > 1:
+                trace.select_option(index=1)
+                page.wait_for_timeout(1500)
+                safe("/recover", "lineage", "traces one payment to its audit entry",
+                     lambda: page.get_by_text("audit", exact=False).count() > 0)
+            else:
+                record("/recover", "lineage", "no payments to trace", "FAIL")
+
+        # -- RECOVERY DATA ROOM ----------------------------------------------
+        print("\nDATA ROOM")
+        page.goto(BASE + "/data", wait_until="networkidle")
+        safe("/data", "data room", "renders every source",
+             lambda: page.get_by_text("Recovery data room").count() > 0)
+        for src in ("Payments", "Payment events", "Audit entries",
+                    "NPCI bank tables", "Signed mandates"):
+            safe("/data", "source: %s" % src, "counted",
+                 lambda x=src: page.get_by_text(x, exact=True).count() > 0)
+        safe("/data", "provenance", "real NPCI data is distinguished from synthetic",
+             lambda: page.get_by_text("real", exact=True).count() > 0)
+
         # ── BACK / FORWARD / REFRESH ──────────────────────────────────────
         print("\nHISTORY + REFRESH")
         page.goto(BASE + "/portfolio", wait_until="networkidle")
@@ -516,7 +606,8 @@ def main() -> int:
         for w, h in ((1366, 768), (1440, 900), (1920, 1080)):
             page.set_viewport_size({"width": w, "height": h})
             for path in ("/portfolio", diag_url, diag_url + "/authorise",
-                         "/lab", "/platform", "/prove", "/evidence", "/data"):
+                         "/lab", "/recover", "/platform", "/prove",
+                         "/evidence", "/data"):
                 def no_overflow(path=path, w=w):
                     page.goto(BASE + path if path.startswith("/") else path,
                               wait_until="networkidle")

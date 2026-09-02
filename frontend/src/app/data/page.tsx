@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { TopBar } from "@/components/Chrome";
 import { NpciUpload } from "@/components/NpciUpload";
 import { Card, Detail, Eyebrow, Figure, PageHead, Panel, SectionHeader, Stagger } from "@/components/ui";
+import { DataRoom } from "@/components/DataRoom";
 import { Merchant } from "@/lib/types";
 
 interface Summary {
@@ -166,6 +167,16 @@ export default function DataPage() {
         {/* ── your payments ── */}
         <Stagger i={1}>
           <Card>
+            {/* Every source behind a recovery number, before the upload
+                controls. "Bring your own data" is the second thing this page
+                is for; the first is showing that the data already here is
+                whole enough to trust the totals computed from it. */}
+            <SectionHeader
+              title="Recovery data room"
+              sub="Every source a recovery number depends on, with its record count, completeness, duplicates and unresolved references. If a total cannot be traced to rows in one of these, it is not shown anywhere."
+            />
+            <DataRoom />
+
             <SectionHeader
               title="Diagnose a month of your own transactions"
               sub="The same decomposition the demo merchants get. Column names are matched loosely — issuer or bank, status or succeeded, amount or amount_paise — because no two exports agree on them."

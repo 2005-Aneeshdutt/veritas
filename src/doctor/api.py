@@ -27,7 +27,7 @@ ROOT = Path(__file__).resolve().parents[2]
 if str(ROOT / "src") not in sys.path:
     sys.path.insert(0, str(ROOT / "src"))
 
-from fastapi import FastAPI, File, HTTPException, UploadFile
+from fastapi import FastAPI, File, HTTPException, Request, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
 
@@ -52,7 +52,14 @@ from doctor.outreach import (
     smtp_configured,
     verify as smtp_verify,
 )
+from doctor import events as ev
+from doctor.channels import decide as decide_channel
 from doctor.counterfactual import run_lab
+from doctor.dataroom import build_dataroom, lineage
+from doctor.mode import status as mode_status, webhook_secret
+from doctor.recovery import confirm, execute_recovery, plan_recovery
+from doctor.rzp import adapter_status
+from doctor.voice import demo as voice_demo
 from doctor.reconcile import drilldown, reconcile
 from doctor.portfolio import build_portfolio, ledger_csv, portfolio_csv
 from doctor.generator import GeneratedMerchant
@@ -1120,6 +1127,232 @@ async def npci_rerun_stream(
         media_type="text/event-stream",
         headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"},
     )
+
+
+def mode_stamp() -> dict:
+    """Provenance for any response that carries money."""
+    from doctor.mode import stamp
+
+    return stamp()
+
+
+def _iso_now() -> str:
+    from datetime import datetime, timezone
+
+    return datetime.now(timezone.utc).isoformat()
+
+
+@app.get("/api/mode")
+def mode() -> dict:
+    """Which world the numbers came from, and what would change it.
+
+    Read by the global banner. Every page shows this, because a recovered
+    rupee from a deterministic replay and one from a real gateway render
+    identically and only one of them means an external system agreed.
+    """
+    st = mode_status()
+    return json.loads(st.model_dump_json()) | {"adapter": adapter_status()}
+
+
+@app.post("/api/events/webhook")
+async def events_webhook(request: Request) -> dict:
+    """Razorpay's webhook. Authenticated, normalised, deduplicated.
+
+    Rejects everything when no RAZORPAY_WEBHOOK_SECRET is configured. An
+    unauthenticated webhook that accepts anything would let anybody on the
+    internet tell this system a payment was recovered, which is the one lie
+    the whole product is built to make impossible.
+    """
+    raw = await request.body()
+    secret = webhook_secret()
+    sig = request.headers.get("x-razorpay-signature", "")
+
+    if not secret:
+        raise HTTPException(
+            503,
+            "No RAZORPAY_WEBHOOK_SECRET configured. Inbound events cannot be "
+            "authenticated, so they are refused rather than trusted.",
+        )
+    if not ev.verify_signature(raw, sig, secret):
+        raise HTTPException(401, "signature does not verify")
+
+    try:
+        payload = json.loads(raw.decode("utf-8"))
+    except (UnicodeDecodeError, json.JSONDecodeError):
+        raise HTTPException(400, "body is not JSON")
+
+    event = ev.normalise(payload, "razorpay_test")
+    if event is None:
+        raise HTTPException(400, "could not normalise this payload")
+
+    res = ev.ingest([event])
+    ev.note_duplicates(res.duplicates)
+    return json.loads(res.model_dump_json())
+
+
+@app.get("/api/events")
+def list_events(limit: int = 60, source: str | None = None) -> dict:
+    """The event log, newest last, with the summary the Data Room reads."""
+    evs = ev.store.all(source)
+    return {
+        "summary": json.loads(ev.summarise().model_dump_json()),
+        "events": [json.loads(e.model_dump_json()) for e in evs[-limit:]],
+        "total": len(evs),
+    } | mode_stamp()
+
+
+@app.post("/api/events/simulate")
+def simulate_event(
+    merchant_id: str, txn_id: str, event_type: str = "payment_link.paid"
+) -> dict:
+    """Generate ONE synthetic outcome event, so the loop closes without a gateway.
+
+    Labelled `synthetic` in the store and on every screen that reads it. This
+    is the honest version of the thing a demo normally fakes: the event is
+    real, the ingestion is real, the idempotency is real, and the source says
+    plainly that no gateway was involved.
+    """
+    if event_type not in ev.OUTCOME_TYPES:
+        raise HTTPException(
+            400,
+            "only an outcome event can be simulated here: %s"
+            % ", ".join(sorted(ev.OUTCOME_TYPES)),
+        )
+    from doctor.recovery import _payment
+
+    txn = _payment(merchant_id, txn_id)
+    if txn is None:
+        raise HTTPException(404, "no such payment: %s" % txn_id)
+
+    e = ev.Event(
+        event_id="synth_%s_%s" % (event_type.replace(".", "_"), txn_id),
+        source="synthetic",
+        event_type=event_type,
+        timestamp=_iso_now(),
+        received_at=_iso_now(),
+        merchant_id=merchant_id,
+        payment_id=txn_id,
+        amount_paise=int(txn["amount_paise"]),
+        previous_state="failed",
+        new_state="paid",
+        processing_status="processed",
+        processing_note="synthetic outcome — no gateway was contacted",
+    )
+    res = ev.ingest([e])
+    ev.note_duplicates(res.duplicates)
+    return json.loads(res.model_dump_json()) | mode_stamp()
+
+
+@app.get("/api/recovery/{merchant_id}/{txn_id}")
+def recovery_plan(merchant_id: str, txn_id: str) -> dict:
+    """Which channel, why, and what the kernel says. Decides nothing, sends nothing."""
+    from doctor.run import load_mandate
+
+    try:
+        att = plan_recovery(merchant_id, txn_id, load_mandate(merchant_id))
+    except FileNotFoundError as e:
+        raise HTTPException(404, str(e))
+    return json.loads(confirm(att).model_dump_json())
+
+
+@app.post("/api/recovery/{merchant_id}/{txn_id}")
+def recovery_execute(
+    merchant_id: str,
+    txn_id: str,
+    confirmed: bool = False,
+    actor: str = "platform",
+) -> dict:
+    """Do the one thing the gate permitted, once. Idempotent by construction."""
+    from doctor.run import load_mandate
+
+    try:
+        att = execute_recovery(
+            merchant_id, txn_id, load_mandate(merchant_id),
+            confirmed=confirmed, actor=actor,
+        )
+    except FileNotFoundError as e:
+        raise HTTPException(404, str(e))
+    return json.loads(confirm(att).model_dump_json())
+
+
+@app.get("/api/channels/{merchant_id}")
+def channel_mix(merchant_id: str) -> dict:
+    """What the channel policy would do across this merchant's whole batch.
+
+    The interesting number is how rarely it reaches for a customer: on this
+    book it never calls anyone, because a quieter option is always available
+    or nothing is permitted at all.
+    """
+    from doctor.recovery import _merchant
+    from doctor.run import load_mandate
+
+    m = _merchant(merchant_id)
+    if not m:
+        raise HTTPException(404, "no such merchant: %s" % merchant_id)
+    signed = load_mandate(merchant_id)
+    health = None
+    from doctor.recovery import _bank_health
+
+    health = _bank_health(merchant_id)
+
+    mix: dict[str, int] = {}
+    value: dict[str, int] = {}
+    rows = []
+    for t in m.get("transactions", []):
+        if t.get("succeeded"):
+            continue
+        d = decide_channel(
+            txn_id=t["txn_id"], merchant_id=merchant_id,
+            amount_paise=int(t["amount_paise"]),
+            error_class=t.get("error_class") or "soft_decline",
+            bank=t.get("bank") or "", prior_attempts=int(t.get("attempts") or 1),
+            signed=signed, bank_health=health,
+        )
+        mix[d.chosen] = mix.get(d.chosen, 0) + 1
+        value[d.chosen] = value.get(d.chosen, 0) + int(t["amount_paise"])
+        if len(rows) < 40:
+            rows.append(json.loads(d.model_dump_json()))
+
+    return {
+        "merchant_id": merchant_id,
+        "merchant_name": m.get("profile", {}).get("name", merchant_id),
+        "mix": mix,
+        "value_paise": value,
+        "sample": rows,
+        "note": (
+            "Cheapest workable channel first. A payment that can still be "
+            "retried silently is retried silently; the customer is only "
+            "contacted when nothing quieter is available."
+        ),
+    } | mode_stamp()
+
+
+@app.get("/api/voice/demo")
+def voice_demo_route(scenario: str = "accepts", language: str = "en") -> dict:
+    """One constructed voice scenario, through the real decision and kernel."""
+    from doctor.voice import SCENARIOS
+
+    if scenario not in SCENARIOS:
+        raise HTTPException(
+            404, "no such scenario: %s (have %s)"
+            % (scenario, ", ".join(sorted(SCENARIOS)))
+        )
+    return json.loads(voice_demo(scenario, language).model_dump_json())
+
+
+@app.get("/api/dataroom")
+def dataroom() -> dict:
+    """Every source behind a recovery number, with its completeness."""
+    return json.loads(build_dataroom().model_dump_json()) | mode_stamp()
+
+
+@app.get("/api/lineage/{merchant_id}/{txn_id}")
+def payment_lineage(merchant_id: str, txn_id: str) -> dict:
+    """One payment, from the batch row to the audit entry that closed it."""
+    out = lineage(merchant_id, txn_id)
+    if out is None:
+        raise HTTPException(404, "no such payment: %s" % txn_id)
+    return json.loads(out.model_dump_json()) | mode_stamp()
 
 
 @app.get("/api/lab/{merchant_id}")

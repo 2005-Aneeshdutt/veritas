@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { SystemPulse, ActivityLine } from "@/components/SystemPulse";
+import { ModeBanner } from "@/components/ModeBanner";
 import { ThemeToggle } from "@/components/Theme";
 
 export function Logo({ size = "sm" }: { size?: "sm" | "lg" }) {
@@ -180,6 +181,10 @@ export function Sidebar({ runHref }: { runHref?: string | null }) {
       label: "Authorise",
       match: run ? [`${run}/authorise`] : [],
     },
+    // How the recovery actually reaches a customer, and how rarely it has
+    // to. Sits after Authorise because it is what the authorised action
+    // turns into.
+    { href: "/recover", label: "Recover", match: ["/recover"] },
     { href: "/platform", label: "Platform", match: ["/platform"] },
     { href: "/prove", label: "Prove", match: ["/prove"] },
   ];
@@ -285,6 +290,7 @@ export function Sidebar({ runHref }: { runHref?: string | null }) {
         </div>
 
         <div className="px-2.5 py-2.5 border-t border-line shrink-0">
+          <ModeBanner />
           <SystemStatus />
           <ResetDemo />
           <div className="flex items-center justify-between mt-1">
