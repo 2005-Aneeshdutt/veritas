@@ -25,7 +25,7 @@ import { Loading, PageHead, Panel, Stagger } from "@/components/ui";
  */
 export default function ControlTowerPage() {
   const [q, setQ] = useState<any>(null);
-  const [filt, setFilt] = useState("urgent");
+  const [filt, setFilt] = useState("attention");
   const [open, setOpen] = useState<{ m: string; d: string } | null>(null);
   const [dead, setDead] = useState(false);
 
@@ -59,11 +59,46 @@ export default function ControlTowerPage() {
           sub="Decisions requiring attention."
           right={
             <span className="text-[12px] text-muted whitespace-nowrap">
-              <span className="num text-ink">{q.needing_attention}</span> of{" "}
-              <span className="num">{q.total}</span> need attention
+              <span className="num text-ink">{q.needing_attention}</span>{" "}
+              require attention
             </span>
           }
         />
+      </Stagger>
+
+      {/* ── the three populations, stated plainly ──
+          "Not eligible for autonomous action" and "needs an operator" are
+          different questions, and answering only the first made this queue
+          1,623 items long. Most failures cannot be automated; most of those
+          are not anybody's task either -- an expired card is blocked on the
+          world, not on a person. Both numbers are shown, because shrinking
+          the queue by hiding the population it came from would be the same
+          dishonesty in the other direction. */}
+      <Stagger>
+        <p className="text-[12.5px] text-muted leading-relaxed">
+          <span className="num text-ink">
+            {q.total.toLocaleString("en-IN")}
+          </span>{" "}
+          decisions evaluated ·{" "}
+          <span className="num text-amber">
+            {q.not_eligible_for_autonomous.toLocaleString("en-IN")}
+          </span>{" "}
+          not eligible for autonomous action ·{" "}
+          <span className="num text-brand">
+            {q.needing_attention.toLocaleString("en-IN")}
+          </span>{" "}
+          require attention
+          <span className="text-faint">
+            {" "}
+            — the difference is{" "}
+            {(
+              q.not_eligible_for_autonomous - q.needing_attention
+            ).toLocaleString("en-IN")}{" "}
+            failures no channel converts and issuers held on a clock. Nothing
+            an operator decides changes those, so they are counted here and
+            kept out of the queue. The All filter still reaches every one.
+          </span>
+        </p>
       </Stagger>
 
       {/* ── the split, in one line ── */}
@@ -111,6 +146,9 @@ export default function ControlTowerPage() {
             </div>
             <p className="text-[13px] text-muted mt-2">
               No decisions require human attention under this filter.
+            </p>
+            <p className="text-[12px] text-faint mt-2">
+              {q.total.toLocaleString("en-IN")} were evaluated.
             </p>
           </div>
         </Stagger>

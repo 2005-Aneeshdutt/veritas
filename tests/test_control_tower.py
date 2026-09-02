@@ -452,19 +452,68 @@ def test_the_policy_result_is_the_kernels_own_verdict(decisions):
 def test_filters_partition_sensibly():
     q = ct.build_queue(filt="all", limit=1)
     assert q.counts_by_filter["all"] == q.total
-    assert q.counts_by_filter["urgent"] <= q.total
+    assert q.counts_by_filter["urgent"] <= q.counts_by_filter["attention"]
     assert q.counts_by_filter["policy"] >= q.counts_by_state.get("hold", 0)
 
 
-def test_only_unsettled_states_count_as_needing_attention():
-    """AUTO_ALLOW and DENY are settled. Neither belongs in a queue."""
+def test_the_three_populations_are_nested_and_add_up():
+    """Evaluated >= not-eligible >= needs-a-person, and nothing is hidden.
+
+    Conflating the middle and the last made the queue 1,623 items long, which
+    is a database rather than a work queue. They are different questions and
+    both answers are on screen.
+    """
     q = ct.build_queue(filt="all", limit=1)
-    expected = sum(
-        q.counts_by_state.get(s, 0) for s in ct.ATTENTION_STATES
+    assert q.total >= q.not_eligible_for_autonomous >= q.needing_attention
+    # Not eligible is exactly "everything the system will not do alone".
+    assert q.not_eligible_for_autonomous == q.total - q.counts_by_state.get(
+        "auto_allow", 0
     )
-    assert q.needing_attention == expected
-    assert "auto_allow" not in ct.ATTENTION_STATES
-    assert "deny" not in ct.ATTENTION_STATES
+    # And the queue's own filter agrees with the count.
+    assert q.counts_by_filter["attention"] == q.needing_attention
+    assert q.counts_by_filter["all"] == q.total
+
+
+def test_an_auto_allow_is_never_in_the_attention_queue(decisions):
+    for d in decisions:
+        if d.state == "auto_allow":
+            assert d.requires_attention is False
+            assert d.not_actionable_reason
+
+
+def test_a_failure_no_channel_converts_is_not_an_operator_task(decisions):
+    """The distinction that shrank the queue without hiding anything.
+
+    An expired card is blocked on the world, not on a person. It is correctly
+    ineligible for automation AND correctly not anybody's task, and calling it
+    an escalation put 764 non-tasks in front of an operator.
+    """
+    not_actionable = [
+        d for d in decisions
+        if not d.requires_attention and d.state != "auto_allow"
+    ]
+    assert not_actionable, "expected some ineligible-but-not-actionable items"
+    for d in not_actionable:
+        assert d.not_actionable_reason
+        assert d.error_class not in ("soft_decline", "technical") or (
+            "issuer" in d.not_actionable_reason
+        )
+
+
+def test_everything_a_person_is_blocked_on_is_still_in_the_queue(decisions):
+    """The other half: nothing actionable was quietly dropped."""
+    for d in decisions:
+        if d.state in ("human_review", "hold", "deny"):
+            if d.not_actionable_reason and "issuer" in d.not_actionable_reason:
+                continue        # waiting on a clock, not a person
+            assert d.requires_attention, d.decision_id
+
+
+def test_the_full_population_is_still_reachable(decisions):
+    """Shrinking the queue by hiding the rest would be the same dishonesty."""
+    q = ct.build_queue(filt="all", limit=200)
+    assert q.counts_by_filter["all"] == q.total
+    assert q.counts_by_filter["all"] > q.counts_by_filter["attention"]
 
 
 def test_the_queue_is_capped(decisions):

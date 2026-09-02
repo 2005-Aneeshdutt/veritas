@@ -495,9 +495,18 @@ def main() -> int:
         safe("/control-tower", "page", "renders the queue",
              lambda: page.get_by_text("Decisions requiring attention").count() > 0)
         safe("/control-tower", "attention count", "says how many need a person",
-             lambda: page.get_by_text("need attention", exact=False).count() > 0)
+             lambda: page.get_by_text("require attention", exact=False).count() > 0)
+        # The full population must stay visible. Shrinking the queue by hiding
+        # what it was drawn from would be the same dishonesty in reverse.
+        safe("/control-tower", "population", "reports everything evaluated",
+             lambda: page.get_by_text("decisions evaluated",
+                                      exact=False).count() > 0)
+        safe("/control-tower", "population", "reports what cannot be automated",
+             lambda: page.get_by_text("not eligible for autonomous action",
+                                      exact=False).count() > 0)
 
-        for f in ("Urgent", "High value", "Uncertain", "Policy", "All"):
+        for f in ("Needs me", "Urgent", "High value", "Uncertain", "Policy",
+                  "All"):
             safe("/control-tower", "filter: %s" % f, "present",
                  lambda x=f: page.get_by_role("button", name=re.compile(x, re.I))
                  .count() > 0)

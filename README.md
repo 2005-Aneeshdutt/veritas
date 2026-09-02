@@ -509,6 +509,29 @@ what a direct `evaluate()` returns for the same action and mandate.
 Across the book: 645 human review · 764 escalate · 372 auto-allow · 214 hold ·
 95 deny.
 
+### Ineligible is not the same as needs-a-person
+
+Answering only "can the system do this alone?" made the queue 1,623 items
+long, which is a database rather than a work queue. Three populations, all on
+screen:
+
+```
+2,090 decisions evaluated
+1,718 not eligible for autonomous action
+  950 require attention
+```
+
+The 768 in the gap are failures **no channel converts** — expired cards,
+failed authentication — and issuers held on a clock. Those are blocked on the
+world, not on a person: correctly outside automation, and correctly nobody's
+task. Calling them escalations put 764 non-tasks in front of an operator.
+
+The distinction reads what `channels.py` already concluded. It is not a new
+threshold, and `AUTO_RATIO`, `CLASSIFIER_FLOOR` and the policy kernel are
+untouched. Nothing is hidden either: the ineligible count sits on the same
+line as the attention count, and the **All** filter still reaches every one of
+the 2,090.
+
 ### Evidence quality is measured, not asserted
 
 Four signals the pipeline already produces, none invented:
@@ -1077,7 +1100,7 @@ checks never consult a model. See [`ARCHITECTURE.md`](ARCHITECTURE.md).
 ```bash
 make setup      # python + frontend dependencies
 make demo       # backend :8000 + frontend :3000
-make test       # 638 tests
+make test       # 642 tests
 make verify     # regenerate everything, fail if any committed number moved
 ```
 
@@ -1099,7 +1122,7 @@ python evals/run_npci_finding.py
 python evals/run_backtest.py               # out-of-sample, real NPCI data
 python evals/run_outcome_eval.py           # forecast accuracy after a fix
 python evals/run_scale_benchmark.py        # throughput at book scale
-pytest -q                                  # 638 tests
+pytest -q                                  # 642 tests
 ```
 
 The LLM evals need a key **once** to populate the cache; after that they

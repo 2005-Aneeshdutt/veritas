@@ -205,6 +205,12 @@ class Decision(BaseModel):
     priority_score: float
     priority_reasons: list[str] = []
     human_review_required: bool = False
+    #: Is a PERSON what this is blocked on? False for a settled auto-allow, a
+    #: failure no channel converts, and an issuer held on a clock. Those are
+    #: ineligible for automation without being anybody's task.
+    requires_attention: bool = True
+    #: Why not, when not. Shown rather than hidden.
+    not_actionable_reason: str | None = None
     #: What a person is allowed to do here. Enforced in review(), not just UI.
     permitted_human_actions: list[str] = []
     override_blocked_reason: str | None = None
@@ -223,7 +229,13 @@ class Decision(BaseModel):
 
 class Queue(BaseModel):
     decisions: list[Decision]
+    #: Every failed payment that was evaluated.
     total: int
+    #: Of those, how many the system cannot act on alone. Most of them, and
+    #: that is the honest shape of the problem rather than a failure.
+    not_eligible_for_autonomous: int = 0
+    #: Of THOSE, how many a person is actually blocked on. The rest are
+    #: blocked on the world or on a clock.
     needing_attention: int
     counts_by_state: dict[str, int]
     counts_by_filter: dict[str, int]
@@ -452,6 +464,48 @@ def _state(
     ), False
 
 
+def _attention(state: State, ch: ChannelDecision | None) -> tuple[bool, str | None]:
+    """Is a PERSON what this is blocked on?
+
+    "Not eligible for autonomous action" and "needs an operator" are different
+    populations, and conflating them made the queue 1,623 items long -- which
+    is a database, not a work queue.
+
+    The distinction is not a new threshold and not new policy. It reads what
+    `channels.py` already concluded:
+
+      * a failure no channel converts (an expired card, a failed
+        authentication) is blocked on the WORLD. It is correctly ineligible
+        for automation, and no operator decision changes it either
+      * an issuer held for degradation is blocked on a CLOCK. It resumes on
+        its own when the condition clears, which is what `resume_condition`
+        says
+      * everything else -- a step-up waiting on a click, a refusal waiting on
+        a re-signed mandate, an abstention waiting on evidence or a judgement
+        -- is blocked on a PERSON
+
+    Nothing is hidden: the ineligible population is counted and reported on
+    the same line as the attention population, and any filter still reaches
+    it.
+    """
+    if state == "auto_allow":
+        return False, "permitted and justified -- no person needed"
+
+    if ch is not None:
+        if ch.chosen == "no_action" and not ch.downtime_hold:
+            return False, (
+                "no channel converts this class of failure, so there is "
+                "nothing for an operator to decide either"
+            )
+        if ch.downtime_hold:
+            return False, (
+                "waiting on an issuer, not on a person. Resumes when: %s"
+                % ch.resume_condition
+            )
+
+    return True, None
+
+
 def _permitted_actions(state: State) -> tuple[list[str], str | None]:
     """What a person may do here. The enforcement list, not a UI hint.
 
@@ -630,6 +684,7 @@ def build_for(merchant_id: str, signed: SignedMandate) -> list[Decision]:
             policy_result, ch.chosen, ev, ch
         )
         permitted, blocked = _permitted_actions(state)
+        attention, not_actionable = _attention(state, ch)
         expected = ch.expected_recovery_paise
         band, score, why = _priority(amount, ev, state, expected, attempts)
 
@@ -658,6 +713,8 @@ def build_for(merchant_id: str, signed: SignedMandate) -> list[Decision]:
             state=state, state_reason=state_reason,
             priority=band, priority_score=score, priority_reasons=why,
             human_review_required=needs_human,
+            requires_attention=attention,
+            not_actionable_reason=not_actionable,
             permitted_human_actions=permitted,
             override_blocked_reason=blocked,
             # Filled in lazily by the detail endpoint. The queue never
@@ -999,19 +1056,24 @@ def reevaluate(merchant_id: str, decision_id: str) -> Decision:
 
 # -- the queue ------------------------------------------------------------
 
-FILTERS = ("urgent", "high_value", "uncertain", "policy", "all")
+#: `attention` is the primary one and the page's default: what a person is
+#: actually blocked on. The rest reach the full population, which is never
+#: hidden -- only un-defaulted.
+FILTERS = ("attention", "urgent", "high_value", "uncertain", "policy", "all")
 
-#: Only these need a person. AUTO_ALLOW and DENY are settled -- one is
-#: permitted and justified, the other is refused and unappealable -- so
-#: neither belongs in a queue of things to look at.
-ATTENTION_STATES = ("human_review", "escalate", "hold")
+#: Kept for the states a person can act on. `requires_attention` is the
+#: finer-grained answer and the one the queue uses; this remains because
+#: several tests and the state legend are written against it.
+ATTENTION_STATES = ("human_review", "escalate", "hold", "deny")
 
 
 def _matches(d: Decision, f: str) -> bool:
     if f == "all":
         return True
+    if f == "attention":
+        return d.requires_attention
     if f == "urgent":
-        return d.priority == "high" and d.state in ATTENTION_STATES
+        return d.priority == "high" and d.requires_attention
     if f == "high_value":
         return d.revenue_at_stake_paise >= 1_500_000
     if f == "uncertain":
@@ -1043,20 +1105,24 @@ def build_queue(
         by_state[d.state] = by_state.get(d.state, 0) + 1
 
     by_filter = {f: sum(1 for d in everything if _matches(d, f)) for f in FILTERS}
-    attention = [d for d in everything if d.state in ATTENTION_STATES]
+    ineligible = [d for d in everything if d.state != "auto_allow"]
+    attention = [d for d in everything if d.requires_attention]
     shown = [d for d in everything if _matches(d, filt)]
     shown.sort(key=lambda d: -d.priority_score)
 
     return Queue(
         decisions=shown[:limit],
         total=len(everything),
+        not_eligible_for_autonomous=len(ineligible),
         needing_attention=len(attention),
         counts_by_state=by_state,
         counts_by_filter=by_filter,
         note=(
             "Generated from the same batches, the same diagnosis runs and the "
             "same policy kernel the rest of the product uses. No decision "
-            "here was invented for the queue."
+            "here was invented for the queue, and none is hidden: the "
+            "ineligible population is counted on the same line and the All "
+            "filter reaches every one of them."
         ),
         **mode_stamp(),
     )

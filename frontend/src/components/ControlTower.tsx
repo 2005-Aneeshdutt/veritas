@@ -37,6 +37,7 @@ const GRADE_TONE: Record<string, string> = {
 };
 
 export const FILTERS = [
+  { key: "attention", label: "Needs me" },
   { key: "urgent", label: "Urgent" },
   { key: "high_value", label: "High value" },
   { key: "uncertain", label: "Uncertain" },
@@ -122,7 +123,11 @@ export function DecisionCard({
       <div className="flex items-center gap-3 mt-3.5 pt-3 border-t border-line">
         <p className="text-[11.5px] text-muted leading-snug flex-1 min-w-0">
           {d.merchant_name} ·{" "}
-          {d.priority_reasons.slice(0, 2).join(" · ") || d.state_reason}
+          {d.not_actionable_reason ? (
+            <span className="text-faint">{d.not_actionable_reason}</span>
+          ) : (
+            d.priority_reasons.slice(0, 2).join(" · ") || d.state_reason
+          )}
         </p>
         <button
           onClick={onReview}
