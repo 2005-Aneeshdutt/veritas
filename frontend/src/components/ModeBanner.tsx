@@ -49,8 +49,13 @@ export function ModeBanner() {
         </span>
       </div>
       <p className="text-[10px] text-faint mt-1 leading-snug">
+        {/* Precision matters more here than brevity. Credentials add a
+            gateway; they do not make the demo book real. Saying "payment
+            facts come from Razorpay" while the diagnosis batch is still
+            generated would be exactly the blur this banner exists to
+            prevent. */}
         {test
-          ? "Payment facts come from a Razorpay test-mode account."
+          ? "Links and outcomes come from a Razorpay test account. The batch is still generated."
           : "Every payment and rupee is generated and replayed. No gateway was contacted."}
       </p>
     </div>

@@ -400,11 +400,25 @@ also refused — that is how somebody demos something they believe is live.
 
 ```bash
 # optional. Nothing below is required for the demo.
-RAZORPAY_KEY_ID=rzp_test_xxxx
+RAZORPAY_KEY_ID=rzp_test_xxxx        # Dashboard (Test Mode) > Account & Settings > API Keys
 RAZORPAY_KEY_SECRET=xxxx
-RAZORPAY_WEBHOOK_SECRET=xxxx
+RAZORPAY_WEBHOOK_SECRET=xxxx         # you choose this when creating the webhook
 pip install razorpay
 ```
+
+**What credentials do and do not change.** They add a gateway; they do not make
+the demo book real. In test mode the payment links are genuine Razorpay
+objects and outcomes are verified against the gateway — the merchant batches
+are still generated, and the banner says exactly that rather than the shorter,
+wronger "payment facts come from Razorpay".
+
+**Verified against a live test account.** `RazorpayAdapter` was exercised end
+to end: `create_payment_link` → `fetch_payment_link` → `cancel_payment_link`
+returned a real `plink_…` id and a working `rzp.io` short URL, and a full
+recovery ran through `channels.decide` → the policy kernel → the gateway,
+producing a real link with `source: razorpay_test`, an audit entry, and —
+correctly — **`recovered: ₹0`**, because creating a link is not a recovery and
+no `payment_link.paid` had arrived.
 
 ### The adapter boundary
 

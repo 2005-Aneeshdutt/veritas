@@ -465,10 +465,23 @@ def main() -> int:
         # which, this audit has to fail.
         print("\nMODE")
         page.goto(BASE + "/portfolio", wait_until="networkidle")
-        safe("sidebar", "mode banner", "says which world the numbers came from",
-             lambda: page.get_by_text("SYNTHETIC EVALUATION").count() > 0)
-        safe("sidebar", "mode banner", "does not claim a gateway was involved",
-             lambda: page.get_by_text("RAZORPAY TEST MODE").count() == 0)
+        # Read what the process actually is rather than assuming it.
+        import urllib.request
+
+        with urllib.request.urlopen("http://localhost:8000/api/mode") as r:
+            live_mode = json.load(r)
+        here = live_mode["label"]
+        other = (
+            "SYNTHETIC EVALUATION"
+            if live_mode["mode"] == "razorpay_test"
+            else "RAZORPAY TEST MODE"
+        )
+        print("       (process is in %s)" % here)
+
+        safe("sidebar", "mode banner", "names the mode the process is in",
+             lambda: page.get_by_text(here).count() > 0)
+        safe("sidebar", "mode banner", "does not also claim the other mode",
+             lambda: page.get_by_text(other).count() == 0)
 
         # -- RECOVERY CHANNELS AND VOICE -------------------------------------
         print("\nRECOVER")
@@ -486,6 +499,9 @@ def main() -> int:
         # The voice demo must be labelled constructed, every time.
         safe("/recover", "voice provenance", "labelled a constructed scenario",
              lambda: page.get_by_text("CONSTRUCTED SCENARIO", exact=False).count() > 0)
+        # Mode-INDEPENDENT on purpose. Credentials let the product create a
+        # real payment link; they do not give it a telephone. A call is
+        # simulated in every mode and the label must say so in every mode.
         safe("/recover", "voice provenance", "labelled a simulated call",
              lambda: page.get_by_text("deterministic voice demo", exact=False).count() > 0)
         safe("/recover", "voice gate", "the call needed a person to confirm it",

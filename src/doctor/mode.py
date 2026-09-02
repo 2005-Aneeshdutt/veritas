@@ -57,8 +57,10 @@ BLURB: dict[Mode, str] = {
         "deterministically. No external system was contacted."
     ),
     Mode.RAZORPAY_TEST: (
-        "Payment facts below came from a Razorpay test-mode account. No real "
-        "money moves in test mode, and nothing here is a live transaction."
+        "Payment links and outcome verification come from a Razorpay "
+        "test-mode account. The diagnosis batch is still generated -- "
+        "credentials add a gateway, they do not make the book real. No real "
+        "money moves in test mode."
     ),
 }
 
@@ -151,8 +153,11 @@ def status() -> ModeStatus:
             razorpay_configured=True,
             webhook_secret_configured=bool(webhook_secret()),
             reason=(
-                "A rzp_test_ key pair is configured, so payment facts can be "
-                "fetched from and verified against Razorpay test mode."
+                "A rzp_test_ key pair is configured, so payment links are "
+                "created on the gateway and outcomes are verified against it. "
+                "The merchant batches remain generated: credentials add a "
+                "second source of payment facts, they do not replace the "
+                "first."
                 + (
                     ""
                     if webhook_secret()
