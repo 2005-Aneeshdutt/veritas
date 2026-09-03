@@ -1,12 +1,14 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { useSuspenseQuery } from "@tanstack/react-query";
-import { ArrowRight, Check, Circle, Minus, Route as RouteIcon, X } from "lucide-react";
-import { casesQueryOptions } from "@/data/services";
-import { ClaimBadge } from "@/components/veritas/claim-badge";
-import { PageHeader } from "@/components/veritas/page-header";
-import { PlaceholderPage } from "@/components/veritas/placeholder-page";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { Pause, Play, RotateCcw, Repeat } from "lucide-react";
+import { JOURNEY_CASES, findJourneyCase } from "@/data/journey-cases";
+import { STAGE_ORDER } from "@/domain/journey";
 import { formatMoney } from "@/domain/money";
-import type { DemoCase, JourneyStepState } from "@/domain/types";
+import { useJourneyEngine, usePrefersReducedMotion } from "@/hooks/use-journey-engine";
+import { StageTimeline } from "@/components/veritas/journey/stage-timeline";
+import { StagePanel } from "@/components/veritas/journey/stage-panels";
+import { CaseContextPanel } from "@/components/veritas/journey/case-context";
+import { EventLog } from "@/components/veritas/journey/event-log";
+import { ClaimBadge } from "@/components/veritas/claim-badge";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/_app/recovery-journey")({
@@ -16,189 +18,256 @@ export const Route = createFileRoute("/_app/recovery-journey")({
   head: () => ({
     meta: [
       { title: "Recovery Journey — VERITAS" },
-      { name: "description", content: "Payment to outcome: diagnosis, plan, authorization, execution, ledger, evidence." },
+      {
+        name: "description",
+        content:
+          "Watch a payment move through investigation, diagnosis, plan, policy, execution, outcome, ledger, evidence and proof.",
+      },
       { property: "og:title", content: "Recovery Journey — VERITAS" },
-      { property: "og:description", content: "Payment to outcome: diagnosis, plan, authorization, execution, ledger, evidence." },
+      {
+        property: "og:description",
+        content:
+          "Watch a payment move through investigation, diagnosis, plan, policy, execution, outcome, ledger, evidence and proof.",
+      },
     ],
   }),
-  loader: ({ context }) => context.queryClient.ensureQueryData(casesQueryOptions),
   component: RecoveryJourneyPage,
 });
 
-const STATE_ICON: Record<JourneyStepState, typeof Check> = {
-  complete: Check,
-  blocked: X,
-  skipped: Minus,
-  pending: Circle,
-};
-
-const STATE_TONE: Record<JourneyStepState, string> = {
-  complete: "text-measured border-measured/40",
-  blocked: "text-denied border-denied/40",
-  skipped: "text-muted-foreground border-hairline",
-  pending: "text-muted-foreground border-hairline",
-};
-
-function CasePicker({ cases, activeId }: { cases: DemoCase[]; activeId?: string }) {
-  if (cases.length === 0) return null;
-  return (
-    <section aria-label="Demo cases" className="mt-1">
-      <p className="label-meta text-[10px] tracking-[0.16em]">Demo cases</p>
-      <ul className="mt-3 divide-y divide-hairline border-t border-hairline">
-        {cases.map((c) => (
-          <li key={c.id}>
-            <Link
-              to="/recovery-journey"
-              search={{ case: c.id }}
-              className={cn(
-                "grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-4 py-3 outline-none transition-colors hover:bg-foreground/[0.03] focus-visible:bg-foreground/[0.05] px-2 -mx-2 rounded-md",
-                activeId === c.id && "bg-foreground/[0.055]",
-              )}
-            >
-              <div className="min-w-0">
-                <p className="truncate text-sm text-foreground">
-                  <span className="label-meta mr-2 text-[10px]">{c.kind}</span>
-                  {c.title}
-                </p>
-                <p className="mt-0.5 truncate font-mono text-[11px] text-muted-foreground/80">
-                  {c.id} · {c.merchant} · {c.decision}
-                </p>
-              </div>
-              <div className="flex shrink-0 items-baseline gap-3">
-                <span className="numeral text-sm text-foreground">{formatMoney(c.amount)}</span>
-                <ClaimBadge state={c.claim} size="sm" />
-              </div>
-            </Link>
-          </li>
-        ))}
-      </ul>
-    </section>
-  );
-}
+const CONTROL =
+  "inline-flex h-9 items-center gap-2 rounded-md border border-hairline px-3.5 text-[13px] transition-colors";
 
 function RecoveryJourneyPage() {
-  const { data: cases } = useSuspenseQuery(casesQueryOptions);
   const { case: caseId } = Route.useSearch();
-  const active = cases.find((c) => c.id === caseId);
+  const navigate = useNavigate({ from: "/recovery-journey" });
+  const fallback = JOURNEY_CASES[1]!;
+  const activeCase = findJourneyCase(caseId) ?? fallback;
+  const reducedMotion = usePrefersReducedMotion();
+  const engine = useJourneyEngine(activeCase);
 
-  if (!active) {
-    return (
-      <div className="space-y-8">
-        <PlaceholderPage
-          title="Recovery Journey"
-          description="Payment to outcome: diagnosis, plan, authorization, execution, ledger, evidence."
-          phase="Phase 3"
-          icon={RouteIcon}
-          capabilities={[
-            "End-to-end timeline per payment",
-            "Policy decision at each step",
-            "Gateway confirmation record",
-            "Evidence attached inline",
-          ]}
-        />
-        {caseId && (
-          <p className="text-sm text-denied">
-            No matching payment in current demo dataset: <span className="font-mono">{caseId}</span>
-          </p>
-        )}
-        <CasePicker cases={cases} />
-      </div>
-    );
-  }
+  const total = STAGE_ORDER.length;
+  const stopped = engine.finished && engine.reachedStages < total;
 
   return (
     <div className="space-y-8">
-      <PageHeader
-        title="Recovery Journey"
-        description={active.summary}
-        actions={
-          <Link
-            to="/recovery-journey"
-            search={{ case: undefined }}
-            className="label-meta inline-flex h-8 items-center rounded-md border border-hairline px-3 text-[10px] text-muted-foreground transition-colors hover:text-foreground"
-          >
-            All cases
-          </Link>
-        }
-      />
-
-      <section aria-label="Case summary" className="grid gap-6 sm:grid-cols-[minmax(0,1fr)_auto]">
-        <div className="min-w-0">
-          <p className="label-meta text-[10px] tracking-[0.16em]">
-            {active.kind} · demo case
-          </p>
-          <h2 className="mt-2 text-2xl font-semibold tracking-tight text-foreground">
-            {active.title}
-          </h2>
-          <p className="mt-1.5 font-mono text-[11px] text-muted-foreground/80">
-            {active.id} · {active.merchant} · policy {active.policy} · decision {active.decision}
-          </p>
-        </div>
-        <div className="shrink-0 sm:text-right">
-          <div className="numeral text-4xl font-semibold leading-none text-foreground">
-            {formatMoney(active.amount)}
-          </div>
-          <div className="mt-2 sm:flex sm:justify-end">
-            <ClaimBadge state={active.claim} size="sm" />
-          </div>
-        </div>
-      </section>
-
-      <section aria-label="Journey timeline">
-        <ol className="border-t border-hairline">
-          {active.steps.map((s) => {
-            const Icon = STATE_ICON[s.state];
-            return (
-              <li key={s.id} className="grid grid-cols-[auto_minmax(0,1fr)] gap-4 border-b border-hairline py-4">
+      {/* Live status header */}
+      <header className="border-b border-hairline pb-5">
+        <div className="flex flex-wrap items-end justify-between gap-x-8 gap-y-4">
+          <div className="min-w-0">
+            <p className="label-meta text-[10px] tracking-[0.16em]">
+              Recovery journey · demo case {String(activeCase.index).padStart(2, "0")} ·{" "}
+              {activeCase.kindLabel}
+            </p>
+            <h1 className="mt-2 flex flex-wrap items-center gap-3 text-xl font-semibold tracking-tight text-foreground sm:text-2xl">
+              {activeCase.title}
+              <span
+                className={cn(
+                  "label-meta inline-flex items-center gap-2 rounded-full border border-hairline px-2.5 py-1 text-[10px] tracking-[0.16em]",
+                  engine.running ? "text-projected" : "text-muted-foreground",
+                  engine.finished && activeCase.completion.tone === "measured" && "text-measured",
+                  engine.finished && activeCase.completion.tone === "denied" && "text-denied",
+                  engine.finished && activeCase.completion.tone === "unverified" && "text-observed",
+                )}
+              >
                 <span
                   aria-hidden="true"
                   className={cn(
-                    "mt-0.5 grid h-6 w-6 shrink-0 place-items-center rounded-full border",
-                    STATE_TONE[s.state],
+                    "h-1.5 w-1.5 rounded-full bg-current",
+                    engine.running && !reducedMotion && "animate-pulse",
                   )}
-                >
-                  <Icon className="h-3 w-3" />
+                />
+                {engine.liveStatus}
+              </span>
+            </h1>
+            <p className="mt-1.5 font-mono text-[11px] text-muted-foreground/80">
+              {activeCase.id} · {activeCase.merchant} · {formatMoney(activeCase.amount)} ·{" "}
+              {activeCase.policy.version}
+            </p>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="numeral mr-2 text-sm text-muted-foreground">
+              {String(engine.reachedStages).padStart(2, "0")} / {total}
+              {stopped && (
+                <span className="label-meta ml-2 text-[10px] text-denied">
+                  {activeCase.finalStatus}
                 </span>
-                <div className="min-w-0">
-                  <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-                    <span className="text-sm font-medium text-foreground">{s.label}</span>
-                    <ClaimBadge state={s.claim} size="sm" />
-                    {s.state === "skipped" && (
-                      <span className="label-meta text-[10px]">Not reached</span>
-                    )}
-                  </div>
-                  <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{s.detail}</p>
-                </div>
-              </li>
+              )}
+            </span>
+            {!engine.running && !engine.started && (
+              <button
+                type="button"
+                onClick={engine.start}
+                className={cn(CONTROL, "border-measured/50 text-foreground hover:border-measured")}
+              >
+                <Play className="h-3.5 w-3.5" aria-hidden="true" />
+                Start recovery journey
+              </button>
+            )}
+            {engine.running && (
+              <button
+                type="button"
+                onClick={engine.pause}
+                className={cn(CONTROL, "text-foreground hover:border-foreground/30")}
+              >
+                <Pause className="h-3.5 w-3.5" aria-hidden="true" />
+                Pause
+              </button>
+            )}
+            {!engine.running && engine.started && !engine.finished && (
+              <button
+                type="button"
+                onClick={engine.resume}
+                className={cn(CONTROL, "border-measured/50 text-foreground hover:border-measured")}
+              >
+                <Play className="h-3.5 w-3.5" aria-hidden="true" />
+                Resume
+              </button>
+            )}
+            {engine.finished && (
+              <button
+                type="button"
+                onClick={engine.replay}
+                className={cn(CONTROL, "text-foreground hover:border-foreground/30")}
+              >
+                <Repeat className="h-3.5 w-3.5" aria-hidden="true" />
+                Replay journey
+              </button>
+            )}
+            <button
+              type="button"
+              onClick={engine.reset}
+              className={cn(CONTROL, "text-muted-foreground hover:text-foreground")}
+            >
+              <RotateCcw className="h-3.5 w-3.5" aria-hidden="true" />
+              Reset
+            </button>
+          </div>
+        </div>
+
+        {/* Progress rail */}
+        <div className="mt-5 flex gap-1" aria-hidden="true">
+          {STAGE_ORDER.map((s) => {
+            const st = engine.stageStatus(s);
+            return (
+              <span
+                key={s}
+                className={cn(
+                  "h-0.5 flex-1 rounded-full transition-colors",
+                  st === "completed" && "bg-measured/70",
+                  st === "current" && "bg-projected",
+                  st === "denied" && "bg-denied",
+                  st === "exception" && "bg-observed",
+                  (st === "pending" || st === "not-reached" || st === "abstained") && "bg-hairline",
+                )}
+              />
             );
           })}
-        </ol>
-      </section>
+        </div>
+      </header>
 
-      <nav aria-label="Related workspaces" className="flex flex-wrap gap-2">
-        {[
-          { to: "/payments" as const, label: "View payment" },
-          { to: "/control-tower" as const, label: "View Control Tower" },
-          { to: "/evidence" as const, label: "View evidence" },
-          { to: "/prove" as const, label: "View proof" },
-        ].map((l) => (
-          <Link
-            key={l.to}
-            to={l.to}
-            className="inline-flex h-8 items-center gap-1.5 rounded-md border border-hairline px-3 text-[13px] text-muted-foreground transition-colors hover:border-foreground/25 hover:text-foreground"
+      <div className="grid gap-10 lg:grid-cols-[15rem_minmax(0,1fr)_16rem]">
+        <div className="space-y-6">
+          <StageTimeline
+            activeStage={engine.activeStage}
+            statusOf={engine.stageStatus}
+            onSelect={engine.selectStage}
+            reducedMotion={reducedMotion}
+          />
+          <EventLog events={engine.events} />
+        </div>
+
+        <div className="min-w-0 space-y-8">
+          <div
+            key={`${activeCase.id}-${engine.activeStage}`}
+            className={cn(!reducedMotion && "animate-in fade-in duration-300")}
           >
-            {l.label}
-            <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
-          </Link>
-        ))}
-      </nav>
+            <StagePanel
+              c={activeCase}
+              stage={engine.activeStage}
+              status={engine.stageStatus(engine.activeStage)}
+              reducedMotion={reducedMotion}
+            />
+          </div>
 
-      <p className="text-xs text-muted-foreground/80">
-        Demo case — no financial action is performed by this interface. Execution and confirmation
-        come from the backend once connected.
-      </p>
+          {engine.finished && (
+            <section
+              aria-label="Journey completion"
+              className={cn(
+                "border-l-2 pl-5",
+                activeCase.completion.tone === "measured" && "border-measured",
+                activeCase.completion.tone === "denied" && "border-denied",
+                activeCase.completion.tone === "unverified" && "border-observed",
+                !reducedMotion && "animate-in fade-in slide-in-from-bottom-1 duration-500",
+              )}
+            >
+              <p className="label-meta text-[10px] tracking-[0.16em]">
+                {activeCase.completion.title}
+              </p>
+              <div className="mt-2 flex flex-wrap items-end gap-x-5 gap-y-2">
+                <span className="numeral text-3xl font-semibold leading-none text-foreground">
+                  {formatMoney(activeCase.claimAmount)}
+                </span>
+                <ClaimBadge state={activeCase.claim} size="sm" />
+              </div>
+              <dl className="mt-4 grid gap-x-8 gap-y-1 sm:grid-cols-2">
+                {activeCase.completion.rows.map((r) => (
+                  <div key={r.label} className="flex items-baseline justify-between gap-4 border-b border-hairline py-1.5">
+                    <dt className="label-meta text-[10px] tracking-[0.14em]">{r.label}</dt>
+                    <dd className="text-[13px] text-foreground">{r.value}</dd>
+                  </div>
+                ))}
+              </dl>
+              {activeCase.principle && (
+                <p className="mt-4 max-w-xl text-sm text-foreground">{activeCase.principle}</p>
+              )}
+            </section>
+          )}
 
-      <CasePicker cases={cases} activeId={active.id} />
+          {/* Demo case switcher */}
+          <section aria-label="Demo cases" className="border-t border-hairline pt-5">
+            <p className="label-meta text-[10px] tracking-[0.16em]">Demo cases</p>
+            <ul className="mt-3 divide-y divide-hairline border-t border-hairline">
+              {JOURNEY_CASES.map((c) => (
+                <li key={c.id}>
+                  <button
+                    type="button"
+                    onClick={() => void navigate({ to: ".", search: { case: c.id } })}
+                    aria-current={c.id === activeCase.id ? "true" : undefined}
+                    className={cn(
+                      "-mx-2 grid w-[calc(100%+1rem)] grid-cols-[minmax(0,1fr)_auto] items-baseline gap-4 rounded-md px-2 py-3 text-left transition-colors hover:bg-foreground/[0.04]",
+                      c.id === activeCase.id && "bg-foreground/[0.055]",
+                    )}
+                  >
+                    <span className="min-w-0">
+                      <span className="truncate text-sm text-foreground">
+                        <span className="label-meta mr-2 text-[10px]">
+                          {String(c.index).padStart(2, "0")} {c.kindLabel}
+                        </span>
+                        {c.title}
+                      </span>
+                      <span className="mt-0.5 block truncate font-mono text-[11px] text-muted-foreground/80">
+                        {c.id} · {c.policy.decision} · {c.outcome.state}
+                      </span>
+                    </span>
+                    <span className="flex shrink-0 items-baseline gap-3">
+                      <span className="numeral text-sm text-foreground">{formatMoney(c.amount)}</span>
+                      <ClaimBadge state={c.claim} size="sm" />
+                    </span>
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </section>
+
+          <p className="text-xs text-muted-foreground/80">
+            Controlled demo journey. No financial action is performed by this interface — execution
+            and gateway confirmation come from the backend once connected.
+          </p>
+        </div>
+
+        <CaseContextPanel c={activeCase} />
+      </div>
     </div>
   );
 }

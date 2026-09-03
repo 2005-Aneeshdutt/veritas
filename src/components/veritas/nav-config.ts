@@ -16,6 +16,7 @@ export type AppRoute =
   | "/"
   | "/control-tower"
   | "/payments"
+  | "/payment/$paymentId"
   | "/recovery-journey"
   | "/diagnosis"
   | "/counterfactual-lab"
