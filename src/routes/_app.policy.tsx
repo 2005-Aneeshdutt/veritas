@@ -7,6 +7,7 @@ import { formatMoney } from "@/domain/money";
 import { ClaimBadge } from "@/components/veritas/claim-badge";
 import { DetailDrawer } from "@/components/veritas/detail-drawer";
 import { usePrefersReducedMotion } from "@/hooks/use-journey-engine";
+import { clearPolicyDecision, recordPolicyDecision } from "@/lib/policy-state";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/_app/policy")({
