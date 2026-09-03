@@ -96,6 +96,12 @@ export const NAV_GROUPS: NavGroup[] = [
         description: "Why a payment failed and what could change it",
       },
       {
+        label: "Recovery Plan",
+        to: "/plan",
+        icon: ClipboardList,
+        description: "What VERITAS recommends doing next — recommendation, not authorization",
+      },
+      {
         label: "Counterfactual Lab",
         to: "/counterfactual-lab",
         icon: FlaskConical,
