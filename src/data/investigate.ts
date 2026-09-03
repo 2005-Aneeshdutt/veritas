@@ -75,6 +75,11 @@ export function actionabilityLabel(actionability: string): "RELIABLE" | "LIMITED
 /* Counterfactual Lab                                                  */
 /* ------------------------------------------------------------------ */
 
+export interface BreachCategory {
+  label: string;
+  count: number;
+}
+
 export interface Strategy {
   id: string;
   label: string;
@@ -83,6 +88,8 @@ export interface Strategy {
   cost: Money;
   net: Money;
   breaches: number;
+  /** Undefined when the demo data does not break the total down by category. */
+  breachBreakdown?: BreachCategory[];
   governance: "WITHIN AUTHORITY" | "BREACHES AUTHORITY" | "NO ACTION";
   difference: string;
 }
@@ -105,6 +112,10 @@ export const STRATEGIES: Strategy[] = [
     cost: inr(96430),
     net: inr(114828),
     breaches: 247,
+    breachBreakdown: [
+      { label: "Retry cap breaches", count: 198 },
+      { label: "Authorization ceiling breaches", count: 49 },
+    ],
     governance: "BREACHES AUTHORITY",
     difference:
       "Retries every failed payment regardless of ceiling, cool-down or contact fatigue. High raw recovery obtained outside the authority boundary.",
@@ -147,14 +158,43 @@ export const STRATEGIES: Strategy[] = [
 export const OPTIMIZATION_STATEMENT =
   "More recovery is not better recovery if the strategy violates the authority boundary.";
 
-export const COMPARISON_STEPS: string[] = [
-  "Loading baseline",
-  "Evaluating naive retry",
-  "Evaluating static rules",
-  "Evaluating Revenue Doctor",
-  "Checking policy breaches",
-  "Comparison ready",
+export interface ComparisonStep {
+  label: string;
+  /** Strategy marked EVALUATED once this step completes, when the step is a strategy pass. */
+  strategyId?: string;
+}
+
+export const COMPARISON_STEPS: ComparisonStep[] = [
+  { label: "Loading baseline", strategyId: "none" },
+  { label: "Evaluating naive retry", strategyId: "naive" },
+  { label: "Evaluating static rules", strategyId: "static" },
+  { label: "Evaluating Revenue Doctor", strategyId: "doctor" },
+  { label: "Evaluating Revenue Doctor + merchant", strategyId: "doctor-merchant" },
+  { label: "Checking policy breaches" },
+  { label: "Comparison ready" },
 ];
+
+export const COUNTERFACTUAL_DISCLAIMER =
+  "Counterfactual values model what could have happened under each strategy; they are not measured recovery.";
+
+/** Highest modelled recovery, ignoring governance. */
+export function highestRawRecovery(): Strategy {
+  return STRATEGIES.reduce((a, b) => (b.recovery.minor > a.recovery.minor ? b : a));
+}
+
+/** Highest recovery among strategies with zero policy breaches. */
+export function bestGovernedRecovery(): Strategy {
+  const governed = STRATEGIES.filter((s) => s.breaches === 0 && s.recovery.minor > 0);
+  return governed.reduce((a, b) => (b.recovery.minor > a.recovery.minor ? b : a));
+}
+
+/** Fewest breaches; ties resolve toward the higher modelled recovery. */
+export function lowestBreaches(): Strategy {
+  return STRATEGIES.reduce((a, b) => {
+    if (b.breaches !== a.breaches) return b.breaches < a.breaches ? b : a;
+    return b.recovery.minor > a.recovery.minor ? b : a;
+  });
+}
 
 export function findStrategy(id: string | undefined): Strategy {
   return STRATEGIES.find((s) => s.id === id) ?? STRATEGIES[3]!;
