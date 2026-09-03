@@ -1,5 +1,6 @@
 import {
   Activity,
+  ClipboardList,
   CreditCard,
   FileCheck2,
   FlaskConical,
