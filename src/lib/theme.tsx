@@ -6,7 +6,7 @@ export type ThemeMode = "dark" | "light" | "system";
 export const THEME_STORAGE_KEY = "veritas-theme";
 
 /** Inline script that applies the persisted theme before first paint. */
-export const themeInitScript = `(function(){try{var m=localStorage.getItem("${THEME_STORAGE_KEY}")||"dark";var d=m==="dark"||(m==="system"&&window.matchMedia("(prefers-color-scheme: dark)").matches);var e=document.documentElement;e.classList.remove("dark","light");e.classList.add(d?"dark":"light");e.style.colorScheme=d?"dark":"light";}catch(_){}})();`;
+export const themeInitScript = `(function(){try{var m=localStorage.getItem("${THEME_STORAGE_KEY}")||"dark";var d=m==="dark"||(m==="system"&&window.matchMedia("(prefers-color-scheme: dark)").matches);var e=document.documentElement;e.classList.remove("dark","light");e.classList.add(d?"dark":"light");}catch(_){}})();`;
 
 type ThemeContextValue = {
   mode: ThemeMode;
@@ -26,7 +26,6 @@ function apply(mode: ThemeMode): "dark" | "light" {
   const el = document.documentElement;
   el.classList.remove("dark", "light");
   el.classList.add(dark ? "dark" : "light");
-  el.style.colorScheme = dark ? "dark" : "light";
   return dark ? "dark" : "light";
 }
 
