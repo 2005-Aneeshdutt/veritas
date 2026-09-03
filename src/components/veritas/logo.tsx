@@ -45,7 +45,7 @@ export function VeritasWordmark({
           VERITAS
         </div>
         {subtitle && (
-          <div className="mt-1 truncate text-[10px] uppercase tracking-[0.16em] text-muted-foreground">
+          <div className="mt-1 truncate text-[9px] uppercase tracking-[0.1em] text-muted-foreground">
             Revenue Recovery Intelligence
           </div>
         )}

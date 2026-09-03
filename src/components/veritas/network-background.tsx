@@ -77,7 +77,7 @@ export function NetworkBackground({
     const grid = () => {
       const step = 48;
       ctx.strokeStyle = line;
-      ctx.globalAlpha = strong ? 0.28 : 0.16;
+      ctx.globalAlpha = strong ? 0.55 : 0.18;
       ctx.lineWidth = 1;
       ctx.beginPath();
       for (let x = 0; x <= width; x += step) {
@@ -106,7 +106,7 @@ export function NetworkBackground({
         ctx.stroke();
       };
       ctx.strokeStyle = measured;
-      ctx.globalAlpha = strong ? 0.07 : 0.035;
+      ctx.globalAlpha = strong ? 0.14 : 0.04;
       ctx.lineWidth = 1.2;
       draw(width * 0.18, height * 0.32, Math.min(width, height) * 0.22);
       draw(width * 0.84, height * 0.72, Math.min(width, height) * 0.16);
@@ -136,7 +136,7 @@ export function NetworkBackground({
           const d = Math.hypot(dx, dy);
           if (d > maxDist) continue;
           ctx.strokeStyle = line;
-          ctx.globalAlpha = (1 - d / maxDist) * (strong ? 0.5 : 0.28);
+          ctx.globalAlpha = (1 - d / maxDist) * (strong ? 0.85 : 0.3);
           ctx.beginPath();
           ctx.moveTo(nodes[i]!.x, nodes[i]!.y);
           ctx.lineTo(nodes[j]!.x, nodes[j]!.y);
@@ -150,7 +150,7 @@ export function NetworkBackground({
         ctx.beginPath();
         ctx.arc(n.x, n.y, n.authority ? 2.1 : 1.3, 0, Math.PI * 2);
         ctx.fillStyle = n.authority ? measured : line;
-        ctx.globalAlpha = n.authority ? (strong ? 0.55 : 0.34) : strong ? 0.7 : 0.45;
+        ctx.globalAlpha = n.authority ? (strong ? 0.9 : 0.36) : strong ? 0.85 : 0.45;
         ctx.fill();
       }
       ctx.globalAlpha = 1;
@@ -220,7 +220,14 @@ export function NetworkBackground({
       className={cn("pointer-events-none absolute inset-0 overflow-hidden", className)}
     >
       <canvas ref={ref} className="h-full w-full" />
-      <div className="absolute inset-0 bg-gradient-to-b from-background/40 via-background/70 to-background" />
+      <div
+        className={cn(
+          "absolute inset-0",
+          intensity === "strong"
+            ? "bg-[radial-gradient(circle_at_50%_45%,color-mix(in_oklab,var(--background)_88%,transparent)_0%,color-mix(in_oklab,var(--background)_55%,transparent)_38%,color-mix(in_oklab,var(--background)_92%,transparent)_100%)]"
+            : "bg-gradient-to-b from-transparent via-background/60 to-background",
+        )}
+      />
     </div>
   );
 }
