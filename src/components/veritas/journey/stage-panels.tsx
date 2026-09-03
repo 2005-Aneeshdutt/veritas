@@ -397,6 +397,7 @@ export function StagePanel({
           </div>
           <Link
             to="/prove"
+            search={{ case: c.id }}
             className="mt-5 inline-flex h-9 items-center gap-2 rounded-md border border-hairline px-3 text-[13px] text-foreground transition-colors hover:border-foreground/30"
           >
             Open proof

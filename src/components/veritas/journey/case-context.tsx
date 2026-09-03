@@ -55,6 +55,7 @@ export function CaseContextPanel({ c }: { c: JourneyCase }) {
         {cta.target === "prove" && (
           <Link
             to="/prove"
+            search={{ case: c.id }}
             className="mt-3 inline-flex h-9 w-full items-center justify-between rounded-md border border-hairline px-3 text-[13px] text-foreground transition-colors hover:border-foreground/30"
           >
             {cta.label}
@@ -74,6 +75,7 @@ export function CaseContextPanel({ c }: { c: JourneyCase }) {
         {cta.target === "evidence" && (
           <Link
             to="/evidence"
+            search={{ case: c.id }}
             className="mt-3 inline-flex h-9 w-full items-center justify-between rounded-md border border-hairline px-3 text-[13px] text-foreground transition-colors hover:border-foreground/30"
           >
             {cta.label}
