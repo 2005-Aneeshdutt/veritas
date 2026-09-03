@@ -21,6 +21,7 @@ import { Route as AppPaymentsRouteImport } from './routes/_app.payments'
 import { Route as AppProveRouteImport } from './routes/_app.prove'
 import { Route as AppRecoveryJourneyRouteImport } from './routes/_app.recovery-journey'
 import { Route as AppSettingsRouteImport } from './routes/_app.settings'
+import { Route as AppPaymentPaymentIdRouteImport } from './routes/_app.payment.$paymentId'
 
 const AppRoute = AppRouteImport.update({
   id: '/_app',
@@ -81,6 +82,11 @@ const AppSettingsRoute = AppSettingsRouteImport.update({
   path: '/settings',
   getParentRoute: () => AppRoute,
 } as any)
+const AppPaymentPaymentIdRoute = AppPaymentPaymentIdRouteImport.update({
+  id: '/payment/$paymentId',
+  path: '/payment/$paymentId',
+  getParentRoute: () => AppRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof AppIndexRoute
@@ -94,6 +100,7 @@ export interface FileRoutesByFullPath {
   '/prove': typeof AppProveRoute
   '/recovery-journey': typeof AppRecoveryJourneyRoute
   '/settings': typeof AppSettingsRoute
+  '/payment/$paymentId': typeof AppPaymentPaymentIdRoute
 }
 export interface FileRoutesByTo {
   '/login': typeof LoginRoute
@@ -107,6 +114,7 @@ export interface FileRoutesByTo {
   '/recovery-journey': typeof AppRecoveryJourneyRoute
   '/settings': typeof AppSettingsRoute
   '/': typeof AppIndexRoute
+  '/payment/$paymentId': typeof AppPaymentPaymentIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -122,6 +130,7 @@ export interface FileRoutesById {
   '/_app/recovery-journey': typeof AppRecoveryJourneyRoute
   '/_app/settings': typeof AppSettingsRoute
   '/_app/': typeof AppIndexRoute
+  '/_app/payment/$paymentId': typeof AppPaymentPaymentIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -137,6 +146,7 @@ export interface FileRouteTypes {
     | '/prove'
     | '/recovery-journey'
     | '/settings'
+    | '/payment/$paymentId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/login'
@@ -150,6 +160,7 @@ export interface FileRouteTypes {
     | '/recovery-journey'
     | '/settings'
     | '/'
+    | '/payment/$paymentId'
   id:
     | '__root__'
     | '/_app'
@@ -164,6 +175,7 @@ export interface FileRouteTypes {
     | '/_app/recovery-journey'
     | '/_app/settings'
     | '/_app/'
+    | '/_app/payment/$paymentId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -257,6 +269,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppSettingsRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/payment/$paymentId': {
+      id: '/_app/payment/$paymentId'
+      path: '/payment/$paymentId'
+      fullPath: '/payment/$paymentId'
+      preLoaderRoute: typeof AppPaymentPaymentIdRouteImport
+      parentRoute: typeof AppRoute
+    }
   }
 }
 
@@ -271,6 +290,7 @@ interface AppRouteChildren {
   AppRecoveryJourneyRoute: typeof AppRecoveryJourneyRoute
   AppSettingsRoute: typeof AppSettingsRoute
   AppIndexRoute: typeof AppIndexRoute
+  AppPaymentPaymentIdRoute: typeof AppPaymentPaymentIdRoute
 }
 
 const AppRouteChildren: AppRouteChildren = {
@@ -284,6 +304,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppRecoveryJourneyRoute: AppRecoveryJourneyRoute,
   AppSettingsRoute: AppSettingsRoute,
   AppIndexRoute: AppIndexRoute,
+  AppPaymentPaymentIdRoute: AppPaymentPaymentIdRoute,
 }
 
 const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
