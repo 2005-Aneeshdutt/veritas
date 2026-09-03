@@ -71,6 +71,7 @@ function usePolicyEvaluation(activeCase: JourneyCase, reducedMotion: boolean) {
     if (reducedMotion) {
       setRevealed(total);
       setStatus(settled);
+      recordPolicyDecision(activeCase.id, settled);
       return;
     }
     setRevealed(0);
@@ -83,15 +84,18 @@ function usePolicyEvaluation(activeCase: JourneyCase, reducedMotion: boolean) {
       if (n >= total) {
         clear();
         setStatus(settled);
+        recordPolicyDecision(activeCase.id, settled);
       }
     }, step);
-  }, [clear, reducedMotion, settled, total]);
+  }, [activeCase.id, clear, reducedMotion, settled, total]);
 
   const reset = useCallback(() => {
     clear();
     setRevealed(0);
     setStatus("IDLE");
-  }, [clear]);
+    clearPolicyDecision(activeCase.id);
+  }, [activeCase.id, clear]);
+
 
   return { revealed, status, run, reset, stopIndex, total, evaluating: status === "EVALUATING POLICY" };
 }
