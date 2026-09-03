@@ -575,7 +575,7 @@ function Overview() {
                         <InlineAction
                           label="View affected payments"
                           to="/payments"
-                          search={{ cause: r.label, ref: undefined }}
+                          search={{ cause: r.label }}
                         />
                       </div>
                       <p className="mt-2 text-xs text-muted-foreground/80">
