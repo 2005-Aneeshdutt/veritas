@@ -1,5 +1,6 @@
 import {
   Activity,
+  ClipboardList,
   CreditCard,
   FileCheck2,
   FlaskConical,
@@ -23,6 +24,7 @@ export type AppRoute =
   | "/policy"
   | "/outcome"
   | "/diagnosis"
+  | "/plan"
   | "/counterfactual-lab"
   | "/evidence"
   | "/audit-trail"
@@ -93,6 +95,12 @@ export const NAV_GROUPS: NavGroup[] = [
         to: "/diagnosis",
         icon: Stethoscope,
         description: "Why a payment failed and what could change it",
+      },
+      {
+        label: "Recovery Plan",
+        to: "/plan",
+        icon: ClipboardList,
+        description: "What VERITAS recommends doing next — recommendation, not authorization",
       },
       {
         label: "Counterfactual Lab",
