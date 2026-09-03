@@ -53,8 +53,8 @@ export function NetworkBackground({
     let pulses: Pulse[] = [];
 
     const nodeCount = () => {
-      const base = Math.round((window.innerWidth * window.innerHeight) / (strong ? 26000 : 46000));
-      return Math.max(14, Math.min(strong ? 68 : 34, base));
+      const base = Math.round((window.innerWidth * window.innerHeight) / (strong ? 26000 : 38000));
+      return Math.max(14, Math.min(strong ? 68 : 44, base));
     };
 
     const init = () => {
@@ -77,7 +77,7 @@ export function NetworkBackground({
     const grid = () => {
       const step = 48;
       ctx.strokeStyle = line;
-      ctx.globalAlpha = strong ? 0.55 : 0.18;
+      ctx.globalAlpha = strong ? 0.55 : 0.3;
       ctx.lineWidth = 1;
       ctx.beginPath();
       for (let x = 0; x <= width; x += step) {
@@ -106,7 +106,7 @@ export function NetworkBackground({
         ctx.stroke();
       };
       ctx.strokeStyle = measured;
-      ctx.globalAlpha = strong ? 0.14 : 0.04;
+      ctx.globalAlpha = strong ? 0.14 : 0.07;
       ctx.lineWidth = 1.2;
       draw(width * 0.18, height * 0.32, Math.min(width, height) * 0.22);
       draw(width * 0.84, height * 0.72, Math.min(width, height) * 0.16);
@@ -136,7 +136,7 @@ export function NetworkBackground({
           const d = Math.hypot(dx, dy);
           if (d > maxDist) continue;
           ctx.strokeStyle = line;
-          ctx.globalAlpha = (1 - d / maxDist) * (strong ? 0.85 : 0.3);
+          ctx.globalAlpha = (1 - d / maxDist) * (strong ? 0.85 : 0.628);
           ctx.beginPath();
           ctx.moveTo(nodes[i]!.x, nodes[i]!.y);
           ctx.lineTo(nodes[j]!.x, nodes[j]!.y);
@@ -150,13 +150,13 @@ export function NetworkBackground({
         ctx.beginPath();
         ctx.arc(n.x, n.y, n.authority ? 2.1 : 1.3, 0, Math.PI * 2);
         ctx.fillStyle = n.authority ? measured : line;
-        ctx.globalAlpha = n.authority ? (strong ? 0.9 : 0.36) : strong ? 0.85 : 0.45;
+        ctx.globalAlpha = n.authority ? (strong ? 0.9 : 0.5) : strong ? 0.85 : 0.628;
         ctx.fill();
       }
       ctx.globalAlpha = 1;
 
       // spawn pulses
-      if (!reduce && nodes.length > 2 && Math.random() < (strong ? 0.035 : 0.014)) {
+      if (!reduce && nodes.length > 2 && Math.random() < (strong ? 0.035 : 0.022)) {
         const from = Math.floor(Math.random() * nodes.length);
         let to = Math.floor(Math.random() * nodes.length);
         if (to === from) to = (to + 1) % nodes.length;
@@ -180,12 +180,12 @@ export function NetworkBackground({
         const fade = Math.sin(p.t * Math.PI);
         const color = p.tone === "measured" ? measured : projected;
         const r = p.tone === "measured" ? 2.6 : 1.8;
-        ctx.globalAlpha = fade * (strong ? 0.85 : 0.5);
+        ctx.globalAlpha = fade * (strong ? 0.85 : 0.62);
         ctx.fillStyle = color;
         ctx.beginPath();
         ctx.arc(x, y, r, 0, Math.PI * 2);
         ctx.fill();
-        ctx.globalAlpha = fade * (strong ? 0.22 : 0.12);
+        ctx.globalAlpha = fade * (strong ? 0.22 : 0.16);
         ctx.beginPath();
         ctx.arc(x, y, r * 3.4, 0, Math.PI * 2);
         ctx.fill();
