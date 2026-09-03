@@ -9,50 +9,288 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as IndexRouteImport } from './routes/index'
+import { Route as AppRouteImport } from './routes/_app'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as AppIndexRouteImport } from './routes/_app.index'
+import { Route as AppAuditTrailRouteImport } from './routes/_app.audit-trail'
+import { Route as AppControlTowerRouteImport } from './routes/_app.control-tower'
+import { Route as AppCounterfactualLabRouteImport } from './routes/_app.counterfactual-lab'
+import { Route as AppDiagnosisRouteImport } from './routes/_app.diagnosis'
+import { Route as AppEvidenceRouteImport } from './routes/_app.evidence'
+import { Route as AppPaymentsRouteImport } from './routes/_app.payments'
+import { Route as AppProveRouteImport } from './routes/_app.prove'
+import { Route as AppRecoveryJourneyRouteImport } from './routes/_app.recovery-journey'
+import { Route as AppSettingsRouteImport } from './routes/_app.settings'
 
-const IndexRoute = IndexRouteImport.update({
+const AppRoute = AppRouteImport.update({
+  id: '/_app',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AppIndexRoute = AppIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => AppRoute,
+} as any)
+const AppAuditTrailRoute = AppAuditTrailRouteImport.update({
+  id: '/audit-trail',
+  path: '/audit-trail',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppControlTowerRoute = AppControlTowerRouteImport.update({
+  id: '/control-tower',
+  path: '/control-tower',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppCounterfactualLabRoute = AppCounterfactualLabRouteImport.update({
+  id: '/counterfactual-lab',
+  path: '/counterfactual-lab',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppDiagnosisRoute = AppDiagnosisRouteImport.update({
+  id: '/diagnosis',
+  path: '/diagnosis',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppEvidenceRoute = AppEvidenceRouteImport.update({
+  id: '/evidence',
+  path: '/evidence',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppPaymentsRoute = AppPaymentsRouteImport.update({
+  id: '/payments',
+  path: '/payments',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppProveRoute = AppProveRouteImport.update({
+  id: '/prove',
+  path: '/prove',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppRecoveryJourneyRoute = AppRecoveryJourneyRouteImport.update({
+  id: '/recovery-journey',
+  path: '/recovery-journey',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppSettingsRoute = AppSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => AppRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
+  '/': typeof AppIndexRoute
+  '/login': typeof LoginRoute
+  '/audit-trail': typeof AppAuditTrailRoute
+  '/control-tower': typeof AppControlTowerRoute
+  '/counterfactual-lab': typeof AppCounterfactualLabRoute
+  '/diagnosis': typeof AppDiagnosisRoute
+  '/evidence': typeof AppEvidenceRoute
+  '/payments': typeof AppPaymentsRoute
+  '/prove': typeof AppProveRoute
+  '/recovery-journey': typeof AppRecoveryJourneyRoute
+  '/settings': typeof AppSettingsRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
+  '/login': typeof LoginRoute
+  '/audit-trail': typeof AppAuditTrailRoute
+  '/control-tower': typeof AppControlTowerRoute
+  '/counterfactual-lab': typeof AppCounterfactualLabRoute
+  '/diagnosis': typeof AppDiagnosisRoute
+  '/evidence': typeof AppEvidenceRoute
+  '/payments': typeof AppPaymentsRoute
+  '/prove': typeof AppProveRoute
+  '/recovery-journey': typeof AppRecoveryJourneyRoute
+  '/settings': typeof AppSettingsRoute
+  '/': typeof AppIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
+  '/_app': typeof AppRouteWithChildren
+  '/login': typeof LoginRoute
+  '/_app/audit-trail': typeof AppAuditTrailRoute
+  '/_app/control-tower': typeof AppControlTowerRoute
+  '/_app/counterfactual-lab': typeof AppCounterfactualLabRoute
+  '/_app/diagnosis': typeof AppDiagnosisRoute
+  '/_app/evidence': typeof AppEvidenceRoute
+  '/_app/payments': typeof AppPaymentsRoute
+  '/_app/prove': typeof AppProveRoute
+  '/_app/recovery-journey': typeof AppRecoveryJourneyRoute
+  '/_app/settings': typeof AppSettingsRoute
+  '/_app/': typeof AppIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/login'
+    | '/audit-trail'
+    | '/control-tower'
+    | '/counterfactual-lab'
+    | '/diagnosis'
+    | '/evidence'
+    | '/payments'
+    | '/prove'
+    | '/recovery-journey'
+    | '/settings'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/login'
+    | '/audit-trail'
+    | '/control-tower'
+    | '/counterfactual-lab'
+    | '/diagnosis'
+    | '/evidence'
+    | '/payments'
+    | '/prove'
+    | '/recovery-journey'
+    | '/settings'
+    | '/'
+  id:
+    | '__root__'
+    | '/_app'
+    | '/login'
+    | '/_app/audit-trail'
+    | '/_app/control-tower'
+    | '/_app/counterfactual-lab'
+    | '/_app/diagnosis'
+    | '/_app/evidence'
+    | '/_app/payments'
+    | '/_app/prove'
+    | '/_app/recovery-journey'
+    | '/_app/settings'
+    | '/_app/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
+  AppRoute: typeof AppRouteWithChildren
+  LoginRoute: typeof LoginRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
+    '/_app': {
+      id: '/_app'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AppRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_app/': {
+      id: '/_app/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AppIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/audit-trail': {
+      id: '/_app/audit-trail'
+      path: '/audit-trail'
+      fullPath: '/audit-trail'
+      preLoaderRoute: typeof AppAuditTrailRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/control-tower': {
+      id: '/_app/control-tower'
+      path: '/control-tower'
+      fullPath: '/control-tower'
+      preLoaderRoute: typeof AppControlTowerRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/counterfactual-lab': {
+      id: '/_app/counterfactual-lab'
+      path: '/counterfactual-lab'
+      fullPath: '/counterfactual-lab'
+      preLoaderRoute: typeof AppCounterfactualLabRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/diagnosis': {
+      id: '/_app/diagnosis'
+      path: '/diagnosis'
+      fullPath: '/diagnosis'
+      preLoaderRoute: typeof AppDiagnosisRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/evidence': {
+      id: '/_app/evidence'
+      path: '/evidence'
+      fullPath: '/evidence'
+      preLoaderRoute: typeof AppEvidenceRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/payments': {
+      id: '/_app/payments'
+      path: '/payments'
+      fullPath: '/payments'
+      preLoaderRoute: typeof AppPaymentsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/prove': {
+      id: '/_app/prove'
+      path: '/prove'
+      fullPath: '/prove'
+      preLoaderRoute: typeof AppProveRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/recovery-journey': {
+      id: '/_app/recovery-journey'
+      path: '/recovery-journey'
+      fullPath: '/recovery-journey'
+      preLoaderRoute: typeof AppRecoveryJourneyRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/settings': {
+      id: '/_app/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof AppSettingsRouteImport
+      parentRoute: typeof AppRoute
     }
   }
 }
 
+interface AppRouteChildren {
+  AppAuditTrailRoute: typeof AppAuditTrailRoute
+  AppControlTowerRoute: typeof AppControlTowerRoute
+  AppCounterfactualLabRoute: typeof AppCounterfactualLabRoute
+  AppDiagnosisRoute: typeof AppDiagnosisRoute
+  AppEvidenceRoute: typeof AppEvidenceRoute
+  AppPaymentsRoute: typeof AppPaymentsRoute
+  AppProveRoute: typeof AppProveRoute
+  AppRecoveryJourneyRoute: typeof AppRecoveryJourneyRoute
+  AppSettingsRoute: typeof AppSettingsRoute
+  AppIndexRoute: typeof AppIndexRoute
+}
+
+const AppRouteChildren: AppRouteChildren = {
+  AppAuditTrailRoute: AppAuditTrailRoute,
+  AppControlTowerRoute: AppControlTowerRoute,
+  AppCounterfactualLabRoute: AppCounterfactualLabRoute,
+  AppDiagnosisRoute: AppDiagnosisRoute,
+  AppEvidenceRoute: AppEvidenceRoute,
+  AppPaymentsRoute: AppPaymentsRoute,
+  AppProveRoute: AppProveRoute,
+  AppRecoveryJourneyRoute: AppRecoveryJourneyRoute,
+  AppSettingsRoute: AppSettingsRoute,
+  AppIndexRoute: AppIndexRoute,
+}
+
+const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
+  AppRoute: AppRouteWithChildren,
+  LoginRoute: LoginRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
