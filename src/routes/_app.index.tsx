@@ -30,7 +30,7 @@ export const Route = createFileRoute("/_app/")({
 });
 
 const CLAIM_ACCENT: Record<ClaimState, string> = {
-  VERIFIED: "text-verified",
+  VERIFIED: "text-foreground",
   MEASURED: "text-measured",
   PROJECTED: "text-projected",
   OBSERVED: "text-foreground",
@@ -135,6 +135,17 @@ function Overview() {
             Exact {formatMoney(atRisk.value)} · {atRisk.deltaPct! > 0 ? "+" : ""}
             {atRisk.deltaPct}% vs last week
           </p>
+
+          <ol className="mt-10 flex flex-wrap items-center gap-x-3 gap-y-2">
+            {["Money", "Intelligence", "Authority", "Action", "Proof"].map((step, i) => (
+              <li key={step} className="flex items-center gap-3">
+                {i > 0 && (
+                  <span aria-hidden="true" className="h-px w-5 bg-hairline" />
+                )}
+                <span className="label-meta text-[10px] tracking-[0.16em]">{step}</span>
+              </li>
+            ))}
+          </ol>
         </div>
 
         <dl className="min-w-0 divide-y divide-hairline border-t border-hairline">
