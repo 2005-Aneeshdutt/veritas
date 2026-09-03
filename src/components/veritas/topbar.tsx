@@ -32,7 +32,7 @@ export function Topbar({ onOpenCommand }: { onOpenCommand: () => void }) {
       <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
         <SheetTrigger
           aria-label="Open navigation"
-          className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-hairline bg-surface text-muted-foreground transition-colors hover:text-foreground md:hidden"
+          className="inline-flex h-9 w-9 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-elevated hover:text-foreground md:hidden"
         >
           <Menu className="h-4 w-4" aria-hidden="true" />
         </SheetTrigger>
@@ -87,11 +87,11 @@ export function Topbar({ onOpenCommand }: { onOpenCommand: () => void }) {
         type="button"
         onClick={onOpenCommand}
         aria-label="Open command palette (Command or Control + K)"
-        className="hidden h-9 items-center gap-2 rounded-md border border-hairline bg-surface px-3 text-sm text-muted-foreground transition-colors hover:text-foreground sm:flex sm:w-64 lg:w-80"
+        className="hidden h-8 items-center gap-2 rounded-md px-2.5 text-[13px] text-muted-foreground/80 transition-colors hover:bg-elevated hover:text-foreground sm:flex sm:w-56"
       >
         <Search className="h-4 w-4 shrink-0" aria-hidden="true" />
         <span className="truncate">Search or run a command</span>
-        <kbd className="ml-auto rounded border border-hairline bg-elevated px-1.5 py-0.5 font-mono text-[10px]">
+        <kbd className="ml-auto rounded border border-hairline px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground/70">
           ⌘K
         </kbd>
       </button>
@@ -99,7 +99,7 @@ export function Topbar({ onOpenCommand }: { onOpenCommand: () => void }) {
         type="button"
         onClick={onOpenCommand}
         aria-label="Open command palette"
-        className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-hairline bg-surface text-muted-foreground transition-colors hover:text-foreground sm:hidden"
+        className="inline-flex h-9 w-9 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-elevated hover:text-foreground sm:hidden"
       >
         <Search className="h-4 w-4" aria-hidden="true" />
       </button>
@@ -107,7 +107,7 @@ export function Topbar({ onOpenCommand }: { onOpenCommand: () => void }) {
       <DropdownMenu>
         <DropdownMenuTrigger
           aria-label={`Notifications, ${NOTIFICATIONS.length} unread`}
-          className="relative inline-flex h-9 w-9 items-center justify-center rounded-md border border-hairline bg-surface text-muted-foreground transition-colors hover:text-foreground"
+          className="relative inline-flex h-9 w-9 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-elevated hover:text-foreground"
         >
           <Bell className="h-4 w-4" aria-hidden="true" />
           <span className="absolute right-1.5 top-1.5 h-1.5 w-1.5 rounded-full bg-measured" />
@@ -129,9 +129,9 @@ export function Topbar({ onOpenCommand }: { onOpenCommand: () => void }) {
       <DropdownMenu>
         <DropdownMenuTrigger
           aria-label="Account menu"
-          className="inline-flex h-9 items-center gap-2 rounded-md border border-hairline bg-surface px-2 text-sm text-foreground"
+          className="inline-flex h-9 items-center gap-2 rounded-md px-1.5 text-sm text-foreground transition-colors hover:bg-elevated"
         >
-          <span className="grid h-6 w-6 shrink-0 place-items-center rounded bg-elevated text-[11px] font-semibold">
+          <span className="grid h-6 w-6 shrink-0 place-items-center rounded bg-elevated text-[11px] font-semibold text-muted-foreground">
             AD
           </span>
           <span className="hidden max-w-28 truncate lg:inline">Operations</span>
