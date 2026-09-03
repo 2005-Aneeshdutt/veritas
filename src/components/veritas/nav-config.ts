@@ -23,6 +23,7 @@ export type AppRoute =
   | "/policy"
   | "/outcome"
   | "/diagnosis"
+  | "/plan"
   | "/counterfactual-lab"
   | "/evidence"
   | "/audit-trail"
