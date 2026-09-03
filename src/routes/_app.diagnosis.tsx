@@ -249,7 +249,7 @@ function DiagnosisPage() {
         onOpenChange={(o) => !o && setSelected(null)}
         eyebrow="Diagnosis factor"
         title={selected?.label ?? ""}
-        description={selected?.note}
+        description={selected?.note ?? ""}
         rows={
           selected
             ? [
