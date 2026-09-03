@@ -8,6 +8,7 @@ import {
   Route as RouteIcon,
   ScrollText,
   Settings,
+  ShieldCheck,
   Stethoscope,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
@@ -18,6 +19,7 @@ export type AppRoute =
   | "/payments"
   | "/payment/$paymentId"
   | "/recovery-journey"
+  | "/policy"
   | "/diagnosis"
   | "/counterfactual-lab"
   | "/evidence"
@@ -71,6 +73,12 @@ export const NAV_GROUPS: NavGroup[] = [
         to: "/recovery-journey",
         icon: RouteIcon,
         description: "Payment to outcome, step by step",
+      },
+      {
+        label: "Policy Kernel",
+        to: "/policy",
+        icon: ShieldCheck,
+        description: "Deterministic authorization for recovery actions",
       },
     ],
   },

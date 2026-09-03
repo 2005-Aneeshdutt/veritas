@@ -21,10 +21,35 @@ const CHECK_LABELS = [
   "Kill-switch not engaged",
 ];
 
-function checks(passUpTo: number, overrides: Partial<Record<number, Partial<PolicyCheck>>> = {}): PolicyCheck[] {
+const CHECK_THRESHOLDS: string[] = [
+  "Merchant enrolled",
+  "Recovery-eligible state",
+  "Mandate active",
+  "Max 2 contacts / 24h",
+  "₹15,000",
+  "3 retries",
+  "60 min",
+  "No open duplicate",
+  "IN · consent on file",
+  "Channel allow-list",
+  "Net > ₹0",
+  "Disengaged",
+];
+
+function checks(
+  passUpTo: number,
+  evaluated: Partial<Record<number, string>> = {},
+  overrides: Partial<Record<number, Partial<PolicyCheck>>> = {},
+): PolicyCheck[] {
   return CHECK_LABELS.map((label, i) => {
     const n = i + 1;
-    const base: PolicyCheck = { n, label, pass: n <= passUpTo };
+    const base: PolicyCheck = {
+      n,
+      label,
+      pass: n <= passUpTo,
+      threshold: CHECK_THRESHOLDS[i]!,
+      ...(evaluated[n] ? { evaluated: evaluated[n]! } : {}),
+    };
     return { ...base, ...(overrides[n] ?? {}) };
   });
 }
@@ -78,10 +103,28 @@ const DENIAL: JourneyCase = {
   },
   policy: {
     version: "RETRY_LIMIT_V4",
-    checks: checks(4, {
-      5: { pass: false, detail: "₹24,816 > ₹15,000 ceiling" },
-      6: { pass: false, detail: "Retry budget exhausted for this instrument" },
-    }),
+    checks: checks(
+      4,
+      {
+        1: "CloudSync Systems",
+        2: "Failed · recovery-eligible",
+        3: "Active card mandate",
+        4: "0 contacts / 24h",
+        5: "₹24,816",
+        6: "3 retries used",
+        7: "18 min since last attempt",
+        8: "None open",
+        9: "IN · consent on file",
+        10: "Retry permitted",
+        11: "PROJECTED net ₹1,228",
+        12: "Disengaged",
+      },
+      {
+        5: { pass: false, detail: "₹24,816 > ₹15,000 ceiling" },
+        6: { pass: false, detail: "Retry budget exhausted for this instrument" },
+        7: { pass: false, detail: "Attempt inside 60 min issuer cool-down" },
+      },
+    ),
     decision: "DENY",
     firstFailure: "Check 05 — ₹24,816 > ₹15,000 ceiling",
     note: "4 / 12 checks passed. Authority stops here: the action was never permitted.",
@@ -195,7 +238,20 @@ const SUCCESS: JourneyCase = {
   },
   policy: {
     version: "RETRY_WINDOW_V3",
-    checks: checks(12),
+    checks: checks(12, {
+      1: "CloudSync Systems",
+      2: "Failed · recovery-eligible",
+      3: "Active UPI mandate",
+      4: "0 contacts / 24h",
+      5: "₹1,707",
+      6: "1 retry used",
+      7: "143 min since last attempt",
+      8: "None open",
+      9: "IN · consent on file",
+      10: "Retry permitted",
+      11: "PROJECTED net ₹1,376",
+      12: "Disengaged",
+    }),
     decision: "AUTO-ALLOW",
     note: "12 / 12 checks passed. The action is authorized — authorization is not execution.",
   },
@@ -311,7 +367,20 @@ const UNVERIFIED: JourneyCase = {
   },
   policy: {
     version: "AUTO_ALLOW_LOW_RISK_V1",
-    checks: checks(12),
+    checks: checks(12, {
+      1: "CloudSync Systems",
+      2: "Stalled · reconciliation-eligible",
+      3: "Active card mandate",
+      4: "0 contacts / 24h",
+      5: "₹0 (non-financial call)",
+      6: "1 retry used",
+      7: "4 min · not a financial retry",
+      8: "None open",
+      9: "IN · consent on file",
+      10: "Reconciliation permitted",
+      11: "No projection made",
+      12: "Disengaged",
+    }),
     decision: "AUTO-ALLOW",
     note: "12 / 12 checks passed for a non-financial reconciliation call.",
   },

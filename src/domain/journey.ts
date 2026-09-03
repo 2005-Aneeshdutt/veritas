@@ -83,6 +83,10 @@ export interface PolicyCheck {
   label: string;
   pass: boolean;
   detail?: string;
+  /** Value observed for this rule in the demo record. */
+  evaluated?: string;
+  /** Threshold or expected value the rule compares against. */
+  threshold?: string;
 }
 
 export interface PlanChannel {

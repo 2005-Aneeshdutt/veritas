@@ -18,6 +18,7 @@ import { Route as AppCounterfactualLabRouteImport } from './routes/_app.counterf
 import { Route as AppDiagnosisRouteImport } from './routes/_app.diagnosis'
 import { Route as AppEvidenceRouteImport } from './routes/_app.evidence'
 import { Route as AppPaymentsRouteImport } from './routes/_app.payments'
+import { Route as AppPolicyRouteImport } from './routes/_app.policy'
 import { Route as AppProveRouteImport } from './routes/_app.prove'
 import { Route as AppRecoveryJourneyRouteImport } from './routes/_app.recovery-journey'
 import { Route as AppSettingsRouteImport } from './routes/_app.settings'
@@ -67,6 +68,11 @@ const AppPaymentsRoute = AppPaymentsRouteImport.update({
   path: '/payments',
   getParentRoute: () => AppRoute,
 } as any)
+const AppPolicyRoute = AppPolicyRouteImport.update({
+  id: '/policy',
+  path: '/policy',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppProveRoute = AppProveRouteImport.update({
   id: '/prove',
   path: '/prove',
@@ -97,6 +103,7 @@ export interface FileRoutesByFullPath {
   '/diagnosis': typeof AppDiagnosisRoute
   '/evidence': typeof AppEvidenceRoute
   '/payments': typeof AppPaymentsRoute
+  '/policy': typeof AppPolicyRoute
   '/prove': typeof AppProveRoute
   '/recovery-journey': typeof AppRecoveryJourneyRoute
   '/settings': typeof AppSettingsRoute
@@ -110,6 +117,7 @@ export interface FileRoutesByTo {
   '/diagnosis': typeof AppDiagnosisRoute
   '/evidence': typeof AppEvidenceRoute
   '/payments': typeof AppPaymentsRoute
+  '/policy': typeof AppPolicyRoute
   '/prove': typeof AppProveRoute
   '/recovery-journey': typeof AppRecoveryJourneyRoute
   '/settings': typeof AppSettingsRoute
@@ -126,6 +134,7 @@ export interface FileRoutesById {
   '/_app/diagnosis': typeof AppDiagnosisRoute
   '/_app/evidence': typeof AppEvidenceRoute
   '/_app/payments': typeof AppPaymentsRoute
+  '/_app/policy': typeof AppPolicyRoute
   '/_app/prove': typeof AppProveRoute
   '/_app/recovery-journey': typeof AppRecoveryJourneyRoute
   '/_app/settings': typeof AppSettingsRoute
@@ -143,6 +152,7 @@ export interface FileRouteTypes {
     | '/diagnosis'
     | '/evidence'
     | '/payments'
+    | '/policy'
     | '/prove'
     | '/recovery-journey'
     | '/settings'
@@ -156,6 +166,7 @@ export interface FileRouteTypes {
     | '/diagnosis'
     | '/evidence'
     | '/payments'
+    | '/policy'
     | '/prove'
     | '/recovery-journey'
     | '/settings'
@@ -171,6 +182,7 @@ export interface FileRouteTypes {
     | '/_app/diagnosis'
     | '/_app/evidence'
     | '/_app/payments'
+    | '/_app/policy'
     | '/_app/prove'
     | '/_app/recovery-journey'
     | '/_app/settings'
@@ -248,6 +260,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppPaymentsRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/policy': {
+      id: '/_app/policy'
+      path: '/policy'
+      fullPath: '/policy'
+      preLoaderRoute: typeof AppPolicyRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/prove': {
       id: '/_app/prove'
       path: '/prove'
@@ -286,6 +305,7 @@ interface AppRouteChildren {
   AppDiagnosisRoute: typeof AppDiagnosisRoute
   AppEvidenceRoute: typeof AppEvidenceRoute
   AppPaymentsRoute: typeof AppPaymentsRoute
+  AppPolicyRoute: typeof AppPolicyRoute
   AppProveRoute: typeof AppProveRoute
   AppRecoveryJourneyRoute: typeof AppRecoveryJourneyRoute
   AppSettingsRoute: typeof AppSettingsRoute
@@ -300,6 +320,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppDiagnosisRoute: AppDiagnosisRoute,
   AppEvidenceRoute: AppEvidenceRoute,
   AppPaymentsRoute: AppPaymentsRoute,
+  AppPolicyRoute: AppPolicyRoute,
   AppProveRoute: AppProveRoute,
   AppRecoveryJourneyRoute: AppRecoveryJourneyRoute,
   AppSettingsRoute: AppSettingsRoute,
