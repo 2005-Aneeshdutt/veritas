@@ -322,6 +322,45 @@ def score(
     )
 
 
+def verify_external_evidence(rec: dict) -> dict:
+    """Does the external evidence a run recorded still match its source?
+
+    Prove's job is falsifiable verification, so external evidence gets the
+    same treatment as everything else: the run named a snapshot id, a source
+    hash and a period, and those are re-derived from the committed NPCI tables
+    and compared. A mismatch is a finding, not a warning.
+
+    Two deliberate constraints:
+
+      * this never fetches NPCI. Prove must stay verifiable with the network
+        unplugged, and a check that failed on a bad DNS day would teach a
+        reader to ignore it.
+      * a run diagnosed before external evidence existed is reported as
+        `recorded: False`, not as a failure. Absence of a claim is not a
+        broken claim, and marking it red would be the same false-alarm
+        problem in the other direction.
+
+    The sealed challenge payload is untouched by this: NPCI evidence is not
+    part of what a challenge seals, so existing seals still verify byte for
+    byte.
+    """
+    from . import npci_evidence as npci
+
+    ev = ((rec or {}).get("report") or {}).get("external_evidence") or {}
+    ref = ev.get("provenance") or {}
+    if not ref:
+        return {
+            "ok": True,
+            "recorded": False,
+            "checks": [],
+            "detail": "this run recorded no external evidence, so there is "
+                      "no external claim to falsify",
+        }
+    out = npci.verify_reference(ref)
+    out["recorded"] = True
+    return out
+
+
 def verify_seal(payload: dict, seal: str) -> bool:
     """Recompute the digest. Exposed so a sceptic can call it themselves."""
     return sha256_hex(payload) == seal

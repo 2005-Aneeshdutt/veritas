@@ -26,6 +26,7 @@ from pathlib import Path
 from chitragupta.rails.mock_rail import Calibration, p_retry_success
 from chitragupta.types import AUTO_EXECUTABLE, PolicyDecision
 
+from . import npci_evidence
 from .features import RECOVERABLE
 from .fault import attribute
 from .stats import is_underpowered, wilson_interval, wilson_halfwidth_pts
@@ -244,6 +245,18 @@ def build_report(s) -> dict:
             code: c.model_dump(mode="json") for code, c in s.classifications.items()
         },
         "needs_review": [c.model_dump(mode="json") for c in s.needs_review],
+        # ------------------------------------------------------------------
+        # External corroboration (§14). Computed last, after every merchant
+        # figure above it, because it exists to be compared against them --
+        # it never feeds them. Read-only and outside the authority chain:
+        # nothing downstream reads this key to allow, deny, price or execute
+        # anything. When NPCI evidence cannot be built the object degrades to
+        # available=false and the diagnosis is unaffected (§19).
+        "external_evidence": npci_evidence.evidence_for(
+            profile.merchant_id,
+            txns,
+            observed_period=s.baseline.period,
+        ).model_dump(mode="json"),
     }
 
 

@@ -81,6 +81,7 @@ from doctor.prove import (
     new_challenge,
     score,
 )
+from doctor import npci_evidence as npci
 from doctor.llm import MODEL_FAST, MODEL_REASONING
 from doctor.run import load_mandate, load_merchant
 from doctor.trace import RunRecord
@@ -1251,8 +1252,14 @@ def recovery_plan(merchant_id: str, txn_id: str) -> dict:
 
     try:
         att = plan_recovery(merchant_id, txn_id, load_mandate(merchant_id))
-    except FileNotFoundError as e:
-        raise HTTPException(404, str(e))
+    except FileNotFoundError:
+        raise HTTPException(404, "no mandate for merchant: %s" % merchant_id)
+    except SystemExit:
+        # load_mandate doubles as a CLI helper and exits instead of raising.
+        # SystemExit is a BaseException, so it escaped the clause above and
+        # surfaced as a 500. Its message carries an absolute path, which is
+        # why the reply states the condition rather than quoting it.
+        raise HTTPException(404, "no mandate for merchant: %s" % merchant_id)
     return json.loads(confirm(att).model_dump_json())
 
 
@@ -1271,8 +1278,10 @@ def recovery_execute(
             merchant_id, txn_id, load_mandate(merchant_id),
             confirmed=confirmed, actor=actor,
         )
-    except FileNotFoundError as e:
-        raise HTTPException(404, str(e))
+    except FileNotFoundError:
+        raise HTTPException(404, "no mandate for merchant: %s" % merchant_id)
+    except SystemExit:
+        raise HTTPException(404, "no mandate for merchant: %s" % merchant_id)
     return json.loads(confirm(att).model_dump_json())
 
 
@@ -1345,6 +1354,87 @@ def voice_demo_route(scenario: str = "accepts", language: str = "en") -> dict:
 def dataroom() -> dict:
     """Every source behind a recovery number, with its completeness."""
     return json.loads(build_dataroom().model_dump_json()) | mode_stamp()
+
+
+@app.get("/api/external/npci")
+def external_npci_snapshot() -> dict:
+    """The NPCI ecosystem snapshot itself, with no merchant attached.
+
+    Read-only. There is no write path to NPCI evidence anywhere in the API,
+    and nothing here reaches the policy kernel: this endpoint cannot change
+    what is allowed, denied, priced or executed.
+    """
+    try:
+        snap = npci.current_snapshot()
+    except Exception as exc:
+        # This endpoint promises UNAVAILABLE, never a 500. A 500 here would
+        # also be the one shape a caller might retry against, so it stays a
+        # well-formed evidence object whatever went wrong underneath.
+        return json.loads(npci.unavailable(str(exc)).model_dump_json()) | mode_stamp()
+    ev = npci.NPCIEvidence(
+        available=True,
+        freshness_status=snap.freshness(),
+        age_days=snap.age_days(),
+        provenance=snap.provenance,
+        metrics=snap.metrics,
+        baseline=snap.baseline,
+    )
+    return json.loads(ev.model_dump_json()) | mode_stamp()
+
+
+@app.get("/api/external/npci/{merchant_id}")
+def external_npci(merchant_id: str) -> dict:
+    """External ecosystem evidence for one merchant, and how it was matched.
+
+    Answers one question -- is this merchant's failure pattern consistent with
+    what NPCI published for the period? -- and answers UNAVAILABLE rather than
+    failing when it cannot. The response carries source, period, as_of,
+    fetched_at, source hash, snapshot id and schema version so the exact
+    numbers can be found again. It carries no credentials and no filesystem
+    paths.
+    """
+    if not (SYNTH / ("merchant_%s.json" % merchant_id)).exists():
+        raise HTTPException(404, "no such merchant: %s" % merchant_id)
+    ev = npci.evidence_for_merchant(merchant_id)
+    return json.loads(ev.model_dump_json()) | mode_stamp()
+
+
+@app.get("/api/external/npci/{merchant_id}/verify")
+def external_npci_verify(merchant_id: str, run_id: str | None = None) -> dict:
+    """Does the NPCI evidence a run recorded still match its committed source?
+
+    Offline by construction: it re-derives the snapshot from the shipped
+    tables and compares hashes. It never fetches NPCI, so a network outage
+    cannot turn a verified run into an unverified one.
+    """
+    if not (SYNTH / ("merchant_%s.json" % merchant_id)).exists():
+        raise HTTPException(404, "no such merchant: %s" % merchant_id)
+    ref: dict = {}
+    if run_id:
+        p = RUNS / ("%s.json" % run_id)
+        if not p.exists():
+            raise HTTPException(404, "no such run: %s" % run_id)
+        rec = json.loads(p.read_text(encoding="utf-8"))
+        ref = ((rec.get("report") or {}).get("external_evidence") or {}).get(
+            "provenance"
+        ) or {}
+        if not ref:
+            return {
+                "ok": False,
+                "recorded": False,
+                "detail": "this run was diagnosed before external evidence "
+                          "was recorded, so there is no snapshot to verify",
+            } | mode_stamp()
+    else:
+        ev = npci.evidence_for_merchant(merchant_id)
+        if not ev.available or ev.provenance is None:
+            return {
+                "ok": False,
+                "recorded": False,
+                "detail": ev.unavailable_reason or "no snapshot available",
+            } | mode_stamp()
+        ref = json.loads(ev.provenance.model_dump_json())
+    return npci.verify_reference(ref) | {"recorded": True} | mode_stamp()
 
 
 @app.get("/api/lineage/{merchant_id}/{txn_id}")

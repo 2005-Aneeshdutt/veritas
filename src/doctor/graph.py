@@ -471,11 +471,28 @@ def node_report(s: State) -> State:
 
     t = s.tracer.start("report")
     s.report = build_report(s)
+    # External evidence provenance goes into the trace -- the audit record the
+    # system already keeps for every node -- and deliberately NOT into the
+    # payment ledger. The ledger's invariant is that every entry is a payment
+    # decision carrying a gate decision (reconcile.py enforces it), and an
+    # evidence row would break that reconciliation. See §21 in the NPCI notes.
+    ev = s.report.get("external_evidence") or {}
+    prov = ev.get("provenance") or {}
     s.tracer.finish(
         t,
         output_summary={
             "measured_keys": list(s.report.get("measured", {})),
             "projected_keys": list(s.report.get("projected", {})),
+            "external_evidence": {
+                "source": "NPCI",
+                "available": bool(ev.get("available")),
+                "snapshot_id": prov.get("snapshot_id"),
+                "source_hash": prov.get("source_hash"),
+                "period": prov.get("period"),
+                "freshness": ev.get("freshness_status"),
+                "relevance": (ev.get("relevance") or {}).get("label"),
+                "corroboration": (ev.get("corroboration") or {}).get("status"),
+            },
         },
     )
     return s

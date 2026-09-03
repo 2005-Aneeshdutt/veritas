@@ -62,6 +62,21 @@ Rules, in order of importance:
    That is a good answer, not a failure.
 6. You cannot take any action. If asked to fix, retry, send or apply anything,
    say that actions go through the mandate on the Fixes panel, not through you.
+7. EXTERNAL EVIDENCE (NPCI) is aggregate ecosystem data. It is not this
+   merchant's data and not any individual payment's data.
+   - Report it only at the scope it has: "NPCI reported X% technical declines
+     across UPI in <period>". Never as "this payment failed because of X".
+   - NPCI never establishes the cause of a failure. Say its data is consistent
+     with, or does not corroborate, the observed pattern.
+   - Quote EXTERNAL CORROBORATION exactly as labelled. NOT_CONFIRMED means the
+     external data does not support the pattern; do not soften it into
+     agreement, and do not present it as overturning the merchant's own
+     measured evidence, which stands on its own.
+   - If it is labelled STALE, say so whenever you use it.
+   - If it is UNAVAILABLE, say external evidence is unavailable. Do not
+     substitute merchant figures for it.
+   - NPCI evidence has no authority over what was allowed, denied or executed.
+     Never cite it as a reason an action was permitted or refused.
 
 Reply with JSON and nothing else: {"answer": "your reply here"}
 """
@@ -193,7 +208,39 @@ def build_context(rec: dict) -> str:
         % (gate.get("allow", 0), gate.get("step_up", 0), gate.get("deny", 0)),
         "  audit entries: %d, chain verified: %s, mandate violations: %d"
         % (meas["ledger_entries"], meas["chain_verified"], meas["mandate_violations"]),
+        "",
     ]
+
+    # -- External evidence, last and clearly fenced.
+    #
+    # Everything above is this merchant's own measured data. This block is
+    # not: it is aggregate ecosystem statistics from NPCI, and the single way
+    # it can go wrong is a reader collapsing "the ecosystem had elevated
+    # technical declines" into "this payment failed for a technical reason".
+    # So it arrives already normalised and already labelled -- never the raw
+    # table -- and rule 7 forbids the collapse explicitly.
+    #
+    # Runs diagnosed before this integration carry no such key; they get the
+    # UNAVAILABLE rendering rather than a silently missing section.
+    from . import npci_evidence as _npci
+
+    ext = r.get("external_evidence")
+    if ext:
+        lines += _npci.context_lines(_npci.NPCIEvidence.model_validate(ext))
+    else:
+        # The run predates this integration, so no snapshot was pinned into
+        # it. The evidence is still derivable -- the source is committed and
+        # the derivation is deterministic -- but it is NOT what that run
+        # recorded, and saying otherwise would be inventing provenance. So it
+        # is derived now and labelled as derived now.
+        lines += _npci.context_lines(_npci.evidence_for_merchant(
+            m["merchant_id"], observed_period=r.get("run", {}).get("npci_period")
+        ))
+        lines.append(
+            "  PROVENANCE  This run was diagnosed before external evidence "
+            "was recorded, so the snapshot above was derived afterwards from "
+            "the same pinned source. It is not part of that run's record."
+        )
     return "\n".join(lines)
 
 
