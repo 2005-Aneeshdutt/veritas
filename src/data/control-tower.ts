@@ -54,7 +54,7 @@ export const QUEUE_ROWS: QueueRow[] = [
   {
     id: "pay_cloudsync_1133",
     merchant: "CloudSync Systems",
-    amount: inr(9480),
+    amount: inr(0),
     method: "Card · Axis · **** 8802",
     methodLabel: "Card",
     failureReason: "Stalled mid-authorization — no terminal processor response",

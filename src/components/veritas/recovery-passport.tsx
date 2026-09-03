@@ -89,7 +89,7 @@ export function RecoveryPassport({
           { k: "Ledger", v: `${c.ledger.entry} · ${c.ledger.verification}` },
           {
             k: "Evidence",
-            v: `${c.evidence.filter((e) => e.status !== "UNAVAILABLE" && e.status !== "UNCLAIMED").length} of ${c.evidence.length} present`,
+            v: `${c.evidence.filter((e) => e.status !== "UNAVAILABLE" && e.status !== "UNCLAIMED" && e.status !== "NOT REACHED").length} of ${c.evidence.length} present`,
           },
           { k: "Gateway", v: c.gateway },
         ].map((r) => (

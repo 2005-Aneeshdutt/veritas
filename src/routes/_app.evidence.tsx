@@ -265,8 +265,10 @@ function EvidencePage() {
         footer={
           open?.status === "UNAVAILABLE"
             ? "Evidence unavailable — no artifact exists for this step."
-            : open?.status === "UNCLAIMED"
-              ? "Gateway confirmation is not claimed for this record."
+            : open?.status === "NOT REACHED"
+              ? "Not reached — the workflow stopped before this step could produce an artifact."
+              : open?.status === "UNCLAIMED"
+                ? "Gateway confirmation is not claimed for this record."
               : "Read-only artifact reference from the demo record."
         }
       />

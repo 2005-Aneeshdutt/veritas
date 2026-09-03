@@ -260,6 +260,7 @@ export const EVIDENCE_STATUSES: EvidenceStatus[] = [
   "VERIFIED",
   "UNAVAILABLE",
   "UNCLAIMED",
+  "NOT REACHED",
 ];
 
 /* ------------------------------------------------------------------- proof */
