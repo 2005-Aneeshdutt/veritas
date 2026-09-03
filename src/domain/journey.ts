@@ -69,7 +69,12 @@ export type LiveStatus =
   | "STOPPED BY POLICY"
   | "OPEN EXCEPTION";
 
-export type EvidenceStatus = "AVAILABLE" | "UNAVAILABLE" | "UNCLAIMED" | "VERIFIED";
+export type EvidenceStatus =
+  | "AVAILABLE"
+  | "UNAVAILABLE"
+  | "UNCLAIMED"
+  | "VERIFIED"
+  | "NOT REACHED";
 
 export interface SignalRow {
   label: string;
