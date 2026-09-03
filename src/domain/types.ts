@@ -102,3 +102,33 @@ export interface OverviewSnapshot {
   exceptions: ExceptionItem[];
   proofHealth: ProofHealth;
 }
+
+/** Journey step state for a demo recovery case. */
+export type JourneyStepState = "complete" | "blocked" | "skipped" | "pending";
+
+export interface JourneyStep {
+  id: string;
+  label: string;
+  state: JourneyStepState;
+  claim: ClaimState;
+  detail: string;
+  at?: string;
+}
+
+/**
+ * A curated demo walkthrough case. Demo mode only — never presented as a live event.
+ */
+export interface DemoCase {
+  /** Payment reference, also the route key. */
+  id: string;
+  kind: "DENIAL" | "SUCCESS" | "UNVERIFIED";
+  title: string;
+  merchant: string;
+  amount: Money;
+  decision: "DENY" | "ALLOW" | "AUTO-ALLOW" | "ABSTAIN";
+  claim: ClaimState;
+  summary: string;
+  policy: string;
+  detectedAt: string;
+  steps: JourneyStep[];
+}
