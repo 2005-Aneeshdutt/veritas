@@ -286,3 +286,45 @@ export function decisionTone(d: PolicyDecision): string {
       return "text-foreground";
   }
 }
+
+/** Operational grouping of the queue by why a case needs attention. */
+export type AttentionGroupId =
+  | "gateway"
+  | "execution"
+  | "policy"
+  | "human"
+  | "ledger";
+
+export const ATTENTION_GROUP_LABEL: Record<AttentionGroupId, string> = {
+  gateway: "Gateway confirmation",
+  execution: "Execution exception",
+  policy: "Policy review",
+  human: "Human review",
+  ledger: "Ledger / evidence",
+};
+
+/** Derived from the row itself — never a fabricated count. */
+export function attentionGroup(r: QueueRow): AttentionGroupId {
+  if (r.execution === "EXCEPTION") return r.claim === "UNVERIFIED" ? "gateway" : "execution";
+  if (r.decision === "HUMAN REVIEW" || r.decision === "ESCALATE") return "human";
+  if (r.decision === "DENY" || r.decision === "HOLD") return "policy";
+  if (r.claim === "MEASURED") return "ledger";
+  return "execution";
+}
+
+export function attentionBreakdown(rows: QueueRow[]) {
+  const ids: AttentionGroupId[] = ["gateway", "execution", "policy", "human", "ledger"];
+  return ids
+    .map((id) => ({ id, label: ATTENTION_GROUP_LABEL[id], count: rows.filter((r) => attentionGroup(r) === id).length }))
+    .filter((g) => g.count > 0);
+}
+
+/** The most meaningful next destination for a row. Never a generic "view". */
+export function nextActionFor(r: QueueRow): { label: string; target: "journey" | "policy" | "evidence" | "audit" | "payment" } {
+  if (r.execution === "EXCEPTION") return { label: "Review", target: r.journeyCaseId ? "journey" : "audit" };
+  if (r.decision === "DENY" || r.decision === "HOLD" || r.decision === "HUMAN REVIEW" || r.decision === "ESCALATE")
+    return { label: "View policy", target: "policy" };
+  if (r.claim === "MEASURED") return { label: "View evidence", target: "evidence" };
+  if (r.journeyCaseId) return { label: "Open journey", target: "journey" };
+  return { label: "Open audit", target: "audit" };
+}
