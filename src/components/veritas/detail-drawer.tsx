@@ -35,7 +35,7 @@ export function DetailDrawer({
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent
         side="right"
-        className="w-full border-hairline bg-background sm:max-w-md overflow-y-auto"
+        className="flex w-full flex-col gap-5 overflow-y-auto border-hairline bg-background sm:max-w-md"
       >
         <SheetHeader className="space-y-2 border-b border-hairline pb-4">
           {eyebrow && <p className="label-meta text-[10px] tracking-[0.16em]">{eyebrow}</p>}
@@ -45,7 +45,7 @@ export function DetailDrawer({
           )}
         </SheetHeader>
 
-        <dl className="divide-y divide-hairline px-4">
+        <dl className="divide-y divide-hairline">
           {rows.map((r) => (
             <div key={r.label} className="grid grid-cols-[auto_minmax(0,1fr)] items-baseline gap-4 py-2.5">
               <dt className="label-meta w-32 shrink-0 text-[10px] tracking-[0.14em]">{r.label}</dt>
@@ -57,7 +57,7 @@ export function DetailDrawer({
         {children && <div className="px-4">{children}</div>}
 
         {actions && actions.length > 0 && (
-          <nav aria-label="Related workspaces" className="flex flex-col gap-2 px-4">
+          <nav aria-label="Related workspaces" className="flex flex-col gap-2">
             {actions.map((a) => (
               <Link
                 key={`${a.to}-${a.label}`}
@@ -73,7 +73,7 @@ export function DetailDrawer({
           </nav>
         )}
 
-        {footer && <p className="px-4 pb-6 text-xs text-muted-foreground/80">{footer}</p>}
+        {footer && <p className="px-4 text-xs text-muted-foreground/80">{footer}</p>}
       </SheetContent>
     </Sheet>
   );
