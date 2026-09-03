@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Route } from "lucide-react";
+import { Route as RouteIcon } from "lucide-react";
 import { PlaceholderPage } from "@/components/veritas/placeholder-page";
 
 export const Route = createFileRoute("/_app/recovery-journey")({
@@ -20,7 +20,7 @@ function RecoveryJourneyPage() {
       title="Recovery Journey"
       description="Payment to outcome: diagnosis, plan, authorization, execution, ledger, evidence."
       phase="Phase 3"
-      icon={Route}
+      icon={RouteIcon}
       capabilities={[
         "End-to-end timeline per payment",
         "Policy decision at each step",

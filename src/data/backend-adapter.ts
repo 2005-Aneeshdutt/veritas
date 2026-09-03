@@ -9,7 +9,7 @@ export const backendAdapter: VeritasAdapter = {
   kind: "backend",
   async getOverview(signal) {
     const res = await fetch(`${API_BASE_URL.replace(/\/$/, "")}/overview`, {
-      signal,
+      signal: signal ?? null,
       headers: { accept: "application/json" },
     });
     if (!res.ok) throw new Error(`Overview request failed (${res.status})`);
