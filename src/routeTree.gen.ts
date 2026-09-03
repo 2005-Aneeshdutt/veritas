@@ -17,6 +17,7 @@ import { Route as AppControlTowerRouteImport } from './routes/_app.control-tower
 import { Route as AppCounterfactualLabRouteImport } from './routes/_app.counterfactual-lab'
 import { Route as AppDiagnosisRouteImport } from './routes/_app.diagnosis'
 import { Route as AppEvidenceRouteImport } from './routes/_app.evidence'
+import { Route as AppOutcomeRouteImport } from './routes/_app.outcome'
 import { Route as AppPaymentsRouteImport } from './routes/_app.payments'
 import { Route as AppPolicyRouteImport } from './routes/_app.policy'
 import { Route as AppProveRouteImport } from './routes/_app.prove'
@@ -63,6 +64,11 @@ const AppEvidenceRoute = AppEvidenceRouteImport.update({
   path: '/evidence',
   getParentRoute: () => AppRoute,
 } as any)
+const AppOutcomeRoute = AppOutcomeRouteImport.update({
+  id: '/outcome',
+  path: '/outcome',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppPaymentsRoute = AppPaymentsRouteImport.update({
   id: '/payments',
   path: '/payments',
@@ -102,6 +108,7 @@ export interface FileRoutesByFullPath {
   '/counterfactual-lab': typeof AppCounterfactualLabRoute
   '/diagnosis': typeof AppDiagnosisRoute
   '/evidence': typeof AppEvidenceRoute
+  '/outcome': typeof AppOutcomeRoute
   '/payments': typeof AppPaymentsRoute
   '/policy': typeof AppPolicyRoute
   '/prove': typeof AppProveRoute
@@ -116,6 +123,7 @@ export interface FileRoutesByTo {
   '/counterfactual-lab': typeof AppCounterfactualLabRoute
   '/diagnosis': typeof AppDiagnosisRoute
   '/evidence': typeof AppEvidenceRoute
+  '/outcome': typeof AppOutcomeRoute
   '/payments': typeof AppPaymentsRoute
   '/policy': typeof AppPolicyRoute
   '/prove': typeof AppProveRoute
@@ -133,6 +141,7 @@ export interface FileRoutesById {
   '/_app/counterfactual-lab': typeof AppCounterfactualLabRoute
   '/_app/diagnosis': typeof AppDiagnosisRoute
   '/_app/evidence': typeof AppEvidenceRoute
+  '/_app/outcome': typeof AppOutcomeRoute
   '/_app/payments': typeof AppPaymentsRoute
   '/_app/policy': typeof AppPolicyRoute
   '/_app/prove': typeof AppProveRoute
@@ -151,6 +160,7 @@ export interface FileRouteTypes {
     | '/counterfactual-lab'
     | '/diagnosis'
     | '/evidence'
+    | '/outcome'
     | '/payments'
     | '/policy'
     | '/prove'
@@ -165,6 +175,7 @@ export interface FileRouteTypes {
     | '/counterfactual-lab'
     | '/diagnosis'
     | '/evidence'
+    | '/outcome'
     | '/payments'
     | '/policy'
     | '/prove'
@@ -181,6 +192,7 @@ export interface FileRouteTypes {
     | '/_app/counterfactual-lab'
     | '/_app/diagnosis'
     | '/_app/evidence'
+    | '/_app/outcome'
     | '/_app/payments'
     | '/_app/policy'
     | '/_app/prove'
@@ -253,6 +265,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppEvidenceRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/outcome': {
+      id: '/_app/outcome'
+      path: '/outcome'
+      fullPath: '/outcome'
+      preLoaderRoute: typeof AppOutcomeRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/payments': {
       id: '/_app/payments'
       path: '/payments'
@@ -304,6 +323,7 @@ interface AppRouteChildren {
   AppCounterfactualLabRoute: typeof AppCounterfactualLabRoute
   AppDiagnosisRoute: typeof AppDiagnosisRoute
   AppEvidenceRoute: typeof AppEvidenceRoute
+  AppOutcomeRoute: typeof AppOutcomeRoute
   AppPaymentsRoute: typeof AppPaymentsRoute
   AppPolicyRoute: typeof AppPolicyRoute
   AppProveRoute: typeof AppProveRoute
@@ -319,6 +339,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppCounterfactualLabRoute: AppCounterfactualLabRoute,
   AppDiagnosisRoute: AppDiagnosisRoute,
   AppEvidenceRoute: AppEvidenceRoute,
+  AppOutcomeRoute: AppOutcomeRoute,
   AppPaymentsRoute: AppPaymentsRoute,
   AppPolicyRoute: AppPolicyRoute,
   AppProveRoute: AppProveRoute,
