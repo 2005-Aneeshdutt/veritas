@@ -232,10 +232,10 @@ function PolicyKernelPage() {
             <p
               className={cn(
                 "numeral mt-1 text-3xl font-semibold tracking-tight sm:text-4xl",
-                denied ? "text-denied" : "text-measured",
+                ev.evaluating ? "text-muted-foreground" : denied ? "text-denied" : "text-measured",
               )}
             >
-              {denied ? "POLICY DENIED" : decision}
+              {ev.evaluating ? "EVALUATING…" : denied ? "POLICY DENIED" : decision}
             </p>
             <p className="mt-1.5 text-sm text-muted-foreground">{activeCase.policy.note}</p>
           </div>
