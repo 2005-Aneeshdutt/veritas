@@ -16,4 +16,8 @@ export const backendAdapter: VeritasAdapter = {
     const data = (await res.json()) as OverviewSnapshot;
     return { ...data, source: "backend" };
   },
+  async getCases() {
+    // Walkthrough cases are a demo-mode affordance only.
+    return [];
+  },
 };
