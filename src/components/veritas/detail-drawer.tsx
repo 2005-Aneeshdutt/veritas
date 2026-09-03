@@ -54,7 +54,7 @@ export function DetailDrawer({
           ))}
         </dl>
 
-        {children && <div className="px-4">{children}</div>}
+        {children && <div>{children}</div>}
 
         {actions && actions.length > 0 && (
           <nav aria-label="Related workspaces" className="flex flex-col gap-2">
@@ -73,7 +73,7 @@ export function DetailDrawer({
           </nav>
         )}
 
-        {footer && <p className="px-4 text-xs text-muted-foreground/80">{footer}</p>}
+        {footer && <p className="text-xs text-muted-foreground/80">{footer}</p>}
       </SheetContent>
     </Sheet>
   );
