@@ -1,5 +1,6 @@
 import { PageHeader } from "./page-header";
 import type { LucideIcon } from "lucide-react";
+import type { ReactNode } from "react";
 
 export function PlaceholderPage({
   title,
@@ -7,16 +8,19 @@ export function PlaceholderPage({
   phase,
   icon: Icon,
   capabilities,
+  notice,
 }: {
   title: string;
   description: string;
   phase: string;
   icon: LucideIcon;
   capabilities: string[];
+  notice?: ReactNode;
 }) {
   return (
     <div className="space-y-6">
       <PageHeader title={title} description={description} />
+      {notice}
       <section className="surface-panel p-8">
         <div className="flex max-w-2xl flex-col gap-4">
           <span className="grid h-10 w-10 place-items-center rounded-md border border-hairline bg-elevated text-muted-foreground">
