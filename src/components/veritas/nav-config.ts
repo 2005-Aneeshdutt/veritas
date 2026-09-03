@@ -12,9 +12,21 @@ import {
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
+export type AppRoute =
+  | "/"
+  | "/control-tower"
+  | "/payments"
+  | "/recovery-journey"
+  | "/diagnosis"
+  | "/counterfactual-lab"
+  | "/evidence"
+  | "/audit-trail"
+  | "/prove"
+  | "/settings";
+
 export interface NavItem {
   label: string;
-  to: string;
+  to: AppRoute;
   icon: LucideIcon;
   description: string;
 }
