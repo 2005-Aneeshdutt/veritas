@@ -68,7 +68,7 @@ const SEVERITY_TONE: Record<string, string> = {
 /** What clicking a headline metric opens, and why. */
 const METRIC_CONTEXT: Record<
   string,
-  { heading: string; body: string; actions: { label: string; to: AppRoute; search?: Record<string, string> }[] }
+  { heading: string; body: string; actions: { label: string; to: AppRoute; search?: Record<string, string> | undefined }[] }
 > = {
   "at-risk": {
     heading: "Revenue at risk, by cause",
@@ -109,7 +109,7 @@ const RISK_CONTEXT: Record<string, string> = {
 
 const STAGE_CONTEXT: Record<
   string,
-  { body: string; action: { label: string; to: AppRoute; search?: Record<string, string> } }
+  { body: string; action: { label: string; to: AppRoute; search?: Record<string, string> | undefined } }
 > = {
   detected: {
     body: "Payments observed as failing, disputed or stalled. Detection is exposure, not loss.",
@@ -167,12 +167,12 @@ function InlineAction({
 }: {
   label: string;
   to: AppRoute;
-  search?: Record<string, string>;
+  search?: Record<string, string> | undefined;
 }) {
   return (
     <Link
       to={to}
-      search={search as never}
+      search={(search ?? {}) as never}
       className="inline-flex h-8 items-center gap-1.5 rounded-md border border-hairline px-3 text-[13px] text-muted-foreground transition-colors hover:border-foreground/25 hover:text-foreground"
     >
       {label}
@@ -408,6 +408,7 @@ function Overview() {
           <SectionTitle title="Recovery flow" hint="Payment → decision → money → proof" />
           <Link
             to="/recovery-journey"
+            search={{ case: undefined }}
             className="label-meta inline-flex shrink-0 items-center gap-1.5 text-[10px] tracking-[0.16em] text-muted-foreground transition-colors hover:text-foreground"
           >
             Open Recovery Journey
@@ -574,7 +575,7 @@ function Overview() {
                         <InlineAction
                           label="View affected payments"
                           to="/payments"
-                          search={{ cause: r.label }}
+                          search={{ cause: r.label, ref: undefined }}
                         />
                       </div>
                       <p className="mt-2 text-xs text-muted-foreground/80">
@@ -595,7 +596,7 @@ function Overview() {
               <Link
                 key={p.id}
                 to="/control-tower"
-                search={{ decision: p.label }}
+                search={{ decision: p.label, view: undefined }}
                 className="flex items-baseline justify-between gap-4 rounded-md px-2 py-2 transition-colors hover:bg-foreground/[0.04]"
               >
                 <dt className="min-w-0 truncate text-sm text-muted-foreground">{p.label}</dt>
@@ -735,7 +736,7 @@ function Overview() {
             : []
         }
         actions={[
-          { label: "View payment", to: "/payments", search: action ? { ref: action.reference } : undefined },
+          { label: "View payment", to: "/payments", search: action ? { ref: action.reference } : {} },
           { label: "View Recovery Journey", to: "/recovery-journey" },
         ]}
         footer="Demo aggregation — detailed payment records require backend connection."

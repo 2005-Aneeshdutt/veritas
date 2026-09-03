@@ -7,7 +7,7 @@ import type { AppRoute } from "./nav-config";
 export interface DrawerAction {
   label: string;
   to: AppRoute;
-  search?: Record<string, string>;
+  search?: Record<string, string> | undefined;
 }
 
 export function DetailDrawer({

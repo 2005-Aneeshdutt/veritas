@@ -114,6 +114,7 @@ function RecoveryJourneyPage() {
         actions={
           <Link
             to="/recovery-journey"
+            search={{ case: undefined }}
             className="label-meta inline-flex h-8 items-center rounded-md border border-hairline px-3 text-[10px] text-muted-foreground transition-colors hover:text-foreground"
           >
             All cases
