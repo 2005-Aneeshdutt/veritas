@@ -10,6 +10,7 @@ import {
   Settings,
   ShieldCheck,
   Stethoscope,
+  Target,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
@@ -20,6 +21,7 @@ export type AppRoute =
   | "/payment/$paymentId"
   | "/recovery-journey"
   | "/policy"
+  | "/outcome"
   | "/diagnosis"
   | "/counterfactual-lab"
   | "/evidence"
@@ -105,16 +107,22 @@ export const NAV_GROUPS: NavGroup[] = [
     caption: "Stand behind the number",
     items: [
       {
+        label: "Outcome",
+        to: "/outcome",
+        icon: Target,
+        description: "What actually happened after execution",
+      },
+      {
         label: "Evidence",
         to: "/evidence",
         icon: FileCheck2,
         description: "Artifacts supporting every claim",
       },
       {
-        label: "Audit Trail",
+        label: "Audit Ledger",
         to: "/audit-trail",
         icon: ScrollText,
-        description: "Immutable record of governed actions",
+        description: "Append-only governance record with chain integrity",
       },
       {
         label: "Prove",
