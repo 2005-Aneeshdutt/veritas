@@ -1,6 +1,7 @@
 import type { VeritasAdapter } from "./adapter";
 import { inr } from "@/domain/money";
 import type { OverviewSnapshot } from "@/domain/types";
+import { DEMO_CASES } from "./demo-cases";
 
 /** Static, clearly-labelled demo figures. Never presented as live truth. */
 const snapshot: OverviewSnapshot = {
@@ -168,5 +169,8 @@ export const demoAdapter: VeritasAdapter = {
   kind: "demo",
   async getOverview() {
     return snapshot;
+  },
+  async getCases() {
+    return DEMO_CASES;
   },
 };

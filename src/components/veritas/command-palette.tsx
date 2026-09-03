@@ -1,4 +1,7 @@
 import { useNavigate } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
+import { casesQueryOptions } from "@/data/services";
+import { formatMoney } from "@/domain/money";
 import {
   CommandDialog,
   CommandEmpty,
@@ -8,7 +11,7 @@ import {
   CommandList,
   CommandSeparator,
 } from "@/components/ui/command";
-import { Monitor, Moon, Sun } from "lucide-react";
+import { CreditCard, Monitor, Moon, Sun } from "lucide-react";
 import { NAV_GROUPS } from "./nav-config";
 import { useTheme } from "@/lib/theme";
 
@@ -21,23 +24,46 @@ export function CommandPalette({
 }) {
   const navigate = useNavigate();
   const { setMode } = useTheme();
+  const { data: cases = [] } = useQuery(casesQueryOptions);
 
   const go = (to: string) => {
     onOpenChange(false);
     void navigate({ to });
   };
 
+  const openCase = (id: string) => {
+    onOpenChange(false);
+    void navigate({ to: "/recovery-journey", search: { case: id } });
+  };
+
   return (
     <CommandDialog open={open} onOpenChange={onOpenChange}>
       <CommandInput placeholder="Search pages and actions…" />
       <CommandList>
-        <CommandEmpty>No results found.</CommandEmpty>
+        <CommandEmpty>No matching payment in current demo dataset.</CommandEmpty>
+        {cases.length > 0 && (
+          <CommandGroup heading="Demo payments">
+            {cases.map((c) => (
+              <CommandItem
+                key={c.id}
+                value={`${c.id} ${c.merchant} ${c.kind} ${c.title} ${c.decision}`}
+                onSelect={() => openCase(c.id)}
+              >
+                <CreditCard className="mr-2 h-4 w-4" aria-hidden="true" />
+                <span className="font-mono text-xs">{c.id}</span>
+                <span className="ml-2 truncate text-xs text-muted-foreground">
+                  {c.merchant} · {c.title} · {formatMoney(c.amount)}
+                </span>
+              </CommandItem>
+            ))}
+          </CommandGroup>
+        )}
         {NAV_GROUPS.map((group, gi) => (
           <CommandGroup key={group.title ?? `g${gi}`} heading={group.title ?? "General"}>
             {group.items.map((item) => (
               <CommandItem
                 key={item.to}
-                value={`${item.label} ${item.description}`}
+                value={`Go to ${item.label} ${item.description}`}
                 onSelect={() => go(item.to)}
               >
                 <item.icon className="mr-2 h-4 w-4" aria-hidden="true" />
