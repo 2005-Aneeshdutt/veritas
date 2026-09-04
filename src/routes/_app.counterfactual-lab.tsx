@@ -5,18 +5,20 @@ import { CaseSwitcher } from "@/components/veritas/case-switcher";
 import { ClaimBadge } from "@/components/veritas/claim-badge";
 import { DetailDrawer } from "@/components/veritas/detail-drawer";
 import { PageHeader } from "@/components/veritas/page-header";
-import { JOURNEY_CASES, findJourneyCase } from "@/data/journey-cases";
+import { useJourneyCase } from "@/hooks/use-journey-case";
+import { useJourneyCases } from "@/hooks/use-journey-cases";
+import { BackendNotice } from "@/components/veritas/backend-notice";
 import {
   COMPARISON_STEPS,
   COUNTERFACTUAL_DISCLAIMER,
   OPTIMIZATION_STATEMENT,
-  STRATEGIES,
   bestGovernedRecovery,
   findStrategy,
   highestRawRecovery,
   lowestBreaches,
   type Strategy,
 } from "@/data/investigate";
+import { useStrategies } from "@/hooks/use-strategies";
 import { formatMoney } from "@/domain/money";
 import { usePrefersReducedMotion } from "@/hooks/use-journey-engine";
 import { cn } from "@/lib/utils";
@@ -70,7 +72,8 @@ function metricLabel(s: Strategy, view: ViewMode): string {
 function CounterfactualLabPage() {
   const { case: caseId } = Route.useSearch();
   const navigate = useNavigate();
-  const activeCase = findJourneyCase(caseId) ?? JOURNEY_CASES[1]!;
+  const { case_: activeCase, isFixture, error } = useJourneyCase(caseId, 1);
+  const { strategies, sourceLabel } = useStrategies(activeCase.id);
   const reduced = usePrefersReducedMotion();
   const [revealed, setRevealed] = useState(0);
   const [running, setRunning] = useState(false);
@@ -79,8 +82,8 @@ function CounterfactualLabPage() {
   const [view, setView] = useState<ViewMode>("recovery");
   const [breachOpen, setBreachOpen] = useState(false);
   const timer = useRef<ReturnType<typeof setInterval> | null>(null);
-  const selected = findStrategy(selectedId);
-  const compare = findStrategy(compareId);
+  const selected = findStrategy(selectedId, strategies);
+  const compare = findStrategy(compareId, strategies);
   const total = COMPARISON_STEPS.length;
   const ready = revealed >= total;
 
@@ -124,11 +127,11 @@ function CounterfactualLabPage() {
     return done;
   }, [revealed]);
 
-  const maxMetric = Math.max(1, ...STRATEGIES.map((s) => metricOf(s, view)));
-  const maxBreach = Math.max(...STRATEGIES.map((s) => s.breaches), 1);
-  const rawWinner = highestRawRecovery();
-  const governedWinner = bestGovernedRecovery();
-  const cleanest = lowestBreaches();
+  const maxMetric = Math.max(1, ...strategies.map((s) => metricOf(s, view)));
+  const maxBreach = Math.max(...strategies.map((s) => s.breaches), 1);
+  const rawWinner = highestRawRecovery(strategies);
+  const governedWinner = bestGovernedRecovery(strategies);
+  const cleanest = lowestBreaches(strategies);
 
   const diff = (a: number, b: number) => {
     const d = a - b;
@@ -137,6 +140,8 @@ function CounterfactualLabPage() {
 
   return (
     <div className="space-y-8">
+      <BackendNotice isFixture={isFixture} error={error} what="counterfactual evaluation" />
+
       <PageHeader
         title="Counterfactual Lab"
         description="What if we optimized only for recovery?"
@@ -153,8 +158,9 @@ function CounterfactualLabPage() {
           <p className="label-meta text-[10px] tracking-[0.16em]">Experiment</p>
           <h2 className="mt-1 text-xl font-semibold tracking-tight">Recovery strategy comparison</h2>
           <p className="mt-1 text-xs text-muted-foreground">
-            DEMO ANALYSIS — frontend comparison of existing counterfactual demo values. No experiment
-            is executed and no money moves.
+              {sourceLabel} — comparison of recovery strategies over the same
+              governed population. No experiment is executed and no money moves.
+            
           </p>
         </div>
         <div className="flex items-center gap-2">
@@ -254,7 +260,7 @@ function CounterfactualLabPage() {
               </div>
 
               <ul className="divide-y divide-hairline">
-                {STRATEGIES.map((s) => {
+                {strategies.map((s) => {
                   const active = s.id === selectedId;
                   const breached = s.breaches > 0;
                   const isCompare = s.id === compareId;
@@ -359,7 +365,7 @@ function CounterfactualLabPage() {
               <section aria-label="Direct comparison" className="space-y-2 border-t border-hairline pt-4">
                 <div className="flex flex-wrap items-center gap-2">
                   <span className="label-meta text-[10px] tracking-[0.16em]">Compare {selected.label} versus</span>
-                  {STRATEGIES.filter((s) => s.id !== selectedId).map((s) => (
+                  {strategies.filter((s) => s.id !== selectedId).map((s) => (
                     <button
                       key={s.id}
                       type="button"

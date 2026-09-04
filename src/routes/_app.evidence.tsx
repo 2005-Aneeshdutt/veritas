@@ -1,7 +1,9 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { ArrowRight, Search, X } from "lucide-react";
-import { JOURNEY_CASES, findJourneyCase } from "@/data/journey-cases";
+import { useJourneyCase } from "@/hooks/use-journey-case";
+import { useJourneyCases } from "@/hooks/use-journey-cases";
+import { BackendNotice } from "@/components/veritas/backend-notice";
 import { EVIDENCE_CATEGORIES, EVIDENCE_STATUSES, evidenceFor, ledgerEntryForCase } from "@/data/proof";
 import type { EvidenceItem } from "@/data/proof";
 import { formatMoney } from "@/domain/money";
@@ -47,7 +49,8 @@ function statusTone(s: EvidenceItem["status"]) {
 function EvidencePage() {
   const { case: caseId } = Route.useSearch();
   const navigate = useNavigate({ from: "/evidence" });
-  const c = findJourneyCase(caseId) ?? JOURNEY_CASES[0]!;
+  const { case_: c, isFixture, error } = useJourneyCase(caseId, 0);
+  const cases = useJourneyCases();
   const items = evidenceFor(c);
   const ledger = ledgerEntryForCase(c.id);
 
@@ -95,6 +98,8 @@ function EvidencePage() {
           Exactly what supports this claim — and exactly what does not.
         </p>
       </header>
+
+      <BackendNotice isFixture={isFixture} error={error} what="evidence" />
 
       <CaseSwitcher activeId={c.id} onSelect={(id) => navigate({ to: ".", search: { case: id } })} />
 
@@ -269,7 +274,7 @@ function EvidencePage() {
               ? "Not reached — the workflow stopped before this step could produce an artifact."
               : open?.status === "UNCLAIMED"
                 ? "Gateway confirmation is not claimed for this record."
-              : "Read-only artifact reference from the demo record."
+              : "Read-only artifact reference from the run record."
         }
       />
     </div>

@@ -1,6 +1,8 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { ArrowRight } from "lucide-react";
-import { JOURNEY_CASES, findJourneyCase } from "@/data/journey-cases";
+import { useJourneyCase } from "@/hooks/use-journey-case";
+import { useJourneyCases } from "@/hooks/use-journey-cases";
+import { BackendNotice } from "@/components/veritas/backend-notice";
 import { formatMoney } from "@/domain/money";
 import { ClaimBadge } from "@/components/veritas/claim-badge";
 import { CaseSwitcher } from "@/components/veritas/case-switcher";
@@ -38,7 +40,7 @@ const DISTINCTIONS = [
 function OutcomePage() {
   const { case: caseId } = Route.useSearch();
   const navigate = useNavigate({ from: "/outcome" });
-  const c = findJourneyCase(caseId) ?? JOURNEY_CASES[0]!;
+  const { case_: c, isFixture, error } = useJourneyCase(caseId, 0);
 
   const outcomeTone =
     c.outcome.state === "MEASURED"
@@ -53,6 +55,8 @@ function OutcomePage() {
 
   return (
     <div className="space-y-9">
+      <BackendNotice isFixture={isFixture} error={error} what="outcome" />
+
       <header className="border-b border-hairline pb-5">
         <p className="label-meta text-[10px] tracking-[0.16em]">After execution</p>
         <h1 className="mt-2 text-xl font-semibold tracking-tight text-foreground sm:text-2xl">
@@ -130,7 +134,7 @@ function OutcomePage() {
       </nav>
 
       <p className="text-xs text-muted-foreground/80">
-        Frontend demonstration only. Outcomes are read from the typed demo record — never inferred.
+        Frontend demonstration only. Outcomes are read from the committed run record — never inferred.
       </p>
     </div>
   );

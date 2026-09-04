@@ -1,11 +1,15 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
+import { RotateCcw } from "lucide-react";
 import { ArrowRight, ChevronDown } from "lucide-react";
 import { CaseSwitcher } from "@/components/veritas/case-switcher";
 import { ClaimBadge } from "@/components/veritas/claim-badge";
 import { DetailDrawer } from "@/components/veritas/detail-drawer";
 import { PageHeader } from "@/components/veritas/page-header";
-import { JOURNEY_CASES, findJourneyCase } from "@/data/journey-cases";
+import { useJourneyCase } from "@/hooks/use-journey-case";
+import { useJourneyCases } from "@/hooks/use-journey-cases";
+import { BackendNotice } from "@/components/veritas/backend-notice";
 import {
   DIAGNOSIS_METHODOLOGY,
   actionabilityLabel,
@@ -42,11 +46,36 @@ export const Route = createFileRoute("/_app/diagnosis")({
 function DiagnosisPage() {
   const { case: caseId } = Route.useSearch();
   const navigate = useNavigate();
-  const activeCase = findJourneyCase(caseId) ?? JOURNEY_CASES[1]!;
+  const { case_: activeCase, isFixture, error } = useJourneyCase(caseId, 1);
   const d = activeCase.diagnosis;
-  const factors = diagnosisFactors(activeCase.id);
+  // One source. The headline used the backend decomposition while this chart
+  // read a fixture, so the page contradicted itself about which factor was on
+  // top. Both now read the case.
+  const factors: DiagnosisFactor[] = d.factors.map((f) => ({
+    id: f.id,
+    label: f.label,
+    effect: f.effect,
+    uncertainty: f.uncertainty,
+    note: f.insideErrorBar
+      ? "Inside its own error bar — not distinguishable from noise."
+      : "Outside its error bar — the effect is real at this sample size.",
+  }));
   const [selected, setSelected] = useState<DiagnosisFactor | null>(null);
   const [methodOpen, setMethodOpen] = useState(false);
+  const qc = useQueryClient();
+  const [rerunning, setRerunning] = useState(false);
+
+  // Re-reads the committed decomposition for this payment. It is deterministic,
+  // so a re-run that returned different numbers would itself be the finding.
+  async function rerun() {
+    setRerunning(true);
+    setSelected(null);
+    try {
+      await qc.invalidateQueries({ queryKey: ["journey-case"] });
+    } finally {
+      setRerunning(false);
+    }
+  }
 
   const magnitudes = factors.map((f) => Math.abs(f.effect ?? 0));
   const max = Math.max(0.0001, ...magnitudes);
@@ -55,6 +84,8 @@ function DiagnosisPage() {
 
   return (
     <div className="space-y-8">
+      <BackendNotice isFixture={isFixture} error={error} what="diagnosis" />
+
       <PageHeader
         title="Diagnosis"
         description="Why is this payment failing?"
@@ -115,15 +146,26 @@ function DiagnosisPage() {
 
           {/* Contribution chart */}
           <section aria-labelledby="why-heading" className="space-y-4">
-            <div>
-              <h3 id="why-heading" className="text-sm font-semibold tracking-tight">
-                Why is this payment failing?
-              </h3>
-              <p className="mt-1 text-xs text-muted-foreground">
-                Estimated contribution with uncertainty. Contributions are analytical estimates, not
-                measured money.
-              </p>
-            </div>
+              <div className="flex flex-wrap items-start justify-between gap-3">
+                <div className="min-w-0">
+                  <h3 id="why-heading" className="text-sm font-semibold tracking-tight">
+                    Why is this payment failing?
+                  </h3>
+                  <p className="mt-1 max-w-lg text-xs text-muted-foreground">
+                    Shapley contribution with measured uncertainty. Estimates, not money - a factor
+                    inside its own error bar is not distinguishable from noise.
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={rerun}
+                  disabled={rerunning}
+                  className="inline-flex h-7 shrink-0 items-center gap-1.5 rounded-md border border-hairline px-2.5 text-[11px] text-muted-foreground transition-colors hover:border-foreground/30 hover:text-foreground disabled:opacity-60"
+                >
+                  <RotateCcw className={rerunning ? "h-3 w-3 animate-spin" : "h-3 w-3"} aria-hidden />
+                  {rerunning ? "Re-running" : "Re-run"}
+                </button>
+              </div>
 
             <ul className="space-y-2">
               {factors.map((f) => {

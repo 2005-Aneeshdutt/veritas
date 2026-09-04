@@ -4,11 +4,12 @@ import { Search, X } from "lucide-react";
 import {
   LEDGER_CLAIMS,
   LEDGER_DECISIONS,
-  LEDGER_ENTRIES,
   LEDGER_OUTCOMES,
   ledgerNeighbours,
 } from "@/data/proof";
 import type { LedgerEntry } from "@/data/proof";
+import { useLedger } from "@/hooks/use-ledger";
+import { BackendNotice } from "@/components/veritas/backend-notice";
 import { formatMoney } from "@/domain/money";
 import { ClaimBadge } from "@/components/veritas/claim-badge";
 import { DetailDrawer, type DrawerAction } from "@/components/veritas/detail-drawer";
@@ -51,6 +52,7 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
 
 function LedgerPage() {
   const { case: caseId } = Route.useSearch();
+  const { entries, isFixture } = useLedger();
   const navigate = useNavigate({ from: "/audit-trail" });
   const [q, setQ] = useState(caseId ?? "");
   const [decision, setDecision] = useState("all");
@@ -63,7 +65,7 @@ function LedgerPage() {
 
   const rows = useMemo(() => {
     const term = q.trim().toLowerCase();
-    const filtered = LEDGER_ENTRIES.filter((e) => {
+    const filtered = entries.filter((e) => {
       if (decision !== "all" && e.decision !== decision) return false;
       if (outcome !== "all" && e.outcome !== outcome) return false;
       if (claim !== "all" && e.claim !== claim) return false;
@@ -78,7 +80,7 @@ function LedgerPage() {
       if (sort === "oldest") return a.n - b.n;
       return b.n - a.n;
     });
-  }, [q, decision, outcome, claim, sort]);
+  }, [entries, q, decision, outcome, claim, sort]);
 
   function clearAll() {
     setQ("");
@@ -89,7 +91,7 @@ function LedgerPage() {
     navigate({ to: ".", search: { case: undefined } });
   }
 
-  const neighbours = open ? ledgerNeighbours(open) : { prev: undefined, next: undefined };
+  const neighbours = open ? ledgerNeighbours(open, entries) : { prev: undefined, next: undefined };
 
   const actions = (e: LedgerEntry): DrawerAction[] => {
     const list: DrawerAction[] = [{ label: "Open payment", to: "/payments", search: { ref: e.payment } }];
@@ -103,6 +105,8 @@ function LedgerPage() {
 
   return (
     <div className="space-y-8">
+      <BackendNotice isFixture={isFixture} error={new Error("Audit ledger unavailable.")} what="ledger" />
+
       <header className="border-b border-hairline pb-5">
         <p className="label-meta text-[10px] tracking-[0.16em]">Append-only governance record</p>
         <h1 className="mt-2 text-xl font-semibold tracking-tight text-foreground sm:text-2xl">
@@ -179,7 +183,7 @@ function LedgerPage() {
           )}
         </div>
         <p className="text-xs text-muted-foreground/80">
-          {rows.length} of {LEDGER_ENTRIES.length} entries
+          {rows.length} of {entries.length} entries
         </p>
       </section>
 

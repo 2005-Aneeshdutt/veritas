@@ -5,7 +5,9 @@ import { CaseSwitcher } from "@/components/veritas/case-switcher";
 import { ClaimBadge } from "@/components/veritas/claim-badge";
 import { DetailDrawer } from "@/components/veritas/detail-drawer";
 import { PageHeader } from "@/components/veritas/page-header";
-import { JOURNEY_CASES, findJourneyCase } from "@/data/journey-cases";
+import { useJourneyCase } from "@/hooks/use-journey-case";
+import { useJourneyCases } from "@/hooks/use-journey-cases";
+import { BackendNotice } from "@/components/veritas/backend-notice";
 import { diagnosisFactors, formatEffect } from "@/data/investigate";
 import type { JourneyCase, PlanChannel } from "@/domain/journey";
 import { formatMoney } from "@/domain/money";
@@ -139,7 +141,7 @@ function planStates(activeCase: JourneyCase, record: "AUTHORIZED" | "DENIED" | u
 function PlanPage() {
   const { case: caseId } = Route.useSearch();
   const navigate = useNavigate();
-  const activeCase = findJourneyCase(caseId) ?? JOURNEY_CASES[1]!;
+  const { case_: activeCase, isFixture, error } = useJourneyCase(caseId, 1);
   const plan = activeCase.plan;
   const reducedMotion = usePrefersReducedMotion();
   const build = usePlanBuild(activeCase.id, reducedMotion);
@@ -158,6 +160,8 @@ function PlanPage() {
 
   return (
     <div className="space-y-8">
+      <BackendNotice isFixture={isFixture} error={error} what="recovery plan" />
+
       <PageHeader
         title="Recovery Plan"
         description="What should VERITAS do next?"
