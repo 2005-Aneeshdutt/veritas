@@ -4,6 +4,18 @@ export function inr(rupees: number): Money {
   return { minor: Math.round(rupees * 100), currency: "INR" };
 }
 
+/**
+ * Money straight from the backend, which reports integer paise everywhere.
+ *
+ * Separate from `inr()` on purpose. Both take a number and return `Money`, so
+ * passing a paise figure to `inr()` would compile, silently multiply by a
+ * hundred, and put a wrong number on screen with no error anywhere. Naming the
+ * unit at the call site is the only thing that stops that.
+ */
+export function paise(minor: number): Money {
+  return { minor: Math.round(minor), currency: "INR" };
+}
+
 /** Full Indian-grouped currency, e.g. ₹5,56,225. */
 export function formatMoney(money: Money, opts?: { decimals?: boolean }): string {
   const value = money.minor / 100;

@@ -178,26 +178,26 @@ export const COUNTERFACTUAL_DISCLAIMER =
   "Counterfactual values model what could have happened under each strategy; they are not measured recovery.";
 
 /** Highest modelled recovery, ignoring governance. */
-export function highestRawRecovery(): Strategy {
-  return STRATEGIES.reduce((a, b) => (b.recovery.minor > a.recovery.minor ? b : a));
+export function highestRawRecovery(list: Strategy[] = STRATEGIES): Strategy {
+  return list.reduce((a, b) => (b.recovery.minor > a.recovery.minor ? b : a));
 }
 
 /** Highest recovery among strategies with zero policy breaches. */
-export function bestGovernedRecovery(): Strategy {
-  const governed = STRATEGIES.filter((s) => s.breaches === 0 && s.recovery.minor > 0);
+export function bestGovernedRecovery(list: Strategy[] = STRATEGIES): Strategy {
+  const governed = list.filter((s) => s.breaches === 0 && s.recovery.minor > 0);
   return governed.reduce((a, b) => (b.recovery.minor > a.recovery.minor ? b : a));
 }
 
 /** Fewest breaches; ties resolve toward the higher modelled recovery. */
-export function lowestBreaches(): Strategy {
-  return STRATEGIES.reduce((a, b) => {
+export function lowestBreaches(list: Strategy[] = STRATEGIES): Strategy {
+  return list.reduce((a, b) => {
     if (b.breaches !== a.breaches) return b.breaches < a.breaches ? b : a;
     return b.recovery.minor > a.recovery.minor ? b : a;
   });
 }
 
-export function findStrategy(id: string | undefined): Strategy {
-  return STRATEGIES.find((s) => s.id === id) ?? STRATEGIES[3]!;
+export function findStrategy(id: string | undefined, list: Strategy[] = STRATEGIES): Strategy {
+  return list.find((s) => s.id === id) ?? STRATEGIES[3]!;
 }
 
 export const INVESTIGATE_CASES = JOURNEY_CASES;

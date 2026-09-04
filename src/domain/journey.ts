@@ -144,6 +144,15 @@ export interface JourneyCase {
     gapPts: number;
     observedSuccess: number;
     topFactor: { label: string; effect: string };
+    /** Every factor the decomposition produced, strongest first. */
+    factors: {
+      id: string;
+      label: string;
+      effect: number | null;
+      uncertainty: number | null;
+      /** False means the effect is distinguishable from noise. */
+      insideErrorBar: boolean;
+    }[];
     reliability: string;
     uncertainty: string;
     actionability: string;

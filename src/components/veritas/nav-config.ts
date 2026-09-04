@@ -5,6 +5,7 @@ import {
   FileCheck2,
   FlaskConical,
   Gauge,
+  Radio,
   LayoutDashboard,
   Route as RouteIcon,
   ScrollText,
@@ -29,6 +30,7 @@ export type AppRoute =
   | "/evidence"
   | "/audit-trail"
   | "/prove"
+  | "/gateway-proof"
   | "/settings";
 
 export interface NavItem {
@@ -138,6 +140,12 @@ export const NAV_GROUPS: NavGroup[] = [
         icon: Activity,
         description: "Attestations and recovery certificates",
       },
+        {
+          label: "Gateway Proof",
+          to: "/gateway-proof",
+          icon: Radio,
+          description: "Real Razorpay test-mode webhook deliveries, as received",
+        },
     ],
   },
   {

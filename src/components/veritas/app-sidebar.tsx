@@ -5,6 +5,24 @@ import { NAV_GROUPS } from "./nav-config";
 import { VeritasMark, VeritasWordmark } from "./logo";
 import { cn } from "@/lib/utils";
 
+/**
+ * Routes that render one payment. Navigating between these should keep the
+ * payment you are looking at — a console where the selected record silently
+ * changes when you move around is worse than one that forgets it, because the
+ * next screen looks right and is about something else.
+ */
+const CASE_ROUTES = new Set<string>([
+  "/recovery-journey",
+  "/diagnosis",
+  "/plan",
+  "/outcome",
+  "/policy",
+  "/evidence",
+  "/prove",
+  "/counterfactual-lab",
+  "/audit-trail",
+]);
+
 export function SidebarNav({
   collapsed,
   onNavigate,
@@ -13,6 +31,12 @@ export function SidebarNav({
   onNavigate?: () => void;
 }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const activeCase = useRouterState({
+    select: (s) => {
+      const c = (s.location.search as Record<string, unknown>)["case"];
+      return typeof c === "string" ? c : undefined;
+    },
+  });
 
   return (
     <nav aria-label="Primary" className="flex flex-1 flex-col gap-6 overflow-y-auto px-3 py-4">
@@ -30,10 +54,16 @@ export function SidebarNav({
           <ul className="space-y-0.5">
             {group.items.map((item) => {
               const active = pathname === item.to;
+              // carry the payment only where the destination understands one
+              const carry =
+                activeCase && CASE_ROUTES.has(item.to)
+                  ? { search: { case: activeCase } as never }
+                  : {};
               const Icon = item.icon;
               const link = (
                 <Link
                   to={item.to}
+                  {...carry}
                   onClick={onNavigate}
                   aria-current={active ? "page" : undefined}
                   aria-label={collapsed ? item.label : undefined}
