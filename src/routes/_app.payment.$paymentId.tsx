@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight } from "lucide-react";
-import { findJourneyCase } from "@/data/journey-cases";
+import { useJourneyCase } from "@/hooks/use-journey-case";
 import { formatMoney } from "@/domain/money";
 import { PageHeader } from "@/components/veritas/page-header";
 import { ClaimBadge } from "@/components/veritas/claim-badge";
@@ -19,7 +19,10 @@ export const Route = createFileRoute("/_app/payment/$paymentId")({
 
 function PaymentDetailPage() {
   const { paymentId } = Route.useParams();
-  const c = findJourneyCase(paymentId);
+  const { case_: resolved } = useJourneyCase(paymentId, 0);
+  // the hook always resolves to something; an id it does not know must still
+  // read as not found rather than silently showing a different payment
+  const c = resolved.id === paymentId ? resolved : undefined;
 
   if (!c) {
     return (

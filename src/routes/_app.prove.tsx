@@ -1,7 +1,9 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ArrowRight, Check, CircleDashed, Copy, MinusCircle, Play } from "lucide-react";
-import { JOURNEY_CASES, findJourneyCase } from "@/data/journey-cases";
+import { useJourneyCase } from "@/hooks/use-journey-case";
+import { useJourneyCases } from "@/hooks/use-journey-cases";
+import { BackendNotice } from "@/components/veritas/backend-notice";
 import { evidenceFor, ledgerEntryForCase, proofFor, proofSteps } from "@/data/proof";
 import { formatMoney } from "@/domain/money";
 import { ClaimBadge } from "@/components/veritas/claim-badge";
@@ -87,7 +89,8 @@ function StepIcon({ state, revealed }: { state: "ok" | "caution" | "absent"; rev
 function ProvePage() {
   const { case: caseId } = Route.useSearch();
   const navigate = useNavigate({ from: "/prove" });
-  const c = findJourneyCase(caseId) ?? JOURNEY_CASES[0]!;
+  const { case_: c, isFixture, error } = useJourneyCase(caseId, 0);
+  const cases = useJourneyCases();
   const reducedMotion = usePrefersReducedMotion();
 
   const steps = proofSteps(c);
@@ -401,6 +404,8 @@ function ProvePage() {
           </div>
         </div>
       </section>
+
+      <BackendNotice isFixture={isFixture} error={error} what="proof" />
 
       <CaseSwitcher activeId={c.id} onSelect={(id) => navigate({ to: ".", search: { case: id } })} />
 

@@ -22,7 +22,7 @@ import { formatCount, formatMoney } from "@/domain/money";
 import { ClaimBadge } from "@/components/veritas/claim-badge";
 import { DetailDrawer, type DrawerAction } from "@/components/veritas/detail-drawer";
 import { ContextNotice } from "@/components/veritas/context-notice";
-import { JOURNEY_CASES } from "@/data/journey-cases";
+import { useJourneyCases } from "@/hooks/use-journey-cases";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/_app/control-tower")({
@@ -117,6 +117,7 @@ function NextActionLink({ row }: { row: QueueRow }) {
 }
 
 function ControlTowerPage() {
+  const cases = useJourneyCases();
   const { decision: incomingDecision, view } = Route.useSearch();
   const navigate = useNavigate({ from: "/control-tower" });
 
@@ -367,7 +368,7 @@ function ControlTowerPage() {
               className={cn(SELECT, "max-w-[220px]")}
             >
               <option value="">Demo data — select…</option>
-              {JOURNEY_CASES.map((c) => (
+              {cases.map((c) => (
                 <option key={c.id} value={c.id}>
                   {c.kindLabel.toUpperCase()} · {c.id}
                 </option>

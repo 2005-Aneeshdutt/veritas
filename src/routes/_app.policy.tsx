@@ -1,7 +1,9 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ArrowRight, Ban, Check, CircleDashed, Play, RotateCcw, ShieldAlert, X } from "lucide-react";
-import { JOURNEY_CASES, findJourneyCase } from "@/data/journey-cases";
+import { useJourneyCase } from "@/hooks/use-journey-case";
+import { useJourneyCases } from "@/hooks/use-journey-cases";
+import { BackendNotice } from "@/components/veritas/backend-notice";
 import type { JourneyCase, PolicyCheck } from "@/domain/journey";
 import { formatMoney } from "@/domain/money";
 import { ClaimBadge } from "@/components/veritas/claim-badge";
@@ -104,7 +106,8 @@ function usePolicyEvaluation(activeCase: JourneyCase, reducedMotion: boolean) {
 function PolicyKernelPage() {
   const { case: caseId } = Route.useSearch();
   const navigate = useNavigate({ from: "/policy" });
-  const activeCase = findJourneyCase(caseId) ?? JOURNEY_CASES[0]!;
+  const { case_: activeCase, isFixture, error } = useJourneyCase(caseId, 0);
+  const cases = useJourneyCases();
   const reducedMotion = usePrefersReducedMotion();
   const ev = usePolicyEvaluation(activeCase, reducedMotion);
   const [openCheck, setOpenCheck] = useState<PolicyCheck | null>(null);
@@ -125,6 +128,8 @@ function PolicyKernelPage() {
 
   return (
     <div className="space-y-9">
+      <BackendNotice isFixture={isFixture} error={error} what="policy evaluation" />
+
       <header className="border-b border-hairline pb-5">
         <p className="label-meta text-[10px] tracking-[0.16em]">Authority boundary</p>
         <div className="mt-2 flex flex-wrap items-end justify-between gap-x-8 gap-y-3">
@@ -156,8 +161,8 @@ function PolicyKernelPage() {
 
       {/* Demo cases */}
       <section aria-label="Demo cases" className="flex flex-wrap items-center gap-2">
-        <span className="label-meta mr-2 text-[10px] tracking-[0.16em]">Demo cases</span>
-        {JOURNEY_CASES.map((c) => {
+
+        {cases.map((c) => {
           const active = c.id === activeCase.id;
           return (
             <button
@@ -408,7 +413,7 @@ function PolicyKernelPage() {
           <p className="text-xs text-muted-foreground/80">Demo records · click a row to open its journey</p>
         </div>
         <ul className="divide-y divide-hairline">
-          {JOURNEY_CASES.map((c) => (
+          {cases.map((c) => (
             <li key={c.id}>
               <Link
                 to="/recovery-journey"
@@ -474,7 +479,7 @@ function PolicyKernelPage() {
             : []
         }
         actions={[{ label: "Open recovery journey", to: "/recovery-journey", search: { case: activeCase.id } }]}
-        footer="Values come from the selected demo record. Nothing is inferred."
+        footer="Values come from the selected run record. Nothing is inferred."
       />
     </div>
   );

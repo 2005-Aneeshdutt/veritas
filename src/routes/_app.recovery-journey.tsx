@@ -1,6 +1,8 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { Pause, Play, RotateCcw, Repeat } from "lucide-react";
-import { JOURNEY_CASES, findJourneyCase } from "@/data/journey-cases";
+import { useJourneyCase } from "@/hooks/use-journey-case";
+import { useJourneyCases } from "@/hooks/use-journey-cases";
+import { BackendNotice } from "@/components/veritas/backend-notice";
 import { STAGE_ORDER } from "@/domain/journey";
 import { formatMoney } from "@/domain/money";
 import { useJourneyEngine, usePrefersReducedMotion } from "@/hooks/use-journey-engine";
@@ -40,8 +42,8 @@ const CONTROL =
 function RecoveryJourneyPage() {
   const { case: caseId } = Route.useSearch();
   const navigate = useNavigate({ from: "/recovery-journey" });
-  const fallback = JOURNEY_CASES[1]!;
-  const activeCase = findJourneyCase(caseId) ?? fallback;
+  const { case_: activeCase, isFixture, error } = useJourneyCase(caseId, 1);
+  const cases = useJourneyCases();
   const reducedMotion = usePrefersReducedMotion();
   const engine = useJourneyEngine(activeCase);
 
@@ -50,6 +52,8 @@ function RecoveryJourneyPage() {
 
   return (
     <div className="space-y-8">
+      <BackendNotice isFixture={isFixture} error={error} what="recovery journey" />
+
       {/* Live status header */}
       <header className="border-b border-hairline pb-5">
         <div className="flex flex-wrap items-end justify-between gap-x-8 gap-y-4">
@@ -228,7 +232,7 @@ function RecoveryJourneyPage() {
           <section aria-label="Demo cases" className="border-t border-hairline pt-5">
             <p className="label-meta text-[10px] tracking-[0.16em]">Demo cases</p>
             <ul className="mt-3 divide-y divide-hairline border-t border-hairline">
-              {JOURNEY_CASES.map((c) => (
+              {cases.map((c) => (
                 <li key={c.id}>
                   <button
                     type="button"
