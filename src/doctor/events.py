@@ -274,7 +274,7 @@ _TRANSITION: dict[str, tuple[PaymentState | None, PaymentState]] = {
 }
 
 
-def normalise(payload: dict, source: Source) -> Event | None:
+def normalise(payload: dict, source: Source, event_id: str = "") -> Event | None:
     """Turn a Razorpay-shaped webhook body into an Event.
 
     Razorpay nests the interesting object under
@@ -282,6 +282,21 @@ def normalise(payload: dict, source: Source) -> Event | None:
     shape. A payload it cannot read returns None and is rejected loudly by the
     caller -- guessing at a malformed event is how a recovery system ends up
     retrying the wrong payment.
+
+    `event_id` is the gateway's OWN identifier for this delivery, which
+    Razorpay sends in the `x-razorpay-event-id` header rather than in the body.
+    Passing it in matters more than it looks: without it the id falls through
+    to the payment id, and then every event type for one payment --
+    `payment.authorized`, `payment.captured`, `order.paid`,
+    `payment_link.paid` -- collapses onto the same key and all but the first
+    are refused as duplicates.
+
+    That is not hypothetical. It cost a real recovery: an `order.paid` body
+    carrying no payment id took the slot for pay_TXw9TT2XVSY7th, the
+    `payment.captured` that followed was refused as a duplicate, and a payment
+    the gateway reports as captured settled at zero because no outcome event
+    naming it survived. The failure is silent and in the safe direction, which
+    is why it went unseen.
     """
     etype = payload.get("event")
     if not etype:
@@ -313,7 +328,8 @@ def normalise(payload: dict, source: Source) -> Event | None:
 
     return Event(
         event_id=str(
-            payload.get("id")
+            event_id
+            or payload.get("id")
             or payload.get("event_id")
             or ent.get("id")
             or ""

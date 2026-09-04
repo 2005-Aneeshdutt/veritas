@@ -1183,7 +1183,12 @@ async def events_webhook(request: Request) -> dict:
     except (UnicodeDecodeError, json.JSONDecodeError):
         raise HTTPException(400, "body is not JSON")
 
-    event = ev.normalise(payload, "razorpay_test")
+    # Razorpay's own delivery id travels in a header, not the body. Using it
+    # keeps distinct event types for one payment distinct; without it they
+    # collapse onto the payment id and all but the first are refused.
+    event = ev.normalise(
+        payload, "razorpay_test", request.headers.get("x-razorpay-event-id", "")
+    )
     if event is None:
         raise HTTPException(400, "could not normalise this payload")
 

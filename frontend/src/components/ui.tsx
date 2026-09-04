@@ -277,9 +277,38 @@ export function Figure({
  * because a reader who cannot tell a measurement from a forecast cannot use
  * anything else on the page.
  */
-export function Tag({ kind }: { kind: "measured" | "projected" }) {
+export type Claim =
+  | "verified"
+  | "measured"
+  | "projected"
+  | "observed"
+  | "unverified"
+  | "abstained";
+
+/**
+ * What a claim is worth, said in one word.
+ *
+ * The ladder matters more than the colours. Two of these states are money you
+ * can stand behind, one is a forecast, and three are refusals of different
+ * strengths -- and a reader who cannot tell them apart cannot use any number
+ * on the page. So each carries its own definition on hover rather than
+ * relying on hue, and the two refusals that are easiest to confuse are
+ * spelled out: `observed` means an event arrived and proves nothing about
+ * money, `abstained` means we could have guessed and chose not to.
+ */
+export const CLAIM_MEANS: Record<Claim, string> = {
+  verified: "Evidence establishes this claim.",
+  measured: "Supported by an outcome marked against a known result.",
+  projected: "A forecast. No outcome has been marked.",
+  observed:
+    "An event was observed. It does not by itself establish that money moved.",
+  unverified: "Not enough evidence to establish this.",
+  abstained: "Deliberately not claimed: the evidence does not support it.",
+};
+
+export function Tag({ kind }: { kind: Claim }) {
   return (
-    <span className={kind === "measured" ? "chip-measured" : "chip-projected"}>
+    <span className={"chip-" + kind} title={CLAIM_MEANS[kind]}>
       {kind}
     </span>
   );

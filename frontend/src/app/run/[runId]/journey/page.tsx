@@ -12,6 +12,7 @@ import {
   Stagger,
 } from "@/components/ui";
 import { GateView } from "@/components/GateView";
+import { RecoveryPassport } from "@/components/RecoveryPassport";
 import { inr } from "@/lib/types";
 
 interface Candidate {
@@ -281,6 +282,12 @@ export default function JourneyPage({ params }: { params: { runId: string } }) {
             <Loading label="opening the file" />
           ) : (
             <div className="space-y-6">
+              {/* The assembled answer comes first. Everything below it is the
+                  working: the beats, the twelve checks, the raw entry. A
+                  reader who only wants to know whether this payment's claim
+                  is good should not have to scroll to find out. */}
+              <RecoveryPassport journey={j as never} />
+
               {/* the header */}
               <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
                 <h2 className="num">{j.txn_id}</h2>
