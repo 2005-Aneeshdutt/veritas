@@ -189,6 +189,28 @@ h3 { @apply text-[13px] font-semibold; }
     @apply chip text-amber bg-amber-soft border border-amber/30
            px-1.5 py-0.5 rounded;
   }
+  /* The rest of the claim ladder. Each state answers a different question,
+     so each gets its own weight rather than a shade of the same one:
+       verified   evidence establishes it        (filled, mint)
+       measured   an outcome was marked          (filled, mint)
+       projected  a forecast                     (filled, amber)
+       observed   an event arrived, money unproven (outline, sky)
+       unverified nothing establishes it          (outline, faint)
+       abstained  we decline to claim             (outline, amber) */
+  .chip-verified {
+    @apply chip text-mint bg-mint-soft border border-mint/40
+           px-1.5 py-0.5 rounded;
+  }
+  .chip-observed {
+    @apply chip text-sky border border-sky/35 px-1.5 py-0.5 rounded;
+  }
+  .chip-unverified {
+    @apply chip text-faint border border-edge px-1.5 py-0.5 rounded;
+  }
+  .chip-abstained {
+    @apply chip text-amber border border-amber/40 px-1.5 py-0.5 rounded;
+  }
+
   /* A refusal is a decision, not decoration: coloured text, no fill. */
   .chip-warn { @apply chip text-rose; }
   .chip-brand { @apply chip text-brand; }

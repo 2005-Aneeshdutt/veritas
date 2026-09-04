@@ -1063,7 +1063,13 @@ def context_lines(ev: NPCIEvidence | None) -> list[str]:
     ]
     if ev.freshness_status == Freshness.STALE:
         lines.append(
-            "  RULE  This evidence is STALE (%d days old). Quote it only as "
-            "labelled historical context." % (ev.age_days or 0)
+            # Deliberately no day count. The age is a function of TODAY, so
+            # embedding it made this prompt change every midnight, missing the
+            # committed LLM cache and quietly breaking the "runs with no API
+            # key" guarantee a day after it was last checked. The period is
+            # already on the line above and is what a reader needs; the exact
+            # age belongs on screen, where it is recomputed live.
+            "  RULE  This evidence is STALE. Quote it only as labelled "
+            "historical context."
         )
     return lines
