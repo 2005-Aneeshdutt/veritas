@@ -145,11 +145,14 @@ export const LEDGER_CLAIMS: ClaimState[] = [
   "ABSTAINED",
 ];
 
-export function ledgerNeighbours(e: LedgerEntry): {
+export function ledgerNeighbours(
+  e: LedgerEntry,
+  list: LedgerEntry[] = LEDGER_ENTRIES,
+): {
   prev: LedgerEntry | undefined;
   next: LedgerEntry | undefined;
 } {
-  const sorted = [...LEDGER_ENTRIES].sort((a, b) => a.n - b.n);
+  const sorted = [...list].sort((a, b) => a.n - b.n);
   const i = sorted.findIndex((x) => x.n === e.n);
   return { prev: sorted[i - 1], next: sorted[i + 1] };
 }

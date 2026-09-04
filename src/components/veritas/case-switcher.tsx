@@ -1,4 +1,4 @@
-import { JOURNEY_CASES } from "@/data/journey-cases";
+import { useJourneyCases } from "@/hooks/use-journey-cases";
 import { formatMoney } from "@/domain/money";
 import { cn } from "@/lib/utils";
 
@@ -12,10 +12,11 @@ export function CaseSwitcher({
   onSelect: (id: string) => void;
   label?: string;
 }) {
+  const cases = useJourneyCases();
   return (
     <section aria-label={label} className="flex flex-wrap items-center gap-2">
-      <span className="label-meta mr-2 text-[10px] tracking-[0.16em]">{label}</span>
-      {JOURNEY_CASES.map((c) => {
+
+      {cases.map((c) => {
         const active = c.id === activeId;
         return (
           <button

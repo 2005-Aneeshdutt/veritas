@@ -85,7 +85,8 @@ export interface ExceptionItem {
 export interface ProofHealth {
   evidenceCoverage: number;
   ledgerIntegrity: number;
-  gatewayReconciliation: number;
+  /** Omitted when no endpoint reports it — never defaulted to 0. */
+  gatewayReconciliation?: number;
   openDisputes: number;
   lastAudit: string;
 }

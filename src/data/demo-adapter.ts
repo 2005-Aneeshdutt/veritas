@@ -165,6 +165,15 @@ const snapshot: OverviewSnapshot = {
   },
 };
 
+/**
+ * Demo mode answers only what it can answer honestly.
+ *
+ * The backend-only surfaces return null rather than a plausible-looking
+ * fixture, so a screen without a backend says "not connected" instead of
+ * showing invented policy checks or an invented ledger hash. A demo that
+ * fabricates evidence is the specific failure this product exists to argue
+ * against, and it would be an odd place to start.
+ */
 export const demoAdapter: VeritasAdapter = {
   kind: "demo",
   async getOverview() {
@@ -172,5 +181,40 @@ export const demoAdapter: VeritasAdapter = {
   },
   async getCases() {
     return DEMO_CASES;
+  },
+  async getCanonicalRunId() {
+    return null;
+  },
+  async listPayments() {
+    return [];
+  },
+  async getJourneyCase() {
+    return null;
+  },
+  async getLab() {
+    return null;
+  },
+  async getLabForPayment() {
+    return null;
+  },
+  async getControlTower() {
+    return null;
+  },
+  async getLineage() {
+    return null;
+  },
+  async getReconcile() {
+    return null;
+  },
+  async getAudit() {
+    return null;
+  },
+  async getMode() {
+    return null;
+  },
+  async getEvents() {
+    // No gateway in demo mode, so no gateway events. Never a fixture here:
+    // a fabricated webhook is the one thing this surface exists to disprove.
+    return null;
   },
 };
