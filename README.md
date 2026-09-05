@@ -1,552 +1,228 @@
-# VERITAS Foundation
+# VERITAS — Console
 
-Build Phase 1 of VERITAS — Revenue Recovery Intelligence.
+**Recover what you can. Prove what happened.**
 
-IMPORTANT:
+The operator console for VERITAS, a revenue-recovery agent built for the
+**Razorpay AI Buildathon 2026, Track 03**.
 
-This is a frontend-only project.
+A recovery agent reads a failed payment and proposes an action. A deterministic
+policy kernel it does not control decides whether that action is allowed at all.
+Every rupee it ends up claiming is marked against an outcome it never saw when
+it decided — and the whole thing is written to a hash chain that can be
+recomputed by anyone who doubts the number.
 
-The backend is separate and frozen. Do not create, modify, replace, or simulate a backend.
+This repository is the **frontend only**. The engine, the policy kernel, the
+ledger and the Razorpay integration live in a separate backend repo
+(`revenue-doctor`). This app renders what that backend recorded; it computes no
+financial figure of its own.
 
-We will connect the real backend later.
+---
 
-==================================================
+## Running it
 
-PRODUCT
-
-==================================================
-
-Brand:
-
-VERITAS
-
-Subtitle:
-
-Revenue Recovery Intelligence
-
-Tagline:
-
-“Recover what you can. Prove what happened.”
-
-Core philosophy:
-
-AI recommends.
-
-Policy authorizes.
-
-Execution acts.
-
-Gateway confirms.
-
-Ledger records.
-
-Evidence supports.
-
-VERITAS proves.
-
-The main product flow will eventually be:
-
-PAYMENT
-
-→ AGENT INVESTIGATES
-
-→ DIAGNOSIS
-
-→ PLAN
-
-→ POLICY KERNEL
-
-→ EXECUTION
-
-→ OUTCOME
-
-→ LEDGER
-
-→ EVIDENCE
-
-→ PROVE
-
-For this phase, build the FOUNDATION and APPLICATION SHELL only.
-
-Do not build the detailed recovery workflow yet.
-
-==================================================
-
-VISUAL DIRECTION
-
-==================================================
-
-Create a premium enterprise fintech interface.
-
-Inspiration:
-
-- Linear
-
-- Stripe
-
-- Ramp
-
-- Vercel
-
-But create an original VERITAS identity.
-
-Dark-first.
-
-Dark mode is the default.
-
-Support:
-
-- Dark
-
-- Light
-
-- System
-
-Persist theme selection.
-
-Dark palette:
-
-Background #070A0C
-
-Surface #0D1215
-
-Elevated #151B20
-
-Border #252D33
-
-Primary text #F5F7F6
-
-Secondary text #8E9994
-
-Measured/success #35D39A
-
-Projected #D5A84A
-
-Denied #E06469
-
-Observed #6FA8FF
-
-Typography should feel like Inter/Geist.
-
-Use:
-
-- strong large financial numbers
-
-- compact metadata
-
-- clean hierarchy
-
-- restrained borders
-
-- minimal shadows
-
-- 8–10px radius
-
-Avoid:
-
-- purple gradients
-
-- generic AI graphics
-
-- excessive glassmorphism
-
-- excessive neon
-
-- giant rounded cards
-
-- random particle effects
-
-- crypto aesthetic
-
-- robot/brain imagery
-
-==================================================
-
-FINANCIAL INTELLIGENCE BACKGROUND
-
-==================================================
-
-Create a subtle animated background.
-
-Visual metaphor:
-
-financial events moving through an authority network.
-
-Use:
-
-- faint grid
-
-- subtle connected nodes
-
-- thin transaction/data lines
-
-- occasional green data pulses
-
-- tiny amber signals
-
-- subtle shield/proof geometry
-
-95% product.
-
-5% atmosphere.
-
-Do not allow the background to interfere with readability.
-
-Login can have the strongest version of this background.
-
-Overview should use a much subtler version.
-
-==================================================
-
-BRANDING
-
-==================================================
-
-Create a minimal VERITAS logo/mark suggesting:
-
-- verification
-
-- authority
-
-- shield
-
-- proof
-
-Do not use a generic AI brain/logo.
-
-VERITAS should feel like financial infrastructure.
-
-==================================================
-
-APPLICATION SHELL
-
-==================================================
-
-Create a polished desktop-first application shell.
-
-Sidebar:
-
-VERITAS
-
-Overview
-
-RECOVER
-
-  Control Tower
-
-  Payments
-
-  Recovery Journey
-
-INVESTIGATE
-
-  Diagnosis
-
-  Counterfactual Lab
-
-PROVE
-
-  Evidence
-
-  Audit Trail
-
-  Prove
-
-Settings
-
-Add a command/search button.
-
-Keyboard shortcut:
-
-Cmd/Ctrl + K
-
-Create:
-
-- sidebar
-
-- topbar
-
-- page headers
-
-- breadcrumbs where useful
-
-- notification area
-
-- search/command palette
-
-- theme switcher
-
-- responsive navigation
-
-The navigation should communicate:
-
-Recover
-
-Investigate
-
-Prove
-
-==================================================
-
-LOGIN
-
-==================================================
-
-Build a premium dark login screen.
-
-Include:
-
-VERITAS
-
-Revenue Recovery Intelligence
-
-“Revenue recovery, under authority.”
-
-Secondary copy:
-
-“AI can recommend an action.
-
-VERITAS determines whether it can be authorized, executed, and proven.”
-
-Use the financial-intelligence network background.
-
-Do not show fake live financial statistics.
-
-==================================================
-
-OVERVIEW
-
-==================================================
-
-Create an executive-grade Overview dashboard.
-
-Primary metrics:
-
-AT RISK
-
-₹64.25L
-
-RECOVERABLE
-
-₹5,56,225
-
-PROJECTED
-
-RECOVERED
-
-₹39,833
-
-MEASURED
-
-HELD
-
-₹16,11,536
-
-IMPORTANT:
-
-Projected and measured money must look clearly different.
-
-Never label projected money as recovered.
-
-Use claim labels directly beside financial values.
-
-Create sections for:
-
-- revenue-at-risk
-
-- recovery funnel
-
-- intervention mix
-
-- policy outcomes
-
-- recent governed actions
-
-- exception queue
-
-- audit/proof health
-
-Keep the dashboard operational and clean.
-
-Do not overfill it with charts.
-
-==================================================
-
-CLAIM STATES
-
-==================================================
-
-Create a reusable semantic status system now.
-
-Supported states:
-
-VERIFIED
-
-MEASURED
-
-PROJECTED
-
-OBSERVED
-
-UNVERIFIED
-
-ABSTAINED
-
-Every state must include:
-
-- text
-
-- icon
-
-- semantic visual treatment
-
-- tooltip
-
-Never rely on color alone.
-
-Definitions:
-
-VERIFIED:
-
-Evidence sufficiently verified.
-
-MEASURED:
-
-Actual result/recovery observed and recorded.
-
-PROJECTED:
-
-Expected or estimated future recovery.
-
-OBSERVED:
-
-Observed state/event without necessarily proving monetary recovery.
-
-UNVERIFIED:
-
-Action/result exists but recovery cannot be established.
-
-ABSTAINED:
-
-No recovery claim is made.
-
-Make this component reusable across the entire application.
-
-==================================================
-
-DATA ARCHITECTURE
-
-==================================================
-
-Create typed frontend domain models.
-
-Create an adapter abstraction:
-
-demoAdapter
-
-backendAdapter
-
-Components should consume typed services/models.
-
-Prepare:
-
-VITE_API_BASE_URL
-
-for future backend connection.
-
-Do not scatter API calls across components.
-
-For now use carefully controlled demo data only where required for the Overview.
-
-Clearly label demo information where appropriate.
-
-Never expose secrets.
-
-==================================================
-
-RESPONSIVENESS
-
-==================================================
-
-Desktop-first.
-
-Also support:
-
-- tablet
-
-- mobile
-
-Collapse navigation appropriately.
-
-Preserve financial hierarchy.
-
-==================================================
-
-ACCESSIBILITY
-
-==================================================
-
-Implement:
-
-- keyboard navigation
-
-- visible focus states
-
-- semantic HTML
-
-- ARIA labels
-
-- accessible contrast
-
-- text + icon for important states
-
-==================================================
-
-PHASE 1 BOUNDARY
-
-==================================================
-
-DO NOT build the detailed:
-
-- Policy Kernel
-
-- Recovery Journey
-
-- Execution workflow
-
-- Ledger
-
-- Evidence
-
-- Prove certificate
-
-- Counterfactual Lab
-
-yet.
-
-Only create placeholders/navigation for those pages if necessary.
-
-Focus on making the foundation extremely polished.
-
-Before finishing, make sure the entire shell feels like one coherent premium fintech product.
-
-This project was built with [Lovable](https://lovable.dev).
-
-## Build with Lovable
-
-Continue developing this project in the [Lovable editor](https://lovable.dev/projects/bec9284e-04e5-4c1d-b172-551a60ff8594).
-
-- **Ship faster**: describe what you want to build and Lovable handles the code.
-- **Stay in sync**: every change made in Lovable is committed straight to this repository.
-- **Full ownership**: this code is yours. Push to `main` on GitHub and your changes sync back into Lovable, ready for your next prompt.
-
-## Development
-
-Prefer working locally? You need Node.js and npm — [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating).
+You need Node 22+, and the backend running on `127.0.0.1:8000`.
 
 ```sh
-git clone <this-repository-url>
-cd <repository-name>
-npm i
-npm run dev
+npm install
+npm run dev          # http://localhost:8080
 ```
+
+Configuration is one variable, in `.env`:
+
+```sh
+VITE_API_BASE_URL=http://127.0.0.1:8000
+```
+
+> **Use `127.0.0.1`, not `localhost`.** This app server-renders, and Node
+> resolves `localhost` to `::1` first while uvicorn binds IPv4 only. With
+> `localhost` the browser works and SSR fails, which surfaces as a blank error
+> page that names nothing.
+
+Leave `VITE_API_BASE_URL` empty and the app falls back to a labelled demo
+adapter, so the UI is still navigable without a backend.
+
+```sh
+npm run build        # production build, pinned to a 6 GB heap; it OOMs below that
+npm run lint
+```
+
+---
+
+## What the console is for
+
+Thirteen surfaces answer different questions about the same book of payments.
+The sidebar groups them by what you are trying to do.
+
+| Group | Page | Answers |
+| --- | --- | --- |
+| — | **Overview** | What is at risk, what is recoverable, what is proven |
+| Recover | **Control Tower** | What needs a decision right now |
+| | **Payments** | Every failing, disputed or stalled payment |
+| | **Recovery Journey** | What happened to this payment, stage by stage |
+| | **Policy Kernel** | Whether an action was permitted, and which rule stopped it |
+| Investigate | **Diagnosis** | Why it failed — Shapley attribution with error bars |
+| | **Recovery Plan** | What the model recommends. A recommendation, not an authorisation |
+| | **Counterfactual Lab** | What a less careful strategy would have recovered, and breached |
+| Prove | **Outcome** | What actually happened after execution |
+| | **Evidence** | The artifacts behind the claim, and the ones missing |
+| | **Audit Ledger** | The append-only record, hashed in sequence |
+| | **Prove** | The strongest claim the evidence supports, and no stronger |
+| | **Gateway Proof** | Real Razorpay test-mode webhooks, as received |
+
+`/login` is a public landing page for someone who has never seen the product —
+the only page with ambient motion.
+
+---
+
+## The guided walk
+
+The app is a mesh: every screen links to several others. That suits an operator
+who knows what they want, and fails a person seeing it for the first time, who
+needs the causal order.
+
+`CaseWalk` draws one path through that mesh, in the order the pipeline actually
+runs:
+
+```
+1 Journey → 2 Diagnosis → 3 Plan → 4 Policy → 5 Outcome → 6 Evidence → 7 Ledger → 8 Proof
+```
+
+Diagnosis sits before Policy deliberately: diagnose, then propose, then
+authorise. It appears on all eight stages as a bar carrying the payment, a
+stepper, and an **Execute for this payment** button that advances one stage. A
+dropdown switches record mid-walk — showing the refusal and then the recovery
+without leaving the stage you are on.
+
+Position comes from the URL, not from stored state, so there is no walk to start
+or lose: open any stage with a `?case=` and the walk is already there. It
+carries any payment from the Control Tower queue, not only the three labelled
+records.
+
+**Changing the demo order is changing `CASE_FLOW` in
+[`case-walk.tsx`](src/components/veritas/case-walk.tsx). Nothing else knows it.**
+
+---
+
+## Nothing is precomputed on arrival
+
+Several pages hold a settled result computed when the run was committed.
+Rendering it instantly reads as a slide rather than a system, so those pages
+replay their own work on arrival:
+
+- **Policy Kernel** — the twelve checks evaluate one at a time (~3.5 s). Until
+  they settle, the verdict, the authority chain, the check tally, the failure
+  line, the consequence row and the case's own history row are all withheld.
+  Checks after the one that stopped the kernel render as *never evaluated*, not
+  as failures.
+- **Diagnosis** — factor bars grow from zero one at a time (~1.6 s); the top
+  factor and actionability land only once attribution completes.
+- **Counterfactual Lab** — the strategy comparison runs its steps before any
+  result appears (~3.5 s).
+
+Withheld means *not rendered*, not `opacity: 0`. A transparent answer is still
+in the DOM, the accessibility tree and any copy-paste, which is exactly the kind
+of "invisible but present" claim this product exists to argue against.
+
+---
+
+## Demo controls
+
+- **Approve the whole book** (Control Tower) — approves every queued action at
+  once. What the kernel denied stays denied however many times it is approved:
+  approving a queue is a person saying yes to work already inside the agent's
+  authority, not granting more.
+- **Reset** (top bar, every page) — rebuilds the runs deterministically from
+  cached model calls, reusing each run id, so a rehearsal is undoable and every
+  link still resolves. Takes ~14 s. It writes to disk, and it *is* the undo, so
+  it fires on the first click without a confirmation step.
+
+---
+
+## Rules this codebase follows
+
+**No financial figure is hardcoded.** Every rupee comes from `/api/portfolio` or
+a run's own reconciliation. That is verified by moving the backend and checking
+the screen follows — not by grepping for literals, which a stale value that
+happens to match would survive.
+
+**Claims are labelled, and the labels mean different things.**
+`MEASURED` (marked against a held-out outcome) · `PROJECTED` (a forecast) ·
+`OBSERVED` · `UNVERIFIED` (acted, outcome not established) · `ABSTAINED` (no
+claim made). A projection is never rendered as money recovered.
+
+**A gateway capture is not a recovery.** Razorpay confirming a payment is the
+gateway's claim; ours requires the held-out outcome. The live test-mode
+transactions shown on Gateway Proof are never added to the measured total.
+
+**Failures stay on screen.** Merchants that recovered nothing are still listed.
+A payment whose outcome could not be established shows as `UNVERIFIED` rather
+than being quietly dropped.
+
+**One source per screen.** `useJourneyCase` never merges backend and fixture
+data into one case — a half-real record with fixture policy checks stapled on
+would be the most misleading artifact this app could produce.
+
+---
+
+## Layout
+
+```
+src/
+  routes/                    18 file-based routes (TanStack Router)
+    _app.tsx                 authenticated shell — sidebar, top bar
+    _app.<page>.tsx          one file per console page
+    login.tsx                public landing page
+  components/veritas/        29 product components
+    case-walk.tsx            the guided walk, and CASE_FLOW
+    demo-reset.tsx           top-bar reset
+    approve-book.tsx         approve-the-whole-book control
+    landing.tsx              the public page
+    network-background.tsx   ambient canvas (landing only)
+  data/
+    backend-adapter.ts       the only place that talks to the API
+    demo-adapter.ts          labelled fallback when no backend is configured
+    map-journey.ts           backend payload → domain case
+  domain/                    money, journey and claim types
+  hooks/                     useJourneyCase, useJourneyCases, useLedger
+docs/
+  build-brief.md             the original Phase 1 build specification
+```
+
+**Stack:** React 19 · TanStack Start / Router / Query · Vite · Tailwind v4 ·
+Radix primitives · Recharts · Lucide.
+
+---
+
+## Known issue
+
+**The Audit Ledger does not show the walkthrough payments.** It reads
+`/api/audit`, which returns only the 60 most recent entries (capped at 400) of
+1,057 — currently none of them CloudSync — so filtering by any demo case renders
+`0 of 60 entries`. The hash columns also render blank, because
+[`use-ledger.ts`](src/hooks/use-ledger.ts) maps `prevHash` and `hash` to empty
+strings while the API returns `entry_hash` on every entry.
+
+The data is fine: `/api/run/{run_id}` → `report.ledger` contains every payment
+with both hashes, and the Policy page already reads it correctly. The fix is to
+source the case-filtered view from the run's own ledger and pass the hashes
+through. Until then stage 7 of the walk is empty for the demo records; the Proof
+page covers the same ground.
+
+---
+
+## Development notes
+
+Things that cost time here, written down so they cost it once:
+
+- **A new component file needs a dev-server restart.** Tailwind will not emit
+  classes it has never seen; without a restart the class is on the element and
+  absent from the CSS, so the padding is silently zero.
+- **`exactOptionalPropertyTypes` is on.** An optional prop must admit
+  `| undefined` explicitly rather than by omission.
+- **`validateSearch` returning `{ case: undefined }` makes the param
+  *required*.** Every case-aware route declares it as
+  `typeof search["case"] === "string" ? ... : undefined`.
+- **Route components are code-split.** Grepping the served module for a symbol
+  finds nothing — the component lives at `?tsr-split=component`.
+- Selection lives in the URL, so every screen is a shareable link to one payment
+  and switching case updates every page the same way.
