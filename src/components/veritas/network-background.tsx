@@ -53,8 +53,8 @@ export function NetworkBackground({
     let pulses: Pulse[] = [];
 
     const nodeCount = () => {
-      const base = Math.round((window.innerWidth * window.innerHeight) / (strong ? 26000 : 38000));
-      return Math.max(14, Math.min(strong ? 68 : 44, base));
+      const base = Math.round((window.innerWidth * window.innerHeight) / (strong ? 17000 : 38000));
+      return Math.max(14, Math.min(strong ? 104 : 44, base));
     };
 
     const init = () => {
@@ -67,8 +67,8 @@ export function NetworkBackground({
       nodes = Array.from({ length: nodeCount() }, (_, i) => ({
         x: Math.random() * width,
         y: Math.random() * height,
-        vx: (Math.random() - 0.5) * 0.12,
-        vy: (Math.random() - 0.5) * 0.12,
+        vx: (Math.random() - 0.5) * 0.2,
+        vy: (Math.random() - 0.5) * 0.2,
         authority: i % 7 === 0,
       }));
       pulses = [];
@@ -106,10 +106,10 @@ export function NetworkBackground({
         ctx.stroke();
       };
       ctx.strokeStyle = measured;
-      ctx.globalAlpha = strong ? 0.14 : 0.07;
+      ctx.globalAlpha = strong ? 0.2 : 0.07;
       ctx.lineWidth = 1.2;
-      draw(width * 0.18, height * 0.32, Math.min(width, height) * 0.22);
-      draw(width * 0.84, height * 0.72, Math.min(width, height) * 0.16);
+      draw(width * 0.78, height * 0.3, Math.min(width, height) * 0.26);
+      draw(width * 0.94, height * 0.78, Math.min(width, height) * 0.18);
       ctx.globalAlpha = 1;
     };
 
@@ -220,14 +220,20 @@ export function NetworkBackground({
       className={cn("pointer-events-none absolute inset-0 overflow-hidden", className)}
     >
       <canvas ref={ref} className="h-full w-full" />
-      <div
-        className={cn(
-          "absolute inset-0",
-          intensity === "strong"
-            ? "bg-[radial-gradient(circle_at_50%_45%,color-mix(in_oklab,var(--background)_88%,transparent)_0%,color-mix(in_oklab,var(--background)_55%,transparent)_38%,color-mix(in_oklab,var(--background)_92%,transparent)_100%)]"
-            : "bg-gradient-to-b from-transparent via-background/60 to-background",
-        )}
-      />
+      {/* The scrim used to be a centred radial at 88% opacity, which erased the
+          animation everywhere including the half of the page with nothing in
+          it. It is now directional: opaque under the copy on the left, clear on
+          the right where the field is the only thing there, and closing to the
+          page colour at the bottom edge so it does not bleed into the section
+          below. */}
+      {intensity === "strong" ? (
+        <>
+          <div className="absolute inset-0 bg-[linear-gradient(100deg,var(--background)_0%,color-mix(in_oklab,var(--background)_92%,transparent)_34%,color-mix(in_oklab,var(--background)_45%,transparent)_62%,transparent_100%)]" />
+          <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-b from-transparent to-background" />
+        </>
+      ) : (
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-background/60 to-background" />
+      )}
     </div>
   );
 }
