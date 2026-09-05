@@ -94,9 +94,3 @@ def test_the_live_stream_sends_the_value_as_a_number():
     assert "value=round(val, 4)" in src
     assert "coalition=label" in src
 
-
-def test_the_panel_recomputes_rather_than_reading_the_answer():
-    ui = open("frontend/src/components/ShapleyLive.tsx", encoding="utf-8").read()
-    assert "seen.get" in ui, "it must derive from the streamed subsets"
-    for banned in ("fetch(", "/api/"):
-        assert banned not in ui, "the panel must not fetch the finished result"

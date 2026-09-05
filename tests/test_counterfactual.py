@@ -37,6 +37,23 @@ ROOT = Path(__file__).resolve().parents[1]
 MERCHANT = "cloudsync"
 
 
+_KEY_MERCHANT = "cloudsync"
+
+# The demo signing keys are private material and deliberately gitignored, so a
+# fresh checkout -- CI included -- does not have them. The code paths below
+# re-sign a narrowed mandate with the real key on purpose: an unsigned struct
+# smuggled past the gate would test nothing. Without the key those paths return
+# the mandate unchanged and the property under test cannot exist, so skip
+# rather than assert something weaker.
+_KEY_DIR = Path(__file__).resolve().parents[1] / "data" / "mandates"
+needs_signing_key = pytest.mark.skipif(
+    not (_KEY_DIR / ("%s_signing_key.hex" % _KEY_MERCHANT)).exists(),
+    reason="data/mandates/%s_signing_key.hex is gitignored; run "
+           "`python -m chitragupta.mandate --generate --merchant %s ...` to create it"
+           % (_KEY_MERCHANT, _KEY_MERCHANT),
+)
+
+
 @pytest.fixture(scope="module")
 def lab():
     return run_lab(MERCHANT)
@@ -273,6 +290,7 @@ def test_confirming_step_ups_releases_holds_but_not_denials(lab):
 
 # -- 8. the frontier -------------------------------------------------------
 
+@needs_signing_key
 def test_the_frontier_is_a_real_trade(lab):
     """More autonomy recovers more AND exposes more. Both, or it is not a trade."""
     pts = lab.frontier

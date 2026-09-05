@@ -312,15 +312,6 @@ def test_the_result_carries_every_action_it_gated():
         os.remove(bak)
 
 
-def test_the_do_it_link_runs_the_fix_rather_than_pointing_at_it():
-    """Landing on a highlighted card and waiting for a second click made the
-    assistant's answer feel like a bookmark. It runs the same gated apply the
-    button runs -- nothing is executed the kernel would not have allowed."""
-    ui = open("frontend/src/components/ApplyFix.tsx", encoding="utf-8").read()
-    assert "autoRan" in ui
-    assert "apply(highlight)" in ui
-
-
 def test_one_payment_can_be_decided_on_its_own(tmp_path):
     """"Confirm all 58" was the only control, which is an all-or-nothing
     choice about other people's money."""

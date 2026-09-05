@@ -13,6 +13,8 @@ and assert it cannot.
 
 from __future__ import annotations
 
+from pathlib import Path
+
 import pytest
 
 from doctor.channels import ChannelDecision, ChannelOption, decide
@@ -27,6 +29,27 @@ from doctor.voice import (
 )
 
 LANGS = ("en", "hinglish")
+
+
+# The demo signing keys are private material and deliberately gitignored, so a
+# fresh checkout -- CI included -- does not have them. `_ask_dont_charge`
+# re-signs a narrowed mandate with the real key on purpose: an unsigned struct
+# smuggled past the gate would test nothing. Without the key it returns the
+# mandate unchanged, so the property under test cannot exist, and skipping is
+# more honest than asserting something weaker.
+_KEY_MERCHANT = "cloudsync"
+_KEY_PATH = (
+    Path(__file__).resolve().parents[1]
+    / "data" / "mandates" / ("%s_signing_key.hex" % _KEY_MERCHANT)
+)
+needs_signing_key = pytest.mark.skipif(
+    not _KEY_PATH.exists(),
+    reason=(
+        "%s is gitignored. Create it with: python -m chitragupta.mandate "
+        "--generate --merchant %s --auto-limit-paise 300000 --ceiling-paise 1500000"
+        % (_KEY_PATH.name, _KEY_MERCHANT)
+    ),
+)
 
 
 # -- 1. it cannot decide anything -----------------------------------------
@@ -168,6 +191,7 @@ def test_the_demo_is_labelled_constructed_and_says_why():
     assert "retry_soft_decline" in d.mandate_excludes
 
 
+@needs_signing_key
 def test_the_demo_mandate_verifies_and_is_genuinely_narrower():
     """A scenario running against an unsigned struct would test nothing."""
     from doctor.voice import _ask_dont_charge
@@ -179,6 +203,7 @@ def test_the_demo_mandate_verifies_and_is_genuinely_narrower():
     assert "reissue_payment_link" in permitted
 
 
+@needs_signing_key
 def test_the_demo_call_still_needs_a_person_to_confirm_it():
     """Rs 12,400 is above the Rs 3,000 auto-execute limit. It is a STEP_UP."""
     d = demo("accepts")
@@ -196,6 +221,7 @@ def test_every_demo_scenario_is_reproducible(scenario, lang):
     assert a == b
 
 
+@needs_signing_key
 def test_the_demo_reaches_voice_only_because_charging_is_not_permitted():
     """The finding that made this feature honest.
 
