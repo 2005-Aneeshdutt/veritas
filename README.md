@@ -1,6 +1,8 @@
-# Revenue Doctor
+# VERITAS
 
-[![CI](https://github.com/2005-Aneeshdutt/Nidaan/actions/workflows/ci.yml/badge.svg)](https://github.com/2005-Aneeshdutt/Nidaan/actions/workflows/ci.yml)
+### Recover what you can. Prove what happened.
+
+[![CI](https://github.com/2005-Aneeshdutt/veritas/actions/workflows/ci.yml/badge.svg)](https://github.com/2005-Aneeshdutt/veritas/actions/workflows/ci.yml)
 
 **Razorpay AI Buildathon — Track 03: AI Revenue Recovery**
 Aneesh Dutt · PES University · [github.com/2005-Aneeshdutt](https://github.com/2005-Aneeshdutt)
@@ -13,10 +15,13 @@ console build.
 Every merchant can see their payment success rate. Nobody tells them what it
 *should* be, whose fault the shortfall is, or what it is worth per month.
 
-Revenue Doctor finds the gap between what a merchant collects and what their
-category actually achieves, proves which causes it comes from, recovers what it
-is authorised to recover — and **reports the measured error bar on its own
+VERITAS finds the gap between what a merchant collects and what their category
+actually achieves, proves which causes it comes from, recovers what it is
+authorised to recover — and **reports the measured error bar on its own
 diagnosis, then refuses to act on anything inside it.**
+
+The engine is packaged as `revenue-doctor`; that name survives in the Python
+module paths and the CI job names, and means the same thing.
 
 > Everyone can build an agent that acts.
 > This one measures how often it is wrong, and says so before you ask.
