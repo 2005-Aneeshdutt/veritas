@@ -9,6 +9,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { DemoReset } from "./demo-reset";
 import { ThemeSwitcher } from "./theme-switcher";
 import { SidebarNav } from "./app-sidebar";
 import { VeritasWordmark } from "./logo";
@@ -123,6 +124,8 @@ export function Topbar({ onOpenCommand }: { onOpenCommand: () => void }) {
           ))}
         </DropdownMenuContent>
       </DropdownMenu>
+
+      <DemoReset />
 
       <ThemeSwitcher />
 
