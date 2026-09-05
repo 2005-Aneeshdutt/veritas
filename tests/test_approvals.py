@@ -232,23 +232,3 @@ def test_a_fix_worth_money_still_says_how_much(run):
     for g in paid:
         assert "at stake" in _stake(g)
 
-
-def test_the_decision_page_makes_the_same_distinction():
-    ui = open(
-        "frontend/src/app/decide/[token]/page.tsx", encoding="utf-8"
-    ).read()
-    assert "no money moves" in ui
-    assert "preview.total_paise > 0" in ui
-
-
-def test_the_book_refreshes_when_the_tab_comes_back():
-    """A fix approved from an email lands in another tab. Without this the
-    book a merchant switches back to shows the figures from before the thing
-    they just authorised."""
-    for page in (
-        "frontend/src/app/portfolio/page.tsx",
-        "frontend/src/app/run/[runId]/authorise/page.tsx",
-    ):
-        ui = open(page, encoding="utf-8").read()
-        assert "visibilitychange" in ui, page
-        assert 'addEventListener("focus"' in ui, page

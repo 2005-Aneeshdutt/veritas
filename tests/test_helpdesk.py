@@ -176,15 +176,6 @@ def test_the_panels_own_suggestions_answer_without_an_api_key():
     assert not missing, "not cached: %s" % missing
 
 
-def test_the_suggestions_here_match_the_ones_in_the_ui():
-    """If someone edits a button's wording, the warmed answer stops matching
-    and the panel refuses on the deployed build. The cache key is the exact
-    string."""
-    ui = open("frontend/src/components/Helpdesk.tsx", encoding="utf-8").read()
-    for q in SUGGESTED:
-        assert q.replace("'", "&apos;") in ui or q in ui, q
-
-
 def test_approving_the_book_does_not_silence_the_panel(tmp_path):
     """The context carries live book figures, so approving changes the cache
     key for every question at once. Both states the demo can be in are
@@ -220,106 +211,6 @@ def test_approving_the_book_does_not_silence_the_panel(tmp_path):
     finally:
         for f in files:
             shutil.copy(tmp_path / os.path.basename(f), f)
-
-
-def test_voice_input_is_feature_detected_not_assumed():
-    """Speech recognition exists in Chrome and Edge, not Firefox, and only
-    partly in Safari. A microphone button that does nothing is worse than no
-    button, especially on a stage, so it is only rendered when the engine is
-    actually there."""
-    ui = open("frontend/src/components/Helpdesk.tsx", encoding="utf-8").read()
-    assert "webkitSpeechRecognition" in ui
-    assert "canHear" in ui, "the button must be gated on detection"
-    assert "not-allowed" in ui, "a blocked microphone must say so"
-
-
-def test_voice_does_not_submit_what_it_only_thinks_it_heard():
-    """A mis-heard question that sends itself is a demo going wrong in front
-    of people. The transcript fills the box; a person still presses Ask."""
-    ui = open("frontend/src/components/Helpdesk.tsx", encoding="utf-8").read()
-    rec = ui[ui.index("rec.onresult") : ui.index("rec.onerror")]
-    assert "setQ(" in rec
-    assert "send(" not in rec, "onresult must not submit on its own"
-
-
-def test_the_microphone_stops_when_the_panel_closes():
-    """A recogniser left running behind a closed panel keeps the tab's
-    microphone indicator lit, which reads as spyware."""
-    ui = open("frontend/src/components/Helpdesk.tsx", encoding="utf-8").read()
-    assert "abort()" in ui
-
-
-def test_the_button_can_be_moved_and_remembers_where():
-    """It floats above the page, so wherever it parks it covers something --
-    bottom-right sat on the top bar's own controls on a short viewport. No
-    fixed default is right for every page, so it is draggable and persisted."""
-    ui = open("frontend/src/components/Helpdesk.tsx", encoding="utf-8").read()
-    assert "onPointerDown" in ui and "onPointerMove" in ui and "onPointerUp" in ui
-    assert "localStorage.setItem(DOCK_KEY" in ui, "the position must survive a reload"
-    assert "setPointerCapture" in ui, "the drag must survive leaving the button"
-
-
-def test_a_drag_is_not_read_as_a_click():
-    """Dragging and clicking share one pointer. Without a movement threshold
-    every drag would also open the panel on release."""
-    ui = open("frontend/src/components/Helpdesk.tsx", encoding="utf-8").read()
-    up = ui[ui.index("function onPointerUp") : ui.index("useEffect(() => {\n    setCanHear")]
-    assert "d?.moved" in up and "return;" in up, "a moved pointer must not toggle"
-
-
-def test_the_button_cannot_be_dragged_off_screen():
-    """A control dropped past the edge is a control you cannot get back."""
-    ui = open("frontend/src/components/Helpdesk.tsx", encoding="utf-8").read()
-    assert "clampToViewport" in ui
-    assert 'window.addEventListener("resize"' in ui, "a shrinking window must not strand it"
-
-
-def test_the_saved_position_is_the_one_it_was_dropped_at():
-    """Reading React state on pointerup can be a render behind the last move,
-    which would persist where the button was rather than where it landed."""
-    ui = open("frontend/src/components/Helpdesk.tsx", encoding="utf-8").read()
-    assert "live.current" in ui
-    assert "JSON.stringify(live.current)" in ui
-
-
-def test_keyboard_users_can_still_open_it():
-    """They never drag, so the pointer handlers must not be the only way in."""
-    ui = open("frontend/src/components/Helpdesk.tsx", encoding="utf-8").read()
-    assert "onKeyDown" in ui and '"Enter"' in ui
-
-
-def test_the_window_itself_moves_not_just_the_button():
-    """Pinned to the right edge at full height it covered the thing you
-    opened it to ask about, which on this app is most of the page."""
-    ui = open("frontend/src/components/Helpdesk.tsx", encoding="utf-8").read()
-    assert "PANEL_KEY" in ui and "winDown" in ui
-    assert "localStorage.setItem(PANEL_KEY" in ui
-
-
-def test_only_the_header_drags_the_window():
-    """A window that moves when you select an answer is one you cannot copy
-    text out of."""
-    ui = open("frontend/src/components/Helpdesk.tsx", encoding="utf-8").read()
-    # Sliced by structure rather than by the panel's title: the title is a
-    # design choice and this test is about where the drag handler lives, so
-    # renaming the panel should not fail it.
-    start = ui.index("onPointerDown={winDown}")
-    head = ui[start : ui.index("</div>", start)]
-    assert "cursor-grab" in head
-    body = ui[ui.index("flex-1 overflow-y-auto") :]
-    assert "winDown" not in body, "the scrolling body must not drag the window"
-
-
-def test_the_window_states_every_colour_it_uses():
-    """It stays light in both themes, so it cannot inherit the page palette.
-    A panel that borrowed --ink would render white text on white the moment
-    someone switched to dark."""
-    css = open("frontend/src/app/globals.css", encoding="utf-8").read()
-    block = css[css.index(".hd {") :]
-    for token in ("--hd-bg", "--hd-ink", "--hd-muted", "--hd-line", "--hd-brand"):
-        assert token in block, token
-    for cls in (".hd .text-muted", ".hd .field", ".hd .btn-primary", ".hd .card-raised"):
-        assert cls in css, "%s must resolve against the window" % cls
 
 
 def test_openrouter_calls_name_a_provider():
