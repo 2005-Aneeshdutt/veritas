@@ -8,7 +8,7 @@ Aneesh Dutt · PES University · [github.com/2005-Aneeshdutt](https://github.com
 CI runs four jobs on every push: the test suite, **a full diagnosis with no API
 key** (proving the committed cache is complete), **a reproducibility check that
 regenerates everything and fails if a single committed number moves**, and the
-frontend build.
+console build.
 
 Every merchant can see their payment success rate. Nobody tells them what it
 *should* be, whose fault the shortfall is, or what it is worth per month.
@@ -31,7 +31,6 @@ Two halves of one product, so a single link is the whole thing.
 |---|---|
 | `src/`, `data/`, `tests/` | **The engine.** The ten-stage pipeline, the Shapley decomposition, the signed mandate, the policy kernel, the hash-chained ledger, the Razorpay integration, and the FastAPI service that exposes all of it over 64 routes. |
 | [`console/`](console) | **The operator console.** React 19 + TanStack Start. Thirteen surfaces that render what the engine recorded; it computes no financial figure of its own. Has [its own README](console/README.md). |
-| `frontend/` | The earlier Next.js UI, still wired to CI and `render.yaml`. Superseded by `console/`. |
 
 The console is the one to open. Run the engine on `:8000`, then:
 
@@ -48,18 +47,19 @@ resolves `localhost` to `::1` while uvicorn binds IPv4 only.
 ## Running it
 
 ```bash
-make setup     # install python and frontend dependencies
-make demo      # backend on :8000, frontend on :3000
+make setup     # install python and console dependencies
+make demo      # engine on :8000, console on :8080
 ```
 
 No API key is needed. Every LLM response the demo uses is cached and committed,
 and the CI job **"Runs with no API key"** exists to prove that rather than
 assert it.
 
-**Deploying.** `render.yaml` defines both services. The frontend rewrites
-`/api/*` to the backend, so the browser only ever talks to one origin and no
-API URL is baked into the client bundle; set `DOCTOR_API_URL` to the backend's
-origin and the scheme is filled in if the host omits it.
+**Deploying.** `render.yaml` defines the API service only. The console is not
+deployed yet and the config does not pretend otherwise: its production build
+targets a serverless runtime rather than a Node server, ships no `start`
+script, and bakes `VITE_API_BASE_URL` into the client bundle at build time.
+Clone and `make demo` is the supported path today.
 
 No key is set there either, deliberately — a deployment that quietly needed one
 would make the offline claim false. The cost is that a question nobody has
@@ -1120,8 +1120,8 @@ checks never consult a model. See [`ARCHITECTURE.md`](ARCHITECTURE.md).
 ## Run it
 
 ```bash
-make setup      # python + frontend dependencies
-make demo       # backend :8000 + frontend :3000
+make setup      # python + console dependencies
+make demo       # engine :8000 + console :8080
 make test       # 669 tests
 make verify     # regenerate everything, fail if any committed number moved
 ```
