@@ -1,7 +1,7 @@
 # Revenue Doctor
 #
 #   make setup     install everything
-#   make demo      run the app (backend + frontend)
+#   make demo      run the app (backend + console)
 #   make test      669 tests
 #   make verify    regenerate and fail if any committed number moved
 #
@@ -14,9 +14,9 @@ PYPATH  := PYTHONPATH=src
 MERCHANT ?= quickmart
 
 help:
-	@echo "setup      install python and frontend dependencies"
+	@echo "setup      install python and console dependencies"
 	@echo "data       fetch source data, generate merchants and mandates"
-	@echo "demo       start backend :8000 and frontend :3000"
+	@echo "demo       start backend :8000 and console :8080"
 	@echo "run        diagnose one merchant on the CLI (MERCHANT=quickmart)"
 	@echo "test       run the test suite"
 	@echo "evals      run every deterministic eval"
@@ -25,7 +25,7 @@ help:
 
 setup:
 	$(PY) -m pip install -e ".[dev]"
-	cd frontend && npm install --no-fund --no-audit
+	cd console && npm install --no-fund --no-audit
 
 # Only needed from a bare checkout -- the generated data is committed.
 data:
@@ -70,6 +70,6 @@ verify:
 	$(PY) scripts/verify_reproducibility.py
 
 clean:
-	rm -rf frontend/.next
+	rm -rf console/.output console/dist
 	find . -name __pycache__ -type d -exec rm -rf {} + 2>/dev/null || true
 	@echo "cleaned build artifacts (generated data is committed and untouched)"

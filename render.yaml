@@ -1,7 +1,16 @@
 # Deployment for a panellist who would rather click a link than clone a repo.
 #
-# Two services. The frontend rewrites /api/* to the backend, so the browser
-# only ever talks to one origin and no API URL is baked into the client bundle.
+# ONE service now: the API. The web service used to build the Next.js UI in
+# frontend/, which console/ has replaced. The console is not deployed here yet
+# and the config does not pretend otherwise -- its production build targets a
+# serverless runtime rather than a Node server, it ships no `start` script, and
+# VITE_API_BASE_URL is baked into the client bundle at build time rather than
+# rewritten at the edge. Wiring that up is real work, and a render.yaml that
+# claimed to do it without having been deployed once would be a lie in a file
+# whose whole job is to be true.
+#
+# Until then: clone, `make demo`, and the console runs on :8080 against the
+# engine on :8000.
 #
 # NO API KEY IS SET HERE, on purpose. Every LLM response the demo needs is
 # committed under llm_cache/, and the CI job "Runs with no API key" exists to
@@ -39,20 +48,3 @@ services:
       # so nothing sends and no link is emitted today.
       # - key: DOCTOR_PUBLIC_URL
       #   value: https://revenue-doctor-web.onrender.com
-
-  - type: web
-    name: revenue-doctor-web
-    runtime: node
-    plan: free
-    region: singapore
-    rootDir: frontend
-    buildCommand: npm ci && npm run build
-    startCommand: npm run start -- --port $PORT
-    envVars:
-      - key: NODE_VERSION
-        value: "20"
-      - key: DOCTOR_API_URL
-        fromService:
-          type: web
-          name: revenue-doctor-api
-          property: hostport

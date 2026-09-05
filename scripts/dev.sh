@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
-# Start Revenue Doctor: FastAPI backend + Next.js frontend.
+# Start VERITAS: FastAPI engine + the operator console.
 #
 #   bash scripts/dev.sh          production build, what the demo should use
-#   bash scripts/dev.sh --dev    hot reload, for editing the frontend
+#   bash scripts/dev.sh --dev    hot reload, for editing the console
 #
 # Ctrl-C stops both.
 
@@ -37,9 +37,9 @@ EOF
   exit 1
 fi
 
-if [ ! -d frontend/node_modules ]; then
-  echo "installing frontend deps..."
-  (cd frontend && npm install --no-fund --no-audit)
+if [ ! -d console/node_modules ]; then
+  echo "installing console deps..."
+  (cd console && npm install --no-fund --no-audit)
 fi
 
 cleanup() {
@@ -81,34 +81,29 @@ else:
     print("  LLM: NO KEY AND NO CACHE -- runs will emit STUBS, labelled as such")
 PY
 
-# --- frontend --------------------------------------------------------------
-cd frontend
-if [ "$MODE" = "--dev" ]; then
-  echo "starting frontend on :3000 (dev) ..."
-  npm run dev &
-else
-  if [ ! -d .next ]; then
-    echo "building frontend..."
-    npm run build
-  fi
-  echo "starting frontend on :3000 ..."
-  npm run start &
-fi
+# --- console ---------------------------------------------------------------
+# Always the dev server. The console's production build targets a serverless
+# runtime and has no `start`, so there is nothing to run in front of a
+# panellist here that the dev server does not already do.
+cd console
+echo "starting console on :8080 ..."
+npm run dev &
 WEB_PID=$!
 cd "$ROOT"
 
 for i in $(seq 1 60); do
-  if curl -sf http://127.0.0.1:3000/ >/dev/null 2>&1; then break; fi
+  if curl -sf http://127.0.0.1:8080/ >/dev/null 2>&1; then break; fi
   sleep 0.5
 done
 
 cat <<'EOF'
 
   ---------------------------------------------------
-   Revenue Doctor is up
+   VERITAS is up
 
-     http://localhost:3000        pick a merchant
-     http://localhost:8000/docs   API
+     http://localhost:8080        the console
+     http://localhost:8080/login  the landing page
+     http://localhost:8000/docs   the API
 
    Ctrl-C to stop both.
   ---------------------------------------------------
