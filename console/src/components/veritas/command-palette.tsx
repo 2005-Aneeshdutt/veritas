@@ -1,0 +1,111 @@
+import { useNavigate } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
+import { casesQueryOptions } from "@/data/services";
+import { formatMoney } from "@/domain/money";
+import {
+  CommandDialog,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+  CommandSeparator,
+} from "@/components/ui/command";
+import { CreditCard, Monitor, Moon, Sun } from "lucide-react";
+import { NAV_GROUPS } from "./nav-config";
+import { useTheme } from "@/lib/theme";
+
+export function CommandPalette({
+  open,
+  onOpenChange,
+}: {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+}) {
+  const navigate = useNavigate();
+  const { setMode } = useTheme();
+  const { data: cases = [] } = useQuery(casesQueryOptions);
+
+  const go = (to: string) => {
+    onOpenChange(false);
+    void navigate({ to });
+  };
+
+  const openCase = (id: string) => {
+    onOpenChange(false);
+    void navigate({ to: "/recovery-journey", search: { case: id } });
+  };
+
+  return (
+    <CommandDialog open={open} onOpenChange={onOpenChange}>
+      <CommandInput placeholder="Search pages and actions…" />
+      <CommandList>
+        <CommandEmpty>No matching payment in current demo dataset.</CommandEmpty>
+        {cases.length > 0 && (
+          <CommandGroup heading="Demo payments">
+            {cases.map((c) => (
+              <CommandItem
+                key={c.id}
+                value={`${c.id} ${c.merchant} ${c.kind} ${c.title} ${c.decision}`}
+                onSelect={() => openCase(c.id)}
+              >
+                <CreditCard className="mr-2 h-4 w-4" aria-hidden="true" />
+                <span className="font-mono text-xs">{c.id}</span>
+                <span className="ml-2 truncate text-xs text-muted-foreground">
+                  {c.merchant} · {c.title} · {formatMoney(c.amount)}
+                </span>
+              </CommandItem>
+            ))}
+          </CommandGroup>
+        )}
+        {NAV_GROUPS.map((group, gi) => (
+          <CommandGroup key={group.title ?? `g${gi}`} heading={group.title ?? "General"}>
+            {group.items.map((item) => (
+              <CommandItem
+                key={item.to}
+                value={`Go to ${item.label} ${item.description}`}
+                onSelect={() => go(item.to)}
+              >
+                <item.icon className="mr-2 h-4 w-4" aria-hidden="true" />
+                <span>{item.label}</span>
+                <span className="ml-2 truncate text-xs text-muted-foreground">
+                  {item.description}
+                </span>
+              </CommandItem>
+            ))}
+          </CommandGroup>
+        ))}
+        <CommandSeparator />
+        <CommandGroup heading="Appearance">
+          <CommandItem
+            value="Dark theme"
+            onSelect={() => {
+              setMode("dark");
+              onOpenChange(false);
+            }}
+          >
+            <Moon className="mr-2 h-4 w-4" aria-hidden="true" /> Dark theme
+          </CommandItem>
+          <CommandItem
+            value="Light theme"
+            onSelect={() => {
+              setMode("light");
+              onOpenChange(false);
+            }}
+          >
+            <Sun className="mr-2 h-4 w-4" aria-hidden="true" /> Light theme
+          </CommandItem>
+          <CommandItem
+            value="System theme"
+            onSelect={() => {
+              setMode("system");
+              onOpenChange(false);
+            }}
+          >
+            <Monitor className="mr-2 h-4 w-4" aria-hidden="true" /> System theme
+          </CommandItem>
+        </CommandGroup>
+      </CommandList>
+    </CommandDialog>
+  );
+}
