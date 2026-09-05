@@ -3,6 +3,7 @@ import { Pause, Play, RotateCcw, Repeat } from "lucide-react";
 import { useJourneyCase } from "@/hooks/use-journey-case";
 import { useJourneyCases } from "@/hooks/use-journey-cases";
 import { BackendNotice } from "@/components/veritas/backend-notice";
+import { CaseWalk } from "@/components/veritas/case-walk";
 import { STAGE_ORDER } from "@/domain/journey";
 import { formatMoney } from "@/domain/money";
 import { useJourneyEngine, usePrefersReducedMotion } from "@/hooks/use-journey-engine";
@@ -54,12 +55,19 @@ function RecoveryJourneyPage() {
     <div className="space-y-8">
       <BackendNotice isFixture={isFixture} error={error} what="recovery journey" />
 
+      <CaseWalk caseId={activeCase.id} />
+
       {/* Live status header */}
       <header className="border-b border-hairline pb-5">
         <div className="flex flex-wrap items-end justify-between gap-x-8 gap-y-4">
           <div className="min-w-0">
             <p className="label-meta text-[10px] tracking-[0.16em]">
-              Recovery journey · demo case {String(activeCase.index).padStart(2, "0")} ·{" "}
+              Recovery journey · demo case{" "}
+              {String(Math.max(1, cases.findIndex((c) => c.id === activeCase.id) + 1)).padStart(
+                2,
+                "0"
+              )}{" "}
+              ·{" "}
               {activeCase.kindLabel}
             </p>
             <h1 className="mt-2 flex flex-wrap items-center gap-3 text-xl font-semibold tracking-tight text-foreground sm:text-2xl">
@@ -232,7 +240,7 @@ function RecoveryJourneyPage() {
           <section aria-label="Demo cases" className="border-t border-hairline pt-5">
             <p className="label-meta text-[10px] tracking-[0.16em]">Demo cases</p>
             <ul className="mt-3 divide-y divide-hairline border-t border-hairline">
-              {cases.map((c) => (
+              {cases.map((c, i) => (
                 <li key={c.id}>
                   <button
                     type="button"
@@ -244,9 +252,9 @@ function RecoveryJourneyPage() {
                     )}
                   >
                     <span className="min-w-0">
-                      <span className="truncate text-sm text-foreground">
+                      <span className="block truncate text-sm text-foreground">
                         <span className="label-meta mr-2 text-[10px]">
-                          {String(c.index).padStart(2, "0")} {c.kindLabel}
+                          {String(i + 1).padStart(2, "0")} {c.kindLabel}
                         </span>
                         {c.title}
                       </span>

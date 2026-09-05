@@ -119,6 +119,20 @@ function CounterfactualLabPage() {
     setRunning(false);
   }, [clear]);
 
+  // Replay on arrival and whenever the payment changes. The comparison is
+  // computed from committed runs, not now -- but a table of results already
+  // sitting there reads as a slide, and the order the strategies are eliminated
+  // in is the argument.
+  const runRef = useRef<(() => void) | null>(null);
+  runRef.current = run;
+  useEffect(() => {
+    clear();
+    setRevealed(0);
+    setRunning(false);
+    const id = window.setTimeout(() => runRef.current?.(), 350);
+    return () => window.clearTimeout(id);
+  }, [activeCase.id, clear]);
+
   const evaluated = useMemo(() => {
     const done = new Set<string>();
     COMPARISON_STEPS.slice(0, revealed).forEach((s) => {

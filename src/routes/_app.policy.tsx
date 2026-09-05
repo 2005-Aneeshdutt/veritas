@@ -7,6 +7,7 @@ import { BackendNotice } from "@/components/veritas/backend-notice";
 import type { JourneyCase, PolicyCheck } from "@/domain/journey";
 import { formatMoney } from "@/domain/money";
 import { ClaimBadge } from "@/components/veritas/claim-badge";
+import { CaseWalk } from "@/components/veritas/case-walk";
 import { DetailDrawer } from "@/components/veritas/detail-drawer";
 import { usePrefersReducedMotion } from "@/hooks/use-journey-engine";
 import { clearPolicyDecision, recordPolicyDecision } from "@/lib/policy-state";
@@ -55,16 +56,25 @@ function usePolicyEvaluation(activeCase: JourneyCase, reducedMotion: boolean) {
   const [revealed, setRevealed] = useState(0);
   const [status, setStatus] = useState<EvalStatus>("IDLE");
   const timer = useRef<ReturnType<typeof setInterval> | null>(null);
+  // `run` is defined below; the arrival effect reaches it through a ref so the
+  // two do not have to be ordered around each other.
+  const runRef = useRef<(() => void) | null>(null);
 
   const clear = useCallback(() => {
     if (timer.current) clearInterval(timer.current);
     timer.current = null;
   }, []);
 
+  // Replay on arrival and whenever the payment changes. The decision was made
+  // when the run was committed -- this is not it being computed now -- but a
+  // settled verdict sitting on the page reads as something baked in, and the
+  // order the kernel stopped in is the part worth seeing.
   useEffect(() => {
     clear();
     setRevealed(0);
     setStatus("IDLE");
+    const id = window.setTimeout(() => runRef.current?.(), 350);
+    return () => window.clearTimeout(id);
   }, [activeCase.id, clear]);
 
   useEffect(() => clear, [clear]);
@@ -92,6 +102,8 @@ function usePolicyEvaluation(activeCase: JourneyCase, reducedMotion: boolean) {
     }, step);
   }, [activeCase.id, clear, reducedMotion, settled, total]);
 
+  runRef.current = run;
+
   const reset = useCallback(() => {
     clear();
     setRevealed(0);
@@ -100,13 +112,27 @@ function usePolicyEvaluation(activeCase: JourneyCase, reducedMotion: boolean) {
   }, [activeCase.id, clear]);
 
 
-  return { revealed, status, run, reset, stopIndex, total, evaluating: status === "EVALUATING POLICY" };
+  const evaluating = status === "EVALUATING POLICY";
+  return {
+    revealed,
+    status,
+    run,
+    reset,
+    stopIndex,
+    total,
+    evaluating,
+    // The kernel has actually returned. Everything downstream of the checks --
+    // the verdict, the claim, the execution state -- keys off this rather than
+    // off the case, so nothing that is an *output* of the run is on screen
+    // before the run.
+    settled: status !== "IDLE" && !evaluating,
+  };
 }
 
 function PolicyKernelPage() {
   const { case: caseId } = Route.useSearch();
   const navigate = useNavigate({ from: "/policy" });
-  const { case_: activeCase, isFixture, error } = useJourneyCase(caseId, 0);
+  const { case_: activeCase, isFixture, error } = useJourneyCase(caseId, 1);
   const cases = useJourneyCases();
   const reducedMotion = usePrefersReducedMotion();
   const ev = usePolicyEvaluation(activeCase, reducedMotion);
@@ -177,32 +203,45 @@ function PolicyKernelPage() {
               )}
             >
               <span className="label-meta text-[10px] tracking-[0.14em]">{c.kindLabel}</span>
-              <span className="numeral text-[12px]">{formatMoney(c.amount)}</span>
-              <span className="text-[11px] text-muted-foreground">{c.policy.decision}</span>
             </button>
           );
         })}
       </section>
 
-      {/* Authority chain */}
+      <CaseWalk caseId={activeCase.id} />
+
+      {/* Authority chain. The first two links are inputs -- the model's
+          recommendation and the kernel it will be judged by -- and are true
+          before anything runs. The last two are the kernel's output, so they
+          stay withheld until the checks have actually been walked. */}
       <section aria-label="Authority chain" className="grid gap-3 sm:grid-cols-4">
         {[
           { k: "Recommendation", v: activeCase.plan.recommended, tone: "text-projected" },
-          { k: "Policy kernel", v: activeCase.policy.version, tone: "text-foreground" },
+          {
+            k: "Policy kernel",
+            v: ev.settled ? activeCase.policy.version : "—",
+            tone: ev.settled ? "text-foreground" : "text-muted-foreground/40",
+          },
           {
             k: "Decision",
-            v: decision,
-            tone: denied ? "text-denied" : "text-measured",
+            v: ev.settled ? decision : "—",
+            tone: !ev.settled
+              ? "text-muted-foreground/40"
+              : denied
+                ? "text-denied"
+                : "text-measured",
           },
           {
             k: "Execution",
-            v: activeCase.execution.state,
+            v: ev.settled ? activeCase.execution.state : "—",
             tone:
-              activeCase.execution.state === "NOT REACHED"
-                ? "text-muted-foreground"
-                : activeCase.execution.state === "EXCEPTION"
-                  ? "text-observed"
-                  : "text-measured",
+              !ev.settled
+                ? "text-muted-foreground/40"
+                : activeCase.execution.state === "NOT REACHED"
+                  ? "text-muted-foreground"
+                  : activeCase.execution.state === "EXCEPTION"
+                    ? "text-observed"
+                    : "text-measured",
           },
         ].map((s, i) => (
           <div key={s.k} className="relative border-l-2 border-hairline pl-4">
@@ -242,31 +281,61 @@ function PolicyKernelPage() {
             <p
               className={cn(
                 "numeral mt-1 text-3xl font-semibold tracking-tight sm:text-4xl",
-                ev.evaluating ? "text-muted-foreground" : denied ? "text-denied" : "text-measured",
+                !ev.settled
+                  ? "text-muted-foreground"
+                  : denied
+                    ? "text-denied"
+                    : "text-measured",
               )}
             >
-              {ev.evaluating ? "EVALUATING…" : denied ? "POLICY DENIED" : decision}
+              {ev.status === "IDLE"
+                ? "AWAITING EVALUATION"
+                : ev.evaluating
+                  ? "EVALUATING…"
+                  : denied
+                    ? "POLICY DENIED"
+                    : decision}
             </p>
-            <p className="mt-1.5 text-sm text-muted-foreground">{activeCase.policy.note}</p>
+            <p className="mt-1.5 text-sm text-muted-foreground">
+              {ev.settled
+                ? activeCase.policy.note
+                : ev.evaluating
+                  ? `Walking the mandate, one check at a time (${ev.revealed}/${checks.length}).`
+                  : `${checks.length} checks stand between this recommendation and money moving.`}
+            </p>
           </div>
 
+          {/* The consequences of a decision arrive with the decision, not
+              before it. Fading them out was not enough: an opacity-0 answer is
+              still in the DOM, the accessibility tree and any copy-paste, which
+              is exactly the kind of "invisible but present" claim this product
+              exists to argue against. The values are withheld, not hidden. */}
           <div className="flex flex-wrap items-baseline gap-x-6 gap-y-2">
             <div>
               <p className="label-meta text-[10px] tracking-[0.16em]">Claim</p>
               <p className="mt-1 flex items-baseline gap-2">
-                <span className="numeral text-xl font-semibold text-foreground">
-                  {formatMoney(activeCase.claimAmount)}
+                <span
+                  className={cn(
+                    "numeral text-xl font-semibold",
+                    ev.settled ? "text-foreground" : "text-muted-foreground/40",
+                  )}
+                >
+                  {ev.settled ? formatMoney(activeCase.claimAmount) : "—"}
                 </span>
-                <ClaimBadge state={activeCase.claim} />
+                {ev.settled && <ClaimBadge state={activeCase.claim} />}
               </p>
             </div>
             <div>
               <p className="label-meta text-[10px] tracking-[0.16em]">Execution</p>
-              <p className="mt-1 text-sm text-foreground">{activeCase.execution.state}</p>
+              <p className={cn("mt-1 text-sm", ev.settled ? "text-foreground" : "text-muted-foreground/40")}>
+                {ev.settled ? activeCase.execution.state : "—"}
+              </p>
             </div>
             <div>
               <p className="label-meta text-[10px] tracking-[0.16em]">Gateway</p>
-              <p className="mt-1 text-sm text-muted-foreground">{activeCase.gateway}</p>
+              <p className={cn("mt-1 text-sm", ev.settled ? "text-muted-foreground" : "text-muted-foreground/40")}>
+                {ev.settled ? activeCase.gateway : "—"}
+              </p>
             </div>
           </div>
 
@@ -313,14 +382,20 @@ function PolicyKernelPage() {
           <div className="flex items-baseline justify-between border-b border-hairline pb-2">
             <p className="label-meta text-[10px] tracking-[0.16em]">12 policy checks</p>
             <p className="numeral text-sm text-muted-foreground">
-              {passed} / 12 passed
+              {ev.settled
+                ? `${passed} / 12 passed`
+                : `${checks.slice(0, ev.revealed).filter((c) => c.pass).length} / ${ev.revealed} evaluated`}
             </p>
           </div>
           <ol className="mt-1 divide-y divide-hairline">
             {checks.map((c, i) => {
-              const shown = ev.status === "IDLE" ? true : i < ev.revealed;
-              const stopped = ev.status !== "IDLE" && i > ev.stopIndex;
-              const isFirstFail = i === ev.stopIndex && !c.pass;
+              const shown = i < ev.revealed;
+              // Checks after the one that stopped the kernel were never
+              // evaluated. Rendering them as failures would say the opposite.
+              const stopped = i > ev.stopIndex;
+              // Only once the walk has actually reached it. Flagging the
+              // stopping rule in advance is the whole verdict, in red.
+              const isFirstFail = i === ev.stopIndex && !c.pass && shown;
               return (
                 <li key={c.n}>
                   <button
@@ -365,13 +440,13 @@ function PolicyKernelPage() {
               );
             })}
           </ol>
-          {activeCase.policy.firstFailure && (
+          {ev.settled && activeCase.policy.firstFailure && (
             <p className="mt-3 flex items-start gap-2 text-sm text-denied">
               <ShieldAlert className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
               {activeCase.policy.firstFailure}
             </p>
           )}
-          {ev.status !== "IDLE" && ev.stopIndex < checks.length - 1 && (
+          {ev.settled && ev.stopIndex < checks.length - 1 && (
             <p className="mt-2 text-xs text-muted-foreground/80">
               Checks after the failed rule were never evaluated. Not evaluated is not passed.
             </p>
@@ -379,7 +454,7 @@ function PolicyKernelPage() {
         </div>
       </section>
 
-      {denied && (
+      {denied && ev.settled && (
         <section
           aria-label="Denial consequence"
           className="grid gap-6 border-y border-hairline py-6 sm:grid-cols-3"
@@ -413,7 +488,11 @@ function PolicyKernelPage() {
           <p className="text-xs text-muted-foreground/80">Demo records · click a row to open its journey</p>
         </div>
         <ul className="divide-y divide-hairline">
-          {cases.map((c) => (
+          {cases.map((c) => {
+            // History is history -- except for the record being re-walked
+            // above, whose answer this row would otherwise give away.
+            const pending = c.id === activeCase.id && !ev.settled;
+            return (
             <li key={c.id}>
               <Link
                 to="/recovery-journey"
@@ -425,21 +504,30 @@ function PolicyKernelPage() {
                 <span
                   className={cn(
                     "label-meta text-[10px] tracking-[0.14em]",
-                    c.policy.decision === "DENY" ? "text-denied" : "text-measured",
+                    pending
+                      ? "text-muted-foreground/40"
+                      : c.policy.decision === "DENY"
+                        ? "text-denied"
+                        : "text-measured",
                   )}
                 >
-                  {c.policy.decision}
+                  {pending ? "EVALUATING" : c.policy.decision}
                 </span>
                 <span className="numeral text-muted-foreground">
-                  {c.policy.checks.filter((x) => x.pass).length}/12
+                  {pending ? "—" : `${c.policy.checks.filter((x) => x.pass).length}/12`}
                 </span>
-                <ClaimBadge state={c.claim} size="sm" />
+                {pending ? (
+                  <span className="text-[11px] text-muted-foreground/40">—</span>
+                ) : (
+                  <ClaimBadge state={c.claim} size="sm" />
+                )}
                 <span className="numeral text-[11px] text-muted-foreground/80">
                   {new Date(c.ledger.at).toISOString().slice(0, 16).replace("T", " ")}Z
                 </span>
               </Link>
             </li>
-          ))}
+            );
+          })}
         </ul>
       </section>
 

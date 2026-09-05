@@ -1,5 +1,4 @@
 import { useJourneyCases } from "@/hooks/use-journey-cases";
-import { formatMoney } from "@/domain/money";
 import { cn } from "@/lib/utils";
 
 /** Shared demo-case selector used across the proof-layer workspaces. */
@@ -32,8 +31,6 @@ export function CaseSwitcher({
             )}
           >
             <span className="label-meta text-[10px] tracking-[0.14em]">{c.kindLabel}</span>
-            <span className="numeral text-[12px]">{formatMoney(c.amount)}</span>
-            <span className="text-[11px] text-muted-foreground">{c.claim}</span>
           </button>
         );
       })}
