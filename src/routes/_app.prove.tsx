@@ -8,6 +8,7 @@ import { evidenceFor, ledgerEntryForCase, proofFor, proofSteps } from "@/data/pr
 import { formatMoney } from "@/domain/money";
 import { ClaimBadge } from "@/components/veritas/claim-badge";
 import { CaseSwitcher } from "@/components/veritas/case-switcher";
+import { CaseWalk } from "@/components/veritas/case-walk";
 import { RecoveryPassport } from "@/components/veritas/recovery-passport";
 import { usePrefersReducedMotion } from "@/hooks/use-journey-engine";
 import { cn } from "@/lib/utils";
@@ -89,7 +90,7 @@ function StepIcon({ state, revealed }: { state: "ok" | "caution" | "absent"; rev
 function ProvePage() {
   const { case: caseId } = Route.useSearch();
   const navigate = useNavigate({ from: "/prove" });
-  const { case_: c, isFixture, error } = useJourneyCase(caseId, 0);
+  const { case_: c, isFixture, error } = useJourneyCase(caseId, 1);
   const cases = useJourneyCases();
   const reducedMotion = usePrefersReducedMotion();
 
@@ -408,6 +409,8 @@ function ProvePage() {
       <BackendNotice isFixture={isFixture} error={error} what="proof" />
 
       <CaseSwitcher activeId={c.id} onSelect={(id) => navigate({ to: ".", search: { case: id } })} />
+
+      <CaseWalk caseId={c.id} />
 
       <RecoveryPassport journeyCase={c} showOpenProof={false} />
 

@@ -2,6 +2,7 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ArrowRight, Check, CircleDashed, Play, RotateCcw } from "lucide-react";
 import { CaseSwitcher } from "@/components/veritas/case-switcher";
+import { CaseWalk } from "@/components/veritas/case-walk";
 import { ClaimBadge } from "@/components/veritas/claim-badge";
 import { DetailDrawer } from "@/components/veritas/detail-drawer";
 import { PageHeader } from "@/components/veritas/page-header";
@@ -176,6 +177,8 @@ function PlanPage() {
         activeId={activeCase.id}
         onSelect={(id) => void navigate({ to: "/plan", search: { case: id } })}
       />
+
+      <CaseWalk caseId={activeCase.id} />
 
       {/* Case context */}
       <section

@@ -9,6 +9,7 @@ import type { EvidenceItem } from "@/data/proof";
 import { formatMoney } from "@/domain/money";
 import { ClaimBadge } from "@/components/veritas/claim-badge";
 import { CaseSwitcher } from "@/components/veritas/case-switcher";
+import { CaseWalk } from "@/components/veritas/case-walk";
 import { DetailDrawer, type DrawerAction } from "@/components/veritas/detail-drawer";
 import { cn } from "@/lib/utils";
 
@@ -49,7 +50,7 @@ function statusTone(s: EvidenceItem["status"]) {
 function EvidencePage() {
   const { case: caseId } = Route.useSearch();
   const navigate = useNavigate({ from: "/evidence" });
-  const { case_: c, isFixture, error } = useJourneyCase(caseId, 0);
+  const { case_: c, isFixture, error } = useJourneyCase(caseId, 1);
   const cases = useJourneyCases();
   const items = evidenceFor(c);
   const ledger = ledgerEntryForCase(c.id);
@@ -102,6 +103,8 @@ function EvidencePage() {
       <BackendNotice isFixture={isFixture} error={error} what="evidence" />
 
       <CaseSwitcher activeId={c.id} onSelect={(id) => navigate({ to: ".", search: { case: id } })} />
+
+      <CaseWalk caseId={c.id} />
 
       {/* Claim relationship */}
       <section aria-label="Claim and support" className="border-l-2 border-hairline pl-5">

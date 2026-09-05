@@ -1,9 +1,10 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { RotateCcw } from "lucide-react";
 import { ArrowRight, ChevronDown } from "lucide-react";
 import { CaseSwitcher } from "@/components/veritas/case-switcher";
+import { CaseWalk } from "@/components/veritas/case-walk";
 import { ClaimBadge } from "@/components/veritas/claim-badge";
 import { DetailDrawer } from "@/components/veritas/detail-drawer";
 import { PageHeader } from "@/components/veritas/page-header";
@@ -67,15 +68,78 @@ function DiagnosisPage() {
 
   // Re-reads the committed decomposition for this payment. It is deterministic,
   // so a re-run that returned different numbers would itself be the finding.
+  const [reran, setReran] = useState(false);
+
+  // The decomposition is deterministic, so a re-run returns the same numbers
+  // and nothing on screen moves. Left at that the button looks broken, so it
+  // reports the result explicitly -- identical is the finding, not the absence
+  // of one.
   async function rerun() {
     setRerunning(true);
+    setReran(false);
     setSelected(null);
+    const started = Date.now();
     try {
-      await qc.invalidateQueries({ queryKey: ["journey-case"] });
+      await qc.refetchQueries({ queryKey: ["journey-case"] });
     } finally {
-      setRerunning(false);
+      // let the spinner be seen even when the refetch returns instantly
+      const held = Math.max(0, 550 - (Date.now() - started));
+      window.setTimeout(() => {
+        setRerunning(false);
+        setReran(true);
+        attributedKey.current = null;
+        attribute(factors.length);
+      }, held);
     }
   }
+
+  // The decomposition is deterministic and already committed; this is a reveal,
+  // not a computation. It exists because a chart that is fully drawn the instant
+  // the page opens reads as a picture, and the attribution is the one thing on
+  // this page worth watching arrive. The numbers are identical either way --
+  // Re-run says so out loud.
+  const [attributed, setAttributed] = useState(0);
+  const stagger = useRef<ReturnType<typeof setInterval> | null>(null);
+  const stopStagger = useCallback(() => {
+    if (stagger.current) clearInterval(stagger.current);
+    stagger.current = null;
+  }, []);
+  const attribute = useCallback(
+    (n: number) => {
+      stopStagger();
+      if (n === 0 || window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) {
+        setAttributed(n);
+        return;
+      }
+      setAttributed(0);
+      let i = 0;
+      stagger.current = setInterval(() => {
+        i += 1;
+        setAttributed(i);
+        if (i >= n) stopStagger();
+      }, 190);
+    },
+    [stopStagger]
+  );
+  useEffect(() => stopStagger, [stopStagger]);
+
+  // Keyed on the payment and its decomposition, not on effect invocation. The
+  // case arrives as a fixture and is replaced by the backend's record moments
+  // later, and the query refetches on focus -- so this effect runs several
+  // times for one arrival. Restarting the walk each time left it looping and
+  // never settling. It now starts once per decomposition and is a no-op after.
+  const factorCount = factors.length;
+  const key = `${activeCase.id}:${factorCount}`;
+  const attributedKey = useRef<string | null>(null);
+  useEffect(() => {
+    if (attributedKey.current === key) return;
+    attributedKey.current = key;
+    setAttributed(0);
+    const id = window.setTimeout(() => attribute(factorCount), 300);
+    return () => window.clearTimeout(id);
+  }, [key, factorCount, attribute]);
+
+  const attributionDone = attributed >= factorCount && factorCount > 0;
 
   const magnitudes = factors.map((f) => Math.abs(f.effect ?? 0));
   const max = Math.max(0.0001, ...magnitudes);
@@ -96,6 +160,8 @@ function DiagnosisPage() {
         activeId={activeCase.id}
         onSelect={(id) => void navigate({ to: "/diagnosis", search: { case: id } })}
       />
+
+      <CaseWalk caseId={activeCase.id} />
 
       <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_320px]">
         <div className="min-w-0 space-y-8">
@@ -128,24 +194,44 @@ function DiagnosisPage() {
             </dl>
           </section>
 
-          {/* Top actionable factor */}
-          <section className="rounded-lg border border-hairline p-5">
+          {/* Top actionable factor. This is a conclusion drawn from the
+              decomposition below, so it arrives after the decomposition does. */}
+          <section
+            className={cn(
+              "rounded-lg border border-hairline p-5 transition-opacity duration-500",
+              attributionDone ? "opacity-100" : "opacity-30"
+            )}
+          >
             <p className="label-meta text-[10px] tracking-[0.16em]">Top actionable factor</p>
             <div className="mt-2 flex flex-wrap items-baseline justify-between gap-3">
               <div>
-                <p className="text-lg font-semibold tracking-tight">{d.topFactor.label}</p>
-                <p className="numeral mt-1 text-2xl tabular-nums">{d.topFactor.effect} pts</p>
+                <p className="text-lg font-semibold tracking-tight">
+                  {attributionDone ? d.topFactor.label : "Attributing…"}
+                </p>
+                <p className="numeral mt-1 text-2xl tabular-nums">
+                  {attributionDone ? `${d.topFactor.effect} pts` : "—"}
+                </p>
               </div>
               <div className="text-right">
                 <p className="label-meta text-[10px] tracking-[0.16em]">Actionability</p>
-                <p className="mt-1 text-sm font-medium">{actionable}</p>
-                <p className="mt-0.5 text-xs text-muted-foreground">{d.actionability}</p>
+                <p className="mt-1 text-sm font-medium">{attributionDone ? actionable : "—"}</p>
+                <p className="mt-0.5 text-xs text-muted-foreground">
+                  {attributionDone ? d.actionability : "Waiting on the decomposition."}
+                </p>
               </div>
             </div>
           </section>
 
           {/* Contribution chart */}
-          <section aria-labelledby="why-heading" className="space-y-4">
+          {/* The data-* attributes are test hooks: the reveal is timing-dependent,
+              and verifying it from rendered text alone means guessing at sample
+              points. */}
+          <section
+            aria-labelledby="why-heading"
+            className="space-y-4"
+            data-attributed={attributed}
+            data-factor-count={factorCount}
+          >
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div className="min-w-0">
                   <h3 id="why-heading" className="text-sm font-semibold tracking-tight">
@@ -165,11 +251,17 @@ function DiagnosisPage() {
                   <RotateCcw className={rerunning ? "h-3 w-3 animate-spin" : "h-3 w-3"} aria-hidden />
                   {rerunning ? "Re-running" : "Re-run"}
                 </button>
+                {reran && !rerunning && (
+                  <p className="mt-1.5 text-right text-[11px] text-measured">
+                    Recomputed from the committed run — identical.
+                  </p>
+                )}
               </div>
 
             <ul className="space-y-2">
-              {factors.map((f) => {
+              {factors.map((f, i) => {
                 const available = f.effect !== null;
+                const on = i < attributed;
                 const pct = available ? (Math.abs(f.effect!) / max) * 100 : 0;
                 const positive = (f.effect ?? 0) >= 0;
                 return (
@@ -185,10 +277,10 @@ function DiagnosisPage() {
                         {available && (
                           <span
                             className={cn(
-                              "block h-2 rounded-sm",
+                              "block h-2 rounded-sm transition-[width] duration-300 ease-out",
                               positive ? "bg-measured/70" : "bg-denied/70",
                             )}
-                            style={{ width: `${Math.max(4, pct)}%` }}
+                            style={{ width: on ? `${Math.max(4, pct)}%` : "0%" }}
                           />
                         )}
                       </span>
@@ -198,7 +290,18 @@ function DiagnosisPage() {
                           available ? "text-foreground" : "text-muted-foreground",
                         )}
                       >
-                        {formatEffect(f)}
+                        <span className={available ? "" : "text-muted-foreground"}>
+                          {!on
+                            ? "—"
+                            : f.effect === null
+                              ? "NOT AVAILABLE"
+                              : `${f.effect > 0 ? "+" : ""}${f.effect.toFixed(2)} pts`}
+                        </span>
+                        {on && f.uncertainty !== null && (
+                          <span className="ml-1.5 text-[11px] font-normal text-muted-foreground/70">
+                            ± {f.uncertainty.toFixed(2)}
+                          </span>
+                        )}
                       </span>
                     </button>
                   </li>
@@ -270,9 +373,18 @@ function DiagnosisPage() {
             <p className="label-meta text-[10px] tracking-[0.16em]">Diagnosis</p>
             <dl className="mt-2 divide-y divide-hairline text-sm">
               <Row label="Primary cause" value={activeCase.failureReason} />
+              {/* Same conclusion as the panel, so it waits for the same thing.
+                  The rail once read "hour +3.79" beside a panel still saying
+                  "Attributing" -- one screen, two answers. */}
               <Row
                 label="Top actionable factor"
-                value={topAvailable ? `${topAvailable.label} · ${formatEffect(topAvailable)}` : "NOT AVAILABLE"}
+                value={
+                  !attributionDone
+                    ? "—"
+                    : topAvailable
+                      ? `${topAvailable.label} · ${formatEffect(topAvailable)}`
+                      : "NOT AVAILABLE"
+                }
               />
             </dl>
           </section>

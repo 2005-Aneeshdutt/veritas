@@ -10,6 +10,7 @@ import {
 import type { LedgerEntry } from "@/data/proof";
 import { useLedger } from "@/hooks/use-ledger";
 import { BackendNotice } from "@/components/veritas/backend-notice";
+import { CaseWalk } from "@/components/veritas/case-walk";
 import { formatMoney } from "@/domain/money";
 import { ClaimBadge } from "@/components/veritas/claim-badge";
 import { DetailDrawer, type DrawerAction } from "@/components/veritas/detail-drawer";
@@ -106,6 +107,8 @@ function LedgerPage() {
   return (
     <div className="space-y-8">
       <BackendNotice isFixture={isFixture} error={new Error("Audit ledger unavailable.")} what="ledger" />
+
+      {caseId && <CaseWalk caseId={caseId} />}
 
       <header className="border-b border-hairline pb-5">
         <p className="label-meta text-[10px] tracking-[0.16em]">Append-only governance record</p>

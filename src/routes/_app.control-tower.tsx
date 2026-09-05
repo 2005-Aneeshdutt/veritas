@@ -23,6 +23,8 @@ import { ClaimBadge } from "@/components/veritas/claim-badge";
 import { DetailDrawer, type DrawerAction } from "@/components/veritas/detail-drawer";
 import { ContextNotice } from "@/components/veritas/context-notice";
 import { useJourneyCases } from "@/hooks/use-journey-cases";
+import { ApproveBook } from "@/components/veritas/approve-book";
+import { CASE_FLOW } from "@/components/veritas/case-walk";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/_app/control-tower")({
@@ -197,9 +199,19 @@ function ControlTowerPage() {
   }
 
   const drawerActions = (r: QueueRow): DrawerAction[] => {
-    const acts: DrawerAction[] = [{ label: "Open payment", to: "/payments", search: { ref: r.id } }];
+    const acts: DrawerAction[] = [];
     if (r.journeyCaseId) {
-      acts.push({ label: "Open recovery journey", to: "/recovery-journey", search: { case: r.journeyCaseId } });
+      // The Control Tower is where a payment is chosen, so it is also where the
+      // walk begins. First action, named the same as the button that continues
+      // it on every stage after this one.
+      acts.push({
+        label: "Execute for this payment",
+        to: CASE_FLOW[0]!.to,
+        search: { case: r.journeyCaseId },
+      });
+    }
+    acts.push({ label: "Open payment", to: "/payments", search: { ref: r.id } });
+    if (r.journeyCaseId) {
       acts.push({ label: "Open policy", to: "/policy", search: { case: r.journeyCaseId } });
       acts.push({ label: "Open evidence", to: "/evidence", search: { case: r.journeyCaseId } });
       acts.push({ label: "Open audit trail", to: "/audit-trail", search: { case: r.journeyCaseId } });
@@ -236,6 +248,9 @@ function ControlTowerPage() {
         aria-label="Attention summary"
         className="flex flex-wrap items-end justify-between gap-x-10 gap-y-5 border-b border-hairline pb-5"
       >
+        <div className="order-first w-full">
+          <ApproveBook />
+        </div>
         <div className="min-w-0">
           <p className="numeral text-4xl font-semibold tracking-tight text-foreground sm:text-5xl">
             {formatCount(attention?.value ?? 0)}
@@ -359,22 +374,26 @@ function ControlTowerPage() {
             <SlidersHorizontal className="h-3.5 w-3.5" aria-hidden="true" />
             Filters
           </button>
-          {/* Demo cases — clearly labelled, deliberately quiet */}
-          <label className="ml-auto flex items-center gap-2">
-            <span className="label-meta text-[10px] tracking-[0.16em]">Demo case</span>
-            <select
-              value=""
-              onChange={(e) => e.target.value && setQ(e.target.value)}
-              className={cn(SELECT, "max-w-[220px]")}
-            >
-              <option value="">Demo data — select…</option>
-              {cases.map((c) => (
-                <option key={c.id} value={c.id}>
-                  {c.kindLabel.toUpperCase()} · {c.id}
-                </option>
-              ))}
-            </select>
-          </label>
+          {/* The same three payments the rest of the console offers, as chips
+              rather than a select that only ever shows its placeholder. */}
+          <div className="ml-auto flex flex-wrap items-center gap-2">
+            {cases.map((c) => (
+              <button
+                key={c.id}
+                type="button"
+                onClick={() => setQ(c.id)}
+                aria-pressed={q === c.id}
+                className={cn(
+                  "inline-flex h-8 items-center rounded-md border px-3 text-[12px] transition-colors",
+                  q === c.id
+                    ? "border-foreground/40 text-foreground"
+                    : "border-hairline text-muted-foreground hover:border-foreground/25 hover:text-foreground"
+                )}
+              >
+                {c.kindLabel}
+              </button>
+            ))}
+          </div>
         </div>
 
         <div className={cn("flex-wrap items-end gap-3", filtersOpen ? "flex" : "hidden lg:flex")}>

@@ -6,6 +6,8 @@ import { BackendNotice } from "@/components/veritas/backend-notice";
 import { formatMoney } from "@/domain/money";
 import { ClaimBadge } from "@/components/veritas/claim-badge";
 import { CaseSwitcher } from "@/components/veritas/case-switcher";
+import { CaseWalk } from "@/components/veritas/case-walk";
+import { RecoveredBook } from "@/components/veritas/recovered-book";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/_app/outcome")({
@@ -40,7 +42,7 @@ const DISTINCTIONS = [
 function OutcomePage() {
   const { case: caseId } = Route.useSearch();
   const navigate = useNavigate({ from: "/outcome" });
-  const { case_: c, isFixture, error } = useJourneyCase(caseId, 0);
+  const { case_: c, isFixture, error } = useJourneyCase(caseId, 1);
 
   const outcomeTone =
     c.outcome.state === "MEASURED"
@@ -68,6 +70,8 @@ function OutcomePage() {
       </header>
 
       <CaseSwitcher activeId={c.id} onSelect={(id) => navigate({ to: ".", search: { case: id } })} />
+
+      <CaseWalk caseId={c.id} />
 
       <section aria-label="Outcome" className="border-l-2 border-hairline pl-5">
         <p className="label-meta text-[10px] tracking-[0.16em]">Outcome</p>
@@ -136,6 +140,8 @@ function OutcomePage() {
       <p className="text-xs text-muted-foreground/80">
         Frontend demonstration only. Outcomes are read from the committed run record — never inferred.
       </p>
+
+      <RecoveredBook />
     </div>
   );
 }
