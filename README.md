@@ -23,6 +23,28 @@ diagnosis, then refuses to act on anything inside it.**
 
 ---
 
+## What is in this repository
+
+Two halves of one product, so a single link is the whole thing.
+
+| Path | What it is |
+|---|---|
+| `src/`, `data/`, `tests/` | **The engine.** The ten-stage pipeline, the Shapley decomposition, the signed mandate, the policy kernel, the hash-chained ledger, the Razorpay integration, and the FastAPI service that exposes all of it over 64 routes. |
+| [`console/`](console) | **The operator console.** React 19 + TanStack Start. Thirteen surfaces that render what the engine recorded; it computes no financial figure of its own. Has [its own README](console/README.md). |
+| `frontend/` | The earlier Next.js UI, still wired to CI and `render.yaml`. Superseded by `console/`. |
+
+The console is the one to open. Run the engine on `:8000`, then:
+
+```bash
+cd console && npm install && npm run dev      # http://localhost:8080
+```
+
+It needs `VITE_API_BASE_URL=http://127.0.0.1:8000` in `console/.env` — with
+`127.0.0.1`, not `localhost`, because the console server-renders and Node
+resolves `localhost` to `::1` while uvicorn binds IPv4 only.
+
+---
+
 ## Running it
 
 ```bash
