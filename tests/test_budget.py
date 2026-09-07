@@ -132,10 +132,20 @@ def test_the_readme_quotes_the_budget_this_code_produces(b):
     """These figures went stale within an hour of being written, because
     warming six answers into the cache changed all three of them and nothing
     complained. Numbers in prose rot silently; this makes them fail loudly.
+
+    The prose moved to docs/ENGINEERING.md when the README was cut down to a
+    front page; the check follows it. Both files are read so this keeps working
+    whichever one carries the figures.
     """
     import io
+    from pathlib import Path
 
-    readme = io.open("README.md", encoding="utf-8").read()
+    root = Path(__file__).resolve().parents[1]
+    readme = "".join(
+        io.open(root / name, encoding="utf-8").read()
+        for name in ("README.md", "docs/ENGINEERING.md")
+        if (root / name).exists()
+    )
     tokens = format(b.cached_tokens_in + b.cached_tokens_out, ",d")
     for label, needle in (
         ("cached answers", "%d answers" % b.cached_calls),
@@ -146,4 +156,6 @@ def test_the_readme_quotes_the_budget_this_code_produces(b):
         ("book tokens", format(b.run_tokens, ",d")),
         ("avoided", "%.2f" % b.run_saved_inr),
     ):
-        assert needle in readme, "README is stale on %s (expected %r)" % (label, needle)
+        assert needle in readme, (
+            "docs are stale on %s (expected %r) -- check docs/ENGINEERING.md" % (label, needle)
+        )
