@@ -1,16 +1,11 @@
 # Deployment for a panellist who would rather click a link than clone a repo.
 #
-# ONE service now: the API. The web service used to build the Next.js UI in
-# frontend/, which console/ has replaced. The console is not deployed here yet
-# and the config does not pretend otherwise -- its production build targets a
-# serverless runtime rather than a Node server, it ships no `start` script, and
-# VITE_API_BASE_URL is baked into the client bundle at build time rather than
-# rewritten at the edge. Wiring that up is real work, and a render.yaml that
-# claimed to do it without having been deployed once would be a lie in a file
-# whose whole job is to be true.
+# ONE service, API and console together. The Dockerfile builds the console as a
+# static SPA (VITE_API_BASE_URL=/, i.e. same origin) and the FastAPI app serves
+# it for every path outside /api. One URL, no CORS, no second host.
 #
-# Until then: clone, `make demo`, and the console runs on :8080 against the
-# engine on :8000.
+# Locally nothing changes: `make demo` still runs the console on :8080 against
+# the engine on :8000.
 #
 # NO API KEY IS SET HERE, on purpose. Every LLM response the demo needs is
 # committed under llm_cache/, and the CI job "Runs with no API key" exists to
@@ -27,24 +22,19 @@
 services:
   - type: web
     name: revenue-doctor-api
-    runtime: python
+    runtime: docker
+    dockerfilePath: ./Dockerfile
     plan: free
     region: singapore
-    buildCommand: pip install -e ".[dev]"
-    startCommand: uvicorn doctor.api:app --host 0.0.0.0 --port $PORT
     healthCheckPath: /api/health
     envVars:
-      - key: PYTHON_VERSION
-        value: "3.12"
-      - key: PYTHONPATH
-        value: src
       - key: DOCTOR_SEED
         value: "20260824"
       # Approve/reject links inside an emailed report are built from this.
       # Unset, they fall back to http://localhost:3000, which is right for a
       # laptop and wrong for a deployment -- so if you ever turn SMTP on here,
-      # set it to the web service's public URL in the dashboard. Left unset
+      # set it to this service's public URL in the dashboard. Left unset
       # rather than guessed at: no mail credential is configured on this plan,
       # so nothing sends and no link is emitted today.
       # - key: DOCTOR_PUBLIC_URL
-      #   value: https://revenue-doctor-web.onrender.com
+      #   value: https://revenue-doctor-api.onrender.com

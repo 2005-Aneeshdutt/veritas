@@ -2405,3 +2405,36 @@ async def replay(run_id: str, speed: float = 1.0):
         media_type="text/event-stream",
         headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"},
     )
+
+
+# ---------------------------------------------------------------------------
+# The console, served from the same origin as the API.
+#
+# `cd console && VITE_API_BASE_URL=/ npm run build` emits a static SPA into
+# console/.output/public. When that directory exists, everything that is not
+# /api is answered from it: a real file if one matches, otherwise the SPA shell
+# so client-side routes (/diagnosis, /payments/...) survive a hard refresh.
+# When it does not exist (plain `make demo`, tests), nothing here registers and
+# the API behaves exactly as before.
+# ---------------------------------------------------------------------------
+_CONSOLE_DIR = ROOT / "console" / ".output" / "public"
+_CONSOLE_SHELL = _CONSOLE_DIR / "_shell.html"
+
+if _CONSOLE_SHELL.is_file():
+    from fastapi.responses import FileResponse
+
+    _CONSOLE_ROOT = _CONSOLE_DIR.resolve()
+
+    @app.get("/{path:path}", include_in_schema=False)
+    def console(path: str):
+        if path == "api" or path.startswith("api/"):
+            raise HTTPException(status_code=404, detail=f"no such route: /{path}")
+        candidate = (_CONSOLE_ROOT / path).resolve()
+        if path and candidate.is_file() and candidate.is_relative_to(_CONSOLE_ROOT):
+            headers = (
+                {"Cache-Control": "public, max-age=31536000, immutable"}
+                if path.startswith("assets/")
+                else None
+            )
+            return FileResponse(candidate, headers=headers)
+        return FileResponse(_CONSOLE_SHELL, headers={"Cache-Control": "no-cache"})
