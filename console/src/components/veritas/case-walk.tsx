@@ -153,7 +153,7 @@ export function CaseWalk({ caseId }: { caseId: string }) {
           ) : (
             <button
               type="button"
-              onClick={() => navigate({ to: "/" })}
+              onClick={() => navigate({ to: "/overview" })}
               className="inline-flex h-9 items-center gap-2 rounded-md border border-measured/40 px-3.5 text-[13px] text-measured transition-colors hover:bg-measured/10"
             >
               <CheckCircle2 className="h-3.5 w-3.5" aria-hidden="true" />

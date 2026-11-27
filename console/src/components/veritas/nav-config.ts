@@ -17,7 +17,7 @@ import {
 import type { LucideIcon } from "lucide-react";
 
 export type AppRoute =
-  | "/"
+  | "/overview"
   | "/control-tower"
   | "/payments"
   | "/payment/$paymentId"
@@ -52,7 +52,7 @@ export const NAV_GROUPS: NavGroup[] = [
     items: [
       {
         label: "Overview",
-        to: "/",
+        to: "/overview",
         icon: LayoutDashboard,
         description: "Executive view of revenue at risk, recovery and proof health",
       },

@@ -24,7 +24,7 @@ import type { ClaimState, HeadlineMetric } from "@/domain/types";
 import type { AppRoute } from "@/components/veritas/nav-config";
 import { cn } from "@/lib/utils";
 
-export const Route = createFileRoute("/_app/")({
+export const Route = createFileRoute("/_app/overview")({
   head: () => ({
     meta: [
       { title: "Overview — VERITAS Revenue Recovery Intelligence" },

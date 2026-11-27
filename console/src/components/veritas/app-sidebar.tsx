@@ -138,11 +138,11 @@ export function AppSidebar({
         )}
       >
         {collapsed ? (
-          <Link to="/" aria-label="VERITAS home">
+          <Link to="/overview" aria-label="VERITAS home">
             <VeritasMark />
           </Link>
         ) : (
-          <Link to="/" aria-label="VERITAS home" className="min-w-0">
+          <Link to="/overview" aria-label="VERITAS home" className="min-w-0">
             <VeritasWordmark subtitle />
           </Link>
         )}

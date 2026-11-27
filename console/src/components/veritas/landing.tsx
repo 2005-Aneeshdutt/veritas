@@ -102,7 +102,7 @@ function Header({ mode, connected }: { mode?: string | undefined; connected: boo
           </div>
         </div>
         <a
-          href="/"
+          href="/overview"
           className="hidden h-9 items-center gap-2 rounded-md border border-hairline px-4 text-[13px] text-muted-foreground transition-colors hover:border-foreground/30 hover:text-foreground sm:inline-flex"
         >
           Enter the console <ArrowRight className="h-3.5 w-3.5" aria-hidden />
@@ -138,7 +138,7 @@ function Header({ mode, connected }: { mode?: string | undefined; connected: boo
 
         <div className="mt-9 flex flex-wrap gap-3">
           <a
-            href="/"
+            href="/overview"
             className="inline-flex h-11 items-center gap-2 rounded-md bg-foreground px-6 text-sm font-medium text-background transition-opacity hover:opacity-90"
           >
             Enter the console <ArrowRight className="h-4 w-4" aria-hidden />
@@ -694,7 +694,7 @@ function Close() {
         </h2>
         <div className="mt-9 flex flex-wrap gap-3">
           <a
-            href="/"
+            href="/overview"
             className="inline-flex h-11 items-center gap-2 rounded-md bg-foreground px-6 text-sm font-medium text-background transition-opacity hover:opacity-90"
           >
             Enter the console <ArrowRight className="h-4 w-4" aria-hidden />

@@ -9,9 +9,9 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppRouteImport } from './routes/_app'
 import { Route as LoginRouteImport } from './routes/login'
-import { Route as AppIndexRouteImport } from './routes/_app.index'
 import { Route as AppAuditTrailRouteImport } from './routes/_app.audit-trail'
 import { Route as AppControlTowerRouteImport } from './routes/_app.control-tower'
 import { Route as AppCounterfactualLabRouteImport } from './routes/_app.counterfactual-lab'
@@ -19,6 +19,7 @@ import { Route as AppDiagnosisRouteImport } from './routes/_app.diagnosis'
 import { Route as AppEvidenceRouteImport } from './routes/_app.evidence'
 import { Route as AppGatewayProofRouteImport } from './routes/_app.gateway-proof'
 import { Route as AppOutcomeRouteImport } from './routes/_app.outcome'
+import { Route as AppOverviewRouteImport } from './routes/_app.overview'
 import { Route as AppPaymentsRouteImport } from './routes/_app.payments'
 import { Route as AppPlanRouteImport } from './routes/_app.plan'
 import { Route as AppPolicyRouteImport } from './routes/_app.policy'
@@ -27,6 +28,11 @@ import { Route as AppRecoveryJourneyRouteImport } from './routes/_app.recovery-j
 import { Route as AppSettingsRouteImport } from './routes/_app.settings'
 import { Route as AppPaymentPaymentIdRouteImport } from './routes/_app.payment.$paymentId'
 
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AppRoute = AppRouteImport.update({
   id: '/_app',
   getParentRoute: () => rootRouteImport,
@@ -35,11 +41,6 @@ const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
   getParentRoute: () => rootRouteImport,
-} as any)
-const AppIndexRoute = AppIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => AppRoute,
 } as any)
 const AppAuditTrailRoute = AppAuditTrailRouteImport.update({
   id: '/audit-trail',
@@ -74,6 +75,11 @@ const AppGatewayProofRoute = AppGatewayProofRouteImport.update({
 const AppOutcomeRoute = AppOutcomeRouteImport.update({
   id: '/outcome',
   path: '/outcome',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppOverviewRoute = AppOverviewRouteImport.update({
+  id: '/overview',
+  path: '/overview',
   getParentRoute: () => AppRoute,
 } as any)
 const AppPaymentsRoute = AppPaymentsRouteImport.update({
@@ -113,7 +119,7 @@ const AppPaymentPaymentIdRoute = AppPaymentPaymentIdRouteImport.update({
 } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof AppIndexRoute
+  '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/audit-trail': typeof AppAuditTrailRoute
   '/control-tower': typeof AppControlTowerRoute
@@ -122,6 +128,7 @@ export interface FileRoutesByFullPath {
   '/evidence': typeof AppEvidenceRoute
   '/gateway-proof': typeof AppGatewayProofRoute
   '/outcome': typeof AppOutcomeRoute
+  '/overview': typeof AppOverviewRoute
   '/payments': typeof AppPaymentsRoute
   '/plan': typeof AppPlanRoute
   '/policy': typeof AppPolicyRoute
@@ -131,6 +138,7 @@ export interface FileRoutesByFullPath {
   '/payment/$paymentId': typeof AppPaymentPaymentIdRoute
 }
 export interface FileRoutesByTo {
+  '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/audit-trail': typeof AppAuditTrailRoute
   '/control-tower': typeof AppControlTowerRoute
@@ -139,17 +147,18 @@ export interface FileRoutesByTo {
   '/evidence': typeof AppEvidenceRoute
   '/gateway-proof': typeof AppGatewayProofRoute
   '/outcome': typeof AppOutcomeRoute
+  '/overview': typeof AppOverviewRoute
   '/payments': typeof AppPaymentsRoute
   '/plan': typeof AppPlanRoute
   '/policy': typeof AppPolicyRoute
   '/prove': typeof AppProveRoute
   '/recovery-journey': typeof AppRecoveryJourneyRoute
   '/settings': typeof AppSettingsRoute
-  '/': typeof AppIndexRoute
   '/payment/$paymentId': typeof AppPaymentPaymentIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
+  '/': typeof IndexRoute
   '/_app': typeof AppRouteWithChildren
   '/login': typeof LoginRoute
   '/_app/audit-trail': typeof AppAuditTrailRoute
@@ -159,13 +168,13 @@ export interface FileRoutesById {
   '/_app/evidence': typeof AppEvidenceRoute
   '/_app/gateway-proof': typeof AppGatewayProofRoute
   '/_app/outcome': typeof AppOutcomeRoute
+  '/_app/overview': typeof AppOverviewRoute
   '/_app/payments': typeof AppPaymentsRoute
   '/_app/plan': typeof AppPlanRoute
   '/_app/policy': typeof AppPolicyRoute
   '/_app/prove': typeof AppProveRoute
   '/_app/recovery-journey': typeof AppRecoveryJourneyRoute
   '/_app/settings': typeof AppSettingsRoute
-  '/_app/': typeof AppIndexRoute
   '/_app/payment/$paymentId': typeof AppPaymentPaymentIdRoute
 }
 export interface FileRouteTypes {
@@ -180,6 +189,7 @@ export interface FileRouteTypes {
     | '/evidence'
     | '/gateway-proof'
     | '/outcome'
+    | '/overview'
     | '/payments'
     | '/plan'
     | '/policy'
@@ -189,6 +199,7 @@ export interface FileRouteTypes {
     | '/payment/$paymentId'
   fileRoutesByTo: FileRoutesByTo
   to:
+    | '/'
     | '/login'
     | '/audit-trail'
     | '/control-tower'
@@ -197,16 +208,17 @@ export interface FileRouteTypes {
     | '/evidence'
     | '/gateway-proof'
     | '/outcome'
+    | '/overview'
     | '/payments'
     | '/plan'
     | '/policy'
     | '/prove'
     | '/recovery-journey'
     | '/settings'
-    | '/'
     | '/payment/$paymentId'
   id:
     | '__root__'
+    | '/'
     | '/_app'
     | '/login'
     | '/_app/audit-trail'
@@ -216,23 +228,31 @@ export interface FileRouteTypes {
     | '/_app/evidence'
     | '/_app/gateway-proof'
     | '/_app/outcome'
+    | '/_app/overview'
     | '/_app/payments'
     | '/_app/plan'
     | '/_app/policy'
     | '/_app/prove'
     | '/_app/recovery-journey'
     | '/_app/settings'
-    | '/_app/'
     | '/_app/payment/$paymentId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
+  IndexRoute: typeof IndexRoute
   AppRoute: typeof AppRouteWithChildren
   LoginRoute: typeof LoginRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_app': {
       id: '/_app'
       path: ''
@@ -246,13 +266,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
-    }
-    '/_app/': {
-      id: '/_app/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof AppIndexRouteImport
-      parentRoute: typeof AppRoute
     }
     '/_app/audit-trail': {
       id: '/_app/audit-trail'
@@ -301,6 +314,13 @@ declare module '@tanstack/react-router' {
       path: '/outcome'
       fullPath: '/outcome'
       preLoaderRoute: typeof AppOutcomeRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/overview': {
+      id: '/_app/overview'
+      path: '/overview'
+      fullPath: '/overview'
+      preLoaderRoute: typeof AppOverviewRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/payments': {
@@ -363,13 +383,13 @@ interface AppRouteChildren {
   AppEvidenceRoute: typeof AppEvidenceRoute
   AppGatewayProofRoute: typeof AppGatewayProofRoute
   AppOutcomeRoute: typeof AppOutcomeRoute
+  AppOverviewRoute: typeof AppOverviewRoute
   AppPaymentsRoute: typeof AppPaymentsRoute
   AppPlanRoute: typeof AppPlanRoute
   AppPolicyRoute: typeof AppPolicyRoute
   AppProveRoute: typeof AppProveRoute
   AppRecoveryJourneyRoute: typeof AppRecoveryJourneyRoute
   AppSettingsRoute: typeof AppSettingsRoute
-  AppIndexRoute: typeof AppIndexRoute
   AppPaymentPaymentIdRoute: typeof AppPaymentPaymentIdRoute
 }
 
@@ -381,19 +401,20 @@ const AppRouteChildren: AppRouteChildren = {
   AppEvidenceRoute: AppEvidenceRoute,
   AppGatewayProofRoute: AppGatewayProofRoute,
   AppOutcomeRoute: AppOutcomeRoute,
+  AppOverviewRoute: AppOverviewRoute,
   AppPaymentsRoute: AppPaymentsRoute,
   AppPlanRoute: AppPlanRoute,
   AppPolicyRoute: AppPolicyRoute,
   AppProveRoute: AppProveRoute,
   AppRecoveryJourneyRoute: AppRecoveryJourneyRoute,
   AppSettingsRoute: AppSettingsRoute,
-  AppIndexRoute: AppIndexRoute,
   AppPaymentPaymentIdRoute: AppPaymentPaymentIdRoute,
 }
 
 const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
+  IndexRoute: IndexRoute,
   AppRoute: AppRouteWithChildren,
   LoginRoute: LoginRoute,
 }

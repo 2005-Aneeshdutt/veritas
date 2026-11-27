@@ -49,7 +49,10 @@ export function Topbar({ onOpenCommand }: { onOpenCommand: () => void }) {
       <nav aria-label="Breadcrumb" className="min-w-0 flex-1">
         <ol className="flex min-w-0 items-center gap-2 text-sm">
           <li className="shrink-0">
-            <Link to="/" className="text-muted-foreground transition-colors hover:text-foreground">
+            <Link
+              to="/overview"
+              className="text-muted-foreground transition-colors hover:text-foreground"
+            >
               VERITAS
             </Link>
           </li>
@@ -61,7 +64,7 @@ export function Topbar({ onOpenCommand }: { onOpenCommand: () => void }) {
               <li className="shrink-0 text-muted-foreground">{group}</li>
             </>
           )}
-          {current && current.to !== "/" && (
+          {current && current.to !== "/overview" && (
             <>
               <li aria-hidden="true" className="text-muted-foreground/50">
                 /
@@ -71,7 +74,7 @@ export function Topbar({ onOpenCommand }: { onOpenCommand: () => void }) {
               </li>
             </>
           )}
-          {current?.to === "/" && (
+          {current?.to === "/overview" && (
             <>
               <li aria-hidden="true" className="text-muted-foreground/50">
                 /
@@ -149,7 +152,7 @@ export function Topbar({ onOpenCommand }: { onOpenCommand: () => void }) {
             <Link to="/settings">Settings</Link>
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
-            <Link to="/login">Sign out</Link>
+            <Link to="/">Sign out</Link>
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
